@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
     <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
@@ -119,6 +120,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Input\" />
     <Folder Include="Themes\DeviceFamily-Mobile\" />
   </ItemGroup>
   <ItemGroup>
