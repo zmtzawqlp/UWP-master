@@ -8,6 +8,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace MyUWPToolkit
 {
+    /// <summary>
+    /// note: just support in touch mode.
+    /// </summary>
     [TemplatePart(Name = PanelHeader, Type = typeof(ContentControl))]
     [TemplatePart(Name = PanelContent, Type = typeof(ContentPresenter))]
     [TemplatePart(Name = ScrollViewer, Type = typeof(ScrollViewer))]
