@@ -3,6 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MyUWPToolkit">
     <ResourceDictionary.MergedDictionaries>
-        <!--<ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/SpeechAutoSuggestBox.Xaml"/>-->
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshControl.Xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -1,0 +1,42 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:converters="using:MyUWPToolkit.Converters"
+    xmlns:local="using:MyUWPToolkit">
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="InversedBooleanToVisibilityConverter" IsInversed="True"/>
+    <Style TargetType="local:PullToRefreshControl">
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsReachThreshold,Converter={StaticResource InversedBooleanToVisibilityConverter}}">
+                            <FontIcon FontSize="30"  FontFamily="Segoe UI Emoji" Glyph="↓" IsHitTestVisible="False"  VerticalAlignment="Bottom"/>
+                            <TextBlock Margin="5,0,5,0" Text="下拉刷新" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsReachThreshold, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <FontIcon FontSize="30"   FontFamily="Segoe UI Emoji" Glyph="↑" IsHitTestVisible="False" VerticalAlignment="Bottom"/>
+                            <TextBlock Margin="5,0,5,0" Text="释放立即刷新" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:PullToRefreshControl">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Margin="{TemplateBinding Margin}">
+                        <ScrollViewer x:Name="ScrollViewer"
+                                      VerticalScrollBarVisibility="Hidden">
+                            <StackPanel>
+                                <ContentControl x:Name="PanelHeader" ContentTemplate="{TemplateBinding HeaderTemplate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
+                                <ContentPresenter x:Name="PanelContent" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>
