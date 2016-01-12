@@ -4,5 +4,7 @@
     xmlns:local="using:MyUWPToolkit">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshControl.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/ColumnChart.Xaml"/>
+        
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

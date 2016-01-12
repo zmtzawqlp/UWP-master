@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chart\ColumnChart.cs" />
+    <Compile Include="Common\BindingEvaluator.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Panel\PullToRefreshControl.cs" />
@@ -115,6 +117,11 @@
     <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\ColumnChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
