@@ -101,11 +101,7 @@ namespace MyUWPToolkit
                 }
             }
             _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
-            this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                _scrollViewer.ChangeView(null, _panelHeader.Height, null);
-            });
-
+            _scrollViewer.ChangeView(null, _panelHeader.Height, null);
         }
 
         public PullToRefreshControl()
@@ -135,9 +131,10 @@ namespace MyUWPToolkit
             if (_scrollViewer != null && _panelContent != null && _panelHeader != null)
             {
                 _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
+                //disable animation when load control.
                 this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    _scrollViewer.ChangeView(null, _panelHeader.Height, null);
+                    _scrollViewer.ChangeView(null, _panelHeader.Height, null,true);
                 });
                 _panelContent.Width = this.ActualWidth;
                 _panelContent.Height = this.ActualHeight;
