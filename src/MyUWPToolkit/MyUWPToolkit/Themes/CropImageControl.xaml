@@ -1,0 +1,64 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyUWPToolkit">
+    <Style TargetType="local:CropImageControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:CropImageControl">
+                    <Grid >
+                        <Grid.Resources>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Height" Value="20"/>
+                                <Setter Property="Width" Value="20"/>
+                                <Setter Property="Fill" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+                                <Setter Property="Stroke" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                <Setter Property="StrokeThickness" Value="1"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <CompositeTransform TranslateX="-10" TranslateY="-10" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Grid.Resources>
+                        <Image x:Name="sourceImage" />
+                        <Canvas x:Name="imageCanvas" Visibility="Collapsed" >
+                            <Path x:Name="nonselectRegion" Fill="#88FFFFFF"  >
+                                <Path.Data>
+                                    <GeometryGroup>
+                                        <RectangleGeometry Rect="{Binding OuterRect}">
+                                        </RectangleGeometry>
+                                        <RectangleGeometry Rect="{Binding SelectedRect}">
+                                        </RectangleGeometry>
+                                    </GeometryGroup>
+                                </Path.Data>
+                            </Path>
+                            <Path x:Name="selectRegion" Fill="Transparent" Stroke="{ThemeResource ApplicationForegroundThemeBrush}" StrokeThickness="1">
+                                <Path.Data>
+                                    <RectangleGeometry Rect="{Binding SelectedRect}"/>
+                                </Path.Data>
+                            </Path>
+
+                            <Ellipse x:Name="topLeftThumb"  Canvas.Left="{Binding SelectedRect.Left}" Canvas.Top="{Binding SelectedRect.Top}"/>
+                            <Ellipse x:Name="topRightThumb"  Canvas.Left="{Binding SelectedRect.Right}" Canvas.Top="{Binding SelectedRect.Top}"/>
+                            <Ellipse x:Name="bottomLeftThumb"  Canvas.Left="{Binding SelectedRect.Left}" Canvas.Top="{Binding SelectedRect.Bottom}"/>
+                            <Ellipse x:Name="bottomRightThumb"  Canvas.Left="{Binding SelectedRect.Right}" Canvas.Top="{Binding SelectedRect.Bottom}"/>
+                            <!--<ContentControl ContentTemplate="{StaticResource RoundCorner}"  x:Name="topLeftCorner" Tag="TopLeftCorner" 
+                                                Canvas.Left="{Binding Path=TopLeftCornerCanvasLeft,Mode=OneWay}" 
+                                                Canvas.Top="{Binding Path=TopLeftCornerCanvasTop,Mode=OneWay}"/>
+                            <ContentControl ContentTemplate="{StaticResource RoundCorner}"  x:Name="topRightCorner" Tag="TopRightCorner"
+                                                Canvas.Left="{Binding Path=BottomRightCornerCanvasLeft,Mode=OneWay}" 
+                                                Canvas.Top="{Binding Path=TopLeftCornerCanvasTop,Mode=OneWay}" />
+                            <ContentControl ContentTemplate="{StaticResource RoundCorner}"  x:Name="bottomLeftCorner" Tag="BottomLeftCorner" 
+                                                Canvas.Left="{Binding Path=TopLeftCornerCanvasLeft,Mode=OneWay}" 
+                                                Canvas.Top="{Binding Path=BottomRightCornerCanvasTop,Mode=OneWay}" />
+                            <ContentControl ContentTemplate="{StaticResource RoundCorner}"  x:Name="bottomRightCorner" Tag="BottomRightCorner" 
+                                                Canvas.Left="{Binding Path=BottomRightCornerCanvasLeft,Mode=OneWay}"
+                                                Canvas.Top="{Binding Path=BottomRightCornerCanvasTop,Mode=OneWay}"/>-->
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
