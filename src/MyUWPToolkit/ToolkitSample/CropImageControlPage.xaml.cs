@@ -68,5 +68,23 @@ namespace ToolkitSample
 
         }
 
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void CropButton_Click(object sender, RoutedEventArgs e)
+        {
+            Popup p = new Popup();
+            Image image = new Image();
+            image.Source=await CropImageControl.GetCropImageSource();
+            p.Child = image;
+            p.IsOpen = true;
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            CropImageControl.ReSetSelectionRect();
+        }
     }
 }

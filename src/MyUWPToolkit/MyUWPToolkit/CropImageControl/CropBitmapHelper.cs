@@ -47,6 +47,30 @@ namespace MyUWPToolkit
             uint height = (uint)Math.Floor(corpSize.Height * scale);
             uint width = (uint)Math.Floor(corpSize.Width * scale);
 
+            var pixels = await GetCroppedBitmapSourceAsync(originalImageFile, startPoint, corpSize, scale);
+            // Stream the bytes into a WriteableBitmap
+            WriteableBitmap cropBmp = new WriteableBitmap((int)width, (int)height);
+                Stream pixStream = cropBmp.PixelBuffer.AsStream();
+                pixStream.Write(pixels, 0, (int)(width * height * 4));
+
+                return cropBmp;
+            
+
+        }
+        async public static Task<byte[]> GetCroppedBitmapSourceAsync(StorageFile originalImageFile,
+           Point startPoint, Size corpSize, double scale)
+        {
+            if (double.IsNaN(scale) || double.IsInfinity(scale))
+            {
+                scale = 1;
+            }
+
+            // Convert start point and size to integer.
+            uint startPointX = (uint)Math.Floor(startPoint.X * scale);
+            uint startPointY = (uint)Math.Floor(startPoint.Y * scale);
+            uint height = (uint)Math.Floor(corpSize.Height * scale);
+            uint width = (uint)Math.Floor(corpSize.Width * scale);
+
             using (IRandomAccessStream stream = await originalImageFile.OpenReadAsync())
             {
 
@@ -71,19 +95,11 @@ namespace MyUWPToolkit
                 }
 
                 // Get the cropped pixels.
-                byte[] pixels = await GetPixelData(decoder, startPointX, startPointY, width, height,
+                return  await GetPixelData(decoder, startPointX, startPointY, width, height,
                     scaledWidth, scaledHeight);
-
-                // Stream the bytes into a WriteableBitmap
-                WriteableBitmap cropBmp = new WriteableBitmap((int)width, (int)height);
-                Stream pixStream = cropBmp.PixelBuffer.AsStream();
-                pixStream.Write(pixels, 0, (int)(width * height * 4));
-
-                return cropBmp;
             }
 
         }
-
         /// <summary>
         /// Save the cropped bitmap to a image file.
         /// </summary>

@@ -110,13 +110,12 @@
     <Compile Include="Chart\ColumnChart.cs" />
     <Compile Include="Common\BindingEvaluator.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
-    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\Converter.cs" />
     <Compile Include="CropImageControl\AspectRatio.cs" />
     <Compile Include="CropImageControl\CropBitmapHelper.cs" />
     <Compile Include="CropImageControl\CropImageControl.cs" />
     <Compile Include="CropImageControl\CropImageSourceChangedEventHandler.cs" />
     <Compile Include="CropImageControl\CropSelection.cs" />
-    <Compile Include="CropImageControl\CropSelection1.cs" />
     <Compile Include="CropImageControl\CropSelectionSize.cs" />
     <Compile Include="Panel\PullToRefreshControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

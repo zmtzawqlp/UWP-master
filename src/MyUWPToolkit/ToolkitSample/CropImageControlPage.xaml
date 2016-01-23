@@ -14,6 +14,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button Content="Open" Click="Button_Click"></Button>
-        <controls:CropImageControl x:Name="CropImageControl" Grid.Row="1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <controls:CropImageControl x:Name="CropImageControl" Grid.Row="1" CropAspectRatio="Square" DefaultCropSelectionSize="Half" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Content="Crop" x:Name="CropButton"  Click="CropButton_Click">
+
+            </AppBarButton>
+            <AppBarButton Content="Cancel" x:Name="CancelButton" Click="CancelButton_Click">
+
+            </AppBarButton>
+        </CommandBar>
+          
+    </Page.BottomAppBar>
 </Page>
