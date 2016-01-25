@@ -11,6 +11,8 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Graphics.Display;
+using System.Diagnostics;
 
 namespace MyUWPToolkit
 {
@@ -235,5 +237,38 @@ namespace MyUWPToolkit
             return pixels;
         }
 
+        public static async Task RotateCaptureImageByDisplayInformationAutoRotationPreferences(IRandomAccessStream inStream, IRandomAccessStream outStream)
+        {
+
+            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(inStream);
+
+            BitmapEncoder encoder = await BitmapEncoder.CreateForTranscodingAsync(outStream, decoder);
+
+            var ort = DisplayInformation.GetForCurrentView().CurrentOrientation;
+            Debug.WriteLine(ort);
+            switch (ort)
+            {
+                //The same as Portrait
+                case DisplayOrientations.None:
+                    encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                    break;
+                //The default view for capture. 
+                case DisplayOrientations.Landscape:
+                    encoder.BitmapTransform.Rotation = BitmapRotation.None;
+                    break;
+                case DisplayOrientations.Portrait:
+                    encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                    break;
+                case DisplayOrientations.LandscapeFlipped:
+                    encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise180Degrees;
+                    break;
+                case DisplayOrientations.PortraitFlipped:
+                    encoder.BitmapTransform.Rotation = BitmapRotation.Clockwise270Degrees;
+                    break;
+                default:
+                    break;
+            }
+            await encoder.FlushAsync();
+        }
     }
 }

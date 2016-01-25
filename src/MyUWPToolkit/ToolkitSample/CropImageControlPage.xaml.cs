@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MyUWPToolkit;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Media.Capture;
@@ -31,47 +33,60 @@ namespace ToolkitSample
             
         }
 
-        //private async void Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    FileOpenPicker openPicker = new FileOpenPicker();
-        //    openPicker.ViewMode = PickerViewMode.Thumbnail;
-        //    openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-        //    openPicker.FileTypeFilter.Add(".jpg");
-        //    openPicker.FileTypeFilter.Add(".jpeg");
-        //    openPicker.FileTypeFilter.Add(".bmp");
-        //    openPicker.FileTypeFilter.Add(".png");
-        //    StorageFile imgFile = await openPicker.PickSingleFileAsync();
-        //    if (imgFile != null)
-        //    {
-        //        CropImageControl.SourceImageFile = imgFile;
-        //    }
-        //}
-
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var cameraCaptureUI = new CameraCaptureUI();
-            cameraCaptureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
-            cameraCaptureUI.PhotoSettings.AllowCropping = true;
-            cameraCaptureUI.PhotoSettings.CroppedSizeInPixels = new Size(400, 400);
-            StorageFile photo = await cameraCaptureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
+            Button btn = sender as Button;
+            StorageFile photo = null;
+            if (btn.Content.ToString() == "Take a photo")
+            {
+                photo = await GetPhotoByCameraCapture();
+            }
+            else
+            {
+                photo = await GetPhotoByPictureLibrary();
+            }
 
-             if (photo != null)
+            if (photo != null)
             {
                 CropImageControl.SourceImageFile = photo;
             }
-
-            //BitmapImage bitmapImage = new BitmapImage();
-            //using (IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read))
-            //{
-            //    bitmapImage.SetSource(stream);
-            //}
-
+       
         }
 
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private async Task<StorageFile> GetPhotoByPictureLibrary()
         {
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".png");
 
+            return await openPicker.PickSingleFileAsync();
         }
+
+        private async Task<StorageFile> GetPhotoByCameraCapture()
+        {
+            var cameraCaptureUI = new CameraCaptureUI();
+            cameraCaptureUI.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
+            cameraCaptureUI.PhotoSettings.AllowCropping = false;
+
+            var photo = await cameraCaptureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
+
+            if (photo != null)
+            {
+                using (var stream = await photo.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    //旋转图片
+                    await CropBitmapHelper.RotateCaptureImageByDisplayInformationAutoRotationPreferences(stream, stream);
+                }
+            }
+
+
+            return photo;
+        }
+ 
+
 
         private async void CropButton_Click(object sender, RoutedEventArgs e)
         {

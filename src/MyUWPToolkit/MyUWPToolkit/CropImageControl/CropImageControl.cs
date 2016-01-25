@@ -112,6 +112,12 @@ namespace MyUWPToolkit
         public CropImageControl()
         {
             this.DefaultStyleKey = typeof(CropImageControl);
+            Loaded += CropImageControl_Loaded;
+        }
+
+        private void CropImageControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            OnSourceImageFileChanged();
         }
 
         protected override void OnApplyTemplate()
@@ -130,7 +136,6 @@ namespace MyUWPToolkit
 
             base.OnApplyTemplate();
             _isTemplateLoaded = true;
-            OnSourceImageFileChanged();
         }
 
 
@@ -150,8 +155,8 @@ namespace MyUWPToolkit
                     this.sourceImagePixelWidth = decoder.PixelWidth;
                 }
 
-                if (this.sourceImagePixelHeight < 2 * 20 ||
-                    this.sourceImagePixelWidth < 2 * 20)
+                if (this.sourceImagePixelHeight < 2 * 30 ||
+                    this.sourceImagePixelWidth < 2 * 30)
                 {
 
                 }
@@ -167,7 +172,7 @@ namespace MyUWPToolkit
                     else
                     {
                         sourceImageScale = Math.Min(this.ActualWidth / this.sourceImagePixelWidth,
-                             this.ActualHeight / this.sourceImagePixelHeight);
+                        this.ActualHeight / this.sourceImagePixelHeight);
                         this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
                     }
 
@@ -183,12 +188,12 @@ namespace MyUWPToolkit
 
         private void Initialize()
         {
-            topLeftThumb.ManipulationMode = topRightThumb.ManipulationMode = bottomLeftThumb.ManipulationMode = bottomRightThumb.ManipulationMode=selectRegion.ManipulationMode = ManipulationModes.Scale |
+            topLeftThumb.ManipulationMode = topRightThumb.ManipulationMode = bottomLeftThumb.ManipulationMode = bottomRightThumb.ManipulationMode = selectRegion.ManipulationMode = ManipulationModes.Scale |
             ManipulationModes.TranslateX | ManipulationModes.TranslateY;
-         
+
 
             //Thumb width and height is 20.
-            CropSelection = new CropSelection { MinSelectRegionSize = 2 * 20, CropAspectRatio = CropAspectRatio };
+            CropSelection = new CropSelection { MinSelectRegionSize = 2 * 30, CropAspectRatio = CropAspectRatio };
             imageCanvas.DataContext = CropSelection;
         }
 
@@ -209,12 +214,12 @@ namespace MyUWPToolkit
 
         private void selectRegion_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
-           
+
         }
 
         private void selectRegion_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-           
+
             if (CropSelection.OuterRect.Contains(e.Position))
             {
                 var x = e.Delta.Translation.X;
@@ -266,7 +271,7 @@ namespace MyUWPToolkit
                             xUpdate = -yUpdate;
                         }
                     }
-             
+
                 }
                 //todo
                 this.CropSelection.UpdateSelectedRect((sender as Ellipse).Name as string, xUpdate, yUpdate);
@@ -291,7 +296,7 @@ namespace MyUWPToolkit
 
         }
 
-        
+
         private void Thumb_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(this);
@@ -350,7 +355,7 @@ namespace MyUWPToolkit
         private void Thumb_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             (sender as UIElement).CapturePointer(e.Pointer);
-            
+
             Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(this);
 
             // Record the start point of the pointer.
@@ -365,7 +370,7 @@ namespace MyUWPToolkit
             {
                 this.imageCanvas.Visibility = Visibility.Collapsed;
                 CropSelection.OuterRect = Rect.Empty;
-              
+
                 CropSelection.SelectedRect = new Rect(0, 0, 0, 0);
             }
             else
@@ -392,7 +397,7 @@ namespace MyUWPToolkit
 
                     rect.X = (e.NewSize.Width - rect.Width) / (int)DefaultCropSelectionSize;
                     rect.Y = (e.NewSize.Height - rect.Height) / (int)DefaultCropSelectionSize;
-               
+
                     CropSelection.SelectedRect = rect;
                 }
                 else
@@ -400,7 +405,7 @@ namespace MyUWPToolkit
                     double scale = e.NewSize.Height / e.PreviousSize.Height;
                     //todo
                     CropSelection.ResizeSelectedRect(scale);
-                   
+
                 }
 
             }
@@ -409,7 +414,7 @@ namespace MyUWPToolkit
 
         public void ReSetSelectionRect()
         {
-            if (sourceImage==null)
+            if (sourceImage == null)
             {
                 return;
             }
@@ -447,7 +452,7 @@ namespace MyUWPToolkit
             if (previewImageSize.Width <= imageCanvas.Width &&
                 previewImageSize.Height <= imageCanvas.Height)
             {
-                
+
             }
             else
             {
@@ -479,12 +484,9 @@ namespace MyUWPToolkit
             if (previewImageSize.Width <= imageCanvas.Width &&
                 previewImageSize.Height <= imageCanvas.Height)
             {
-                //this.previewImage.Stretch = Windows.UI.Xaml.Media.Stretch.None;
             }
             else
             {
-                //this.previewImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
-
                 previewImageScale = Math.Min(imageCanvas.Width / previewImageSize.Width,
                     imageCanvas.Height / previewImageSize.Height);
             }

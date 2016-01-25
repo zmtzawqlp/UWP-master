@@ -13,7 +13,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Content="Open" Click="Button_Click"></Button>
+        <Button Content="Take a photo" Click="Button_Click"></Button>
+        <Button Content="Pick from picture Library" Click="Button_Click" Margin="200,0,0,0"/>
         <controls:CropImageControl x:Name="CropImageControl" Grid.Row="1" CropAspectRatio="Square" DefaultCropSelectionSize="Half" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 
