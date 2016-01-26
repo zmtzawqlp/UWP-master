@@ -498,6 +498,20 @@ namespace MyUWPToolkit
                    previewImageScale);
         }
 
+
+        public async Task SaveCroppedBitmap(StorageFile croppedImageFile, Size? imageSize = null)
+        {
+
+            double widthScale = imageCanvas.Width / this.sourceImagePixelWidth;
+            double heightScale = imageCanvas.Height / this.sourceImagePixelHeight;
+
+            await CropBitmapHelper.SaveCroppedBitmapAsync(
+                  this.SourceImageFile,
+                  croppedImageFile,
+                  new Point(this.CropSelection.SelectedRect.X / widthScale, this.CropSelection.SelectedRect.Y / heightScale),
+                  new Size(this.CropSelection.SelectedRect.Width / widthScale, this.CropSelection.SelectedRect.Height / heightScale), imageSize);
+
+        }
         #endregion
     }
 }

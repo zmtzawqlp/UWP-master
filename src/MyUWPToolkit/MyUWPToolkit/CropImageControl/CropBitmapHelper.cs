@@ -117,11 +117,14 @@ namespace MyUWPToolkit
         /// <param name="cropSize">
         /// The size of the region to be cropped.
         /// </param>
+        /// <param name="imageSize">
+        /// The size of image to store.
+        /// </param>
         /// <returns>
         /// Whether the operation is successful.
         /// </returns>
         async public static Task SaveCroppedBitmapAsync(StorageFile originalImageFile, StorageFile newImageFile,
-            Point startPoint, Size cropSize)
+            Point startPoint, Size cropSize, Size? imageSize = null)
         {
 
             // Convert start point and size to integer.
@@ -129,10 +132,8 @@ namespace MyUWPToolkit
             uint startPointY = (uint)Math.Floor(startPoint.Y);
             uint height = (uint)Math.Floor(cropSize.Height);
             uint width = (uint)Math.Floor(cropSize.Width);
-
             using (IRandomAccessStream originalImgFileStream = await originalImageFile.OpenReadAsync())
             {
-
 
                 // Create a decoder from the stream. With the decoder, we can get 
                 // the properties of the image.
@@ -177,6 +178,12 @@ namespace MyUWPToolkit
                         encoderID,
                         newImgFileStream);
 
+                    if (imageSize != null)
+                    {
+                        bmpEncoder.BitmapTransform.ScaledHeight = (uint)imageSize.Value.Height;
+                        bmpEncoder.BitmapTransform.ScaledWidth = (uint)imageSize.Value.Width;
+                    }
+
                     // Set the pixel data to the cropped image.
                     bmpEncoder.SetPixelData(
                         BitmapPixelFormat.Bgra8,
@@ -189,6 +196,7 @@ namespace MyUWPToolkit
 
                     // Flush the data to file.
                     await bmpEncoder.FlushAsync();
+
                 }
             }
 
@@ -270,5 +278,7 @@ namespace MyUWPToolkit
             }
             await encoder.FlushAsync();
         }
+
+       
     }
 }
