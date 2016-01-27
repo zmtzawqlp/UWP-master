@@ -117,7 +117,10 @@
     <Compile Include="CropImageControl\CropImageSourceChangedEventHandler.cs" />
     <Compile Include="CropImageControl\CropSelection.cs" />
     <Compile Include="CropImageControl\CropSelectionSize.cs" />
+    <Compile Include="Panel\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefreshControl.cs" />
+    <Compile Include="Panel\PullToRefreshPanel.cs" />
+    <Compile Include="Panel\ScrollPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
     <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
@@ -143,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Include="Themes\PullToRefreshPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -152,6 +159,10 @@
     <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resource\default_ptr_rotate.png" />
+    <Content Include="Resource\indicator_arrow.png" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

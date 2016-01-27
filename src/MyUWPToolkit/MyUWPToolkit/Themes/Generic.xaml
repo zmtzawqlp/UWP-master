@@ -6,6 +6,7 @@
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshControl.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/ColumnChart.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/CropImageControl.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshPanel.Xaml"/>
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

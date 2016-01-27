@@ -36,6 +36,10 @@ namespace ToolkitSample
 
             listView.Loaded += IncrementalLoading_Loaded;
 
+            var u = DateTime.Now;
+            var s = DateTime.Now.ToString("MM-dd");
+            var s1 = DateTime.Now.ToString("hh:mm");
+            var a = s;
         }
 
         void IncrementalLoading_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)

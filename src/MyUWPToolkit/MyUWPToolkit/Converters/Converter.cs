@@ -112,4 +112,24 @@ namespace MyUWPToolkit.Converters
             throw new NotImplementedException();
         }
     }
+
+
+    public sealed class DateTimeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var datetime = (DateTime)value;
+            var format = (string)parameter;
+            if (datetime!=null)
+            {
+                return datetime.ToString(format);
+            }
+            return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
