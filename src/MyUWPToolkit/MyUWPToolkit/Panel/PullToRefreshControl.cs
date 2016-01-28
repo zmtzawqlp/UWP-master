@@ -93,6 +93,8 @@ namespace MyUWPToolkit
                 return;
             }
 
+            _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
+            _scrollViewer.ChangeView(null, _panelHeader.Height, null);
             if (IsReachThreshold)
             {
                 if (PullToRefresh != null)
@@ -100,8 +102,6 @@ namespace MyUWPToolkit
                     PullToRefresh(this, null);
                 }
             }
-            _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
-            _scrollViewer.ChangeView(null, _panelHeader.Height, null);
         }
 
         public PullToRefreshControl()

@@ -167,12 +167,12 @@ namespace MyUWPToolkit
         {
             //IsRefreshing = true;
             _scrollViewer.DirectManipulationCompleted -= _scrollViewer_DirectManipulationCompleted;
-            LastRefreshTime = DateTime.Now;
             _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
             _scrollViewer.ChangeView(null, _panelHeader.Height, null);
 
             if (PullToRefresh != null)
             {
+                LastRefreshTime = DateTime.Now;
                 PullToRefresh(this, null);
             }
 
