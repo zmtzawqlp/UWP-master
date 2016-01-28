@@ -25,12 +25,11 @@ namespace ToolkitSample
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CropImageControlPage : Page
+    public sealed partial class ImageToolPage : Page
     {
-        public CropImageControlPage()
+        public ImageToolPage()
         {
             this.InitializeComponent();
-            
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -48,9 +47,9 @@ namespace ToolkitSample
 
             if (photo != null)
             {
-                CropImageControl.SourceImageFile = photo;
+                imageTool.SourceImageFile = photo;
             }
-       
+
         }
 
         private async Task<StorageFile> GetPhotoByPictureLibrary()
@@ -85,21 +84,25 @@ namespace ToolkitSample
 
             return photo;
         }
- 
+
 
 
         private async void CropButton_Click(object sender, RoutedEventArgs e)
         {
-            Popup p = new Popup();
-            Image image = new Image();
-            image.Source=await CropImageControl.GetCropImageSource();
-            p.Child = image;
-            p.IsOpen = true;
+            //Popup p = new Popup();
+            //Image image = new Image();
+            //image.Source = await imageTool.GetCropImageSource();
+            //p.Child = image;
+            //p.IsOpen = true;
+            await imageTool.RotateAsync(RotationAngle.Clockwise90Degrees);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            CropImageControl.ReSetSelectionRect();
+           // imageTool.ReSetSelectionRect();
         }
     }
+
+
+    
 }

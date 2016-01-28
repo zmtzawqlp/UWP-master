@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI.Xaml;
 
 namespace MyUWPToolkit
 {
@@ -94,6 +95,19 @@ namespace MyUWPToolkit
             get
             {
                 return (SelectedRect.Right - SelectedRect.Left) / 3 * 2 + SelectedRect.Left;
+            }
+        }
+
+
+        private Visibility _cropSelectionVisibility=Visibility.Collapsed;
+
+        public Visibility CropSelectionVisibility
+        {
+            get { return _cropSelectionVisibility; }
+            set
+            {
+                _cropSelectionVisibility = value;
+                this.OnPropertyChanged("CropSelectionVisibility");
             }
         }
 

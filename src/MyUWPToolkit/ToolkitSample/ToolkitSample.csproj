@@ -104,6 +104,9 @@
     <Compile Include="CropImageControlPage.xaml.cs">
       <DependentUpon>CropImageControlPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ImageToolPage.xaml.cs">
+      <DependentUpon>ImageToolPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CropImageControlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImageToolPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

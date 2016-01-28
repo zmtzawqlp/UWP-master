@@ -16,10 +16,8 @@ using System.Diagnostics;
 
 namespace MyUWPToolkit
 {
-    public class CropBitmapHelper
+    public class BitmapHelper
     {
-
-
         /// <summary>
         /// Get a cropped bitmap from a image file.
         /// </summary>
@@ -35,7 +33,7 @@ namespace MyUWPToolkit
         /// <returns>
         /// The cropped image.
         /// </returns>
-        async public static Task<ImageSource> GetCroppedBitmapAsync(StorageFile originalImageFile,
+        async public static Task<WriteableBitmap> GetCroppedBitmapAsync(StorageFile originalImageFile,
             Point startPoint, Size corpSize, double scale)
         {
             if (double.IsNaN(scale) || double.IsInfinity(scale))
@@ -52,11 +50,11 @@ namespace MyUWPToolkit
             var pixels = await GetCroppedBitmapSourceAsync(originalImageFile, startPoint, corpSize, scale);
             // Stream the bytes into a WriteableBitmap
             WriteableBitmap cropBmp = new WriteableBitmap((int)width, (int)height);
-                Stream pixStream = cropBmp.PixelBuffer.AsStream();
-                pixStream.Write(pixels, 0, (int)(width * height * 4));
+            Stream pixStream = cropBmp.PixelBuffer.AsStream();
+            pixStream.Write(pixels, 0, (int)(width * height * 4));
 
-                return cropBmp;
-            
+            return cropBmp;
+
 
         }
         async public static Task<byte[]> GetCroppedBitmapSourceAsync(StorageFile originalImageFile,
@@ -97,7 +95,7 @@ namespace MyUWPToolkit
                 }
 
                 // Get the cropped pixels.
-                return  await GetPixelData(decoder, startPointX, startPointY, width, height,
+                return await GetPixelData(decoder, startPointX, startPointY, width, height,
                     scaledWidth, scaledHeight);
             }
 
@@ -202,6 +200,73 @@ namespace MyUWPToolkit
 
         }
 
+        async public static Task CloneBitmapAsync(StorageFile originalImageFile, StorageFile newImageFile)
+        {
+
+            // Convert start point and size to integer.
+  
+            using (IRandomAccessStream originalImgFileStream = await originalImageFile.OpenReadAsync())
+            {
+
+                // Create a decoder from the stream. With the decoder, we can get 
+                // the properties of the image.
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(originalImgFileStream);
+
+                // Refine the start point and the size. 
+
+                // Get the cropped pixels.
+                byte[] pixels = await GetPixelData(decoder, 0, 0, decoder.PixelWidth, decoder.PixelHeight,
+                    decoder.PixelWidth, decoder.PixelHeight);
+
+                using (IRandomAccessStream newImgFileStream = await newImageFile.OpenAsync(FileAccessMode.ReadWrite))
+                {
+
+                    Guid encoderID = Guid.Empty;
+
+                    switch (newImageFile.FileType.ToLower())
+                    {
+                        case ".png":
+                            encoderID = BitmapEncoder.PngEncoderId;
+                            break;
+                        case ".bmp":
+                            encoderID = BitmapEncoder.BmpEncoderId;
+                            break;
+                        default:
+                            encoderID = BitmapEncoder.JpegEncoderId;
+                            break;
+                    }
+
+                    // Create a bitmap encoder
+
+                    BitmapEncoder bmpEncoder = await BitmapEncoder.CreateAsync(
+                        encoderID,
+                        newImgFileStream);
+
+                    if (imageSize != null)
+                    {
+                        bmpEncoder.BitmapTransform.ScaledHeight = (uint)imageSize.Value.Height;
+                        bmpEncoder.BitmapTransform.ScaledWidth = (uint)imageSize.Value.Width;
+                    }
+
+                    // Set the pixel data to the cropped image.
+                    bmpEncoder.SetPixelData(
+                        BitmapPixelFormat.Bgra8,
+                        BitmapAlphaMode.Straight,
+                        decoder.PixelWidth,
+                        decoder.PixelHeight,
+                        decoder.DpiX,
+                        decoder.DpiY,
+                        pixels);
+
+                    // Flush the data to file.
+                    await bmpEncoder.FlushAsync();
+
+                }
+            }
+
+        }
+
+
         /// <summary>
         /// Use BitmapTransform to define the region to crop, and then get the pixel data in the region
         /// </summary>
@@ -279,6 +344,73 @@ namespace MyUWPToolkit
             await encoder.FlushAsync();
         }
 
-       
+        public static async Task RotateAsync(StorageFile sourcefile, WriteableBitmap bitmap, RotationAngle angle)
+        {
+
+            using (IRandomAccessStream sourceStream = await sourcefile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+                Guid encoderID = Guid.Empty;
+
+                switch (sourcefile.FileType.ToLower())
+                {
+                    case ".png":
+                        encoderID = BitmapEncoder.PngEncoderId;
+                        break;
+                    case ".bmp":
+                        encoderID = BitmapEncoder.BmpEncoderId;
+                        break;
+                    default:
+                        encoderID = BitmapEncoder.JpegEncoderId;
+                        break;
+                }
+
+                byte[] pixels = null;
+
+                using (var stream = bitmap.PixelBuffer.AsStream())
+                {
+                    pixels = new byte[stream.Length];
+                    stream.Read(pixels, 0, pixels.Length);
+                }
+                InMemoryRandomAccessStream outStream = new InMemoryRandomAccessStream();
+                // Create a bitmap encoder
+                BitmapEncoder bmpEncoder = await BitmapEncoder.CreateAsync(
+                    encoderID,
+                    outStream);
+                switch (angle)
+                {
+                    case RotationAngle.None:
+                        break;
+                    case RotationAngle.Clockwise90Degrees:
+                        bmpEncoder.BitmapTransform.Rotation = BitmapRotation.Clockwise90Degrees;
+                        break;
+                    case RotationAngle.Clockwise180Degrees:
+                        bmpEncoder.BitmapTransform.Rotation = BitmapRotation.Clockwise180Degrees;
+                        break;
+                    case RotationAngle.Clockwise270Degrees:
+                        bmpEncoder.BitmapTransform.Rotation = BitmapRotation.Clockwise270Degrees;
+                        break;
+                    default:
+                        break;
+                }
+                // Set the pixel data to the cropped image.
+                bmpEncoder.SetPixelData(
+                    BitmapPixelFormat.Bgra8,
+                    BitmapAlphaMode.Straight,
+                    (uint)bitmap.PixelWidth,
+                    (uint)bitmap.PixelHeight,
+                    decoder.DpiX,
+                    decoder.DpiY,
+                    pixels);
+
+                // Flush the data to file.
+                await bmpEncoder.FlushAsync();
+              
+            }
+
+
+          
+        }
+
     }
 }

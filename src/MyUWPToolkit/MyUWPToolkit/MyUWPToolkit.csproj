@@ -111,12 +111,14 @@
     <Compile Include="Common\BindingEvaluator.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
-    <Compile Include="CropImageControl\AspectRatio.cs" />
-    <Compile Include="CropImageControl\CropBitmapHelper.cs" />
-    <Compile Include="CropImageControl\CropImageControl.cs" />
-    <Compile Include="CropImageControl\CropImageSourceChangedEventHandler.cs" />
-    <Compile Include="CropImageControl\CropSelection.cs" />
-    <Compile Include="CropImageControl\CropSelectionSize.cs" />
+    <Compile Include="ImageControl\AspectRatio.cs" />
+    <Compile Include="ImageControl\BitmapHelper.cs" />
+    <Compile Include="ImageControl\Crop\CropImageControl.cs" />
+    <Compile Include="ImageControl\Crop\CropImageSourceChangedEventHandler.cs" />
+    <Compile Include="ImageControl\ImageTool.cs" />
+    <Compile Include="ImageControl\CropSelection.cs" />
+    <Compile Include="ImageControl\CropSelectionSize.cs" />
+    <Compile Include="ImageControl\RotationAngle.cs" />
     <Compile Include="Panel\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefreshControl.cs" />
     <Compile Include="Panel\PullToRefreshPanel.cs" />
@@ -132,6 +134,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\CropImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\ImageTool.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

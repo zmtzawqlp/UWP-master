@@ -176,7 +176,7 @@ namespace MyUWPToolkit
                         this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
                     }
 
-                    this.sourceImage.Source = await CropBitmapHelper.GetCroppedBitmapAsync(
+                    this.sourceImage.Source = await BitmapHelper.GetCroppedBitmapAsync(
                         this.SourceImageFile,
                         new Point(0, 0),
                         new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight),
@@ -461,7 +461,7 @@ namespace MyUWPToolkit
                     imageCanvas.Height / previewImageSize.Height);
             }
 
-            return await CropBitmapHelper.GetCroppedBitmapAsync(
+            return await BitmapHelper.GetCroppedBitmapAsync(
                    this.SourceImageFile,
                    new Point(this.CropSelection.SelectedRect.X / sourceImageWidthScale, this.CropSelection.SelectedRect.Y / sourceImageHeightScale),
                    previewImageSize,
@@ -491,7 +491,7 @@ namespace MyUWPToolkit
                     imageCanvas.Height / previewImageSize.Height);
             }
 
-            return await CropBitmapHelper.GetCroppedBitmapSourceAsync(
+            return await BitmapHelper.GetCroppedBitmapSourceAsync(
                    this.SourceImageFile,
                    new Point(this.CropSelection.SelectedRect.X / sourceImageWidthScale, this.CropSelection.SelectedRect.Y / sourceImageHeightScale),
                    previewImageSize,
@@ -505,7 +505,7 @@ namespace MyUWPToolkit
             double widthScale = imageCanvas.Width / this.sourceImagePixelWidth;
             double heightScale = imageCanvas.Height / this.sourceImagePixelHeight;
 
-            await CropBitmapHelper.SaveCroppedBitmapAsync(
+            await BitmapHelper.SaveCroppedBitmapAsync(
                   this.SourceImageFile,
                   croppedImageFile,
                   new Point(this.CropSelection.SelectedRect.X / widthScale, this.CropSelection.SelectedRect.Y / heightScale),
