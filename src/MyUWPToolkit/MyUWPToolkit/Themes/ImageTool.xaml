@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MyUWPToolkit">
-
+    xmlns:local="using:MyUWPToolkit"
+    xmlns:converters="using:MyUWPToolkit.Converters"
+    >
+    <converters:VisibilityConverter x:Key="InversedBooleanToVisibilityConverter" IsReversed="True"/>
     <Style x:Key="ImageToolScrollViewerStyle" TargetType="ScrollViewer">
         <Setter Property="HorizontalScrollMode" Value="Enabled"/>
         <Setter Property="VerticalScrollMode" Value="Enabled"/>
@@ -124,7 +126,7 @@
                             <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False" Maximum="{TemplateBinding ScrollableHeight}" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{TemplateBinding VerticalOffset}" ViewportSize="{TemplateBinding ViewportHeight}"/>
                             <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{TemplateBinding HorizontalOffset}" ViewportSize="{TemplateBinding ViewportWidth}"/>
                             <Border x:Name="ScrollBarSeparator" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Grid.Column="1" Grid.Row="1"/>
-                            <Canvas Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="{Binding CropSelectionVisibility}">
+                            <Canvas Grid.ColumnSpan="2" Visibility="{Binding CropSelectionVisibility}">
                                 <Path x:Name="nonselectRegion" Fill="#88FFFFFF"  >
                                     <Path.Data>
                                         <GeometryGroup>
@@ -171,10 +173,10 @@
                                 </Setter>
                             </Style>
                         </Grid.Resources>
-                        <Image x:Name="sourceImage"  Visibility="Visible"/>
-                        <Canvas x:Name="imageCanvas"  HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
-                            <ScrollViewer x:Name="scrollViewer"  Style="{StaticResource ImageToolScrollViewerStyle}">
-                                <Grid x:Name="imageGrid">
+                        <Image x:Name="sourceImage"  Visibility="Visible" Opacity="0"/>
+                        <Canvas x:Name="imageCanvas"  HorizontalAlignment="Stretch" IsHitTestVisible="{Binding CropSelectionVisibility,Converter={StaticResource InversedBooleanToVisibilityConverter}}"  VerticalAlignment="Stretch">
+                            <ScrollViewer x:Name="scrollViewer" Background="Green" Style="{StaticResource ImageToolScrollViewerStyle}">
+                                <Grid x:Name="imageGrid" Background="Red">
                                     <Image x:Name="editImage"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Grid>
                             </ScrollViewer>

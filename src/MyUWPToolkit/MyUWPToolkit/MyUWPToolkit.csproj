@@ -124,6 +124,7 @@
     <Compile Include="Panel\PullToRefreshPanel.cs" />
     <Compile Include="Panel\ScrollPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\FrameworkElementExtensions.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
     <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
   </ItemGroup>

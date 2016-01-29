@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -19,6 +21,7 @@ namespace MyUWPToolkit
 {
     [TemplatePart(Name = ScrollViewer, Type = typeof(ScrollViewer))]
     [TemplatePart(Name = ImageGrid, Type = typeof(Grid))]
+    [TemplatePart(Name = SelectRegion, Type = typeof(Path))]
     [TemplatePart(Name = ImageCanvas, Type = typeof(Canvas))]
     [TemplatePart(Name = SourceImage, Type = typeof(Image))]
     [TemplatePart(Name = EditImage, Type = typeof(Image))]
@@ -31,6 +34,7 @@ namespace MyUWPToolkit
         #region Fields
         private const string ScrollViewer = "scrollViewer";
         private const string ImageGrid = "imageGrid";
+        private const string SelectRegion = "selectRegion";
         private const string ImageCanvas = "imageCanvas";
         private const string SourceImage = "sourceImage";
         private const string EditImage = "editImage";
@@ -42,6 +46,8 @@ namespace MyUWPToolkit
         private Grid imageGrid;
         private ScrollViewer scrollViewer;
         private Canvas imageCanvas;
+        //in scrollviewer
+        private Path selectRegion;
         private Image sourceImage;
         private Image editImage;
         private Ellipse topLeftThumb;
@@ -118,8 +124,16 @@ namespace MyUWPToolkit
 
         // Using a DependencyProperty as the backing store for TempImageFile.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TempImageFileProperty =
-            DependencyProperty.Register("TempImageFile", typeof(StorageFile), typeof(ImageTool), new PropertyMetadata(null));
+            DependencyProperty.Register("TempImageFile", typeof(StorageFile), typeof(ImageTool), new PropertyMetadata(null, new PropertyChangedCallback(OnTempImageFileChanged)));
 
+        private static void OnTempImageFileChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = d as ImageTool;
+            if (control != null)
+            {
+                control.OnTempImageFileChanged();
+            }
+        }
 
 
 
@@ -150,6 +164,7 @@ namespace MyUWPToolkit
             imageCanvas = GetTemplateChild(ImageCanvas) as Canvas;
             sourceImage = GetTemplateChild(SourceImage) as Image;
             editImage = GetTemplateChild(EditImage) as Image;
+            //selectRegion = GetTemplateChild(SelectRegion) as Path;
 
             topLeftThumb = GetTemplateChild(TopLeftThumb) as Ellipse;
             topRightThumb = GetTemplateChild(TopRightThumb) as Ellipse;
@@ -161,6 +176,8 @@ namespace MyUWPToolkit
             AttachEvents();
 
         }
+
+        #region Initialize
         private void Initialize()
         {
             topLeftThumb.ManipulationMode = topRightThumb.ManipulationMode = bottomLeftThumb.ManipulationMode = bottomRightThumb.ManipulationMode =
@@ -176,6 +193,11 @@ namespace MyUWPToolkit
         {
             sourceImage.SizeChanged += SourceImage_SizeChanged;
             editImage.SizeChanged += EditImage_SizeChanged;
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                imageCanvas.PointerMoved += ImageCanvas_PointerMoved;
+            }
+
             // Handle the pointer events of the corners. 
             AddThumbEvents(topLeftThumb);
             AddThumbEvents(topRightThumb);
@@ -186,18 +208,19 @@ namespace MyUWPToolkit
             //selectRegion.ManipulationDelta += selectRegion_ManipulationDelta;
             //selectRegion.ManipulationCompleted += selectRegion_ManipulationCompleted;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+            scrollViewer.ViewChanging += ScrollViewer_ViewChanging;
+            //find selection path in scrollViewer
+            scrollViewer.Loaded += (s,e)=> 
+            {
+                this.selectRegion = this.scrollViewer.FindDescendantByName("selectRegion") as Path;
+            };
+            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
+
         }
 
-        private void EditImage_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            //this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () => {
-            scrollViewer.ChangeView(e.NewSize.Width, e.NewSize.Height, null, true);
-            //});
-        }
-
-        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            Debug.WriteLine("X:" + (sender as ScrollViewer).HorizontalOffset + ", Y:" + (sender as ScrollViewer).VerticalOffset);
+            
         }
 
         private void AddThumbEvents(Ellipse thumb)
@@ -206,6 +229,99 @@ namespace MyUWPToolkit
             //thumb.PointerMoved += Thumb_PointerMoved;
             //thumb.PointerReleased += Thumb_PointerReleased;
             //thumb.ManipulationDelta += Thumb_ManipulationDelta;  
+        }
+
+        #endregion
+
+        #region Handle manipulation in PC with mouse
+
+        private void ImageCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var point = e.GetCurrentPoint(editImage);
+            if (new Rect(0, 0, editImage.Width, editImage.Height).Contains(point.Position))
+            {
+                imageCanvas.ManipulationMode = ManipulationModes.All;
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeAll, 1);
+                imageCanvas.ManipulationDelta += ImageCanvas_ManipulationDelta;
+            }
+            else
+            {
+                imageCanvas.ManipulationMode = ManipulationModes.System;
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+                imageCanvas.ManipulationDelta -= ImageCanvas_ManipulationDelta;
+            }
+        }
+
+        private void ImageCanvas_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            scrollViewer.ChangeView(scrollViewer.HorizontalOffset - e.Delta.Translation.X, scrollViewer.VerticalOffset - e.Delta.Translation.Y, null, true);
+        }
+
+        #endregion
+
+        #region Source/TempIamgeFile changed
+        private async void OnSourceImageFileChanged()
+        {
+            if (_isTemplateLoaded && SourceImageFile != null)
+            {
+
+                StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+                TempImageFile = await SourceImageFile.CopyAsync(storageFolder, "Temp_" + SourceImageFile.Name, NameCollisionOption.ReplaceExisting);
+            }
+        }
+
+        private async void OnTempImageFileChanged()
+        {
+            if (_isTemplateLoaded && SourceImageFile != null && TempImageFile != null)
+            {
+                // Ensure the stream is disposed once the image is loaded
+                using (IRandomAccessStream fileStream = await TempImageFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
+
+                    this.sourceImagePixelHeight = decoder.PixelHeight;
+                    this.sourceImagePixelWidth = decoder.PixelWidth;
+                }
+
+                if (this.sourceImagePixelHeight < 2 * 30 ||
+                    this.sourceImagePixelWidth < 2 * 30)
+                {
+
+                }
+                else
+                {
+                    double sourceImageScale = 1;
+
+                    if (this.sourceImagePixelHeight < this.ActualHeight &&
+                        this.sourceImagePixelWidth < this.ActualWidth)
+                    {
+                        this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.None;
+                    }
+                    else
+                    {
+                        sourceImageScale = Math.Min(this.ActualWidth / this.sourceImagePixelWidth,
+                        this.ActualHeight / this.sourceImagePixelHeight);
+                        this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
+                    }
+                    this.sourceImage.Source = await BitmapHelper.GetCroppedBitmapAsync(
+                        this.TempImageFile,
+                        new Point(0, 0),
+                        new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight),
+                        sourceImageScale);
+                }
+            }
+        }
+
+        #endregion
+
+        #region CoreWindow/Source/Edit image size changed
+        private void EditImage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var width = this.CropSelection.SelectedRect.X - (this.ActualWidth - this.editImage.Width) / 2;
+            var height = this.CropSelection.SelectedRect.Y - (this.ActualHeight - this.editImage.Height) / 2;
+            scrollViewer.ChangeView(width, height, null, true);
+            //scrollViewer.ChangeView(e.NewSize.Width, e.NewSize.Height, null, true);
         }
 
         private void SourceImage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -223,25 +339,32 @@ namespace MyUWPToolkit
             }
             else
             {
-                if (imageGrid != null)
-                {
-                    imageGrid.Width = this.ActualWidth + e.NewSize.Width * 2;
-                    imageGrid.Height = this.ActualHeight + e.NewSize.Height * 2;
-                }
 
 
                 if (scrollViewer != null)
                 {
                     scrollViewer.Width = this.ActualWidth;
                     scrollViewer.Height = this.ActualHeight;
-
                 }
+
                 if (editImage != null)
                 {
                     editImage.Width = e.NewSize.Width;
                     editImage.Height = e.NewSize.Height;
                     editImage.Source = sourceImage.Source;
                 }
+                InitializeCropSelection();
+
+                if (imageGrid != null)
+                {
+                    //imageGrid.Width = this.ActualWidth + e.NewSize.Width * 2;
+                    //imageGrid.Height = this.ActualHeight + e.NewSize.Height * 2;
+
+                    imageGrid.Width = this.ActualWidth + (this.CropSelection.SelectedRect.X-(this.ActualWidth-this.editImage.Width)/2) *2;
+                    imageGrid.Height = this.ActualHeight + (this.CropSelection.SelectedRect.Y- (this.ActualHeight - this.editImage.Height) / 2) * 2;
+
+                }
+
 
                 //this.imageCanvas.Visibility = Visibility.Visible;
 
@@ -279,73 +402,108 @@ namespace MyUWPToolkit
             }
         }
 
-        private async void OnSourceImageFileChanged()
+        private void CoreWindow_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
         {
-            if (_isTemplateLoaded && SourceImageFile != null)
-            {
+            //Reisze image base on current windows size.
+            OnTempImageFileChanged();
+        }
+        #endregion
 
-                StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            var generalTransform = selectRegion.TransformToVisual(editImage);
+            var point = generalTransform.TransformBounds(CropSelection.SelectedRect);
+            Debug.WriteLine(point);
+            //imageGrid.Width *= scrollViewer.ZoomFactor;
+            //imageGrid.Height *= scrollViewer.ZoomFactor;
+            //imageGrid.Width = this.ActualWidth + (this.CropSelection.SelectedRect.X - (this.ActualWidth - this.editImage.Width * scrollViewer.ZoomFactor) / 2) * 2;
+            //imageGrid.Height = this.ActualHeight + (this.CropSelection.SelectedRect.Y - (this.ActualHeight - this.editImage.Height * scrollViewer.ZoomFactor) / 2) * 2;
 
-                TempImageFile = await storageFolder.CreateFileAsync("Temp_" + SourceImageFile.Name, CreationCollisionOption.ReplaceExisting);
+            //imageGrid.Width = 2*CropSelection.SelectedRect.X  + this.editImage.Width *(2- scrollViewer.ZoomFactor* scrollViewer.ZoomFactor);
 
-                await BitmapHelper.CloneBitmapAsync(this.SourceImageFile, TempImageFile);
+            //imageGrid.Height = 2*this.CropSelection.SelectedRect.Y + this.editImage.Height *(2- scrollViewer.ZoomFactor* scrollViewer.ZoomFactor);
 
-                // Ensure the stream is disposed once the image is loaded
-                using (IRandomAccessStream fileStream = await SourceImageFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                {
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
-
-                    this.sourceImagePixelHeight = decoder.PixelHeight;
-                    this.sourceImagePixelWidth = decoder.PixelWidth;
-                }
-
-                if (this.sourceImagePixelHeight < 2 * 30 ||
-                    this.sourceImagePixelWidth < 2 * 30)
-                {
-
-                }
-                else
-                {
-                    double sourceImageScale = 1;
-
-                    if (this.sourceImagePixelHeight < this.ActualHeight &&
-                        this.sourceImagePixelWidth < this.ActualWidth)
-                    {
-                        this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.None;
-                    }
-                    else
-                    {
-                        sourceImageScale = Math.Min(this.ActualWidth / this.sourceImagePixelWidth,
-                        this.ActualHeight / this.sourceImagePixelHeight);
-                        this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
-                    }
-                    this.sourceImage.Source = await BitmapHelper.GetCroppedBitmapAsync(
-                        this.SourceImageFile,
-                        new Point(0, 0),
-                        new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight),
-                        sourceImageScale);
-                }
-            }
         }
 
+
+        #region Crop
         public void StartEidtCrop()
         {
-            if (scrollViewer != null)
+            if (CropSelection != null)
             {
-                scrollViewer.IsHitTestVisible = true;
+                CropSelection.CropSelectionVisibility = Visibility.Visible;
+
+                InitializeCropSelection();
             }
-
-
         }
 
         public void FinishEditCrop()
         {
-            if (scrollViewer != null)
+            if (CropSelection != null)
             {
-                scrollViewer.IsHitTestVisible = false;
+                CropSelection.CropSelectionVisibility = Visibility.Collapsed;
             }
         }
 
+        void InitializeCropSelection()
+        {
+            //if (size.IsEmpty || double.IsNaN(size.Height) || size.Height <= 0)
+            //{
+            //    this.imageCanvas.Visibility = Visibility.Collapsed;
+            //    CropSelection.OuterRect = Rect.Empty;
+
+            //    CropSelection.SelectedRect = new Rect(0, 0, 0, 0);
+            //}
+            //else
+            //{
+            if (editImage == null)
+            {
+                return;
+            }
+            var width = this.ActualWidth;
+            var height = this.ActualHeight;
+            CropSelection.OuterRect = new Rect(0, 0, width, height);
+
+            //if (e.PreviousSize.IsEmpty || double.IsNaN(e.PreviousSize.Height) || e.PreviousSize.Height <= 0)
+            {
+                var rect = new Rect();
+                if (CropAspectRatio == AspectRatio.Custom)
+                {
+                    rect.Width = editImage.Width / (int)DefaultCropSelectionSize;
+                    rect.Height = editImage.Height / (int)DefaultCropSelectionSize;
+                }
+                else
+                {
+                    var min = Math.Min(editImage.Width, editImage.Height);
+                    rect.Width = rect.Height = min / (int)DefaultCropSelectionSize;
+                }
+
+                rect.X = (width - rect.Width) / (int)DefaultCropSelectionSize;
+                rect.Y = (height - rect.Height) / (int)DefaultCropSelectionSize;
+
+                CropSelection.SelectedRect = rect;
+            }
+            //    else
+            //    {
+            //        double scale = e.NewSize.Height / e.PreviousSize.Height;
+            //        //todo
+            //        CropSelection.ResizeSelectedRect(scale);
+
+            //    }
+
+            //}
+        }
+
+        void ResizeCropSelection(Size newSize, Size previousSize)
+        {
+            double scale = newSize.Height / previousSize.Height;
+
+            CropSelection.ResizeSelectedRect(scale);
+        }
+        #endregion
+
+
+        #region Rotate
         public async Task RotateAsync(RotationAngle angle)
         {
             if (SourceImageFile == null)
@@ -353,11 +511,13 @@ namespace MyUWPToolkit
                 return;
             }
 
-            if (EditImageSource!=null)
+            if (TempImageFile != null)
             {
-               await BitmapHelper.RotateAsync(this.SourceImageFile,EditImageSource,angle);
+                await BitmapHelper.RotateAsync(this.TempImageFile, angle);
+                OnTempImageFileChanged();
             }
         }
+        #endregion
 
     }
 }

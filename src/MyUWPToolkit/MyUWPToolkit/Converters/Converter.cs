@@ -12,7 +12,7 @@ namespace MyUWPToolkit.Converters
     /// Value converter that translates true to <see cref="Visibility.Visible"/> and false to
     /// <see cref="Visibility.Collapsed"/>.
     /// </summary>
-    public sealed class Converter : IValueConverter
+    public sealed class VisibilityConverter : IValueConverter
     {
         /// <summary>
         /// If true - converts from Visibility to Boolean.

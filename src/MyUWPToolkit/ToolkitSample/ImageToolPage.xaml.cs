@@ -48,7 +48,7 @@ namespace ToolkitSample
             if (photo != null)
             {
                 imageTool.SourceImageFile = photo;
-                imageTool.StartEidtCrop();
+                //imageTool.StartEidtCrop();
             }
 
         }
@@ -95,12 +95,14 @@ namespace ToolkitSample
             //image.Source = await imageTool.GetCropImageSource();
             //p.Child = image;
             //p.IsOpen = true;
-            await imageTool.RotateAsync(RotationAngle.Clockwise90Degrees);
+            // await imageTool.RotateAsync(RotationAngle.Clockwise90Degrees);
+            imageTool.StartEidtCrop();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-           // imageTool.ReSetSelectionRect();
+            // imageTool.ReSetSelectionRect();
+            imageTool.FinishEditCrop();
         }
     }
 
