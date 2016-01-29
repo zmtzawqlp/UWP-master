@@ -210,10 +210,10 @@ namespace MyUWPToolkit
 
         private void SourceImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (CropSelection == null || CropSelection.CropSelectionVisibility == Visibility.Collapsed)
-            {
-                return;
-            }
+            //if (CropSelection == null || CropSelection.CropSelectionVisibility == Visibility.Collapsed)
+            //{
+            //    return;
+            //}
             if (e.NewSize.IsEmpty || double.IsNaN(e.NewSize.Height) || e.NewSize.Height <= 0)
             {
                 //this.imageCanvas.Visibility = Visibility.Collapsed;
@@ -319,7 +319,7 @@ namespace MyUWPToolkit
                         this.ActualHeight / this.sourceImagePixelHeight);
                         this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
                     }
-                    EditImageSource = await BitmapHelper.GetCroppedBitmapAsync(
+                    this.sourceImage.Source = await BitmapHelper.GetCroppedBitmapAsync(
                         this.SourceImageFile,
                         new Point(0, 0),
                         new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight),

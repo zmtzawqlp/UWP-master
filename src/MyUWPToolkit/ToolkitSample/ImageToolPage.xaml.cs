@@ -48,6 +48,7 @@ namespace ToolkitSample
             if (photo != null)
             {
                 imageTool.SourceImageFile = photo;
+                imageTool.StartEidtCrop();
             }
 
         }

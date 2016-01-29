@@ -171,8 +171,8 @@
                                 </Setter>
                             </Style>
                         </Grid.Resources>
-                        <Image x:Name="sourceImage" Source="{TemplateBinding EditImageSource}" Visibility="Visible"/>
-                        <Canvas x:Name="imageCanvas"  HorizontalAlignment="Stretch" IsHitTestVisible="False" VerticalAlignment="Stretch">
+                        <Image x:Name="sourceImage"  Visibility="Visible"/>
+                        <Canvas x:Name="imageCanvas"  HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
                             <ScrollViewer x:Name="scrollViewer"  Style="{StaticResource ImageToolScrollViewerStyle}">
                                 <Grid x:Name="imageGrid">
                                     <Image x:Name="editImage"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
