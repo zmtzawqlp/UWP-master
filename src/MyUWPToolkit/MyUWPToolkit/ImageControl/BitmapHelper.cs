@@ -126,8 +126,8 @@ namespace MyUWPToolkit
         {
 
             // Convert start point and size to integer.
-            uint startPointX = (uint)Math.Floor(startPoint.X);
-            uint startPointY = (uint)Math.Floor(startPoint.Y);
+            uint startPointX = (uint)Math.Floor(startPoint.X > 0 ? startPoint.X : 0);
+            uint startPointY = (uint)Math.Floor(startPoint.Y > 0 ? startPoint.Y : 0);
             uint height = (uint)Math.Floor(cropSize.Height);
             uint width = (uint)Math.Floor(cropSize.Width);
             using (IRandomAccessStream originalImgFileStream = await originalImageFile.OpenReadAsync())
@@ -367,7 +367,7 @@ namespace MyUWPToolkit
                 }
                 // Flush the data to file.
                 await encoder.FlushAsync();
-              
+
             }
         }
 

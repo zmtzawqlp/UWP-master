@@ -7,23 +7,41 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" xmlns:controls="using:MyUWPToolkit"
     >
+    <Page.TopAppBar>
+        <CommandBar>
+            <AppBarButton Label="Take a photo"  Content="Take a photo" Icon="Camera" Click="Button_Click">
 
+            </AppBarButton>
+
+            <AppBarButton Label="Pick from picture Library" Content="Pick from picture Library" Icon="Pictures"  Click="Button_Click">
+
+            </AppBarButton>
+
+            <AppBarButton Label="Save" Content="Save" x:Name="SaveButton" Icon="SaveLocal" Click="saveButton_Click" >
+
+            </AppBarButton>
+        </CommandBar>
+    </Page.TopAppBar>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Button Content="Take a photo" Click="Button_Click"></Button>
-        <Button Content="Pick from picture Library" Click="Button_Click" Margin="200,0,0,0"/>
-        <controls:ImageTool x:Name="imageTool" Grid.Row="1" CropAspectRatio="Square" DefaultCropSelectionSize="Half" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <controls:ImageTool x:Name="imageTool"  CropAspectRatio="Square" DefaultCropSelectionSize="Half" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton Content="Crop" x:Name="CropButton"  Click="CropButton_Click">
+            <AppBarButton Label="Crop" Content="Crop" x:Name="CropButton" Icon="Crop"  Click="CropButton_Click">
 
             </AppBarButton>
-            <AppBarButton Content="Cancel" x:Name="CancelButton" Click="CancelButton_Click">
+
+            <AppBarButton Label="Rotate" Content="Rotate" x:Name="RotateButton" Icon="Rotate"  Click="RotateButton_Click">
+
+            </AppBarButton>
+            <AppBarButton Label="CancelEdit" Content="Cancel" Icon="Cancel" x:Name="CancelEditButton" Click="CancelEditButton_Click" >
+
+            </AppBarButton>
+            <AppBarButton Label="Ok" Content="Ok" x:Name="OkButton" Icon="Accept" Click="OkButton_Click" Visibility="Collapsed">
+
+            </AppBarButton>
+            <AppBarButton Label="Cancel" Content="Cancel" Icon="Cancel" x:Name="CancelButton" Click="CancelButton_Click" Visibility="Collapsed">
 
             </AppBarButton>
         </CommandBar>

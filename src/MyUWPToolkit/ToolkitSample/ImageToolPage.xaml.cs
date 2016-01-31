@@ -88,24 +88,67 @@ namespace ToolkitSample
 
 
 
-        private async void CropButton_Click(object sender, RoutedEventArgs e)
+        private void CropButton_Click(object sender, RoutedEventArgs e)
         {
-            //Popup p = new Popup();
-            //Image image = new Image();
-            //image.Source = await imageTool.GetCropImageSource();
-            //p.Child = image;
-            //p.IsOpen = true;
-            // await imageTool.RotateAsync(RotationAngle.Clockwise90Degrees);
+
             imageTool.StartEidtCrop();
+            CropButton.Visibility = Visibility.Collapsed;
+            RotateButton.Visibility = Visibility.Collapsed;
+            CancelEditButton.Visibility = Visibility.Collapsed;
+            OkButton.Visibility = Visibility.Visible;
+            CancelButton.Visibility = Visibility.Visible;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            // imageTool.ReSetSelectionRect();
-            imageTool.FinishEditCrop();
+            imageTool.CancelEditCrop();
+            CropButton.Visibility = Visibility.Visible;
+            RotateButton.Visibility = Visibility.Visible;
+            CancelEditButton.Visibility = Visibility.Visible;
+            OkButton.Visibility = Visibility.Collapsed;
+            CancelButton.Visibility = Visibility.Collapsed;
+        }
+
+        private async void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = await imageTool.FinishEditCrop();
+            if (result)
+            {
+                CropButton.Visibility = Visibility.Visible;
+                RotateButton.Visibility = Visibility.Visible;
+                CancelEditButton.Visibility = Visibility.Visible;
+                OkButton.Visibility = Visibility.Collapsed;
+                CancelButton.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        private void RotateButton_Click(object sender, RoutedEventArgs e)
+        {
+            imageTool.RotateAsync(RotationAngle.Clockwise90Degrees);
+        }
+
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            FileSavePicker savePicker = new FileSavePicker();
+
+            savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+
+         
+            savePicker.FileTypeChoices["jpg"]=new List<string>{ ".jpg" };
+            savePicker.FileTypeChoices["jpeg"] = new List<string> { ".jpeg" };
+            savePicker.FileTypeChoices["png"] = new List<string> { ".png" };
+
+            var file= await savePicker.PickSaveFileAsync();
+            imageTool.SaveBitmap(file);
+        }
+
+        private void CancelEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            imageTool.CancelEdit();
         }
     }
 
 
-    
+
 }

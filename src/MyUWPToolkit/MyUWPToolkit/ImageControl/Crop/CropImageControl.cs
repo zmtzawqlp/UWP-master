@@ -296,7 +296,6 @@ namespace MyUWPToolkit
 
         }
 
-
         private void Thumb_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(this);
@@ -468,7 +467,7 @@ namespace MyUWPToolkit
                    previewImageScale);
         }
 
-        public async Task<Byte[]> GetCropImageSourceDatas()
+        public async Task<Byte[]> GetCropImageSourceData()
         {
 
             double sourceImageWidthScale = imageCanvas.Width / this.sourceImagePixelWidth;

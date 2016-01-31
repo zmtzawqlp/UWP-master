@@ -149,7 +149,7 @@ namespace MyUWPToolkit
 
         }
 
-        internal void UpdateSelectedRect(string ThumbName, double xUpdate, double yUpdate)
+        internal void UpdateSelectedRect(string ThumbName, double xUpdate, double yUpdate,Rect? outerRect=null)
         {
 
 
@@ -187,11 +187,12 @@ namespace MyUWPToolkit
             var rightTop = new Point(rect.Right, rect.Top);
             var rightBottom = new Point(rect.Right, rect.Bottom);
 
+            var outerRect1 = outerRect!=null ? outerRect.Value: OuterRect;
 
-            if (OuterRect.Contains(leftTop)
-                && OuterRect.Contains(leftBottom)
-                && OuterRect.Contains(rightTop)
-                && OuterRect.Contains(rightBottom)
+            if (outerRect1.Contains(leftTop)
+                && outerRect1.Contains(leftBottom)
+                && outerRect1.Contains(rightTop)
+                && outerRect1.Contains(rightBottom)
                 && rect.Width >= 2 * MinSelectRegionSize
                 && rect.Height >= 2 * MinSelectRegionSize)
             {

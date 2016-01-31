@@ -10,6 +10,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -63,6 +64,36 @@ namespace MyUWPToolkit
         /// The previous points of all the pointers.
         /// </summary>
         Dictionary<uint, Point?> pointerPositionHistory = new Dictionary<uint, Point?>();
+
+
+        /// <summary>
+        /// The y distance between cropSelection top left and image top left
+        /// </summary>
+        private double ScrollableHeight
+        {
+            get
+            {
+                //cropSelection top left
+                return this.CropSelection.SelectedRect.Y
+                //image top left
+                - (this.ActualHeight - this.editImage.Height * scrollViewer.ZoomFactor) / 2;
+            }
+        }
+
+        /// <summary>
+        /// The x distance between cropSelection top left and image top left
+        /// </summary>
+        private double ScrollableWidth
+        {
+            get
+            {
+                //cropSelection top left
+                return this.CropSelection.SelectedRect.X
+                //image top left
+               - (this.ActualWidth - this.editImage.Width * scrollViewer.ZoomFactor) / 2;
+
+            }
+        }
 
         #endregion
 
@@ -204,31 +235,24 @@ namespace MyUWPToolkit
             AddThumbEvents(bottomLeftThumb);
             AddThumbEvents(bottomRightThumb);
 
-            // Handle the manipulation events of the selectRegion
-            //selectRegion.ManipulationDelta += selectRegion_ManipulationDelta;
-            //selectRegion.ManipulationCompleted += selectRegion_ManipulationCompleted;
+
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            scrollViewer.ViewChanging += ScrollViewer_ViewChanging;
-            //find selection path in scrollViewer
-            scrollViewer.Loaded += (s,e)=> 
+
+            scrollViewer.Loaded += (s, e) =>
             {
                 this.selectRegion = this.scrollViewer.FindDescendantByName("selectRegion") as Path;
+                var canvas = this.scrollViewer.FindDescendantByName("CropSelectionCanvas") as Canvas;
+                //canvas.ManipulationMode = ManipulationModes.All;
             };
             Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
-
-        }
-
-        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
-        {
-            
         }
 
         private void AddThumbEvents(Ellipse thumb)
         {
-            //thumb.PointerPressed += Thumb_PointerPressed;
-            //thumb.PointerMoved += Thumb_PointerMoved;
-            //thumb.PointerReleased += Thumb_PointerReleased;
-            //thumb.ManipulationDelta += Thumb_ManipulationDelta;  
+            thumb.PointerPressed += Thumb_PointerPressed;
+            thumb.PointerMoved += Thumb_PointerMoved;
+            thumb.PointerReleased += Thumb_PointerReleased;
+            thumb.PointerEntered += Thumb_PointerEntered;
         }
 
         #endregion
@@ -238,7 +262,7 @@ namespace MyUWPToolkit
         private void ImageCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             var point = e.GetCurrentPoint(editImage);
-            if (new Rect(0, 0, editImage.Width, editImage.Height).Contains(point.Position))
+            if (new Rect(0, 0, editImage.Width*scrollViewer.ZoomFactor, editImage.Height*scrollViewer.ZoomFactor).Contains(point.Position))
             {
                 imageCanvas.ManipulationMode = ManipulationModes.All;
                 Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeAll, 1);
@@ -275,6 +299,7 @@ namespace MyUWPToolkit
         {
             if (_isTemplateLoaded && SourceImageFile != null && TempImageFile != null)
             {
+                scrollViewer.ZoomToFactor(1);
                 // Ensure the stream is disposed once the image is loaded
                 using (IRandomAccessStream fileStream = await TempImageFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
@@ -304,11 +329,23 @@ namespace MyUWPToolkit
                         this.ActualHeight / this.sourceImagePixelHeight);
                         this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
                     }
+                    ImageSource preSource = this.sourceImage.Source;
+                    
                     this.sourceImage.Source = await BitmapHelper.GetCroppedBitmapAsync(
                         this.TempImageFile,
                         new Point(0, 0),
                         new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight),
                         sourceImageScale);
+                    if (preSource!=null )
+                    {
+                        WriteableBitmap pre = preSource as WriteableBitmap;
+                        var source = this.sourceImage.Source as WriteableBitmap;
+                        if (pre.PixelWidth==source.PixelWidth && pre.PixelHeight == source.PixelHeight)
+                        {
+                            this.editImage.Source = this.sourceImage.Source;
+                        }
+                    }
+                   
                 }
             }
         }
@@ -318,9 +355,7 @@ namespace MyUWPToolkit
         #region CoreWindow/Source/Edit image size changed
         private void EditImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var width = this.CropSelection.SelectedRect.X - (this.ActualWidth - this.editImage.Width) / 2;
-            var height = this.CropSelection.SelectedRect.Y - (this.ActualHeight - this.editImage.Height) / 2;
-            scrollViewer.ChangeView(width, height, null, true);
+            scrollViewer.ChangeView(ScrollableWidth, ScrollableHeight, null, true);
             //scrollViewer.ChangeView(e.NewSize.Width, e.NewSize.Height, null, true);
         }
 
@@ -336,6 +371,7 @@ namespace MyUWPToolkit
                 //CropSelection.OuterRect = Rect.Empty;
 
                 //CropSelection.SelectedRect = new Rect(0, 0, 0, 0);
+               
             }
             else
             {
@@ -357,13 +393,9 @@ namespace MyUWPToolkit
 
                 if (imageGrid != null)
                 {
-                    //imageGrid.Width = this.ActualWidth + e.NewSize.Width * 2;
-                    //imageGrid.Height = this.ActualHeight + e.NewSize.Height * 2;
-
-                    imageGrid.Width = this.ActualWidth + (this.CropSelection.SelectedRect.X-(this.ActualWidth-this.editImage.Width)/2) *2;
-                    imageGrid.Height = this.ActualHeight + (this.CropSelection.SelectedRect.Y- (this.ActualHeight - this.editImage.Height) / 2) * 2;
-
+                    CalculateAndReSetExtentSize();
                 }
+
 
 
                 //this.imageCanvas.Visibility = Visibility.Visible;
@@ -409,20 +441,146 @@ namespace MyUWPToolkit
         }
         #endregion
 
+        #region Handle thumb
+        private void Thumb_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender == topLeftThumb || sender == bottomRightThumb)
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeNorthwestSoutheast, 1);
+            }
+            else if (sender == topRightThumb || sender == bottomLeftThumb)
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeNortheastSouthwest, 1);
+            }
+        }
+        private void Thumb_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            uint ptrId = e.GetCurrentPoint(this).PointerId;
+            if (this.pointerPositionHistory.ContainsKey(ptrId))
+            {
+                this.pointerPositionHistory.Remove(ptrId);
+            }
+
+            (sender as UIElement).ReleasePointerCapture(e.Pointer);
+
+            //event
+            //GetCropImageSource();
+            e.Handled = true;
+
+        }
+
+        private void Thumb_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(this);
+            //if (!CropSelection.OuterRect.Contains(pt.Position))
+            //{
+            //    return;
+            //}
+            uint ptrId = pt.PointerId;
+
+            if (pointerPositionHistory.ContainsKey(ptrId) && pointerPositionHistory[ptrId].HasValue)
+            {
+                Point currentPosition = pt.Position;
+                Point previousPosition = pointerPositionHistory[ptrId].Value;
+
+                double xUpdate = currentPosition.X - previousPosition.X;
+                double yUpdate = currentPosition.Y - previousPosition.Y;
+                //xUpdate = (int)xUpdate;
+                //yUpdate = (int)yUpdate;
+                if (CropAspectRatio == AspectRatio.Square)
+                {
+
+                    if (sender == topLeftThumb || sender == bottomRightThumb)
+                    {
+                        if (Math.Abs(xUpdate) >= Math.Abs(yUpdate))
+                        {
+                            yUpdate = xUpdate;
+                        }
+                        else
+                        {
+                            xUpdate = yUpdate;
+                        }
+                    }
+                    else
+                    {
+                        if (Math.Abs(xUpdate) >= Math.Abs(yUpdate))
+                        {
+                            yUpdate = -xUpdate;
+                        }
+                        else
+                        {
+                            xUpdate = -yUpdate;
+                        }
+                    }
+                    ////currentPosition = new Point() { X = previousPosition.X + xUpdate, Y = previousPosition.Y + yUpdate };
+                    //Debug.WriteLine((sender as Ellipse).Name + "----------" + xUpdate + ",,,," + yUpdate);
+                }
+
+
+                var generalTransform = editImage.TransformToVisual(this);
+                var imageRect = generalTransform.TransformBounds(new Rect(0, 0, editImage.Width * scrollViewer.ZoomFactor, editImage.Height * scrollViewer.ZoomFactor));
+
+
+                this.CropSelection.UpdateSelectedRect((sender as Ellipse).Name as string, xUpdate, yUpdate, imageRect);
+
+                pointerPositionHistory[ptrId] = currentPosition;
+
+              
+
+                UpdateCropSelection();
+
+               
+                CalculateAndReSetExtentSize();
+            }
+
+            e.Handled = true;
+        }
+
+        private void UpdateCropSelection()
+        {
+            var width = this.ActualWidth;
+            var height = this.ActualHeight;
+
+            var rect = new Rect();
+            rect.Width = CropSelection.SelectedRect.Width;
+            rect.Height = CropSelection.SelectedRect.Height;
+
+            rect.X = (int)((width - rect.Width) / 2);
+            rect.Y = (int)((height - rect.Height) / 2);
+
+            CropSelection.SelectedRect = rect;
+        }
+
+        private void Thumb_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            (sender as UIElement).CapturePointer(e.Pointer);
+
+            Windows.UI.Input.PointerPoint pt = e.GetCurrentPoint(this);
+
+            // Record the start point of the pointer.
+            pointerPositionHistory[pt.PointerId] = pt.Position;
+
+            e.Handled = true;
+        }
+        #endregion
+
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            var generalTransform = selectRegion.TransformToVisual(editImage);
-            var point = generalTransform.TransformBounds(CropSelection.SelectedRect);
-            Debug.WriteLine(point);
-            //imageGrid.Width *= scrollViewer.ZoomFactor;
-            //imageGrid.Height *= scrollViewer.ZoomFactor;
-            //imageGrid.Width = this.ActualWidth + (this.CropSelection.SelectedRect.X - (this.ActualWidth - this.editImage.Width * scrollViewer.ZoomFactor) / 2) * 2;
-            //imageGrid.Height = this.ActualHeight + (this.CropSelection.SelectedRect.Y - (this.ActualHeight - this.editImage.Height * scrollViewer.ZoomFactor) / 2) * 2;
+            //var generalTransform = selectRegion.TransformToVisual(editImage);
+            //var point = generalTransform.TransformBounds(CropSelection.SelectedRect);
+            //Debug.WriteLine(point);
+            if (!e.IsIntermediate)
+            {
+                CalculateAndReSetExtentSize();
+            }
+        }
 
-            //imageGrid.Width = 2*CropSelection.SelectedRect.X  + this.editImage.Width *(2- scrollViewer.ZoomFactor* scrollViewer.ZoomFactor);
-
-            //imageGrid.Height = 2*this.CropSelection.SelectedRect.Y + this.editImage.Height *(2- scrollViewer.ZoomFactor* scrollViewer.ZoomFactor);
-
+        private void CalculateAndReSetExtentSize()
+        {
+            var width = this.ActualWidth + ScrollableWidth * 2;
+            imageGrid.Width = width / scrollViewer.ZoomFactor;
+            var height = this.ActualHeight + ScrollableHeight * 2;
+            imageGrid.Height = height / scrollViewer.ZoomFactor;
         }
 
 
@@ -437,25 +595,46 @@ namespace MyUWPToolkit
             }
         }
 
-        public void FinishEditCrop()
+        public async Task<bool> FinishEditCrop()
         {
+
+            var generalTransform = selectRegion.TransformToVisual(editImage);
+            var cropRect = generalTransform.TransformBounds(CropSelection.SelectedRect);
+
+            var width = cropRect.Width / scrollViewer.ZoomFactor;
+            var height = cropRect.Height / scrollViewer.ZoomFactor;
+            if (Width < 2 * CropSelection. MinSelectRegionSize || height < 2 * CropSelection.MinSelectRegionSize)
+            {
+                MessageDialog dialog = new MessageDialog("CropSelection is ("+ (uint)Math.Floor(width) + ","+ (uint)Math.Floor(height) + ") now and should be more than " + 2*CropSelection.MinSelectRegionSize+" px");
+                await dialog.ShowAsync();
+                return false;
+            }
+            else
+            {
+                await SaveCropBitmap(TempImageFile);
+                scrollViewer.ZoomToFactor(1);
+                OnTempImageFileChanged();
+                if (CropSelection != null)
+                {
+                    CropSelection.CropSelectionVisibility = Visibility.Collapsed;
+                }
+                return true;
+            }
+           
+        }
+
+        public void CancelEditCrop()
+        {
+            scrollViewer.ZoomToFactor(1);
             if (CropSelection != null)
             {
                 CropSelection.CropSelectionVisibility = Visibility.Collapsed;
             }
+            scrollViewer.ChangeView(ScrollableWidth, ScrollableHeight, null, false);
         }
 
         void InitializeCropSelection()
         {
-            //if (size.IsEmpty || double.IsNaN(size.Height) || size.Height <= 0)
-            //{
-            //    this.imageCanvas.Visibility = Visibility.Collapsed;
-            //    CropSelection.OuterRect = Rect.Empty;
-
-            //    CropSelection.SelectedRect = new Rect(0, 0, 0, 0);
-            //}
-            //else
-            //{
             if (editImage == null)
             {
                 return;
@@ -478,20 +657,11 @@ namespace MyUWPToolkit
                     rect.Width = rect.Height = min / (int)DefaultCropSelectionSize;
                 }
 
-                rect.X = (width - rect.Width) / (int)DefaultCropSelectionSize;
-                rect.Y = (height - rect.Height) / (int)DefaultCropSelectionSize;
+                rect.X = (uint)Math.Floor(((width - rect.Width) / 2));
+                rect.Y = (uint)Math.Floor(((height - rect.Height) / 2));
 
                 CropSelection.SelectedRect = rect;
             }
-            //    else
-            //    {
-            //        double scale = e.NewSize.Height / e.PreviousSize.Height;
-            //        //todo
-            //        CropSelection.ResizeSelectedRect(scale);
-
-            //    }
-
-            //}
         }
 
         void ResizeCropSelection(Size newSize, Size previousSize)
@@ -500,8 +670,25 @@ namespace MyUWPToolkit
 
             CropSelection.ResizeSelectedRect(scale);
         }
-        #endregion
 
+
+        public async Task SaveCropBitmap(StorageFile newImageFile, Size? imageSize = null)
+        {
+            var generalTransform = selectRegion.TransformToVisual(editImage);
+            var cropRect = generalTransform.TransformBounds(CropSelection.SelectedRect);
+
+            var width = cropRect.Width / scrollViewer.ZoomFactor;
+            var height = cropRect.Height / scrollViewer.ZoomFactor;
+
+
+            await BitmapHelper.SaveCroppedBitmapAsync(
+                  this.TempImageFile,
+                  newImageFile,
+                  new Point(cropRect.X , cropRect.Y),
+                  new Size(width, height), imageSize);
+
+        }
+        #endregion
 
         #region Rotate
         public async Task RotateAsync(RotationAngle angle)
@@ -519,5 +706,32 @@ namespace MyUWPToolkit
         }
         #endregion
 
+        public async Task SaveBitmap(StorageFile newImageFile, Size? imageSize = null)
+        {
+            var generalTransform = selectRegion.TransformToVisual(editImage);
+            var cropRect = generalTransform.TransformBounds(CropSelection.SelectedRect);
+
+            var width = cropRect.Width / scrollViewer.ZoomFactor;
+            var height = cropRect.Height / scrollViewer.ZoomFactor;
+
+
+            await BitmapHelper.SaveCroppedBitmapAsync(
+                  this.TempImageFile,
+                  newImageFile,
+                  new Point(0, 0),
+                  new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight), imageSize);
+
+        }
+
+        public void CancelEdit()
+        {
+            OnSourceImageFileChanged();
+            scrollViewer.ZoomToFactor(1);
+            if (CropSelection != null)
+            {
+                CropSelection.CropSelectionVisibility = Visibility.Collapsed;
+            }
+            //scrollViewer.ChangeView(ScrollableWidth, ScrollableHeight, null, false);
+        }
     }
 }

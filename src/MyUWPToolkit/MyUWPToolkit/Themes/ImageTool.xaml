@@ -126,7 +126,7 @@
                             <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False" Maximum="{TemplateBinding ScrollableHeight}" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{TemplateBinding VerticalOffset}" ViewportSize="{TemplateBinding ViewportHeight}"/>
                             <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{TemplateBinding HorizontalOffset}" ViewportSize="{TemplateBinding ViewportWidth}"/>
                             <Border x:Name="ScrollBarSeparator" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Grid.Column="1" Grid.Row="1"/>
-                            <Canvas Grid.ColumnSpan="2" Visibility="{Binding CropSelectionVisibility}">
+                            <Canvas x:Name="CropSelectionCanvas"  Grid.ColumnSpan="2" Visibility="{Binding CropSelectionVisibility}">
                                 <Path x:Name="nonselectRegion" Fill="#88FFFFFF"  >
                                     <Path.Data>
                                         <GeometryGroup>
@@ -175,8 +175,8 @@
                         </Grid.Resources>
                         <Image x:Name="sourceImage"  Visibility="Visible" Opacity="0"/>
                         <Canvas x:Name="imageCanvas"  HorizontalAlignment="Stretch" IsHitTestVisible="{Binding CropSelectionVisibility,Converter={StaticResource InversedBooleanToVisibilityConverter}}"  VerticalAlignment="Stretch">
-                            <ScrollViewer x:Name="scrollViewer" Background="Green" Style="{StaticResource ImageToolScrollViewerStyle}">
-                                <Grid x:Name="imageGrid" Background="Red">
+                            <ScrollViewer x:Name="scrollViewer" MinZoomFactor="1" MaxZoomFactor="2" Style="{StaticResource ImageToolScrollViewerStyle}">
+                                <Grid x:Name="imageGrid" >
                                     <Image x:Name="editImage"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Grid>
                             </ScrollViewer>
