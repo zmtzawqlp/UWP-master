@@ -14,7 +14,7 @@ namespace MyUWPToolkit.Util
         /// <summary>
         /// Indicates whether the running device is windows phone device.
         /// </summary>
-        internal static bool IsWindowsPhoneDevice
+        public static bool IsWindowsPhoneDevice
         {
             get
             {
@@ -33,7 +33,7 @@ namespace MyUWPToolkit.Util
         /// <returns>
         /// 	<c>true</c> if the specified element is in visual tree; otherwise, <c>false</c>.
         /// </returns>
-        internal static bool IsInVisualTree(this FrameworkElement elem)
+        public static bool IsInVisualTree(this FrameworkElement elem)
         {
             var current = elem;
             FrameworkElement temp = null; // <<IP>> take parent once

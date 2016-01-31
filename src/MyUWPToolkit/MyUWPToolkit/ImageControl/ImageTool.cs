@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -261,8 +262,12 @@ namespace MyUWPToolkit
 
         private void ImageCanvas_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            if (e.Pointer.PointerDeviceType != PointerDeviceType.Mouse)
+            {
+                return;
+            }
             var point = e.GetCurrentPoint(editImage);
-            if (new Rect(0, 0, editImage.Width*scrollViewer.ZoomFactor, editImage.Height*scrollViewer.ZoomFactor).Contains(point.Position))
+            if (new Rect(0, 0, editImage.Width * scrollViewer.ZoomFactor, editImage.Height * scrollViewer.ZoomFactor).Contains(point.Position))
             {
                 imageCanvas.ManipulationMode = ManipulationModes.All;
                 Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeAll, 1);
@@ -330,22 +335,22 @@ namespace MyUWPToolkit
                         this.sourceImage.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
                     }
                     ImageSource preSource = this.sourceImage.Source;
-                    
+
                     this.sourceImage.Source = await BitmapHelper.GetCroppedBitmapAsync(
                         this.TempImageFile,
                         new Point(0, 0),
                         new Size(this.sourceImagePixelWidth, this.sourceImagePixelHeight),
                         sourceImageScale);
-                    if (preSource!=null )
+                    if (preSource != null)
                     {
                         WriteableBitmap pre = preSource as WriteableBitmap;
                         var source = this.sourceImage.Source as WriteableBitmap;
-                        if (pre.PixelWidth==source.PixelWidth && pre.PixelHeight == source.PixelHeight)
+                        if (pre.PixelWidth == source.PixelWidth && pre.PixelHeight == source.PixelHeight)
                         {
                             this.editImage.Source = this.sourceImage.Source;
                         }
                     }
-                   
+
                 }
             }
         }
@@ -371,7 +376,7 @@ namespace MyUWPToolkit
                 //CropSelection.OuterRect = Rect.Empty;
 
                 //CropSelection.SelectedRect = new Rect(0, 0, 0, 0);
-               
+
             }
             else
             {
@@ -444,6 +449,10 @@ namespace MyUWPToolkit
         #region Handle thumb
         private void Thumb_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            if (e.Pointer.PointerDeviceType != PointerDeviceType.Mouse)
+            {
+                return;
+            }
             if (sender == topLeftThumb || sender == bottomRightThumb)
             {
                 Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeNorthwestSoutheast, 1);
@@ -525,11 +534,11 @@ namespace MyUWPToolkit
 
                 pointerPositionHistory[ptrId] = currentPosition;
 
-              
+
 
                 UpdateCropSelection();
 
-               
+
                 CalculateAndReSetExtentSize();
             }
 
@@ -603,9 +612,9 @@ namespace MyUWPToolkit
 
             var width = cropRect.Width / scrollViewer.ZoomFactor;
             var height = cropRect.Height / scrollViewer.ZoomFactor;
-            if (Width < 2 * CropSelection. MinSelectRegionSize || height < 2 * CropSelection.MinSelectRegionSize)
+            if (Width < 2 * CropSelection.MinSelectRegionSize || height < 2 * CropSelection.MinSelectRegionSize)
             {
-                MessageDialog dialog = new MessageDialog("CropSelection is ("+ (uint)Math.Floor(width) + ","+ (uint)Math.Floor(height) + ") now and should be more than " + 2*CropSelection.MinSelectRegionSize+" px");
+                MessageDialog dialog = new MessageDialog("CropSelection is (" + (uint)Math.Floor(width) + "," + (uint)Math.Floor(height) + ") now and should be more than " + 2 * CropSelection.MinSelectRegionSize + " px");
                 await dialog.ShowAsync();
                 return false;
             }
@@ -620,7 +629,7 @@ namespace MyUWPToolkit
                 }
                 return true;
             }
-           
+
         }
 
         public void CancelEditCrop()
@@ -677,18 +686,27 @@ namespace MyUWPToolkit
             var generalTransform = selectRegion.TransformToVisual(editImage);
             var cropRect = generalTransform.TransformBounds(CropSelection.SelectedRect);
 
-            double widthScale = this.ActualWidth / this.sourceImagePixelWidth;
-            double heightScale = this.ActualHeight / this.sourceImagePixelHeight;
-            widthScale = widthScale > 1 ? 1 : widthScale;
-            heightScale = heightScale > 1 ? 1 : heightScale;
+            double sourceImageScale = 1;
 
-            var width = cropRect.Width / scrollViewer.ZoomFactor/ widthScale;
-            var height = cropRect.Height / scrollViewer.ZoomFactor/ widthScale;
+            if (this.sourceImagePixelHeight < this.ActualHeight &&
+                this.sourceImagePixelWidth < this.ActualWidth)
+            {
+            }
+            else
+            {
+                sourceImageScale = Math.Min(this.ActualWidth / this.sourceImagePixelWidth,
+                this.ActualHeight / this.sourceImagePixelHeight);
+            }
+
+            var x = cropRect.X / sourceImageScale;
+            var y = cropRect.Y / sourceImageScale;
+            var width = cropRect.Width  / sourceImageScale;
+            var height = cropRect.Height / sourceImageScale;
 
             await BitmapHelper.SaveCroppedBitmapAsync(
                   this.TempImageFile,
                   newImageFile,
-                  new Point(cropRect.X , cropRect.Y),
+                  new Point(x, y),
                   new Size(width, height), imageSize);
 
         }

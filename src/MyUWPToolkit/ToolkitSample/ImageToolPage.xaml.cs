@@ -1,4 +1,5 @@
 ﻿using MyUWPToolkit;
+using MyUWPToolkit.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,12 +74,15 @@ namespace ToolkitSample
 
             var photo = await cameraCaptureUI.CaptureFileAsync(CameraCaptureUIMode.Photo);
 
-            if (photo != null)
+            if (PlatformIndependent.IsWindowsPhoneDevice)
             {
-                using (var stream = await photo.OpenAsync(FileAccessMode.ReadWrite))
+                if (photo != null)
                 {
-                    //旋转图片
-                    await BitmapHelper.RotateCaptureImageByDisplayInformationAutoRotationPreferences(stream, stream);
+                    using (var stream = await photo.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        //旋转图片
+                        await BitmapHelper.RotateCaptureImageByDisplayInformationAutoRotationPreferences(stream, stream);
+                    }
                 }
             }
 
