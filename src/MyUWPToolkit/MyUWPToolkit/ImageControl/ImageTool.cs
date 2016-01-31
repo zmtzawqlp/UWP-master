@@ -677,9 +677,13 @@ namespace MyUWPToolkit
             var generalTransform = selectRegion.TransformToVisual(editImage);
             var cropRect = generalTransform.TransformBounds(CropSelection.SelectedRect);
 
-            var width = cropRect.Width / scrollViewer.ZoomFactor;
-            var height = cropRect.Height / scrollViewer.ZoomFactor;
+            double widthScale = this.ActualWidth / this.sourceImagePixelWidth;
+            double heightScale = this.ActualHeight / this.sourceImagePixelHeight;
+            widthScale = widthScale > 1 ? 1 : widthScale;
+            heightScale = heightScale > 1 ? 1 : heightScale;
 
+            var width = cropRect.Width / scrollViewer.ZoomFactor/ widthScale;
+            var height = cropRect.Height / scrollViewer.ZoomFactor/ widthScale;
 
             await BitmapHelper.SaveCroppedBitmapAsync(
                   this.TempImageFile,

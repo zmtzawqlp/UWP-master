@@ -15,9 +15,9 @@
                         <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsReachThreshold,Converter={StaticResource InversedBooleanToVisibilityConverter}}">
                             <Image Margin="-50,0,0,0" Width="50" Height="50" Source="ms-appx:///MyUWPToolkit/Resource/indicator_arrow.png"></Image>
                             <StackPanel Orientation="Vertical">
-                                <TextBlock  Text="下拉刷新" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock  Text="Pull to refresh" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock>
-                                    <Run Text="最近刷新:"/>
+                                    <Run Text="Recently refresh:"/>
                                     <Run Text="{Binding LastRefreshTime,Converter={StaticResource dateTimeConverter},ConverterParameter=MM-dd}"/>
                                     <Run Text="{Binding LastRefreshTime,Converter={StaticResource dateTimeConverter},ConverterParameter=hh:mm}"/>
                                 </TextBlock>
@@ -30,9 +30,9 @@
                                 </Image.RenderTransform>
                             </Image>
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Text="松开刷新" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Release to refresh" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock>
-                                    <Run Text="最近刷新:"/>
+                                    <Run Text="Recently refresh:"/>
                                     <Run Text="{Binding LastRefreshTime,Converter={StaticResource dateTimeConverter},ConverterParameter=MM-dd}"/>
                                     <Run Text="{Binding LastRefreshTime,Converter={StaticResource dateTimeConverter},ConverterParameter=hh:mm}"/>
                                 </TextBlock>
