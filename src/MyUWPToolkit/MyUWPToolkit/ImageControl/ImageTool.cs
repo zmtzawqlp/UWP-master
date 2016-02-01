@@ -123,8 +123,6 @@ namespace MyUWPToolkit
             set { _defaultCropSelectionSize = value; }
         }
 
-
-        public event CropImageSourceChangedEventHandler CropImageSourceChanged;
         #endregion
 
         #region DependencyProperty
