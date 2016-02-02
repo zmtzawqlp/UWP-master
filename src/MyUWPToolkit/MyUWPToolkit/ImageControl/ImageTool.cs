@@ -312,10 +312,11 @@ namespace MyUWPToolkit
                     this.sourceImagePixelWidth = decoder.PixelWidth;
                 }
 
-                if (this.sourceImagePixelHeight < 2 * 30 ||
-                    this.sourceImagePixelWidth < 2 * 30)
+                if (this.sourceImagePixelHeight < 2 * CropSelection.MinSelectRegionSize ||
+                     this.sourceImagePixelWidth < 2 * CropSelection.MinSelectRegionSize)
                 {
-
+                    MessageDialog dialog = new MessageDialog("Image size is (" + sourceImagePixelWidth + "," + sourceImagePixelHeight + ") now and should be more than " + 2 * CropSelection.MinSelectRegionSize + " px");
+                    await dialog.ShowAsync();
                 }
                 else
                 {
