@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -46,7 +47,7 @@ namespace ToolkitSample
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
@@ -58,7 +59,7 @@ namespace ToolkitSample
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
+                rootFrame.Navigated += RootFrame_Navigated;
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -68,6 +69,11 @@ namespace ToolkitSample
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+                SystemNavigationManager.GetForCurrentView().BackRequested += (s, ea) =>
+                {
+                    while (rootFrame.CanGoBack)
+                    { rootFrame.GoBack(); ea.Handled = true; }
+                };
             }
 
             if (rootFrame.Content == null)
@@ -75,10 +81,16 @@ namespace ToolkitSample
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(ImageToolPage), e.Arguments);
+                rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private void RootFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+               (e.Content as Page).Frame.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
         }
 
         /// <summary>

@@ -98,13 +98,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ColumnChartSample.xaml.cs">
+    <Compile Include="Views\ColumnChartSample.xaml.cs">
       <DependentUpon>ColumnChartSample.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CropImageControlPage.xaml.cs">
+    <Compile Include="Views\CropImageControlPage.xaml.cs">
       <DependentUpon>CropImageControlPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImageToolPage.xaml.cs">
+    <Compile Include="Views\ImageToolPage.xaml.cs">
       <DependentUpon>ImageToolPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
@@ -113,7 +113,7 @@
     <Compile Include="Model\Employee.cs" />
     <Compile Include="Model\TestData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PullToRefreshControl.xaml.cs">
+    <Compile Include="Views\PullToRefreshControl.xaml.cs">
       <DependentUpon>PullToRefreshControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -138,15 +138,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ColumnChartSample.xaml">
+    <Page Include="Views\ColumnChartSample.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CropImageControlPage.xaml">
+    <Page Include="Views\CropImageControlPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ImageToolPage.xaml">
+    <Page Include="Views\ImageToolPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,7 +154,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="PullToRefreshControl.xaml">
+    <Page Include="Views\PullToRefreshControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

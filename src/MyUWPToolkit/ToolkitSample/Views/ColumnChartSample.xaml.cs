@@ -26,10 +26,10 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             List<KeyValuePair<string, long>> valueList = new List<KeyValuePair<string, long>>();
-            valueList.Add(new KeyValuePair<string, long>("净超大", -60));
-            valueList.Add(new KeyValuePair<string, long>("净大单", 20));
-            valueList.Add(new KeyValuePair<string, long>("净中单", -50));
-            valueList.Add(new KeyValuePair<string, long>("净小单", 30));
+            valueList.Add(new KeyValuePair<string, long>("Data1", -60));
+            valueList.Add(new KeyValuePair<string, long>("Data2", 20));
+            valueList.Add(new KeyValuePair<string, long>("Data3", -50));
+            valueList.Add(new KeyValuePair<string, long>("Data4", 30));
             //valueList.Add(new KeyValuePair<string, int>("Project Manager", 40));
 
             cc.DataContext = valueList;

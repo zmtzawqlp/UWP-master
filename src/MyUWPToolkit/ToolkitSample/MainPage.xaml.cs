@@ -26,5 +26,27 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
         }
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            switch (e.ClickedItem.ToString())
+            {
+
+                case "ImageTool":
+                    Frame.Navigate(typeof(ImageToolPage));
+                    break;
+                case "PullToRefreshControl":
+                    Frame.Navigate(typeof(PullToRefreshControl));
+                    break;
+                case "CropImageControl":
+                    Frame.Navigate(typeof(CropImageControlPage));
+                    break;
+                case "ColumnChart":
+                    Frame.Navigate(typeof(ColumnChartSample));
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

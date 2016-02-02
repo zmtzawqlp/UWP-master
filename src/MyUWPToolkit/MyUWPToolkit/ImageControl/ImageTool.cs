@@ -185,6 +185,16 @@ namespace MyUWPToolkit
         public ImageTool()
         {
             this.DefaultStyleKey = typeof(ImageTool);
+            Unloaded += ImageTool_Unloaded;
+        }
+
+        private async void ImageTool_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (TempImageFile != null)
+            {
+                await TempImageFile.DeleteAsync();
+                TempImageFile = null;
+            }
         }
 
         protected override void OnApplyTemplate()
@@ -527,7 +537,8 @@ namespace MyUWPToolkit
 
                 var generalTransform = editImage.TransformToVisual(this);
                 var imageRect = generalTransform.TransformBounds(new Rect(0, 0, editImage.Width * scrollViewer.ZoomFactor, editImage.Height * scrollViewer.ZoomFactor));
-
+                //fix issue that sometime
+                imageRect = new Rect() { X = Math.Floor(imageRect.X), Y = Math.Floor(imageRect.Y), Width = imageRect.Width, Height = imageRect.Height };
 
                 this.CropSelection.UpdateSelectedRect((sender as Ellipse).Name as string, xUpdate, yUpdate, imageRect);
 

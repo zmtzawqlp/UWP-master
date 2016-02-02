@@ -7,7 +7,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <ListView ItemClick="ListView_ItemClick" IsItemClickEnabled="True" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5" Background="#fff" BorderThickness="1" BorderBrush="#d6d6d6">
+                        <TextBlock Text="{Binding}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <x:String>ImageTool</x:String>
+            <x:String>PullToRefreshControl</x:String>
+            <x:String>CropImageControl</x:String>
+            <x:String>ColumnChart</x:String>
+        </ListView>
     </Grid>
 </Page>
