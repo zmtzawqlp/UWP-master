@@ -119,10 +119,14 @@
     <Compile Include="ImageControl\CropSelection.cs" />
     <Compile Include="ImageControl\CropSelectionSize.cs" />
     <Compile Include="ImageControl\RotationAngle.cs" />
+    <Compile Include="Panel\IResizable.cs" />
     <Compile Include="Panel\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefreshControl.cs" />
     <Compile Include="Panel\PullToRefreshPanel.cs" />
     <Compile Include="Panel\ScrollPanel.cs" />
+    <Compile Include="Panel\VariableSizedGridView.cs" />
+    <Compile Include="Panel\VariableSizedWrapGridDataContext.cs" />
+    <Compile Include="Panel\VirtualizedVariableSizedWrapGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\FrameworkElementExtensions.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
@@ -157,6 +161,11 @@
     <Page Include="Themes\PullToRefreshPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\VariableSizedGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
   <ItemGroup>

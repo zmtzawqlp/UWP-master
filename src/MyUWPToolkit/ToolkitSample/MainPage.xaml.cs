@@ -25,10 +25,25 @@ namespace ToolkitSample
         public MainPage()
         {
             this.InitializeComponent();
+            Loaded += MainPage_Loaded;
+            
+            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
+        }
+
+        private void CoreWindow_SizeChanged(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.WindowSizeChangedEventArgs args)
+        {
+            
+        }
+
+        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            WebView webView = new WebView();
+            string width = await webView.InvokeScriptAsync("eval", new string[] { "window.screen.width.toString()" });
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            
             switch (e.ClickedItem.ToString())
             {
 
@@ -44,9 +59,15 @@ namespace ToolkitSample
                 case "ColumnChart":
                     Frame.Navigate(typeof(ColumnChartSample));
                     break;
+                case "VariableSizedGridView":
+                    Frame.Navigate(typeof(VariableSizedGridViewPage));
+                    break;
                 default:
                     break;
             }
         }
     }
+
+
+   
 }

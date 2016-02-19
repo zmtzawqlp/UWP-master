@@ -8,6 +8,7 @@
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/CropImageControl.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshPanel.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/ImageTool.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/VariableSizedGridView.Xaml"/>
 
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
