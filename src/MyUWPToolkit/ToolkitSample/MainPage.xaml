@@ -20,7 +20,7 @@
             <x:String>PullToRefreshControl</x:String>
             <x:String>CropImageControl</x:String>
             <x:String>ColumnChart</x:String>
-            <x:String>VariableSizedGridView</x:String>
+            <!--<x:String>VariableSizedGridView</x:String>-->
         </ListView>
     </Grid>
 </Page>
