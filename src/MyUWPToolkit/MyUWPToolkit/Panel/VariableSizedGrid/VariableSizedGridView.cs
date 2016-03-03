@@ -93,14 +93,7 @@ namespace MyUWPToolkit
                 }
             }
         }
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-
-
-            var a= base.GetContainerForItemOverride();
-            return a;
-        }
-
+     
         VariableSizedItemDataContext preitemDataContext = null;
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {

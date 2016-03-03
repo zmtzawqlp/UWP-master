@@ -124,8 +124,10 @@
     <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />
     <Compile Include="Panel\PullToRefresh\ScrollPanel.cs" />
     <Compile Include="Panel\VariableSizedGrid\IResizable.cs" />
+    <Compile Include="Panel\VariableSizedGrid\RowAdapter.cs" />
     <Compile Include="Panel\VariableSizedGrid\VariableSizedGridView.cs" />
     <Compile Include="Panel\VariableSizedGrid\VariableSizedWrapGridDataContext.cs" />
+    <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedGridView.cs" />
     <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedWrapGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\FrameworkElementExtensions.cs" />
@@ -163,6 +165,11 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\VariableSizedGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\VirtualizedVariableSizedGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

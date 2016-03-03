@@ -62,6 +62,9 @@ namespace ToolkitSample
                 case "VariableSizedGridView":
                     Frame.Navigate(typeof(VariableSizedGridViewPage));
                     break;
+                case "VirtualizedVariableSizedGridView":
+                    Frame.Navigate(typeof(VirtualizedVariableSizedGridViewPage));
+                    break;
                 default:
                     break;
             }

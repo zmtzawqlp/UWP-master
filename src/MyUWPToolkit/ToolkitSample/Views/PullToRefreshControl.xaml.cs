@@ -96,7 +96,7 @@ namespace ToolkitSample
         {
             get { return this.Count < _totalCount; }
         }
-
+      
         /// <summary>
         /// 异步加载数据（增量加载）
         /// </summary>
@@ -106,7 +106,7 @@ namespace ToolkitSample
         {
             if (_isBusy)
             {
-                throw new InvalidOperationException("忙着呢，先不搭理你");
+               // throw new InvalidOperationException("忙着呢，先不搭理你");
             }
             _isBusy = true;
 
@@ -120,7 +120,7 @@ namespace ToolkitSample
                            try
                            {
                                // 模拟长时任务
-                               await Task.Delay(1000);
+                               //await Task.Delay(1000);
 
                                // 增量加载的起始索引
                                var startIndex = this.Count;
