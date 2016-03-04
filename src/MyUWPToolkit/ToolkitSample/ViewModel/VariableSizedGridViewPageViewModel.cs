@@ -42,7 +42,7 @@ namespace ToolkitSample.ViewModel
                 results.Add(new Thing() { Name = "Malt", Height = 1, Width = 2, ImagePath = @"/Resource/Images/malt.jpg" });
                 results.Add(new Thing() { Name = "Water", Height = 1, Width = 2, ImagePath = @"/Resource/Images/water.jpg" });
                 results.Add(new Thing() { Name = "Yeast", Height = 1, Width = 1, ImagePath = @"/Resource/Images/yeast.jpg" });
-                results.Add(new Thing() { Name = "Sugar", Height = 2, Width = 2, ImagePath = @"/Resource/Images/sugars.jpg" });
+                //results.Add(new Thing() { Name = "Sugar", Height = 2, Width = 2, ImagePath = @"/Resource/Images/sugars.jpg" });
                 //results.Add(new Thing() { Name = "Herbs", Height = 2, Width = 1, ImagePath = @"/Resource/Images/herbs.jpg" });
                 //results.Add(new Thing() { Name = "Beer", Height = 2, Width = 2, ImagePath = @"/Resource/Images/beer.jpg" });
                 //results.Add(new Thing() { Name = "Hops", Height = 1, Width = 1, ImagePath = @"/Resource/Images/hops.jpg" });

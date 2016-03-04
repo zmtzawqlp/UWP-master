@@ -88,7 +88,7 @@ namespace ToolkitSample
             _funcGetData = getDataFunc;
             _totalCount = totalCount;
         }
-
+     
         /// <summary>
         /// 是否还有更多的数据
         /// </summary>

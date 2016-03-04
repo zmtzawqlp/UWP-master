@@ -59,9 +59,6 @@ namespace ToolkitSample
                 case "ColumnChart":
                     Frame.Navigate(typeof(ColumnChartSample));
                     break;
-                case "VariableSizedGridView":
-                    Frame.Navigate(typeof(VariableSizedGridViewPage));
-                    break;
                 case "VirtualizedVariableSizedGridView":
                     Frame.Navigate(typeof(VirtualizedVariableSizedGridViewPage));
                     break;

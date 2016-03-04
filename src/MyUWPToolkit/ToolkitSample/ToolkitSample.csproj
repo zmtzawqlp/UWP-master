@@ -126,9 +126,6 @@
     <Compile Include="Views\PullToRefreshControl.xaml.cs">
       <DependentUpon>PullToRefreshControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VariableSizedGridViewPage.xaml.cs">
-      <DependentUpon>VariableSizedGridViewPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\VirtualizedVariableSizedGridViewPage.xaml.cs">
       <DependentUpon>VirtualizedVariableSizedGridViewPage.xaml</DependentUpon>
     </Compile>
@@ -171,10 +168,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PullToRefreshControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\VariableSizedGridViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

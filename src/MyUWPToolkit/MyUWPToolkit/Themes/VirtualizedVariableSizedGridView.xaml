@@ -36,13 +36,13 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <GridView Background="Red" ItemsSource="{Binding}" ItemTemplate="{StaticResource local:VirtualizedVariableSizedGridView.GridViewItemTemplate}" ScrollViewer.VerticalScrollBarVisibility="Hidden" >
+                    <local:VariableSizedGridView ItemsSource="{Binding}" ScrollViewer.VerticalScrollBarVisibility="Hidden" >
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <VariableSizedWrapGrid ItemHeight="200" Orientation="Horizontal" ItemWidth="200" MaximumRowsOrColumns="4" />
+                                <VariableSizedWrapGrid Orientation="Horizontal"  MaximumRowsOrColumns="4" />
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
-                    </GridView>
+                    </local:VariableSizedGridView>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

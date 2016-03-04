@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -45,17 +46,11 @@ namespace ToolkitSample
 
                 return new MainPageViewModel().Things;
             });
-            //await _things.LoadMoreItemsAsync(10);
-            var a= new RowAdapter<Thing>(_things, 2);
-            this.demoList.ItemsSource = a;
-            //_things.LoadMoreItemsAsync(10);
-            a.CollectionChanged += A_CollectionChanged;
-        }
 
-        private void A_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.demoList.ItemsSource = null;
-            this.demoList.ItemsSource = sender;
+            var a= new ObservableRowAapter<Thing>(_things, 15);
+     
+            this.demoList.ItemsSource = a;
+
         }
     }
 

@@ -28,42 +28,28 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <!--<local:MyListView x:Name="demoList"  >
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
+        <!--<control:VariableSizedGridView x:Name="demoList"  >
+            <control:VariableSizedGridView.ItemTemplate>
                 <DataTemplate>
-                    <Border Width="180" Height="180" Margin="10" >
-                        <GridView ItemsSource="{Binding}">
-
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="2" >
-                                        <Image Source="{Binding Image}"
+                    <Grid Margin="2" >
+                        <Image Source="{Binding Image}"
                                Stretch="UniformToFill"
                                VerticalAlignment="Stretch"
                                HorizontalAlignment="Stretch" />
-                                        <StackPanel Margin="4"
+                        <StackPanel Margin="4"
                                     VerticalAlignment="Bottom"
                                     HorizontalAlignment="Left">
-                                            <TextBlock Text="{Binding Name}"
+                            <TextBlock Text="{Binding Name}"
                                        HorizontalAlignment="Center"
                                        Foreground="White"
                                        FontSize="16"
                                        Margin="6" />
-                                        </StackPanel>
-                                    </Grid>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
-                    </Border>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </local:MyListView>-->
-        <control:VirtualizedVariableSizedGridView x:Name="demoList" control:VirtualizedVariableSizedGridView.GridViewItemTemplate="{StaticResource VirtualizedVariableSizedGridViewItemTemplate}" >
+            </control:VariableSizedGridView.ItemTemplate>
+        </control:VariableSizedGridView>-->
+        <control:VirtualizedVariableSizedGridView x:Name="demoList">
            
             <control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
                 <DataTemplate>

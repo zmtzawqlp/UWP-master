@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyUWPToolkit
 {
-    public  interface IResizable
+    public interface IResizable
     {
         /// <summary>
         /// 
@@ -17,5 +17,48 @@ namespace MyUWPToolkit
         /// 
         /// </summary>
         int Height { get; set; }
+    }
+
+
+    public class ResizeableItems : List<ResizeableItem>
+    {
+
+        public ResizeableItem GetItem(double width)
+        {
+            foreach (var item in this)
+            {
+                if (item.Min<= width && item.Max >= width)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+    }
+
+    public class ResizeableItem
+    {
+        public int Columns { get; set; }
+
+        public int ItemWidth { get; set; }
+
+        public List<Resizable> Items {get;set; }
+
+        public double Min { get; set; }
+
+        public double Max { get; set; }
+    }
+
+    public class Resizable
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+       public int Width { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+       public int Height { get; set; }
     }
 }
