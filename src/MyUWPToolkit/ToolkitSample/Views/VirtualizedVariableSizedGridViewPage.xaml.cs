@@ -42,7 +42,7 @@ namespace ToolkitSample
             //demoList.IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
             //demoList.DataFetchSize = 2.0;
             //demoList.IncrementalLoadingThreshold = 1.0;
-            _things = new MyIncrementalLoading<Thing>(14, (startIndex, count) =>
+            _things = new MyIncrementalLoading<Thing>(1000, (startIndex, count) =>
             {
 
                 return new MainPageViewModel().Things;
