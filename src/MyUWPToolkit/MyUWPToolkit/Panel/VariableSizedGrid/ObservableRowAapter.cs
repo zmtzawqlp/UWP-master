@@ -12,9 +12,6 @@ namespace MyUWPToolkit
 {
     /// <summary>
     /// Only for VirtualizedVariableSizedGridView control
-    /// Known issue: if ISupportIncrementalLoading is not Infinitely.
-    /// if the ISupportIncrementalLoading vestigial items(it means MaxCount%RowItemsCount) less than RowItemsCount, 
-    /// it will miss the item.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ObservableRowAapter<T> : ObservableCollection<IEnumerable<T>>, ISupportIncrementalLoading, IResizeableItems
