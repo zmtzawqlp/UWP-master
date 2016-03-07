@@ -23,6 +23,19 @@ namespace MyUWPToolkit
     public class ResizeableItems : List<ResizeableItem>
     {
 
+        public int RowItemsCount
+        {
+            get
+            {
+                foreach (var item in this)
+                {
+                    return item.Items.Count;
+                }
+
+                return 0;
+            }
+        }
+
         public ResizeableItem GetItem(double width)
         {
             foreach (var item in this)
@@ -60,5 +73,11 @@ namespace MyUWPToolkit
         /// 
         /// </summary>
        public int Height { get; set; }
+    }
+
+    public interface IResizeableItems
+    {
+        int RowItemsCount { get;}
+        ResizeableItems ResizeableItems { get; set; }
     }
 }

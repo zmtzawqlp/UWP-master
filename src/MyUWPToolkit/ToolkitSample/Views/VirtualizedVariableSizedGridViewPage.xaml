@@ -7,25 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:MyUWPToolkit"
     mc:Ignorable="d">
-    <Page.Resources>
-        <DataTemplate x:Key="VirtualizedVariableSizedGridViewItemTemplate">
-            <Grid Margin="2" >
-                <Image Source="{Binding Image}"
-                               Stretch="UniformToFill"
-                               VerticalAlignment="Stretch"
-                               HorizontalAlignment="Stretch" />
-                <StackPanel Margin="4"
-                                    VerticalAlignment="Bottom"
-                                    HorizontalAlignment="Left">
-                    <TextBlock Text="{Binding Name}"
-                                       HorizontalAlignment="Center"
-                                       Foreground="White"
-                                       FontSize="16"
-                                       Margin="6" />
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
-    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <!--<control:VariableSizedGridView x:Name="demoList"  >

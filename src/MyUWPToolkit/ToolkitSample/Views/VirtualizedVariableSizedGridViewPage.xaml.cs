@@ -1,4 +1,5 @@
 ﻿using MyUWPToolkit;
+using MyUWPToolkit.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -22,7 +24,7 @@ using Windows.UI.Xaml.Navigation;
 namespace ToolkitSample
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// 
     /// </summary>
     public sealed partial class VirtualizedVariableSizedGridViewPage : Page
     {
@@ -30,6 +32,7 @@ namespace ToolkitSample
         public VirtualizedVariableSizedGridViewPage()
         {
             this.InitializeComponent();
+          
             Loaded += VirtualizedVariableSizedGridView_Loaded;
         }
 
@@ -39,55 +42,24 @@ namespace ToolkitSample
             //demoList.IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
             //demoList.DataFetchSize = 2.0;
             //demoList.IncrementalLoadingThreshold = 1.0;
-            _things = new MyIncrementalLoading<Thing>(1000, (startIndex, count) =>
+            _things = new MyIncrementalLoading<Thing>(14, (startIndex, count) =>
             {
-                //lblLog.Text += string.Format("从索引 {0} 处开始获取 {1} 条数据", startIndex, count);
-                //lblLog.Text += Environment.NewLine;
 
                 return new MainPageViewModel().Things;
             });
 
-            var a= new ObservableRowAapter<Thing>(_things, 15);
-     
-            this.demoList.ItemsSource = a;
-
-        }
-    }
-
-    public class MyListView : ListView
-    {
-        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
-        {
-            
-            base.PrepareContainerForItemOverride(element, item);
-        }
-
-
-
-        protected override void OnItemsChanged(object e)
-        {
-            base.OnItemsChanged(e);
-        }
-
-       
-    }
-
-    public class DataGen
-    {
-        static ObservableCollection<string> data;
-
-        public static ObservableCollection<string> Gen()
-        {
-            if (data == null)
+            if (PlatformIndependent.IsWindowsPhoneDevice)
             {
-                data = new ObservableCollection<string>();
-                for (int i = 0; i < 1000; i++)
-                {
-                    data.Add("block-" + i.ToString());
-                }
+                this.demoList.ItemsSource = _things;
+            }
+            else
+            {
+                var a = new ObservableRowAapter<Thing>(_things);
+
+                this.demoList.ItemsSource = a;
             }
 
-            return data;
         }
     }
+    
 }

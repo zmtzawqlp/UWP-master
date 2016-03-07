@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -27,52 +28,51 @@ namespace MyUWPToolkit
 
         private static void OnResizeableItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var gridview = d as VariableSizedGridView;
-            if (gridview.ItemsPanelRoot!=null)
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
-                VariableSizedWrapGrid wrapgrid=gridview.ItemsPanelRoot as VariableSizedWrapGrid;
-                wrapgrid.MaximumRowsOrColumns = gridview.ResizeableItem.Columns;
-                wrapgrid.ItemHeight = wrapgrid.ItemWidth = gridview.ResizeableItem.ItemWidth;
-
-                foreach (var element in gridview.Items)
+                var gridview = d as VariableSizedGridView;
+                if (gridview.ItemsPanelRoot != null && gridview.ResizeableItem != null)
                 {
-                    var gridviewItem = gridview.ContainerFromItem(element) as GridViewItem;
-                    if (gridviewItem != null)
+                    VariableSizedWrapGrid wrapgrid = gridview.ItemsPanelRoot as VariableSizedWrapGrid;
+                    wrapgrid.MaximumRowsOrColumns = gridview.ResizeableItem.Columns;
+                    wrapgrid.ItemHeight = wrapgrid.ItemWidth = gridview.ResizeableItem.ItemWidth;
+                    wrapgrid.Width = gridview.ResizeableItem.ItemWidth * gridview.ResizeableItem.Columns;
+                    for (int i = 0; i < gridview.Items.Count; i++)
                     {
-                        gridviewItem.SetValue(VariableSizedWrapGrid.ColumnSpanProperty, gridview.ResizeableItem.Items[gridview.index].Width);
-                        gridviewItem.SetValue(VariableSizedWrapGrid.RowSpanProperty, gridview.ResizeableItem.Items[gridview.index].Height);
-                        gridview.index++;
-                        if (gridview.index == gridview.ResizeableItem.Items.Count)
+                        var gridviewItem = gridview.ContainerFromItem(gridview.Items[i]) as GridViewItem;
+                        if (gridviewItem != null)
                         {
-                            gridview.index = 0;
+                            gridviewItem.SetValue(VariableSizedWrapGrid.ColumnSpanProperty, gridview.ResizeableItem.Items[i].Width);
+                            gridviewItem.SetValue(VariableSizedWrapGrid.RowSpanProperty, gridview.ResizeableItem.Items[i].Height);
                         }
                     }
+                    // wrapgrid.UpdateLayout();
                 }
-
             }
+            
         }
-
-        internal int index = 0;
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             //var viewModel = item as IResizable;
-
-            var gridviewItem = element as GridViewItem;
-            if (ResizeableItem != null)
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
-                element.SetValue(VariableSizedWrapGrid.ColumnSpanProperty, ResizeableItem.Items[index].Width);
-                element.SetValue(VariableSizedWrapGrid.RowSpanProperty, ResizeableItem.Items[index].Height);
-                index++;
-                if (index == ResizeableItem.Items.Count)
+                var gridviewItem = element as GridViewItem;
+                if (ResizeableItem != null)
                 {
-                    index = 0;
+                    element.SetValue(VariableSizedWrapGrid.ColumnSpanProperty, ResizeableItem.Items[this.Items.IndexOf(item)].Width);
+                    element.SetValue(VariableSizedWrapGrid.RowSpanProperty, ResizeableItem.Items[this.Items.IndexOf(item)].Height);
+                    if (this.ItemsPanelRoot != null)
+                    {
+                        VariableSizedWrapGrid wrapgrid = this.ItemsPanelRoot as VariableSizedWrapGrid;
+                        wrapgrid.MaximumRowsOrColumns = this.ResizeableItem.Columns;
+                        wrapgrid.ItemHeight = wrapgrid.ItemWidth = this.ResizeableItem.ItemWidth;
+                        wrapgrid.Width = this.ResizeableItem.ItemWidth * this.ResizeableItem.Columns;
+                    }
                 }
             }
 
             base.PrepareContainerForItemOverride(element, item);
-
-
         }
     }
 

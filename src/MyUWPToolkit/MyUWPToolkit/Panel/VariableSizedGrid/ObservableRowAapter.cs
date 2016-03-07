@@ -10,20 +10,158 @@ using Windows.UI.Xaml.Data;
 
 namespace MyUWPToolkit
 {
-    public class ObservableRowAapter<T> : ObservableCollection<IEnumerable<T>>, ISupportIncrementalLoading
+    /// <summary>
+    /// Only for VirtualizedVariableSizedGridView control
+    /// Known issue: if ISupportIncrementalLoading is not Infinitely.
+    /// if the ISupportIncrementalLoading vestigial items(it means MaxCount%RowItemsCount) less than RowItemsCount, 
+    /// it will miss the item.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ObservableRowAapter<T> : ObservableCollection<IEnumerable<T>>, ISupportIncrementalLoading, IResizeableItems
     {
         private RowAdapter<T> rowAdapter = null;
-
-        public ObservableRowAapter(IList<T> sourceList, int columns)
+        private readonly IList<T> sourceList;
+        public int RowItemsCount
         {
-            rowAdapter = new RowAdapter<T>(sourceList, columns);
+            //default is 15.
+            get { return _resizeableItems.RowItemsCount; }
+        }
+
+        public ObservableRowAapter(IList<T> sourceList)
+        {
+            InitializeResizeableItems();
+            rowAdapter = new RowAdapter<T>(sourceList, RowItemsCount);
+            this.sourceList = sourceList;
+        }
+
+        private void InitializeResizeableItems()
+        {
+            if (_resizeableItems == null)
+            {
+                _resizeableItems = new ResizeableItems();
+
+                // ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(0, 0));
+
+                double windowMinwidth = 500;
+                double windowMaxwidth = 1920;
+                double rangwidth = (windowMaxwidth - windowMinwidth) / 4.0;
+
+                #region 4
+                var list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+
+                var c4 = new ResizeableItem() { Columns = 4, Items = list, Min = windowMinwidth + rangwidth * 3 + 1, Max = double.PositiveInfinity };
+                _resizeableItems.Add(c4);
+                #endregion
+
+                #region 3
+                list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+
+                var c3 = new ResizeableItem() { Columns = 3, Items = list, Min = windowMinwidth + rangwidth * 2 + 1, Max = windowMinwidth + rangwidth * 3 };
+                _resizeableItems.Add(c3);
+                #endregion
+
+
+                #region 2
+                list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+
+                var c2 = new ResizeableItem() { Columns = 2, Items = list, Min = windowMinwidth + rangwidth * 1 + 1, Max = windowMinwidth + rangwidth * 2 };
+                _resizeableItems.Add(c2);
+                #endregion
+
+                #region 1
+                list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+
+                var c1 = new ResizeableItem() { Columns = 2, Items = list, Min = windowMinwidth + +1, Max = windowMinwidth + rangwidth * 1 };
+                _resizeableItems.Add(c1);
+                #endregion
+            }
         }
 
         public bool HasMoreItems
         {
             get
             {
-                return rowAdapter.HasMoreItems;
+                var hasMoreItems = rowAdapter.HasMoreItems;
+
+                return hasMoreItems;
+            }
+        }
+        ResizeableItems _resizeableItems;
+
+        ResizeableItems IResizeableItems.ResizeableItems
+        {
+            get
+            {
+                return _resizeableItems;
+            }
+
+            set
+            {
+                if (_resizeableItems != value)
+                {
+                    _resizeableItems = value;
+                    rowAdapter = new RowAdapter<T>(sourceList, RowItemsCount);
+                }
             }
         }
 
@@ -32,10 +170,8 @@ namespace MyUWPToolkit
             IAsyncOperation<LoadMoreItemsResult> result = rowAdapter.LoadMoreItemsAsync(count);
             if (rowAdapter.Count > 0)
             {
-                
                 for (int i = 0; i < rowAdapter.Count; i++)
                 {
-
                     if (rowAdapter.SourceList.Count / rowAdapter.rowItemsCount > i)
                     {
                         var item = this.ElementAtOrDefault(i);
@@ -43,6 +179,20 @@ namespace MyUWPToolkit
                         {
                             this.Insert(i, rowAdapter[i]);
                         }
+                    }
+                    else
+                    {
+                        //this will make UI updating very uncomfortable
+                        //but with out this, it will casue an issue that 
+                        // Known issue: if ISupportIncrementalLoading is not Infinitely.
+                        // if the ISupportIncrementalLoading vestigial items(it means MaxCount%RowItemsCount) less than RowItemsCount, 
+                        // it will miss the item.
+                        // not has good solution now.
+                        //var item = this.ElementAtOrDefault(i);
+                        //if (item != null)
+                        //{
+                        //    this[i] = rowAdapter[i];
+                        //}
                     }
                 }
             }
@@ -69,7 +219,7 @@ namespace MyUWPToolkit
         {
             int limit = Parent.SourceList.Count;
             int end = Math.Min(StartIndex + Parent.rowItemsCount, limit);
-            CurrentCount = end-StartIndex;
+            CurrentCount = end - StartIndex;
             for (int pos = StartIndex; pos < end; ++pos)
             {
                 yield return Parent.SourceList[pos];
@@ -98,17 +248,17 @@ namespace MyUWPToolkit
             get { return items; }
         }
 
-        public RowAdapter(IList<T> sourceList, int columns)
+        public RowAdapter(IList<T> sourceList, int rowItemsCount)
         {
             if (null == sourceList)
                 throw new ArgumentNullException("sourceList", "Resource.RowAdapter_RowAdapter_sourceList_is_null");
-            if (columns <= 0)
+            if (rowItemsCount <= 0)
                 throw new ArgumentOutOfRangeException("columns", "Resource.RowAdapter_RowAdapter_ColumnsGreaterOne");
 
             // We require the source list to implement IList because we
             // need to know how many item there are
             items = sourceList;
-            rowItemsCount = columns;
+            this.rowItemsCount = rowItemsCount;
 
         }
 
