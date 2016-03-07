@@ -142,7 +142,28 @@ namespace MyUWPToolkit
             get
             {
                 var hasMoreItems = rowAdapter.HasMoreItems;
-
+                //fix Known issue
+                //Known issue: if ISupportIncrementalLoading is not Infinitely.
+                //if the ISupportIncrementalLoading vestigial items(it means MaxCount % RowItemsCount) less than RowItemsCount, 
+                //it will miss the item.
+                //has no good solution now.
+                if (!hasMoreItems)
+                {
+                    if (rowAdapter.Count > 0)
+                    {
+                        for (int i = 0; i < rowAdapter.Count; i++)
+                        {
+                            if (rowAdapter.SourceList.Count / rowAdapter.rowItemsCount <= i)
+                            {
+                                var item = this.ElementAtOrDefault(i);
+                                if (item == null)
+                                {
+                                    this.Insert(i, rowAdapter[i]);
+                                }
+                            }
+                        }
+                    }
+                }
                 return hasMoreItems;
             }
         }
@@ -180,20 +201,21 @@ namespace MyUWPToolkit
                             this.Insert(i, rowAdapter[i]);
                         }
                     }
-                    else
-                    {
-                        //this will make UI updating very uncomfortable
-                        //but with out this, it will casue an issue that 
-                        // Known issue: if ISupportIncrementalLoading is not Infinitely.
-                        // if the ISupportIncrementalLoading vestigial items(it means MaxCount%RowItemsCount) less than RowItemsCount, 
-                        // it will miss the item.
-                        // not has good solution now.
-                        //var item = this.ElementAtOrDefault(i);
-                        //if (item != null)
-                        //{
-                        //    this[i] = rowAdapter[i];
-                        //}
-                    }
+                    //has fix in HasMoreItems property
+                    //else
+                    //{
+                    //    this will make UI updating very uncomfortable
+                    //    but with out this, it will casue an issue that
+                    //    Known issue: if ISupportIncrementalLoading is not Infinitely.
+                    //    if the ISupportIncrementalLoading vestigial items(it means MaxCount % RowItemsCount) less than RowItemsCount, 
+                    //    it will miss the item.
+                    //    has no good solution now.
+                    //    var item = this.ElementAtOrDefault(i);
+                    //    if (item != null)
+                    //    {
+                    //        this[i] = rowAdapter[i];
+                    //    }
+                    //}
                 }
             }
 
