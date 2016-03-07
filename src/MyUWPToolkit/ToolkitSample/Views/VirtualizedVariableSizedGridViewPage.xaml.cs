@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using ToolkitSample.ViewModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -59,6 +60,11 @@ namespace ToolkitSample
                 this.demoList.ItemsSource = a;
             }
 
+        }
+
+        private async void demoList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+           await  new MessageDialog((e.ClickedItem as Thing).Name).ShowAsync();
         }
     }
     

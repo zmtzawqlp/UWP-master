@@ -17,6 +17,7 @@
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
         <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
         <Setter Property="IsItemClickEnabled" Value="False"/>
+        <Setter Property="SelectionMode" Value="None"/>
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>

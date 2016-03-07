@@ -35,6 +35,9 @@ namespace MyUWPToolkit
         #endregion
 
         #region Property
+
+        public new event ItemClickEventHandler ItemClick;
+
         private ResizeableItems _resizeableItems = null;
 
         public ResizeableItems ResizeableItems
@@ -83,6 +86,16 @@ namespace MyUWPToolkit
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 this.SizeChanged += VirtualizedVariableSizedGridView_SizeChanged;
+            }
+            else
+            {
+                 base.ItemClick += (s, e) =>
+                 {
+                     if (this.ItemClick != null)
+                     {
+                         ItemClick(this, e);
+                     }
+                 };
             }
         }
 
@@ -268,7 +281,10 @@ namespace MyUWPToolkit
 
         private void Gridview_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            if (this.ItemClick != null)
+            {
+                ItemClick(this, e);
+            }
         }
     }
 }

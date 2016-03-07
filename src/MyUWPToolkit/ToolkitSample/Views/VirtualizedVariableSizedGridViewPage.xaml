@@ -30,7 +30,7 @@
                 </DataTemplate>
             </control:VariableSizedGridView.ItemTemplate>
         </control:VariableSizedGridView>-->
-        <control:VirtualizedVariableSizedGridView x:Name="demoList">
+        <control:VirtualizedVariableSizedGridView x:Name="demoList" ItemClick="demoList_ItemClick">
            
             <control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
                 <DataTemplate>
