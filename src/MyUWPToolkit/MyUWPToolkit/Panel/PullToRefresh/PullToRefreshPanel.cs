@@ -153,7 +153,8 @@ namespace MyUWPToolkit
         {
             ScrollViewer sv = sender as ScrollViewer;
             IsReachThreshold = sv.VerticalOffset == 0;
-            if (IsReachThreshold)
+            //fix issue that go back from other page, it will call refresh if the scroller has VerticalOffset
+            if (IsReachThreshold && e.IsIntermediate)
             {
                 _scrollViewer.DirectManipulationCompleted += _scrollViewer_DirectManipulationCompleted;
             }
