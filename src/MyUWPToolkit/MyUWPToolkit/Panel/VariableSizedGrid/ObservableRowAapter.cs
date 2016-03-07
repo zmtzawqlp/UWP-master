@@ -148,7 +148,7 @@ namespace MyUWPToolkit
                 {
                     if (rowAdapter.Count > 0)
                     {
-                        for (int i = 0; i < rowAdapter.Count; i++)
+                        for (int i = this.Count; i < rowAdapter.Count; i++)
                         {
                             //sometime it will miss some indexs in LoadMoreItemsAsync method,
                             //if hasMoreItems is false, that means not more items,
@@ -191,7 +191,7 @@ namespace MyUWPToolkit
             IAsyncOperation<LoadMoreItemsResult> result = rowAdapter.LoadMoreItemsAsync(count);
             if (rowAdapter.Count > 0)
             {
-                for (int i = 0; i < rowAdapter.Count; i++)
+                for (int i = this.Count; i < rowAdapter.Count; i++)
                 {
                     if (rowAdapter.SourceList.Count / rowAdapter.rowItemsCount > i)
                     {

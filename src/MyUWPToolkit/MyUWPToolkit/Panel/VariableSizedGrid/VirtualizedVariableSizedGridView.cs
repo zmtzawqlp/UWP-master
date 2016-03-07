@@ -206,20 +206,25 @@ namespace MyUWPToolkit
             if (ItemsSource != null)
             {
                 var resizeableItem = ResizeableItems.GetItem(e.NewSize.Width);
-                resizeableItem.ItemWidth = (int)(e.NewSize.Width / resizeableItem.Columns - 7);
 
-                foreach (var item in this.Items)
+                if (resizeableItem!=null)
                 {
-                    var gridviewItem = this.ContainerFromItem(item) as ListViewItem;
-                    //not null, it's in viewport, so it need to update.
-                    if (gridviewItem != null && gridviewItem.ContentTemplateRoot != null)
-                    {
-                        var gridview = gridviewItem.ContentTemplateRoot as VariableSizedGridView;
-                        gridview.ResizeableItem = null;
-                        gridview.ResizeableItem = resizeableItem;
+                    resizeableItem.ItemWidth = (int)(e.NewSize.Width / resizeableItem.Columns - 7);
 
+                    foreach (var item in this.Items)
+                    {
+                        var gridviewItem = this.ContainerFromItem(item) as ListViewItem;
+                        //not null, it's in viewport, so it need to update.
+                        if (gridviewItem != null && gridviewItem.ContentTemplateRoot != null)
+                        {
+                            var gridview = gridviewItem.ContentTemplateRoot as VariableSizedGridView;
+                            gridview.ResizeableItem = null;
+                            gridview.ResizeableItem = resizeableItem;
+
+                        }
                     }
                 }
+               
             }
         }
 
