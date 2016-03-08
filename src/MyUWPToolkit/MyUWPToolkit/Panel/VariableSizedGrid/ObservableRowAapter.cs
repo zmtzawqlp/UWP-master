@@ -146,7 +146,7 @@ namespace MyUWPToolkit
                 //has no good solution now.
                 if (!hasMoreItems)
                 {
-                    if (rowAdapter.Count > 0)
+                    if (rowAdapter.Count > 0 && this.Count < rowAdapter.Count)
                     {
                         for (int i = this.Count; i < rowAdapter.Count; i++)
                         {
