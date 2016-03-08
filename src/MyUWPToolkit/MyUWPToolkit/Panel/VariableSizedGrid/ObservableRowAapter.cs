@@ -273,9 +273,9 @@ namespace MyUWPToolkit
         public RowAdapter(IList<T> sourceList, int rowItemsCount)
         {
             if (null == sourceList)
-                throw new ArgumentNullException("sourceList", "Resource.RowAdapter_RowAdapter_sourceList_is_null");
+                throw new ArgumentNullException("sourceList", "sourceList can not be null");
             if (rowItemsCount <= 0)
-                throw new ArgumentOutOfRangeException("columns", "Resource.RowAdapter_RowAdapter_ColumnsGreaterOne");
+                throw new ArgumentOutOfRangeException("rowItemsCount", "rowItemsCount should be more than one");
 
             // We require the source list to implement IList because we
             // need to know how many item there are
@@ -327,7 +327,7 @@ namespace MyUWPToolkit
 
         public void Add(IEnumerable<T> item)
         {
-
+            throw new NotSupportedException();
         }
 
         public bool Contains(IEnumerable<T> item)
