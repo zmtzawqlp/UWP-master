@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ using Windows.UI.Xaml.Data;
 namespace MyUWPToolkit
 {
     /// <summary>
-    /// Only for VirtualizedVariableSizedGridView control
+    /// Only for VirtualizedVariableSizedGridView control and sourceList must be ISupportIncrementalLoading
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ObservableRowAapter<T> : ObservableCollection<IEnumerable<T>>, ISupportIncrementalLoading, IResizeableItems
@@ -29,6 +30,57 @@ namespace MyUWPToolkit
             InitializeResizeableItems();
             rowAdapter = new RowAdapter<T>(sourceList, RowItemsCount);
             this.sourceList = sourceList;
+            if (this.sourceList!=null && this.sourceList is INotifyCollectionChanged)
+            {
+                (this.sourceList as INotifyCollectionChanged).CollectionChanged += ObservableRowAapter_CollectionChanged;
+            }
+            this.CollectionChanged += ObservableRowAapter_CollectionChanged1;
+        }
+
+        private void ObservableRowAapter_CollectionChanged1(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    if (this.sourceList != null && this.sourceList.Count>0)
+                    {
+                        this.sourceList.Clear();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ObservableRowAapter_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    if (this.Count>0)
+                    {
+                        this.Clear();
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void InitializeResizeableItems()

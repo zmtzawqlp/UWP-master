@@ -66,6 +66,14 @@ namespace ToolkitSample
         {
            await  new MessageDialog((e.ClickedItem as Thing).Name).ShowAsync();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (_things!=null)
+            {
+                _things.Clear();
+            }
+        }
     }
     
 }
