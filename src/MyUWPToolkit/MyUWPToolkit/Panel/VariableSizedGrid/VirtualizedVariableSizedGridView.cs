@@ -82,6 +82,8 @@ namespace MyUWPToolkit
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 this.SizeChanged += VirtualizedVariableSizedGridView_SizeChanged;
+                this.IsItemClickEnabled = false;
+                this.SelectionMode = ListViewSelectionMode.None;
             }
             else
             {
@@ -243,8 +245,8 @@ namespace MyUWPToolkit
                     var resizeableItem = ResizeableItems.GetItem(this.ActualWidth);
                     resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);
                     gridview.ResizeableItem = resizeableItem;
-                    gridview.ItemClick += Gridview_ItemClick;
-                    //gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
+                    //Container Recycling so don't need to remove event,and it will case a bug ItemClick fire twice.
+                    //gridview.ItemClick += Gridview_ItemClick;
                 }
                 else
                 {
@@ -253,18 +255,18 @@ namespace MyUWPToolkit
             }
 
         }
+        //Container Recycling so don't need to remove event,and it will case a bug ItemClick fire twice.
+        //protected override void ClearContainerForItemOverride(DependencyObject element, object item)
+        //{
+        //    if (!PlatformIndependent.IsWindowsPhoneDevice)
+        //    {
+        //        var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
+        //        //gridview.ItemClick -= Gridview_ItemClick;
+        //        //variableSizedGridViews.Remove(gridview);
+        //    }
 
-        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-        {
-            if (!PlatformIndependent.IsWindowsPhoneDevice)
-            {
-                var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
-                gridview.ItemClick -= Gridview_ItemClick;
-                //variableSizedGridViews.Remove(gridview);
-            }
-
-            base.ClearContainerForItemOverride(element, item);
-        }
+        //    base.ClearContainerForItemOverride(element, item);
+        //}
 
         private void GridviewItem_Loaded(object sender, RoutedEventArgs e)
         {
@@ -275,8 +277,13 @@ namespace MyUWPToolkit
             gridview.ResizeableItem = resizeableItem;
             gridview.ItemClick += Gridview_ItemClick;
             gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
-
+            gridview.Unloaded += Gridview_Unloaded;
             (sender as ListViewItem).Loaded -= GridviewItem_Loaded;
+        }
+
+        private void Gridview_Unloaded(object sender, RoutedEventArgs e)
+        {
+            (sender as VariableSizedGridView).ItemClick -= Gridview_ItemClick;
         }
 
         private void Gridview_ItemClick(object sender, ItemClickEventArgs e)

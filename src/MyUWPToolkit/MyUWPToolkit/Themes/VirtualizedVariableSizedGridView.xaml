@@ -16,8 +16,6 @@
         <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
         <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
-        <Setter Property="IsItemClickEnabled" Value="False"/>
-        <Setter Property="SelectionMode" Value="None"/>
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>
@@ -38,7 +36,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <local:VariableSizedGridView ItemsSource="{Binding}" IsItemClickEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Hidden" >
+                    <local:VariableSizedGridView ItemsSource="{Binding}" SelectionMode="None" IsItemClickEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Hidden" >
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VariableSizedWrapGrid Orientation="Horizontal"  MaximumRowsOrColumns="4" />
