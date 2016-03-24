@@ -30,10 +30,6 @@ namespace MyUWPToolkit
     /// </summary>
     public class VirtualizedVariableSizedGridView : ListView
     {
-        #region Fields
-        private List<VariableSizedGridView> variableSizedGridViews = new List<VariableSizedGridView>();
-        #endregion
-
         #region Property
 
         public new event ItemClickEventHandler ItemClick;
@@ -273,7 +269,6 @@ namespace MyUWPToolkit
         private void GridviewItem_Loaded(object sender, RoutedEventArgs e)
         {
             var gridview = (sender as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
-            variableSizedGridViews.Add(gridview);
 
             var resizeableItem = ResizeableItems.GetItem(this.ActualWidth);
             resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);

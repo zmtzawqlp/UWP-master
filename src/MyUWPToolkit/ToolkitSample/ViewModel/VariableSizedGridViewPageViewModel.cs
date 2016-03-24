@@ -25,7 +25,11 @@ namespace ToolkitSample.ViewModel
                 return new BitmapImage(new Uri("ms-appx://" + this.ImagePath));
             }
         }
-
+        public override string ToString()
+        {
+            return Name;
+            //return base.ToString();
+        }
 
     }
 
