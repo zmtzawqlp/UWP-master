@@ -1,0 +1,24 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    >
+    <!--Common-->
+    <SolidColorBrush x:Key="CustomForegroundBrush">#FF000000</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomForegroundRedBrush">#FFD0402D</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomForegroundGreenBrush">#FF17B03E</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomForegroundBlueBrush">#FF1166D1</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomForegroundYellowBrush">#FFFF9D00</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomSectionTitleForegroundBrush" Color="#FFB5B5B5"/>
+    <SolidColorBrush x:Key="CustomHighlightForegroundThemeBrush">#FF3381E3</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomSecondaryForegroundThemeBrush">#FF999999</SolidColorBrush>
+    <SolidColorBrush x:Key="CustomSeparatorThemeBrush">#FFCCCCCC</SolidColorBrush>
+    <SolidColorBrush x:Key="GridBackground">#fff</SolidColorBrush>
+    <!--Common-->
+    <SolidColorBrush x:Key="keyboardButtonForeground" Color="#333333"/>
+    <SolidColorBrush x:Key="keyboardLightButtonBackground" Color="#ffffff"/>
+    <SolidColorBrush x:Key="KeyboardDeepButtonBackground" Color="#eeeeee"/>
+    <SolidColorBrush x:Key="keyboardBackground" Color="#cccccc"/>
+    <!--CustomKeyboard-->
+
+</ResourceDictionary>

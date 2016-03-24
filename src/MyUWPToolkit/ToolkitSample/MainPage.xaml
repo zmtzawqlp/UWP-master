@@ -21,7 +21,7 @@
             <x:String>CropImageControl</x:String>
             <x:String>ColumnChart</x:String>
             <x:String>VirtualizedVariableSizedGridView</x:String>
-            <!--<x:String>VariableSizedGridView</x:String>-->
+            <x:String>CustomKeyboardPage</x:String>
         </ListView>
     </Grid>
 </Page>
