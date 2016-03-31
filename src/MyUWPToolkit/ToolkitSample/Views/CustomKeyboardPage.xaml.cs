@@ -158,7 +158,7 @@ namespace ToolkitSample
                 }
 
                 this.searchBox.SelectionStart = index;
-
+                preSelectionStart = index;
                 this.searchBox.Focus(FocusState.Programmatic);
             }
             catch (Exception e)
