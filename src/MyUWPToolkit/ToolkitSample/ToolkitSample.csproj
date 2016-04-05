@@ -132,6 +132,9 @@
     <Compile Include="Views\VirtualizedVariableSizedGridViewPage.xaml.cs">
       <DependentUpon>VirtualizedVariableSizedGridViewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WIN2DPage.xaml.cs">
+      <DependentUpon>WIN2DPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -191,6 +194,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\VirtualizedVariableSizedGridViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WIN2DPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1566,6 +1566,14 @@
         "runtime": {
           "lib/netcore50/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        }
       }
     },
     "UAP,Version=v10.0/win10-arm": {
@@ -3222,6 +3230,17 @@
         "runtime": {
           "lib/netcore50/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-arm/native/Microsoft.Graphics.Canvas.dll": {}
+        }
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
@@ -4849,6 +4868,17 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Xml.XmlSerializer.dll": {}
+        }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-arm/native/Microsoft.Graphics.Canvas.dll": {}
         }
       }
     },
@@ -6511,6 +6541,17 @@
         "runtime": {
           "lib/netcore50/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x64/native/Microsoft.Graphics.Canvas.dll": {}
+        }
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
@@ -8138,6 +8179,17 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Xml.XmlSerializer.dll": {}
+        }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x64/native/Microsoft.Graphics.Canvas.dll": {}
         }
       }
     },
@@ -9800,6 +9852,17 @@
         "runtime": {
           "lib/netcore50/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x86/native/Microsoft.Graphics.Canvas.dll": {}
+        }
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
@@ -11427,6 +11490,17 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Xml.XmlSerializer.dll": {}
+        }
+      },
+      "Win2D.uwp/1.17.0": {
+        "compile": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Microsoft.Graphics.Canvas.winmd": {}
+        },
+        "native": {
+          "runtimes/win10-x86/native/Microsoft.Graphics.Canvas.dll": {}
         }
       }
     }
@@ -14829,6 +14903,25 @@
         "runtimes/win8-aot/lib/netcore50/System.Xml.XmlSerializer.dll",
         "System.Xml.XmlSerializer.nuspec"
       ]
+    },
+    "Win2D.uwp/1.17.0": {
+      "sha512": "G5rG8c4dBX4Aq1RKzjvmtjM3Q/us7GdzllyqF1rsiy65eQg3UE5Kc8R09ROSnHeptqf5l6W6GDZ7uJMKdHKP0Q==",
+      "type": "Package",
+      "files": [
+        "[Content_Types].xml",
+        "_rels/.rels",
+        "build/native/Win2D.uwp.targets",
+        "include/Microsoft.Graphics.Canvas.h",
+        "include/Microsoft.Graphics.Canvas.native.h",
+        "lib/uap10.0/Microsoft.Graphics.Canvas.winmd",
+        "lib/uap10.0/Microsoft.Graphics.Canvas.xml",
+        "package/services/metadata/core-properties/c14cb1a5d50147c8baab5c4b7a072c76.psmdcp",
+        "runtimes/win10-arm/native/Microsoft.Graphics.Canvas.dll",
+        "runtimes/win10-x64/native/Microsoft.Graphics.Canvas.dll",
+        "runtimes/win10-x86/native/Microsoft.Graphics.Canvas.dll",
+        "Win2d.githash.txt",
+        "Win2D.uwp.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -14836,7 +14929,8 @@
       "Microsoft.ApplicationInsights >= 1.0.0",
       "Microsoft.ApplicationInsights.PersistenceChannel >= 1.0.0",
       "Microsoft.ApplicationInsights.WindowsApps >= 1.0.0",
-      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
+      "Win2D.uwp >= 1.17.0"
     ],
     "UAP,Version=v10.0": []
   }

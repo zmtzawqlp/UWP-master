@@ -65,6 +65,9 @@ namespace ToolkitSample
                 case "CustomKeyboardPage":
                     Frame.Navigate(typeof(CustomKeyboardPage));
                     break;
+                case "WIN2DPage":
+                    Frame.Navigate(typeof(WIN2DPage));
+                    break;
                 default:
                     break;
             }

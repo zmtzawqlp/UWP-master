@@ -22,6 +22,7 @@
             <x:String>ColumnChart</x:String>
             <x:String>VirtualizedVariableSizedGridView</x:String>
             <x:String>CustomKeyboardPage</x:String>
+            <x:String>WIN2DPage</x:String>
         </ListView>
     </Grid>
 </Page>

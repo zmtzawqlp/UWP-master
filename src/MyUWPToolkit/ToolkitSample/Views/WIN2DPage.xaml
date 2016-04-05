@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="ToolkitSample.WIN2DPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ToolkitSample.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal">
+            <Button x:Name="pickImgBtn"
+                    Click="pickImgBtn_Click"
+                    Content="Pick Image"
+                    Margin="8"/>
+            <Button x:Name="saveImgBtn"
+                    Click="saveImgBtn_Click"
+                    Content="Save Image"
+                    Margin="0,0,8,0"/>
+            <CheckBox x:Name="useLogicChk"
+                      Content="Use Logical Space"
+                      IsChecked="True"/>
+        </StackPanel>
+        <canvas:CanvasControl x:Name="canvas" Visibility="Collapsed"
+                              ClearColor="AliceBlue"
+                              Draw="canvas_Draw"
+                              Height="300"
+                              Width="300"/>
+    </Grid>
+</Page>
