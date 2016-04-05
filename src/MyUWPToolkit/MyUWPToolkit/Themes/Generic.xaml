@@ -9,6 +9,6 @@
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshPanel.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/ImageTool.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/VirtualizedVariableSizedGridView.Xaml"/>
-
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/Win2DImageTool.Xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

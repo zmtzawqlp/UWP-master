@@ -119,6 +119,7 @@
     <Compile Include="ImageControl\CropSelection.cs" />
     <Compile Include="ImageControl\CropSelectionSize.cs" />
     <Compile Include="ImageControl\RotationAngle.cs" />
+    <Compile Include="ImageControl\Win2DImageTool.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshControl.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />
@@ -173,6 +174,11 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\VirtualizedVariableSizedGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\Win2DImageTool.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

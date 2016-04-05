@@ -27,10 +27,10 @@
                       Content="Use Logical Space"
                       IsChecked="True"/>
         </StackPanel>
-        <canvas:CanvasControl x:Name="canvas" Visibility="Collapsed"
+        <canvas:CanvasControl x:Name="canvas" 
                               ClearColor="AliceBlue"
                               Draw="canvas_Draw"
-                              Height="300"
-                              Width="300"/>
+                              HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"/>
     </Grid>
 </Page>

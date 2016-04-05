@@ -108,20 +108,28 @@ namespace ToolkitSample
                     bitmapRect.X = 0;
                     bitmapRect.Y = 0;
                 }
-                canvas.Visibility = Visibility.Visible;
+                //canvas.Visibility = Visibility.Visible;
                 //force canvas to redraw
-                //canvas.Invalidate();
+                canvas.Invalidate();
             }
 
         }
 
         private void canvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
+            //var mybitmap = new CanvasRenderTarget(sender, 200, 200);
+            //using (var ds=mybitmap.CreateDrawingSession())
+            //{
+                
+            //}
+
             //only draw if image is loaded
             if (bitmapImg != null)
             {
-                args.DrawingSession.DrawImage(bitmapImg, bitmapRect);
+                bitmapRect = new Rect(0, 0, canvas.ActualWidth, canvas.ActualHeight);
+                //args.DrawingSession.DrawImage(bitmapImg, bitmapRect,new Rect(0, 0, 100, 100) );
                 //sender.Invalidate();
+                args.DrawingSession.DrawImage(bitmapImg);
             }
         }
 
