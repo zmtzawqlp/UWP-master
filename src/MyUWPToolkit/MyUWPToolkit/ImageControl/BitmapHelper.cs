@@ -337,6 +337,8 @@ namespace MyUWPToolkit
                     break;
             }
             await encoder.FlushAsync();
+            inStream.Seek(0);
+            outStream.Seek(0);
         }
 
         public static async Task RotateAsync(StorageFile sourcefile, RotationAngle angle)
