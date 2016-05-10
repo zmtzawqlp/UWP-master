@@ -117,6 +117,9 @@
     <Compile Include="Views\CustomKeyboardPage.xaml.cs">
       <DependentUpon>CustomKeyboardPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DataGridSamplePage.xaml.cs">
+      <DependentUpon>DataGridSamplePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImageToolPage.xaml.cs">
       <DependentUpon>ImageToolPage.xaml</DependentUpon>
     </Compile>
@@ -178,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CustomKeyboardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DataGridSamplePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

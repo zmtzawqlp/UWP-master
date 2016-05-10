@@ -68,6 +68,9 @@ namespace ToolkitSample
                 case "WIN2DPage":
                     Frame.Navigate(typeof(WIN2DPage));
                     break;
+                case "DataGrid":
+                    Frame.Navigate(typeof(DataGridSamplePage));
+                    break;
                 default:
                     break;
             }

@@ -15,6 +15,17 @@ namespace XamlDemo.Model
         {
             var employees = new List<Employee>();
 
+            //int i = 0;
+            //var item = new Employee
+            //{
+            //    Name = "Name " + i.ToString().PadLeft(4, '0'),
+            //    Age = new Random(i).Next(20, 60),
+            //    IsMale = Convert.ToBoolean(i % 2)
+            //};
+            //for (int j = 0; j < 10; j++)
+            //{
+            //    employees.Add(item);
+            //}
             for (int i = 0; i < 1000; i++)
             {
                 employees.Add(

@@ -108,9 +108,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chart\ColumnChart.cs" />
+    <Compile Include="CollectionView\ICollectionViewEx.cs" />
+    <Compile Include="CollectionView\UWPCollectionView.cs" />
     <Compile Include="Common\BindingEvaluator.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
+    <Compile Include="DataGrid\Enums.cs" />
+    <Compile Include="DataGrid\Model\Cell\CellFactory.cs" />
+    <Compile Include="DataGrid\Model\Cell\CellRange.cs" />
+    <Compile Include="DataGrid\Model\Cell\CellType.cs" />
+    <Compile Include="DataGrid\DataGrid.cs" />
+    <Compile Include="DataGrid\DataGridP.cs" />
+    <Compile Include="DataGrid\DataGridPanel.cs" />
+    <Compile Include="DataGrid\Model\Cell\ICellFactory.cs" />
+    <Compile Include="DataGrid\Model\RowCol\BoundRow.cs" />
+    <Compile Include="DataGrid\Model\RowCol\Column.cs" />
+    <Compile Include="DataGrid\Model\RowCol\Columns.cs" />
+    <Compile Include="DataGrid\Model\RowCol\Row.cs" />
+    <Compile Include="DataGrid\Model\RowCol\RowCol.cs" />
+    <Compile Include="DataGrid\Model\RowCol\RowCols.cs" />
+    <Compile Include="DataGrid\Model\RowCol\Rows.cs" />
+    <Compile Include="DataGrid\Model\RowCol\UnboundRowStorage.cs" />
+    <Compile Include="DataGrid\Util\BindingEx.cs" />
+    <Compile Include="DataGrid\Util\Consts.cs" />
+    <Compile Include="DataGrid\Util\ObjectEx.cs" />
     <Compile Include="ImageControl\AspectRatio.cs" />
     <Compile Include="ImageControl\BitmapHelper.cs" />
     <Compile Include="ImageControl\Crop\CropImageControl.cs" />
@@ -136,6 +157,8 @@
     <Compile Include="Util\NotifyTaskCompletion.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
     <Compile Include="Util\SpeechService.cs" />
+    <Compile Include="DataGrid\Util\TypeEx.cs" />
+    <Compile Include="Util\Util.cs" />
     <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +168,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\CropImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\DataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

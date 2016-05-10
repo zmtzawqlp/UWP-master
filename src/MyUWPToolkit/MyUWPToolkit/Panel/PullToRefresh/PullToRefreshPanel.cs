@@ -184,6 +184,10 @@ namespace MyUWPToolkit
             if (_scrollViewer != null && _panelHeader != null)
             //&& _panelContent != null && _panelHeader != null)
             {
+                if (double.IsInfinity(RefreshThreshold))
+                {
+                    RefreshThreshold = 100;
+                }
                 _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
 
                 _scrollViewer.ChangeView(null, _panelHeader.Height, null, true);
