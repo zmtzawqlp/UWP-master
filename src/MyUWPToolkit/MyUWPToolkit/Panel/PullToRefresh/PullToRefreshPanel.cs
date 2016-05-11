@@ -154,8 +154,9 @@ namespace MyUWPToolkit
             ScrollViewer sv = sender as ScrollViewer;
             IsReachThreshold = sv.VerticalOffset == 0;
             //fix issue that go back from other page, it will call refresh.
-            if (IsReachThreshold && e.IsIntermediate)
+            //if (IsReachThreshold && e.IsIntermediate)
             {
+                _scrollViewer.DirectManipulationCompleted -= _scrollViewer_DirectManipulationCompleted;
                 _scrollViewer.DirectManipulationCompleted += _scrollViewer_DirectManipulationCompleted;
             }
             //if (_panelHeader != null && _panelHeader.Height == sv.VerticalOffset)
@@ -171,12 +172,14 @@ namespace MyUWPToolkit
             _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
             _scrollViewer.ChangeView(null, _panelHeader.Height, null);
 
-            if (PullToRefresh != null)
+            if (IsReachThreshold)
             {
-                LastRefreshTime = DateTime.Now;
-                PullToRefresh(this, null);
+                if (PullToRefresh != null)
+                {
+                    LastRefreshTime = DateTime.Now;
+                    PullToRefresh(this, null);
+                }
             }
-
         }
 
         private void UpdateVerticalOffset()
@@ -192,6 +195,19 @@ namespace MyUWPToolkit
 
                 _scrollViewer.ChangeView(null, _panelHeader.Height, null, true);
             }
+        }
+
+        public void UpdateVerticalOffset(double verticalOffset)
+        {
+            //Debug.WriteLine(_scrollViewer.VerticalOffset);
+            //_scrollViewer.ChangeView(null, _scrollViewer.VerticalOffset-verticalOffset, null, true);
+
+            _scrollViewer.ScrollToVerticalOffset(_scrollViewer.VerticalOffset - verticalOffset);
+        }
+
+        public bool IsPulling()
+        {
+            return _panelHeader.Height != _scrollViewer.VerticalOffset;
         }
     }
 }

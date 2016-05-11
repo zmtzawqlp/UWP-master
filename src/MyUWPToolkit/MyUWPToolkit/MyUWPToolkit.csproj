@@ -132,6 +132,8 @@
     <Compile Include="DataGrid\Util\BindingEx.cs" />
     <Compile Include="DataGrid\Util\Consts.cs" />
     <Compile Include="DataGrid\Util\ObjectEx.cs" />
+    <Compile Include="FlexGrid\FlexGrid.cs" />
+    <Compile Include="FlexGrid\FlexGridP.cs" />
     <Compile Include="ImageControl\AspectRatio.cs" />
     <Compile Include="ImageControl\BitmapHelper.cs" />
     <Compile Include="ImageControl\Crop\CropImageControl.cs" />
@@ -180,6 +182,11 @@
     <Page Include="Themes\DeviceFamily-Mobile\VirtualizedVariableSizedGridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\FlexGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\ImageTool.xaml">

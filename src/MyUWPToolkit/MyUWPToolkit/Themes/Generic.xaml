@@ -11,5 +11,6 @@
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/VirtualizedVariableSizedGridView.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/Win2DImageTool.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/DataGrid.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/FlexGrid.Xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -71,6 +71,9 @@ namespace ToolkitSample
                 case "DataGrid":
                     Frame.Navigate(typeof(DataGridSamplePage));
                     break;
+                case "FlexGrid":
+                    Frame.Navigate(typeof(FlexGridSamplePage));
+                    break;
                 default:
                     break;
             }

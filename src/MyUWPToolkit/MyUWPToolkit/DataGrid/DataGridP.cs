@@ -32,8 +32,6 @@ namespace MyUWPToolkit.DataGrid
         DataGridPanel _columnHeaderPanel;
         DataGridPanel _cellPanel;
         ContentControl _pullToRefreshHeader;
-        Grid _crossSlideLeftGrid;
-        Grid _crossSlideRightGrid;
 
         ICollectionView _view;
         ICellFactory _cellFactory;
@@ -47,7 +45,10 @@ namespace MyUWPToolkit.DataGrid
         CultureInfo _ci;
         string _lang;
         bool startingPullToRefresh = false;
-        bool startingCrossSlide = false;
+        bool startingCrossSlideLeft = false;
+        bool startingCrossSlideRight = false;
+        double preDeltaTranslationX;
+        double preDeltaTranslationY;
         #endregion
 
         #region Internal Properties
@@ -83,6 +84,25 @@ namespace MyUWPToolkit.DataGrid
             }
         }
 
+        internal TranslateTransform PivotItemTT
+        {
+            get
+            {
+                if (PivotItem!=null)
+                {
+                    var tt = PivotItem.RenderTransform as TranslateTransform;
+                    if (tt == null)
+                    {
+                        tt = new TranslateTransform();
+                    }
+                    return tt;
+                }
+                else
+                {
+                    return new TranslateTransform();
+                }
+            }
+        }
         #endregion
 
         #region Public Properties

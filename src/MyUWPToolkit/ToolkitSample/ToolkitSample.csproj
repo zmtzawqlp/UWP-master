@@ -108,6 +108,9 @@
     </Compile>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="ViewModel\VariableSizedGridViewPageViewModel.cs" />
+    <Compile Include="Views\BlankPage1.xaml.cs">
+      <DependentUpon>BlankPage1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ColumnChartSample.xaml.cs">
       <DependentUpon>ColumnChartSample.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,9 @@
     </Compile>
     <Compile Include="Views\DataGridSamplePage.xaml.cs">
       <DependentUpon>DataGridSamplePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FlexGridSamplePage.xaml.cs">
+      <DependentUpon>FlexGridSamplePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImageToolPage.xaml.cs">
       <DependentUpon>ImageToolPage.xaml</DependentUpon>
@@ -172,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\BlankPage1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ColumnChartSample.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -185,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DataGridSamplePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FlexGridSamplePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

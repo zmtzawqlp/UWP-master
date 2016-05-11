@@ -32,8 +32,6 @@ namespace MyUWPToolkit.DataGrid
     [TemplatePart(Name = "VerticalScrollBar", Type = typeof(ScrollBar))]
     [TemplatePart(Name = "HorizontalScrollBar", Type = typeof(ScrollBar))]
     [TemplatePart(Name = "PullToRefreshHeader", Type = typeof(ContentControl))]
-    [TemplatePart(Name = "CrossSlideLeftGrid", Type = typeof(Grid))]
-    [TemplatePart(Name = "CrossSlideRightGrid", Type = typeof(Grid))]
     public partial class DataGrid : Control
     {
 
@@ -98,36 +96,8 @@ namespace MyUWPToolkit.DataGrid
 
                 if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                 {
-                    //if (_sbV.Visibility == Visibility.Visible && _sbV.IsEnabled == false)
-                    //{
-                    //    if (_sbV.ActualWidth != double.NaN)
-                    //    {
-                    //        wid -= _sbV.ActualWidth;
-                    //    }
-                    //}
-                    //if (_sbH.Visibility == Visibility.Visible && _sbH.IsEnabled == false)
-                    //{
-                    //    if (_sbH.ActualHeight != double.NaN)
-                    //    {
-                    //        hei -= _sbH.ActualHeight;
-                    //    }
-                    //}
-
-                    // make sure star sizes are current (TFS 30814)
+                    
                     UpdateStarSizes();
-
-                    // check which scrollbars we need
-                    //bool needV = Rows.GetTotalSize() > hei;
-                    //if (needV)
-                    //{
-                    //    wid -= _root.ColumnDefinitions[2].ActualWidth;
-                    //}
-                    //bool needH = Columns.GetTotalSize() > wid;
-                    //if (needH)
-                    //{
-                    //    hei -= _root.RowDefinitions[2].ActualHeight;
-                    //    needV = Rows.GetTotalSize() > hei;
-                    //}
 
                     // update scrollbar parameters
                     _verticalScrollBar.SmallChange = _horizontalScrollBar.SmallChange = Rows.DefaultSize;
@@ -136,22 +106,12 @@ namespace MyUWPToolkit.DataGrid
                     _verticalScrollBar.Maximum = Rows.GetTotalSize() - hei;
                     _horizontalScrollBar.Maximum = Columns.GetTotalSize() - wid;
 
-
-                    //ViewportHeight = hei;
-                    //ViewportWidth = wid;
-                    //ScrollableHeight = Rows.GetTotalSize() - hei;
-                    //ScrollableWidth = Columns.GetTotalSize() - wid;
-                    //var rowSize = Rows.GetTotalSize(); 
-                    //_sbV.Maximum = rowSize - hei + 1; 
-                    //_sbH.Maximum = Columns.GetTotalSize() - wid + 1;
-
                     // update scrollbar visibility
                     if (_verticalScrollBar != null)
                     {
-                        _verticalScrollBar.Visibility = _verticalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
+                        _verticalScrollBar.Visibility = _verticalScrollBar.Maximum > _cellPanel.ActualHeight ? Visibility.Visible : Visibility.Collapsed;
 
                     }
-                    //UpdateScrollbarVisibility(_sbH, HorizontalScrollBarVisibility, needH);
 
                     // make sure current scroll position is valid
                     ScrollPosition = ScrollPosition;
@@ -196,9 +156,6 @@ namespace MyUWPToolkit.DataGrid
             _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
             _pullToRefreshHeader.DataContext = this;
 
-            _crossSlideLeftGrid = GetTemplateChild("CrossSlideLeftGrid") as Grid;
-            _crossSlideRightGrid = GetTemplateChild("CrossSlideRightGrid") as Grid;
-
             _cellPanel.SetValue(Grid.RowProperty, 2);
             _columnHeaderPanel.SetValue(Grid.RowProperty, 0);
             _cellPanel.LayoutUpdated += _cellPanel_LayoutUpdated;
@@ -219,30 +176,40 @@ namespace MyUWPToolkit.DataGrid
         private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
             startingPullToRefresh = false;
-            startingCrossSlide = false;
+            startingCrossSlideLeft = false;
+            startingCrossSlideRight = false;
             if (_verticalScrollBar.Value == 0)
             {
                 startingPullToRefresh = true;
             }
 
             //Cross Slide left
-            if (_horizontalScrollBar.Value == 0 || _horizontalScrollBar.Value == _horizontalScrollBar.Maximum)
+            if (_horizontalScrollBar.Value == 0)
             {
-                startingCrossSlide = true;
+                startingCrossSlideLeft = true;
+            }
+            if (_horizontalScrollBar.Value == _horizontalScrollBar.Maximum)
+            {
+                startingCrossSlideRight = true;
             }
         }
 
         private void _contentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
+            preDeltaTranslationX = 0;
+            preDeltaTranslationY = 0;
             VisualStateManager.GoToState(this, "NoIndicator", true);
             _pullToRefreshHeader.Height = 0;
-            _crossSlideLeftGrid.Width = 0;
-            _crossSlideRightGrid.Width = 0;
+            startingPullToRefresh = false;
+            startingCrossSlideLeft = false;
+            startingCrossSlideRight = false;
             _contentGrid.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+
             _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
+
             if (PivotItem != null)
             {
-                PivotItem.Margin = _defaultPivotItemMargin;
+                PivotItem.RenderTransform = new TranslateTransform();
             }
             if (IsReachThreshold && startingPullToRefresh)
             {
@@ -256,115 +223,76 @@ namespace MyUWPToolkit.DataGrid
 
         private void _contentGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
+            var x = e.Delta.Translation.X;
+            var y = e.Delta.Translation.Y;
 
             ////Cross Slide left
-            if (((_crossSlideLeftGrid.Width == 0 && e.Delta.Translation.X > 0 && e.Delta.Translation.Y == 0) || _crossSlideLeftGrid.Width > 0) && _horizontalScrollBar.Value == 0 && startingCrossSlide)
+            if (PivotItem != null && ((x > 0 && y == 0) || PivotItemTT.X != 0) && _horizontalScrollBar.Value == 0 && startingCrossSlideLeft)
             {
-                var maxThreshold = (int)(Window.Current.Bounds.Width * 5 / 6.0);
-                if (_crossSlideLeftGrid.Width <= maxThreshold)
+                VisualStateManager.GoToState(this, "NoIndicator", true);
+                var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 5 / 6.0;
+                var tt = PivotItemTT;
+                if (Math.Abs(tt.X) <= maxThreshold && preDeltaTranslationX != x)
                 {
-                    _contentGrid.ManipulationMode = ManipulationModes.TranslateX;
-
-                    if (PivotItem != null)
+                    preDeltaTranslationX = x;
+                    _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
+                    _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
+                    if (tt.X >= maxThreshold)
                     {
-                        if (PivotItem.Margin.Left >= maxThreshold)
-                        {
-                            HandleCrossSlide(CrossSlideMode.Left);
-                        }
-                        else
-                        {
-                            var width = PivotItem.Margin.Left + e.Delta.Translation.X;
-                            if (width > maxThreshold)
-                            {
-                                width = maxThreshold;
-                                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                            }
-
-                            PivotItem.Margin = new Thickness(width, PivotItem.Margin.Top, PivotItem.Margin.Right, PivotItem.Margin.Bottom);
-
-                            if (PivotItem.Margin.Left >= maxThreshold)
-                            {
-                                HandleCrossSlide(CrossSlideMode.Left);
-                            }
-                        }
+                        HandleCrossSlide(CrossSlideMode.Left);
                     }
                     else
                     {
-                        var width = _crossSlideLeftGrid.Width + e.Delta.Translation.X;
+                        var width = tt.X + x;
+
                         if (width > maxThreshold)
                         {
                             width = maxThreshold;
-                            if (CrossSlide != null)
-                            {
-                                _crossSlideLeftGrid.Width = 0;
-                                if (this.CrossSlide != null)
-                                {
-                                    CrossSlide(this, new CrossSlideEventArgs(CrossSlideMode.Left));
-                                }
-                                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                                return;
-                            }
+                            tt.X = width >= 0 ? width : 0;
+                            PivotItem.RenderTransform = tt;
+                            HandleCrossSlide(CrossSlideMode.Left);
+                            return;
                         }
 
-                        _crossSlideLeftGrid.Width = width >= 0 ? width : 0;
+                        tt.X = width >= 0 ? width : 0;
+                        PivotItem.RenderTransform = tt;
                     }
                 }
-                VisualStateManager.GoToState(this, "NoIndicator", true);
+
             }
             ////Cross Slide right
-            if (((_crossSlideRightGrid.Width == 0 && e.Delta.Translation.X < 0 && e.Delta.Translation.Y == 0) || _crossSlideRightGrid.Width > 0) && _horizontalScrollBar.Value == _horizontalScrollBar.Maximum && startingCrossSlide)
+            else if (PivotItem != null && ((x < 0 && y == 0) || PivotItemTT.X != 0) && _horizontalScrollBar.Value == _horizontalScrollBar.Maximum && startingCrossSlideRight)
             {
-                var maxThreshold = (int)(Window.Current.Bounds.Width * 5 / 6.0);
-                if (_crossSlideRightGrid.Width <= maxThreshold)
+                VisualStateManager.GoToState(this, "NoIndicator", true);
+                var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 5 / 6.0;
+                var tt = PivotItemTT;
+                if (Math.Abs(tt.X) <= maxThreshold && preDeltaTranslationX != x)
                 {
-                    _contentGrid.ManipulationMode = ManipulationModes.TranslateX;
+                    preDeltaTranslationX = x;
+                    _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
+                    _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
 
-                    if (PivotItem != null)
+                    if (Math.Abs(tt.X) >= maxThreshold)
                     {
-                        if (PivotItem.Margin.Right >= maxThreshold)
-                        {
-                            HandleCrossSlide(CrossSlideMode.Right);
-                        }
-                        else
-                        {
-                            var width = PivotItem.Margin.Right - e.Delta.Translation.X;
-                            if (width > maxThreshold)
-                            {
-                                width = maxThreshold;
-                                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                            }
-
-                            PivotItem.Margin = new Thickness(PivotItem.Margin.Left, PivotItem.Margin.Top, width, PivotItem.Margin.Bottom);
-
-                            if (PivotItem.Margin.Right >= maxThreshold)
-                            {
-                                HandleCrossSlide(CrossSlideMode.Right);
-                            }
-                        }
+                        HandleCrossSlide(CrossSlideMode.Right);
                     }
                     else
                     {
-                        var width = _crossSlideRightGrid.Width - e.Delta.Translation.X;
-                        if (width > maxThreshold)
+                        var width = tt.X + x;
+                        if (Math.Abs(width) > maxThreshold)
                         {
-                            width = maxThreshold;
-                            if (CrossSlide != null)
-                            {
-                                _crossSlideRightGrid.Width = 0;
-                                if (this.CrossSlide != null)
-                                {
-                                    CrossSlide(this, new CrossSlideEventArgs(CrossSlideMode.Right));
-                                }
-                                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                                return;
-                            }
+                            width = -maxThreshold;
+                            tt.X = width <= 0 ? width : 0;
+                            PivotItem.RenderTransform = tt;
+                            HandleCrossSlide(CrossSlideMode.Right);
+                            return;
                         }
-                        _crossSlideRightGrid.Width = width >= 0 ? width : 0;
+
+                        tt.X = width <= 0 ? width : 0;
+                        PivotItem.RenderTransform = tt;
                     }
-                   
                 }
 
-                VisualStateManager.GoToState(this, "NoIndicator", true);
             }
 
 
@@ -372,20 +300,29 @@ namespace MyUWPToolkit.DataGrid
             //1.starting pull to refresh, it should height is 0, delta y is more than 0 and delta x is 0
             //2.pulling to refresh, height should be more than 0
             //verticaloffset should be 0 and startingPullToRefresh should be true
-            if (((_pullToRefreshHeader.Height == 0 && e.Delta.Translation.Y > 0 && e.Delta.Translation.X == 0) || _pullToRefreshHeader.Height > 0) && _verticalScrollBar.Value == 0 && startingPullToRefresh)
+            else if (((_pullToRefreshHeader.Height == 0 && y > 0 && x == 0) || _pullToRefreshHeader.Height > 0) && _verticalScrollBar.Value == 0 && startingPullToRefresh)
             {
                 var maxThreshold = RefreshThreshold * 4 / 3.0;
-                if (_pullToRefreshHeader.Height <= maxThreshold)
+                
+                //Y not support inertial
+                if (e.IsInertial)
                 {
-                    _contentGrid.ManipulationMode = ManipulationModes.TranslateY;
-                    var height = _pullToRefreshHeader.Height + e.Delta.Translation.Y;
+                    _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
+                    _contentGrid_ManipulationCompleted(null, null);
+                    return;
+                }
+                if (_pullToRefreshHeader.Height <= maxThreshold && preDeltaTranslationY != y)
+                {
+                    preDeltaTranslationY = y;
+                    var height = _pullToRefreshHeader.Height + y;
                     if (height > maxThreshold)
                     {
                         height = maxThreshold;
-                        _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
                     }
                     _pullToRefreshHeader.Height = height >= 0 ? height : 0;
+                    Debug.WriteLine(_pullToRefreshHeader.Height);
                 }
+
                 if (_pullToRefreshHeader.Height >= RefreshThreshold)
                 {
                     this.IsReachThreshold = true;
@@ -398,7 +335,13 @@ namespace MyUWPToolkit.DataGrid
             }
             else if (_pullToRefreshHeader.Height == 0)
             {
-                var point = new Point() { X = ScrollPosition.X + e.Delta.Translation.X, Y = ScrollPosition.Y + e.Delta.Translation.Y };
+                if (preDeltaTranslationX == x && preDeltaTranslationY == y)
+                {
+                    return;
+                }
+                preDeltaTranslationX = x;
+                preDeltaTranslationY = y;
+                var point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y + y };
 
                 ScrollPosition = point;
 
@@ -443,10 +386,15 @@ namespace MyUWPToolkit.DataGrid
 
             if (PivotItem != null)
             {
-                PivotItem.Margin = _defaultPivotItemMargin;
+                //PivotItem.Margin = _defaultPivotItemMargin;
+                PivotItem.RenderTransform = new TranslateTransform();
                 var pivot = PivotItem.Parent as Pivot;
-                if (pivot != null)
+                //Manipulation Is Inertial
+                //when swip quickly, may it will change index manytime, we only handle the selectindex is 
+                //PivotItem index
+                if (pivot != null && pivot.SelectedIndex == pivot.IndexFromContainer(PivotItem))
                 {
+                    this.Visibility = Visibility.Collapsed;
                     var index = pivot.SelectedIndex;
                     if (mode == CrossSlideMode.Left)
                     {
@@ -464,8 +412,8 @@ namespace MyUWPToolkit.DataGrid
                             index = 0;
                         }
                     }
-
                     pivot.SelectedIndex = index;
+                    this.Visibility = Visibility.Visible;
                 }
             }
 
