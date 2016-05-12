@@ -112,7 +112,7 @@ namespace MyUWPToolkit.DataGrid
                     {
                         switch (VerticalScrollBarVisibility)
                         {
-                            
+
                             case ScrollBarVisibility.Auto:
                                 _verticalScrollBar.Visibility = _verticalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
                                 break;
@@ -126,13 +126,13 @@ namespace MyUWPToolkit.DataGrid
                             default:
                                 break;
                         }
-                        
+
                     }
                     if (_horizontalScrollBar != null)
-                    {   
+                    {
                         switch (HorizontalScrollBarVisibility)
                         {
-                          
+
                             case ScrollBarVisibility.Auto:
                                 _horizontalScrollBar.Visibility = _horizontalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
                                 break;
@@ -146,7 +146,7 @@ namespace MyUWPToolkit.DataGrid
                             default:
                                 break;
                         }
-                      
+
                     }
 
                     // make sure current scroll position is valid
@@ -224,7 +224,8 @@ namespace MyUWPToolkit.DataGrid
             {
                 startingCrossSlideLeft = true;
             }
-            if (_horizontalScrollBar.Value == _horizontalScrollBar.Maximum)
+            //double
+            if (Math.Abs(_horizontalScrollBar.Value - _horizontalScrollBar.Maximum) < 0.0001)
             {
                 startingCrossSlideRight = true;
             }
@@ -295,12 +296,12 @@ namespace MyUWPToolkit.DataGrid
         private void HandleManipulationDelta(ManipulationDeltaRoutedEventArgs e, double x, double y)
         {
             //Cross Slide left
-            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && _horizontalScrollBar.Value == 0 && startingCrossSlideLeft)
+            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideLeft)
             {
                 HandleCrossSlideLeft(x, y);
             }
             //Cross Slide right
-            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && _horizontalScrollBar.Value == _horizontalScrollBar.Maximum && startingCrossSlideRight)
+            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideRight)
             {
                 HandleCrossSlideRight(x, y);
             }
