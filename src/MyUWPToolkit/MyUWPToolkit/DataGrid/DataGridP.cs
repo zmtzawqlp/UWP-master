@@ -49,6 +49,7 @@ namespace MyUWPToolkit.DataGrid
         bool startingCrossSlideRight = false;
         double preDeltaTranslationX;
         double preDeltaTranslationY;
+        ManipulationStatus manipulationStatus;
         #endregion
 
         #region Internal Properties
@@ -483,5 +484,15 @@ namespace MyUWPToolkit.DataGrid
         Auto,
         //Handle sort by SortingColumn event
         Manual
+    }
+
+
+    public enum ManipulationStatus
+    {
+        None,
+        CrossSlideLeft,
+        CrossSlideRight,
+        PullToRefresh,
+        Scrolling
     }
 }

@@ -164,7 +164,7 @@
                                         <!--ColumnHeader-->
                                         <RowDefinition Height="auto"/>
                                         <!--PullToRefreshHeader-->
-                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="0"/>
                                         <!--Cell-->
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
