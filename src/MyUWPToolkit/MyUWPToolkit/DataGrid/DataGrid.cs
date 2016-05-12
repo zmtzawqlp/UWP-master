@@ -110,7 +110,43 @@ namespace MyUWPToolkit.DataGrid
                     // update scrollbar visibility
                     if (_verticalScrollBar != null)
                     {
-                        _verticalScrollBar.Visibility = _verticalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
+                        switch (VerticalScrollBarVisibility)
+                        {
+                            
+                            case ScrollBarVisibility.Auto:
+                                _verticalScrollBar.Visibility = _verticalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
+                                break;
+                            case ScrollBarVisibility.Disabled:
+                            case ScrollBarVisibility.Hidden:
+                                _verticalScrollBar.Visibility = Visibility.Collapsed;
+                                break;
+                            case ScrollBarVisibility.Visible:
+                                _verticalScrollBar.Visibility = Visibility.Visible;
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                    }
+                    if (_horizontalScrollBar != null)
+                    {   
+                        switch (HorizontalScrollBarVisibility)
+                        {
+                          
+                            case ScrollBarVisibility.Auto:
+                                _horizontalScrollBar.Visibility = _horizontalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
+                                break;
+                            case ScrollBarVisibility.Disabled:
+                            case ScrollBarVisibility.Hidden:
+                                _horizontalScrollBar.Visibility = Visibility.Collapsed;
+                                break;
+                            case ScrollBarVisibility.Visible:
+                                _horizontalScrollBar.Visibility = Visibility.Visible;
+                                break;
+                            default:
+                                break;
+                        }
+                      
                     }
 
                     // make sure current scroll position is valid
