@@ -1081,7 +1081,7 @@ namespace MyUWPToolkit.DataGrid
                     bool pct = str[0] == '%' || str[str.Length - 1] == '%';
                     if (pct)
                     {
-                        str = str.Trim('%'); // TFS 47808
+                        str = str.Trim('%');
                     }
                     decimal d;
                     if (decimal.TryParse(str, NumberStyles.Any, ci, out d))

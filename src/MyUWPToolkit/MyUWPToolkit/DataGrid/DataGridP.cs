@@ -487,7 +487,7 @@ namespace MyUWPToolkit.DataGrid
     }
 
 
-    public enum ManipulationStatus
+    internal enum ManipulationStatus
     {
         None,
         CrossSlideLeft,

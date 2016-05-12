@@ -105,7 +105,7 @@ namespace MyUWPToolkit.DataGrid.Model.RowCol
                             {
                                 var cw = c.Width.Value * starValue;
                                 cw = Math.Max(c.MinWidth, Math.Min(c.MaxWidth, cw));
-                                cw = Math.Round(cw); // TFS 48113
+                                cw = Math.Round(cw);
                                 c.SetSize(cw);
                                 szLast -= cw;
                             }
