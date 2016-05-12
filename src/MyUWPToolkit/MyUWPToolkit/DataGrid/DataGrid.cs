@@ -320,7 +320,7 @@ namespace MyUWPToolkit.DataGrid
         {
             manipulationStatus = ManipulationStatus.CrossSlideLeft;
             VisualStateManager.GoToState(this, "NoIndicator", true);
-            var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 5 / 6.0;
+            var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 4 / 5.0;
             var tt = PivotItemTT;
             if (Math.Abs(tt.X) <= maxThreshold && preDeltaTranslationX != x)
             {
@@ -354,7 +354,7 @@ namespace MyUWPToolkit.DataGrid
         {
             manipulationStatus = ManipulationStatus.CrossSlideRight;
             VisualStateManager.GoToState(this, "NoIndicator", true);
-            var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 5 / 6.0;
+            var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 4 / 5.0;
             var tt = PivotItemTT;
             if (Math.Abs(tt.X) <= maxThreshold && preDeltaTranslationX != x)
             {
@@ -468,7 +468,6 @@ namespace MyUWPToolkit.DataGrid
         {
 
             _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-
             if (PivotItem != null)
             {
                 //PivotItem.Margin = _defaultPivotItemMargin;
