@@ -10,6 +10,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.Foundation;
+using Windows.Devices.Input;
+using Windows.UI.Input;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace MyUWPToolkit.FlexGrid
 {
@@ -42,9 +45,9 @@ namespace MyUWPToolkit.FlexGrid
         }
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (RefreshThreshold==0.0)
+            if (RefreshThreshold == 0.0)
             {
-                RefreshThreshold= RefreshThreshold = availableSize.Height * 1 / 5;
+                RefreshThreshold = RefreshThreshold = availableSize.Height * 1 / 5;
             }
             return base.MeasureOverride(availableSize);
         }
@@ -128,10 +131,16 @@ namespace MyUWPToolkit.FlexGrid
                     HandleManipulationDelta(e, x, y);
                     break;
                 case ManipulationStatus.CrossSlideLeft:
-                    HandleCrossSlideLeft(x, y);
+                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
+                    {
+                        HandleCrossSlideLeft(x, y);
+                    }
                     break;
                 case ManipulationStatus.CrossSlideRight:
-                    HandleCrossSlideRight(x, y);
+                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
+                    {
+                        HandleCrossSlideRight(x, y);
+                    }
                     break;
                 case ManipulationStatus.PullToRefresh:
                     HandlePullToRefresh(x, y, e);
@@ -341,8 +350,16 @@ namespace MyUWPToolkit.FlexGrid
         {
             _cell.Loaded -= _cell_Loaded;
             _cellSV = _cell.GetFirstChildOfType<ScrollViewer>();
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                _cellIP = _cellSV.GetFirstChildOfType<ItemsPresenter>();
+                _cellIP.PointerWheelChanged += OnPointerWheelChanged;
+                var verticalScrollBar = _cellSV.GetChildrenOfType<ScrollBar>().FirstOrDefault(x => x.Name == "VerticalScrollBar");
+                verticalScrollBar.ValueChanged += (s, e1) => { _frozenColumnsCellSV.ChangeView(null, e1.NewValue, null); };
+                var horizontalScrollBar = _cellSV.GetChildrenOfType<ScrollBar>().FirstOrDefault(x => x.Name == "HorizontalScrollBar");
+                horizontalScrollBar.ValueChanged += (s, e2) => { _columnsHeaderSV.ChangeView(e2.NewValue, null, null); };
+            }
         }
-
 
         #endregion
 
@@ -352,15 +369,18 @@ namespace MyUWPToolkit.FlexGrid
         {
             _columnsHeader = GetTemplateChild("ColumnsHeader") as ListView;
             _columnsHeader.Loaded += _columnsHeader_Loaded;
-            _columnsHeader.ItemClick += OnColumnSorting;    
+            _columnsHeader.ItemClick += OnColumnSorting;
         }
-
-      
 
         private void _columnsHeader_Loaded(object sender, RoutedEventArgs e)
         {
             _columnsHeader.Loaded -= _columnsHeader_Loaded;
             _columnsHeaderSV = _columnsHeader.GetFirstChildOfType<ScrollViewer>();
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                _columnsHeaderIP = _columnsHeaderSV.GetFirstChildOfType<ItemsPresenter>();
+                _columnsHeaderIP.PointerWheelChanged += OnPointerWheelChanged;
+            }
         }
 
         #endregion
@@ -377,6 +397,25 @@ namespace MyUWPToolkit.FlexGrid
         {
             _frozenColumnsCell.Loaded -= _frozenColumnsCell_Loaded;
             _frozenColumnsCellSV = _frozenColumnsCell.GetFirstChildOfType<ScrollViewer>();
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                _frozenColumnsCellIP = _frozenColumnsCellSV.GetFirstChildOfType<ItemsPresenter>();
+                _frozenColumnsCellIP.PointerWheelChanged += OnPointerWheelChanged;
+                _frozenColumnsCell.PointerEntered += _frozenColumnsCell_PointerEntered;
+                _frozenColumnsCell.PointerExited += _frozenColumnsCell_PointerExited;
+            }
+        }
+
+        private void _frozenColumnsCell_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+                VisualStateManager.GoToState(_cellSV, "NoIndicator", true);
+        }
+
+        private void _frozenColumnsCell_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+                VisualStateManager.GoToState(_cellSV, "MouseIndicator", true);
         }
 
         #endregion
@@ -399,79 +438,61 @@ namespace MyUWPToolkit.FlexGrid
         }
         #endregion
 
-        #region DP
-        private void OnItemsSourceChanged()
-        {
-            //_manualSort.Clear();
-            //ScrollPosition = new Point(0, 0);
-            //if (_view != null)
-            //{
-            //    _view.VectorChanged -= _view_VectorChanged;
-            //}
-            //_view = ItemsSource as ICollectionView;
-
-            //_props = null;
-            //_itemType = null;
-            //if (_view == null && ItemsSource != null)
-            //{
-            //    _view = new UWPCollectionView(ItemsSource);
-            //}
-
-            //// remove old rows, auto-generated columns
-            //Rows.Clear();
-            //ClearAutoGeneratedColumns();
-
-            //// bind grid to new data source
-            //if (_view != null)
-            //{
-            //    // connect event handlers
-            //    _view.VectorChanged += _view_VectorChanged;
-            //    // get list of properties available for binding
-            //    _props = GetItemProperties();
-
-            //    // just in case GetItemProperties changed something
-            //    ClearAutoGeneratedColumns();
-
-            //    //auto - generate columns
-            //    if (AutoGenerateColumns)
-            //    {
-            //        using (Columns.DeferNotifications())
-            //        {
-            //            GenerateColumns(_props);
-            //        }
-            //    }
-
-            //    // initialize non-auto-generated column bindings
-            //    foreach (var col in Columns)
-            //    {
-            //        if (!col.AutoGenerated)
-            //        {
-            //            BindColumn(col);
-            //        }
-            //    }
-
-            //    // load rows
-            //    LoadRows();
-
-            //}
-        }
-        #endregion
-
         #region Common
         private void OnItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.ItemClick!=null)
+            if (this.ItemClick != null)
             {
                 this.ItemClick(this, e);
             }
         }
         private void OnColumnSorting(object sender, ItemClickEventArgs e)
         {
-            if (this.SortingColumn!=null)
+            if (this.SortingColumn != null)
             {
                 this.SortingColumn(this, new SortingColumnEventArgs(e.ClickedItem));
             }
         }
+        private void OnItemsSourceChanged()
+        {
+            //reset scrollviewer
+            if (_cellSV != null)
+            {
+                _cellSV.ChangeView(0, 0, null, true);
+            }
+            if (_columnsHeaderSV != null)
+            {
+                _columnsHeaderSV.ChangeView(0, 0, null, true);
+            }
+            if (_frozenColumnsCellSV != null)
+            {
+                _frozenColumnsCellSV.ChangeView(0, 0, null, true);
+            }
+        }
+        private void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                PointerPoint mousePosition = e.GetCurrentPoint(sender as ItemsPresenter);
+
+                var delta = mousePosition.Properties.MouseWheelDelta;
+                if (sender == _columnsHeaderIP)
+                {
+                    var horizontalOffset = _cellSV.HorizontalOffset - delta;
+                    _cellSV.ChangeView(horizontalOffset, null, null);
+                    _columnsHeaderSV.ChangeView(horizontalOffset, null, null);
+                }
+                else
+                {
+                    var verticalOffset = _cellSV.VerticalOffset - delta;
+                    _cellSV.ChangeView(null, verticalOffset, null);
+                    _frozenColumnsCellSV.ChangeView(null, verticalOffset, null);
+                }
+            }
+        }
+
         #endregion
         #endregion
 

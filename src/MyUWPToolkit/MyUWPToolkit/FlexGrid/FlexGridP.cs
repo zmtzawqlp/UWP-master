@@ -25,6 +25,11 @@ namespace MyUWPToolkit.FlexGrid
         ScrollViewer _columnsHeaderSV;
         ScrollViewer _cellSV;
 
+        ItemsPresenter _frozenColumnsCellIP;
+        ItemsPresenter _columnsHeaderIP;
+        ItemsPresenter _cellIP;
+         
+
         #region Manipulation
         bool startingPullToRefresh = false;
         bool startingCrossSlideLeft = false;

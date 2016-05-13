@@ -23,6 +23,7 @@ using Windows.Devices.Input;
 using System.Diagnostics;
 using Windows.UI;
 using MyUWPToolkit.Common;
+using Windows.UI.Input;
 
 namespace MyUWPToolkit.DataGrid
 {
@@ -189,6 +190,12 @@ namespace MyUWPToolkit.DataGrid
             _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
             _contentGrid.ManipulationCompleted += _contentGrid_ManipulationCompleted;
             _contentGrid.ManipulationStarting += _contentGrid_ManipulationStarting;
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                _contentGrid.PointerWheelChanged += _contentGrid_PointerWheelChanged;
+                this.PointerEntered += OnPointerEntered;
+                this.PointerExited += OnPointerExited;
+            }
 
             _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
             _pullToRefreshHeader.DataContext = this;
@@ -207,6 +214,32 @@ namespace MyUWPToolkit.DataGrid
             int sz = (int)(FontSize * 1.6 + 4);
             Rows.DefaultSize = sz;
             ColumnHeaders.Rows.DefaultSize = sz;
+        }
+
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+                VisualStateManager.GoToState(this, "NoIndicator", true);
+        }
+
+        private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+                VisualStateManager.GoToState(this, "MouseIndicator", true);
+        }
+
+        private void _contentGrid_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                PointerPoint mousePosition = e.GetCurrentPoint(sender as Grid);
+                var delta = mousePosition.Properties.MouseWheelDelta;
+
+                var verticalOffset = ScrollPosition.Y + delta;
+                ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
+            }
         }
 
         private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
@@ -230,7 +263,7 @@ namespace MyUWPToolkit.DataGrid
             {
                 startingCrossSlideRight = true;
             }
-            
+
         }
 
         private void _contentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -270,17 +303,23 @@ namespace MyUWPToolkit.DataGrid
         {
             var x = e.Delta.Translation.X;
             var y = e.Delta.Translation.Y;
-
+            
             switch (manipulationStatus)
             {
                 case ManipulationStatus.None:
                     HandleManipulationDelta(e, x, y);
                     break;
                 case ManipulationStatus.CrossSlideLeft:
-                    HandleCrossSlideLeft(x, y);
+                    if (e.PointerDeviceType!=PointerDeviceType.Mouse)
+                    {
+                        HandleCrossSlideLeft(x, y);
+                    }
                     break;
                 case ManipulationStatus.CrossSlideRight:
-                    HandleCrossSlideRight(x, y);
+                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
+                    {
+                        HandleCrossSlideRight(x, y);
+                    }
                     break;
                 case ManipulationStatus.PullToRefresh:
                     HandlePullToRefresh(x, y, e);

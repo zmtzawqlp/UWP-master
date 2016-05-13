@@ -57,7 +57,7 @@
           FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
           FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
           PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-          PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+          PointerOverBackground="Transparent"
           PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
           SelectedBackground="{ThemeResource SystemControlHighlightListAccentLowBrush}"
           SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
