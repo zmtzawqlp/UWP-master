@@ -143,7 +143,10 @@ namespace MyUWPToolkit.FlexGrid
                     }
                     break;
                 case ManipulationStatus.PullToRefresh:
-                    HandlePullToRefresh(x, y, e);
+                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
+                    {
+                        HandlePullToRefresh(x, y, e);
+                    }
                     break;
                 case ManipulationStatus.Scrolling:
                     HandleScrolling(x, y, e);
@@ -488,7 +491,7 @@ namespace MyUWPToolkit.FlexGrid
                 {
                     var verticalOffset = _cellSV.VerticalOffset - delta;
                     _cellSV.ChangeView(null, verticalOffset, null);
-                    _frozenColumnsCellSV.ChangeView(null, verticalOffset, null);
+                    _frozenColumnsCellSV.ChangeView(null, verticalOffset, null, true);
                 }
             }
         }

@@ -322,7 +322,10 @@ namespace MyUWPToolkit.DataGrid
                     }
                     break;
                 case ManipulationStatus.PullToRefresh:
-                    HandlePullToRefresh(x, y, e);
+                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
+                    {
+                        HandlePullToRefresh(x, y, e);
+                    }
                     break;
                 case ManipulationStatus.Scrolling:
                     HandleScrolling(x, y, e);
