@@ -321,7 +321,7 @@ namespace MyUWPToolkit.FlexGrid
                 PivotItem.RenderTransform = new TranslateTransform();
                 var pivot = PivotItem.Parent as Pivot;
                 //Manipulation Is Inertial
-                //when swip quickly, may it will change index manytime, we only handle the selectindex is 
+                //when swip quickly, may it will change index many time, we only handle the selectindex is 
                 //PivotItem index
                 if (pivot != null && pivot.SelectedIndex == pivot.IndexFromContainer(PivotItem))
                 {
@@ -378,6 +378,8 @@ namespace MyUWPToolkit.FlexGrid
             }
         }
 
+
+        #region horizontalScrollBar
         private void _horizontalScrollBar_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (!e.Pointer.IsInContact)
@@ -388,15 +390,20 @@ namespace MyUWPToolkit.FlexGrid
 
         private void _horizontalScrollBar_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            _horizontalScrollBar.ValueChanged -= _horizontalScrollBar_ValueChanged;
-            _horizontalScrollBar.ValueChanged += _horizontalScrollBar_ValueChanged;
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                _horizontalScrollBar.ValueChanged -= _horizontalScrollBar_ValueChanged;
+                _horizontalScrollBar.ValueChanged += _horizontalScrollBar_ValueChanged;
+            }
         }
 
         private void _horizontalScrollBar_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             _columnsHeaderSV.ChangeView(e.NewValue, null, null, true);
         }
+        #endregion
 
+        #region verticalScrollBar
         private void VerticalScrollBar_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (!e.Pointer.IsInContact)
@@ -407,14 +414,19 @@ namespace MyUWPToolkit.FlexGrid
 
         private void VerticalScrollBar_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            _verticalScrollBar.ValueChanged -= _verticalScrollBar_ValueChanged;
-            _verticalScrollBar.ValueChanged += _verticalScrollBar_ValueChanged;
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                _verticalScrollBar.ValueChanged -= _verticalScrollBar_ValueChanged;
+                _verticalScrollBar.ValueChanged += _verticalScrollBar_ValueChanged;
+            }
+
         }
 
         private void _verticalScrollBar_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             _frozenColumnsCellSV.ChangeView(null, e.NewValue, null, true);
         }
+        #endregion
 
         #endregion
 
