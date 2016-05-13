@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace MyUWPToolkit.FlexGrid
 {
@@ -19,30 +21,88 @@ namespace MyUWPToolkit.FlexGrid
         ListView _columnsHeader;
         ListView _cell;
         ContentControl _pullToRefreshHeader;
-        //ScrollViewer _frozenColumnsHeader;
         ScrollViewer _frozenColumnsCellSV;
         ScrollViewer _columnsHeaderSV;
         ScrollViewer _cellSV;
 
-        ////ItemsPresenter _frozenColumnsHeader;
-        //ItemsPresenter _frozenColumnsCellIP;
-        //ItemsPresenter _columnsHeaderIP;
-        //ItemsPresenter _cellIP;
+        #region Manipulation
+        bool startingPullToRefresh = false;
+        bool startingCrossSlideLeft = false;
+        bool startingCrossSlideRight = false;
+        double preDeltaTranslationX;
+        double preDeltaTranslationY;
+        ManipulationStatus manipulationStatus;
         #endregion
 
+        #endregion
+
+
         #region Internal property
-        ScrollViewer CellSV
+        bool firstTimeTrytoFindPivotItem = true;
+
+        PivotItem _pivotItem;
+        internal PivotItem PivotItem
         {
             get
             {
-                if (_cellSV==null && _cell!=null)
+                if (_pivotItem == null && firstTimeTrytoFindPivotItem)
                 {
-                 
+                    firstTimeTrytoFindPivotItem = false;
+                    var parent = this.Parent as FrameworkElement;
+                    while (parent != null)
+                    {
+                        _pivotItem = parent as PivotItem;
+                        if (_pivotItem != null)
+                        {
+                            break;
+                        }
+                        parent = parent.Parent as FrameworkElement;
+                    }
+
                 }
-                return null;
+                return _pivotItem;
+            }
+        }
+
+        internal TranslateTransform PivotItemTT
+        {
+            get
+            {
+                if (PivotItem != null)
+                {
+                    var tt = PivotItem.RenderTransform as TranslateTransform;
+                    if (tt == null)
+                    {
+                        tt = new TranslateTransform();
+                    }
+                    return tt;
+                }
+                else
+                {
+                    return new TranslateTransform();
+                }
             }
         }
         #endregion
+
+        #region Public property
+        /// <summary>
+        /// fire when tap in column header
+        /// </summary>
+        public event EventHandler<ItemClickEventArgs> ItemClick;
+
+        /// <summary>
+        /// occur when reach threshold.
+        /// </summary>
+        public event EventHandler PullToRefresh;
+
+        /// <summary>
+        /// fire when tap in column header
+        /// </summary>
+        public event EventHandler<SortingColumnEventArgs> SortingColumn;
+
+        #endregion
+
         #region DependencyProperty
         public object ItemsSource
         {
@@ -171,7 +231,37 @@ namespace MyUWPToolkit.FlexGrid
 
         #endregion
 
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty); }
+            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for VerticalScrollBarVisibility.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
+            DependencyProperty.Register("VerticalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(FlexGrid), new PropertyMetadata(ScrollBarVisibility.Auto));
+
+
+        public ScrollBarVisibility HorizontalScrollBarVisibility
+        {
+            get { return (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty); }
+            set { SetValue(HorizontalScrollBarVisibilityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HorizontalScrollBarVisibility.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty =
+            DependencyProperty.Register("HorizontalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(FlexGrid), new PropertyMetadata(ScrollBarVisibility.Auto));
+
 
         #endregion
+    }
+
+    public class SortingColumnEventArgs:EventArgs
+    {
+        public object Column { get; private set; }
+        public SortingColumnEventArgs(object column)
+        {
+            Column = column;
+        }
     }
 }

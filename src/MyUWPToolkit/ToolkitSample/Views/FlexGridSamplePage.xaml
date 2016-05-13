@@ -15,7 +15,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="adada">
-                <flexgrid:FlexGrid x:Name="flexgrid" >
+                <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick" PullToRefresh="flexgrid_PullToRefresh" SortingColumn="flexgrid_SortingColumn" >
                     <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}"/>

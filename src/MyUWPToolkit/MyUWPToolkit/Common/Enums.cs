@@ -14,4 +14,10 @@ namespace MyUWPToolkit.Common
         PullToRefresh,
         Scrolling
     }
+
+    public enum CrossSlideMode
+    {
+        Left,
+        Right
+    }
 }

@@ -37,18 +37,28 @@ namespace ToolkitSample
         {
             _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
             {
-                if (count == -1)
-                {
-                    count = 5;
-                }
-
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
 
             //_employees.CollectionChanged += _employees_CollectionChanged;
             flexgrid.FrozenColumnsHeaderItemsSource = new List<string>() { "test1" };
-            flexgrid.ColumnsHeaderItemsSource = new List<string>() { "Name1", "Name2", "Name3", "Name4", "Name5", "Name6", "Name7", "Name8"};
+            flexgrid.ColumnsHeaderItemsSource = new List<string>() { "Name1", "Name2", "Name3", "Name4", "Name5", "Name6", "Name7"};
             flexgrid.ItemsSource = _employees;
+        }
+
+        private void flexgrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+        private void flexgrid_PullToRefresh(object sender, EventArgs e)
+        {
+
+        }
+
+        private void flexgrid_SortingColumn(object sender, MyUWPToolkit.FlexGrid.SortingColumnEventArgs e)
+        {
+
         }
     }
 }

@@ -26,4 +26,14 @@ namespace MyUWPToolkit.DataGrid
         /// </summary>
         All = 3,
     }
+
+
+    public enum SortMode
+    {
+        //Handle sort by collection view
+        Auto,
+        //Handle sort by SortingColumn event
+        Manual
+    }
+
 }

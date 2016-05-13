@@ -9,7 +9,7 @@
     <Style TargetType="local:DataGrid">
         <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="RefreshThreshold" Value="150"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="PullToRefreshHeaderTemplate">
             <Setter.Value>

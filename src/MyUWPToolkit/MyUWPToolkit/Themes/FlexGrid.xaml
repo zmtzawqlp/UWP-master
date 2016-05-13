@@ -14,6 +14,7 @@
     <x:Double x:Key="ListViewItemMinWidth">88</x:Double>
     <x:Double x:Key="ListViewItemMinHeight">44</x:Double>
     <Thickness x:Key="ListViewItemCompactSelectedBorderThemeThickness">4</Thickness>
+    
     <Style x:Key="FlexGridListViewStyle" TargetType="ListView">
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="TabNavigation" Value="Once" />
@@ -128,6 +129,7 @@
         </Setter>
     </Style>
     <Style TargetType="local:FlexGrid">
+        <Setter Property="RefreshThreshold" Value="150"/>
         <Setter Property="PullToRefreshHeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -163,6 +165,8 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:FlexGrid">
@@ -185,7 +189,7 @@
                                 </ListView.ItemsPanel>
                             </ListView>
 
-                            <ListView x:Name="ColumnsHeader"  Grid.Row="0" Grid.Column="1" ItemsSource="{TemplateBinding ColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding ColumnsHeaderItemTemplate}" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.IsHorizontalRailEnabled="True" ScrollViewer.IsVerticalRailEnabled="False" Style="{StaticResource FlexGridListViewStyle}">
+                            <ListView x:Name="ColumnsHeader"  Grid.Row="0" Grid.Column="1" ItemsSource="{TemplateBinding ColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding ColumnsHeaderItemTemplate}" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.IsHorizontalRailEnabled="True" ScrollViewer.IsVerticalRailEnabled="False" Style="{StaticResource FlexGridListViewStyle}">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <ItemsStackPanel Orientation="Horizontal"/>
@@ -197,9 +201,9 @@
                                 ContentTemplate="{TemplateBinding PullToRefreshHeaderTemplate}"   HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
 
 
-                            <ListView x:Name="FrozenColumnsCell" Grid.Row="2" Grid.Column="0" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsCellItemTemplate}" Style="{StaticResource FlexGridListViewStyle}"/>
+                            <ListView x:Name="FrozenColumnsCell" Grid.Row="2" Grid.Column="0" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsCellItemTemplate}" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.IsHorizontalRailEnabled="False" ScrollViewer.IsVerticalRailEnabled="True" Style="{StaticResource FlexGridListViewStyle}"/>
 
-                            <ListView x:Name="Cell" Grid.Row="2" Grid.Column="1" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding CellItemTemplate}" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.IsHorizontalRailEnabled="True" ScrollViewer.IsVerticalRailEnabled="True" Style="{StaticResource FlexGridListViewStyle}"/>
+                            <ListView x:Name="Cell" Grid.Row="2" Grid.Column="1" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding CellItemTemplate}" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}" ScrollViewer.IsHorizontalRailEnabled="True" ScrollViewer.IsVerticalRailEnabled="True" Style="{StaticResource FlexGridListViewStyle}"/>
                         </Grid>
                     </Border>
                 </ControlTemplate>

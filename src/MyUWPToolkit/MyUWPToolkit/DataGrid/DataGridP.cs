@@ -58,7 +58,6 @@ namespace MyUWPToolkit.DataGrid
         internal IList<SortDescription> ManualSortDescriptions { get { return _manualSort; } }
 
         bool firstTimeTrytoFindPivotItem = true;
-        internal Thickness _defaultPivotItemMargin = new Thickness();
 
         PivotItem _pivotItem;
         internal PivotItem PivotItem
@@ -74,8 +73,6 @@ namespace MyUWPToolkit.DataGrid
                         _pivotItem = parent as PivotItem;
                         if (_pivotItem != null)
                         {
-                            _defaultPivotItemMargin = _pivotItem.Margin;
-                            //ScrollViewer.SetHorizontalScrollMode(_pivot, ScrollMode.Disabled);
                             break;
                         }
                         parent = parent.Parent as FrameworkElement;
@@ -203,12 +200,6 @@ namespace MyUWPToolkit.DataGrid
         /// </summary>
         public event EventHandler PullToRefresh;
 
-
-        /// <summary>
-        /// occur when Cross Slide to left or right.
-        /// make it for in some controls like Pivot
-        /// </summary>
-        public event EventHandler<CrossSlideEventArgs> CrossSlide;
         #endregion
 
         #region Dependency Properties
@@ -495,20 +486,4 @@ namespace MyUWPToolkit.DataGrid
         }
     }
 
-    public enum CrossSlideMode
-    {
-        Left,
-        Right
-    }
-
-    public enum SortMode
-    {
-        //Handle sort by collection view
-        Auto,
-        //Handle sort by SortingColumn event
-        Manual
-    }
-
-
-  
 }

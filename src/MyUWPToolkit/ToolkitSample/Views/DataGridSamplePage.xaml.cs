@@ -1,4 +1,5 @@
-﻿using MyUWPToolkit.DataGrid;
+﻿using MyUWPToolkit.Common;
+using MyUWPToolkit.DataGrid;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -52,7 +53,7 @@ namespace ToolkitSample
             //_employees.CollectionChanged += _employees_CollectionChanged;
 
             datagrid.ItemsSource =_employees;
-            datagrid.CrossSlide += Datagrid_CrossSlide;
+           
         }
 
         private void Datagrid_CrossSlide(object sender, MyUWPToolkit.DataGrid.CrossSlideEventArgs e)
