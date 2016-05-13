@@ -22,6 +22,7 @@ using Windows.Foundation.Collections;
 using Windows.Devices.Input;
 using System.Diagnostics;
 using Windows.UI;
+using MyUWPToolkit.Common;
 
 namespace MyUWPToolkit.DataGrid
 {
@@ -229,10 +230,22 @@ namespace MyUWPToolkit.DataGrid
             {
                 startingCrossSlideRight = true;
             }
+            
         }
 
         private void _contentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
+
+            VisualStateManager.GoToState(this, "NoIndicator", true);
+            _pullToRefreshHeader.Height = 0;
+            _contentGrid.RowDefinitions[1].Height = new GridLength(0);
+
+            if (PivotItem != null)
+            {
+                PivotItem.RenderTransform = new TranslateTransform();
+            }
+
+
             if (IsReachThreshold && manipulationStatus == ManipulationStatus.PullToRefresh)
             {
                 if (PullToRefresh != null)
@@ -241,24 +254,15 @@ namespace MyUWPToolkit.DataGrid
                     PullToRefresh(this, null);
                 }
             }
-
-            preDeltaTranslationX = 0;
-            preDeltaTranslationY = 0;
-            VisualStateManager.GoToState(this, "NoIndicator", true);
-            _pullToRefreshHeader.Height = 0;
-            _contentGrid.RowDefinitions[1].Height = new GridLength(0);
+            IsReachThreshold = false;
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
             manipulationStatus = ManipulationStatus.None;
-            _contentGrid.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            preDeltaTranslationX = 0;
+            preDeltaTranslationY = 0;
 
             _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
-
-            if (PivotItem != null)
-            {
-                PivotItem.RenderTransform = new TranslateTransform();
-            }
 
         }
 

@@ -111,6 +111,7 @@
     <Compile Include="CollectionView\ICollectionViewEx.cs" />
     <Compile Include="CollectionView\UWPCollectionView.cs" />
     <Compile Include="Common\BindingEvaluator.cs" />
+    <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
     <Compile Include="DataGrid\Enums.cs" />

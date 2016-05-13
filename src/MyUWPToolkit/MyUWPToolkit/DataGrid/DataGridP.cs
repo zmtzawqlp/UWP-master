@@ -1,4 +1,5 @@
 ﻿using MyUWPToolkit.CollectionView;
+using MyUWPToolkit.Common;
 using MyUWPToolkit.DataGrid.Model.Cell;
 using MyUWPToolkit.DataGrid.Model.RowCol;
 using System;
@@ -509,12 +510,5 @@ namespace MyUWPToolkit.DataGrid
     }
 
 
-    internal enum ManipulationStatus
-    {
-        None,
-        CrossSlideLeft,
-        CrossSlideRight,
-        PullToRefresh,
-        Scrolling
-    }
+  
 }

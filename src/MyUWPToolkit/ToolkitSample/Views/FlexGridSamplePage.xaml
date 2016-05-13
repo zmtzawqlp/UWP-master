@@ -6,98 +6,54 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:MyUWPToolkit"
+    xmlns:flexgrid="using:MyUWPToolkit.FlexGrid"
     mc:Ignorable="d">
     <Page.Resources>
-
-        <Style x:Key="ListViewStyle1" TargetType="ListView">
-            <Setter Property="IsTabStop" Value="False"/>
-            <Setter Property="TabNavigation" Value="Once"/>
-            <Setter Property="IsSwipeEnabled" Value="True"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled"/>
-            <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="True"/>
-            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
-            <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True"/>
-            <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
-            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
-            <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
-            <Setter Property="ItemContainerTransitions">
-                <Setter.Value>
-                    <TransitionCollection>
-                        <AddDeleteThemeTransition/>
-                        <ContentThemeTransition/>
-                        <ReorderThemeTransition/>
-                        <EntranceThemeTransition IsStaggeringEnabled="False"/>
-                    </TransitionCollection>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ItemsPanel">
-                <Setter.Value>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListView">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-                            <ScrollViewer x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
-                                <ItemsPresenter ManipulationStarting="ItemsPresenter_ManipulationStarting" ManipulationDelta="ItemsPresenter_ManipulationDelta" ManipulationMode="System" ManipulationInertiaStarting="ItemsPresenter_ManipulationInertiaStarting" ManipulationCompleted="ItemsPresenter_ManipulationCompleted" FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}" HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
-                                <!--,TranslateY,TranslateInertia-->
-                            </ScrollViewer>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
+        
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="adada">
-                <control:PullToRefreshPanel x:Name="PullToRefreshPanel">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ListView x:Name="listview1" Grid.Column="0"  >
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="djkajdalkja"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                        <ListView x:Name="listview" Grid.Column="1" Style="{StaticResource ListViewStyle1}" PointerPressed="listview_PointerPressed">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Grid>
-
-                </control:PullToRefreshPanel>
-               
+                <flexgrid:FlexGrid x:Name="flexgrid" >
+                    <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
+                    <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Width="100"/>
+                        </DataTemplate>
+                    </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
+                    <flexgrid:FlexGrid.FrozenColumnsCellItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </flexgrid:FlexGrid.FrozenColumnsCellItemTemplate>
+                    <flexgrid:FlexGrid.CellItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                                <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                                <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                                <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                                <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                                <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                            </Grid>
+                        </DataTemplate>
+                    </flexgrid:FlexGrid.CellItemTemplate>
+                </flexgrid:FlexGrid>
             </PivotItem>
             <PivotItem Header="dada">
                 <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Red"/>

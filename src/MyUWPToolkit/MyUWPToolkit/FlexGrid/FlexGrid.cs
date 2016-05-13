@@ -1,26 +1,196 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace MyUWPToolkit.FlexGrid
 {
-    [TemplatePart(Name = "FrozenColumnsHeader", Type = typeof(ItemsControl))]
+    [TemplatePart(Name = "ContentGrid", Type = typeof(Grid))]
+    [TemplatePart(Name = "FrozenColumnsHeader", Type = typeof(ListView))]
     [TemplatePart(Name = "FrozenColumnsCell", Type = typeof(ListView))]
     [TemplatePart(Name = "ColumnsHeader", Type = typeof(ListView))]
     [TemplatePart(Name = "Cell", Type = typeof(ListView))]
+    [TemplatePart(Name = "PullToRefreshHeader", Type = typeof(ContentControl))]
     public partial class FlexGrid : Control
     {
-        #region Ctor
+        #region ctor
         public FlexGrid()
         {
             this.DefaultStyleKey = typeof(FlexGrid);
-           
+
         }
         #endregion
-       
+
+        #region override method
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitializeContentGrid();
+            InitializeFrozenColumnsHeader();
+            InitializeFrozenColumnsCell();
+            InitializeColumnsHeader();
+            InitializeCell();
+            InitializePullToRefreshHeader();
+        }
+
+
+        #endregion
+
+
+        #region private method
+
+        #region ContentGrid
+        private void InitializeContentGrid()
+        {
+            _contentGrid = GetTemplateChild("ContentGrid") as Grid;
+            _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
+            _contentGrid.ManipulationCompleted += _contentGrid_ManipulationCompleted;
+            _contentGrid.ManipulationStarting += _contentGrid_ManipulationStarting;
+        }
+
+        private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
+        {
+
+        }
+
+        private void _contentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+
+        }
+
+        private void _contentGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region Cell
+        private void InitializeCell()
+        {
+            _cell = GetTemplateChild("Cell") as ListView;
+            _cell.Loaded += _cell_Loaded;
+        }
+
+        private void _cell_Loaded(object sender, RoutedEventArgs e)
+        {
+            _cell.Loaded -= _cell_Loaded;
+            _cellSV = _cell.GetFirstChildOfType<ScrollViewer>();
+        }
+
+
+        #endregion
+
+        #region ColumnsHeader
+
+        private void InitializeColumnsHeader()
+        {
+            _columnsHeader = GetTemplateChild("ColumnsHeader") as ListView;
+            _columnsHeader.Loaded += _columnsHeader_Loaded;
+        }
+
+        private void _columnsHeader_Loaded(object sender, RoutedEventArgs e)
+        {
+            _columnsHeader.Loaded -= _columnsHeader_Loaded;
+            _columnsHeaderSV = _columnsHeader.GetFirstChildOfType<ScrollViewer>();
+        }
+
+        #endregion
+
+        #region FrozenColumnsCell
+        private void InitializeFrozenColumnsCell()
+        {
+            _frozenColumnsCell = GetTemplateChild("FrozenColumnsCell") as ListView;
+            _frozenColumnsCell.Loaded += _frozenColumnsCell_Loaded;
+        }
+
+        private void _frozenColumnsCell_Loaded(object sender, RoutedEventArgs e)
+        {
+            _frozenColumnsCell.Loaded -= _frozenColumnsCell_Loaded;
+            _frozenColumnsCellSV = _frozenColumnsCell.GetFirstChildOfType<ScrollViewer>();
+        }
+
+        #endregion
+
+        #region FrozenColumnsHeader
+        private void InitializeFrozenColumnsHeader()
+        {
+            _frozenColumnsHeader = GetTemplateChild("FrozenColumnsHeader") as ListView;
+        }
+
+        #endregion
+
+        #region PullToRefreshHeader
+
+        private void InitializePullToRefreshHeader()
+        {
+            _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
+            _pullToRefreshHeader.DataContext = this;
+        }
+        #endregion
+
+        #region DP
+        private void OnItemsSourceChanged()
+        {
+            //_manualSort.Clear();
+            //ScrollPosition = new Point(0, 0);
+            //if (_view != null)
+            //{
+            //    _view.VectorChanged -= _view_VectorChanged;
+            //}
+            //_view = ItemsSource as ICollectionView;
+
+            //_props = null;
+            //_itemType = null;
+            //if (_view == null && ItemsSource != null)
+            //{
+            //    _view = new UWPCollectionView(ItemsSource);
+            //}
+
+            //// remove old rows, auto-generated columns
+            //Rows.Clear();
+            //ClearAutoGeneratedColumns();
+
+            //// bind grid to new data source
+            //if (_view != null)
+            //{
+            //    // connect event handlers
+            //    _view.VectorChanged += _view_VectorChanged;
+            //    // get list of properties available for binding
+            //    _props = GetItemProperties();
+
+            //    // just in case GetItemProperties changed something
+            //    ClearAutoGeneratedColumns();
+
+            //    //auto - generate columns
+            //    if (AutoGenerateColumns)
+            //    {
+            //        using (Columns.DeferNotifications())
+            //        {
+            //            GenerateColumns(_props);
+            //        }
+            //    }
+
+            //    // initialize non-auto-generated column bindings
+            //    foreach (var col in Columns)
+            //    {
+            //        if (!col.AutoGenerated)
+            //        {
+            //            BindColumn(col);
+            //        }
+            //    }
+
+            //    // load rows
+            //    LoadRows();
+
+            //}
+        }
+        #endregion
+        #endregion
+
     }
 }
