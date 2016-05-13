@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
@@ -28,7 +29,8 @@ namespace MyUWPToolkit.FlexGrid
         ItemsPresenter _frozenColumnsCellIP;
         ItemsPresenter _columnsHeaderIP;
         ItemsPresenter _cellIP;
-         
+        ScrollBar _verticalScrollBar;
+        ScrollBar _horizontalScrollBar;
 
         #region Manipulation
         bool startingPullToRefresh = false;

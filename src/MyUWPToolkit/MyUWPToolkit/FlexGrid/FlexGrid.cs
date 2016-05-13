@@ -13,6 +13,7 @@ using Windows.Foundation;
 using Windows.Devices.Input;
 using Windows.UI.Input;
 using Windows.UI.Xaml.Controls.Primitives;
+using System.Diagnostics;
 
 namespace MyUWPToolkit.FlexGrid
 {
@@ -68,6 +69,15 @@ namespace MyUWPToolkit.FlexGrid
 
         private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
+            if (_verticalScrollBar != null)
+            {
+                _verticalScrollBar.ValueChanged -= _verticalScrollBar_ValueChanged;
+            }
+            if (_horizontalScrollBar != null)
+            {
+                _horizontalScrollBar.ValueChanged -= _horizontalScrollBar_ValueChanged;
+            }
+
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
@@ -357,11 +367,53 @@ namespace MyUWPToolkit.FlexGrid
             {
                 _cellIP = _cellSV.GetFirstChildOfType<ItemsPresenter>();
                 _cellIP.PointerWheelChanged += OnPointerWheelChanged;
-                var verticalScrollBar = _cellSV.GetChildrenOfType<ScrollBar>().FirstOrDefault(x => x.Name == "VerticalScrollBar");
-                verticalScrollBar.ValueChanged += (s, e1) => { _frozenColumnsCellSV.ChangeView(null, e1.NewValue, null); };
-                var horizontalScrollBar = _cellSV.GetChildrenOfType<ScrollBar>().FirstOrDefault(x => x.Name == "HorizontalScrollBar");
-                horizontalScrollBar.ValueChanged += (s, e2) => { _columnsHeaderSV.ChangeView(e2.NewValue, null, null); };
+
+                _verticalScrollBar = _cellSV.GetChildrenOfType<ScrollBar>().FirstOrDefault(x => x.Name == "VerticalScrollBar");
+                _verticalScrollBar.PointerEntered += VerticalScrollBar_PointerEntered;
+                _verticalScrollBar.PointerExited += VerticalScrollBar_PointerExited;
+
+                _horizontalScrollBar = _cellSV.GetChildrenOfType<ScrollBar>().FirstOrDefault(x => x.Name == "HorizontalScrollBar");
+                _horizontalScrollBar.PointerEntered += _horizontalScrollBar_PointerEntered;
+                _horizontalScrollBar.PointerExited += _horizontalScrollBar_PointerExited;
             }
+        }
+
+        private void _horizontalScrollBar_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.Pointer.IsInContact)
+            {
+                _horizontalScrollBar.ValueChanged -= _horizontalScrollBar_ValueChanged;
+            }
+        }
+
+        private void _horizontalScrollBar_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            _horizontalScrollBar.ValueChanged -= _horizontalScrollBar_ValueChanged;
+            _horizontalScrollBar.ValueChanged += _horizontalScrollBar_ValueChanged;
+        }
+
+        private void _horizontalScrollBar_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _columnsHeaderSV.ChangeView(e.NewValue, null, null, true);
+        }
+
+        private void VerticalScrollBar_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (!e.Pointer.IsInContact)
+            {
+                _verticalScrollBar.ValueChanged -= _verticalScrollBar_ValueChanged;
+            }
+        }
+
+        private void VerticalScrollBar_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            _verticalScrollBar.ValueChanged -= _verticalScrollBar_ValueChanged;
+            _verticalScrollBar.ValueChanged += _verticalScrollBar_ValueChanged;
+        }
+
+        private void _verticalScrollBar_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            _frozenColumnsCellSV.ChangeView(null, e.NewValue, null, true);
         }
 
         #endregion
@@ -478,6 +530,9 @@ namespace MyUWPToolkit.FlexGrid
 
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
+                _verticalScrollBar.ValueChanged -= _verticalScrollBar_ValueChanged;
+                _horizontalScrollBar.ValueChanged -= _horizontalScrollBar_ValueChanged;
+
                 PointerPoint mousePosition = e.GetCurrentPoint(sender as ItemsPresenter);
 
                 var delta = mousePosition.Properties.MouseWheelDelta;
@@ -491,7 +546,7 @@ namespace MyUWPToolkit.FlexGrid
                 {
                     var verticalOffset = _cellSV.VerticalOffset - delta;
                     _cellSV.ChangeView(null, verticalOffset, null);
-                    _frozenColumnsCellSV.ChangeView(null, verticalOffset, null, true);
+                    _frozenColumnsCellSV.ChangeView(null, verticalOffset, null);
                 }
             }
         }
