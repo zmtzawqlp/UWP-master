@@ -724,7 +724,7 @@ namespace MyUWPToolkit.DataGrid
         private void OnItemsSourceChanged()
         {
             _manualSort.Clear();
-            ScrollPosition = new Point(0, 0);
+            ScrollPosition = new Point(ScrollPosition.X, 0);
             if (_view != null)
             {
                 _view.VectorChanged -= _view_VectorChanged;

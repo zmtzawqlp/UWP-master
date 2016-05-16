@@ -162,9 +162,9 @@ namespace ToolkitSample
                        token));
         }
 
-        public void Sort()
+        public void OrderBy()
         {
-          
+         
         }
     }
 

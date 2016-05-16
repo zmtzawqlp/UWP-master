@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ namespace XamlDemo.Model
         /// <summary>
         /// 返回一个 Employee 数据集合，可用于测试
         /// </summary>
-        public static List<Employee> GetEmployees()
+        public static ObservableCollection<Employee> GetEmployees()
         {
-            var employees = new List<Employee>();
+            var employees = new ObservableCollection<Employee>();
 
             //int i = 0;
             //var item = new Employee
