@@ -82,7 +82,7 @@ namespace MyUWPToolkit.FlexGrid
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
 
-            if (_cellSV.VerticalOffset == 0)
+            if (_cellSV.VerticalOffset == 0 && AllowPullToRefresh)
             {
                 startingPullToRefresh = true;
             }
@@ -260,6 +260,10 @@ namespace MyUWPToolkit.FlexGrid
 
         private void HandlePullToRefresh(double x, double y, ManipulationDeltaRoutedEventArgs e)
         {
+            if (!AllowPullToRefresh)
+            {
+                return;
+            }
             manipulationStatus = ManipulationStatus.PullToRefresh;
             var maxThreshold = RefreshThreshold * 4 / 3.0;
             //Y not support inertial
@@ -363,6 +367,7 @@ namespace MyUWPToolkit.FlexGrid
         {
             _cell.Loaded -= _cell_Loaded;
             _cellSV = _cell.GetFirstChildOfType<ScrollViewer>();
+            _cellSV.ViewChanged += _cellSV_ViewChanged;
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 _cellIP = _cellSV.GetFirstChildOfType<ItemsPresenter>();
@@ -378,6 +383,15 @@ namespace MyUWPToolkit.FlexGrid
             }
         }
 
+        private void _cellSV_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            //for if itemsouce changed, but column has offset, we should move offset.
+            if (_cellSV.HorizontalOffset == 0 && _cellSV.VerticalOffset == 0 && _columnsHeaderSV != null)
+            {
+                _cellSV.ChangeView(_columnsHeaderSV.HorizontalOffset, null, null, true);
+            }
+
+        }
 
         #region horizontalScrollBar
         private void _horizontalScrollBar_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -563,6 +577,11 @@ namespace MyUWPToolkit.FlexGrid
             }
         }
 
+
+        public IEnumerable<object> GetVisibleItems()
+        {
+            return Util.Util.GetVisibleItems(_cell);
+        }
         #endregion
         #endregion
 

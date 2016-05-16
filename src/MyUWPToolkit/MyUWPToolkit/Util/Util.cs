@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
+using Windows.Foundation;
 
 namespace MyUWPToolkit.Util
 {
@@ -52,5 +54,25 @@ namespace MyUWPToolkit.Util
                 }
             }
         }
+        public static IEnumerable<object> GetVisibleItems(ItemsControl itemsControl)
+        {
+            for (int i = 0; i < itemsControl.Items.Count; i++)
+            {
+                var obj = itemsControl.ContainerFromIndex(i) as FrameworkElement;
+                if (obj != null)
+                {
+                    GeneralTransform gt = obj.TransformToVisual(itemsControl);
+                    var rect = gt.TransformBounds(new Rect(0, 0, obj.ActualWidth, obj.ActualHeight));
+
+                    if (rect.Bottom < 0 || rect.Top > itemsControl.ActualHeight)
+                    {
+                        continue;
+                    }
+
+                    yield return itemsControl.Items[i];
+                }
+            }
+        }
+
     }
 }

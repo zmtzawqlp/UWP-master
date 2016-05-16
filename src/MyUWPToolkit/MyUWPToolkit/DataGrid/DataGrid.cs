@@ -112,6 +112,7 @@ namespace MyUWPToolkit.DataGrid
                     // update scrollbar visibility
                     if (_verticalScrollBar != null)
                     {
+                        
                         switch (VerticalScrollBarVisibility)
                         {
 

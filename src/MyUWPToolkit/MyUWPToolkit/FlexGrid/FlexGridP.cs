@@ -107,7 +107,6 @@ namespace MyUWPToolkit.FlexGrid
         /// fire when tap in column header
         /// </summary>
         public event EventHandler<SortingColumnEventArgs> SortingColumn;
-
         #endregion
 
         #region DependencyProperty
@@ -190,6 +189,17 @@ namespace MyUWPToolkit.FlexGrid
             DependencyProperty.Register("CellItemTemplate", typeof(DataTemplate), typeof(FlexGrid), new PropertyMetadata(null));
 
         #region PullToRefresh
+        public bool AllowPullToRefresh
+        {
+            get { return (bool)GetValue(AllowPullToRefreshProperty); }
+            set { SetValue(AllowPullToRefreshProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowPullToRefresh.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowPullToRefreshProperty =
+            DependencyProperty.Register("AllowPullToRefresh", typeof(bool), typeof(FlexGrid), new PropertyMetadata(false));
+
+
         /// <summary>
         /// The threshold for release to refresh，defautl value is 1/5 of PullToRefreshPanel's height.
         /// </summary>
