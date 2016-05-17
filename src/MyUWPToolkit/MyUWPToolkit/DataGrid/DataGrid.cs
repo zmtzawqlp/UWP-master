@@ -76,7 +76,36 @@ namespace MyUWPToolkit.DataGrid
             _horizontalScrollBar = GetTemplateChild("HorizontalScrollBar") as ScrollBar;
             _verticalScrollBar.Scroll += ScrollBar_Scroll;
             _horizontalScrollBar.Scroll += ScrollBar_Scroll;
+            _verticalScrollBar.PointerWheelChanged += _verticalScrollBar_PointerWheelChanged;
+            _horizontalScrollBar.PointerWheelChanged += _horizontalScrollBar_PointerWheelChanged;
+        }
 
+        private void _horizontalScrollBar_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                PointerPoint mousePosition = e.GetCurrentPoint(sender as ScrollBar);
+                var delta = mousePosition.Properties.MouseWheelDelta;
+
+                var horizontalOffset = ScrollPosition.X + delta;
+                ScrollPosition = new Point(horizontalOffset, ScrollPosition.Y);
+            }
+        }
+
+        private void _verticalScrollBar_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                PointerPoint mousePosition = e.GetCurrentPoint(sender as ScrollBar);
+                var delta = mousePosition.Properties.MouseWheelDelta;
+
+                var verticalOffset = ScrollPosition.Y + delta;
+                ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
+            }
         }
 
         private void ScrollBar_Scroll(object sender, ScrollEventArgs e)
