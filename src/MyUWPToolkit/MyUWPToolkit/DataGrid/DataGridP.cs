@@ -381,7 +381,29 @@ namespace MyUWPToolkit.DataGrid
             (d as DataGrid).Invalidate();
         }
 
+        public bool ShowFrozenLines
+        {
+            get { return (bool)GetValue(ShowFrozenLinesProperty); }
+            set { SetValue(ShowFrozenLinesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowFrozenLines.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowFrozenLinesProperty =
+            DependencyProperty.Register("ShowFrozenLines", typeof(bool), typeof(DataGrid), new PropertyMetadata(true));
+
+
+
         #region PullToRefresh
+
+        public bool AllowPullToRefresh
+        {
+            get { return (bool)GetValue(AllowPullToRefreshProperty); }
+            set { SetValue(AllowPullToRefreshProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowPullToRefresh.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowPullToRefreshProperty =
+            DependencyProperty.Register("AllowPullToRefresh", typeof(bool), typeof(DataGrid), new PropertyMetadata(false));
         /// <summary>
         /// The threshold for release to refresh，defautl value is 1/5 of PullToRefreshPanel's height.
         /// </summary>

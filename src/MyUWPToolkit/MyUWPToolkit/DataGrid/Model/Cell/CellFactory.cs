@@ -18,7 +18,7 @@ namespace MyUWPToolkit.DataGrid.Model.Cell
     public class CellFactory : ICellFactory
     {
         static Thickness
-           _padding = new Thickness(4, 0, 4, 0),   // default padding
+           _padding = new Thickness(0),   // default padding
            _bdrError = new Thickness(4),           // error tooltip padding
            _bdrFixed = new Thickness(0, 0, 1, 1),  // fixed cells
            _bdrV = new Thickness(0, 0, 1, 0),      // vertical grid lines
@@ -172,6 +172,12 @@ namespace MyUWPToolkit.DataGrid.Model.Cell
                 bdr.Child = GetTemplatedCell(grid, c.HeaderTemplate);
                 //bdr.Child = c.HeaderTemplate.LoadContent() as UIElement;
             }
+
+            if (c.HeaderForeground != null)
+            {
+                tb.Foreground = c.HeaderForeground;
+            }
+            tb.HorizontalAlignment = c.HeaderHorizontalAlignment;
 
             // show sort direction (after applying styles)
             if (grid.ShowSort && IsSortSymbolRow(grid, rng))

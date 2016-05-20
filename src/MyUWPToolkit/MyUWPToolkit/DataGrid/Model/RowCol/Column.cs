@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
 
 namespace MyUWPToolkit.DataGrid
 {
@@ -196,7 +197,11 @@ namespace MyUWPToolkit.DataGrid
                 }
             }
         }
-       
+
+        public Brush HeaderForeground { get; set; }
+
+        public HorizontalAlignment HeaderHorizontalAlignment { get; set; }
+
         public override DataGrid Grid
         {
             get { return Columns != null ? Columns.Grid : null; }

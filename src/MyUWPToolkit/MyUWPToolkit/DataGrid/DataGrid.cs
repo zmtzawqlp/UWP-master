@@ -124,11 +124,15 @@ namespace MyUWPToolkit.DataGrid
                 // calculate size available (client and scrollbars)
                 var wid = _contentGrid.ActualWidth;
                 var hei = _contentGrid.ActualHeight;
-
+                var columnHeaderHeight = _columnHeaderPanel.ActualHeight;
+                var frozenColumnsSize = Columns.GetFrozenSize();
+                var frozenRowsSize = Rows.GetFrozenSize();
 
                 if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                 {
-
+                    hei -= columnHeaderHeight;
+                    _verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
+                    _horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
                     UpdateStarSizes();
 
                     // update scrollbar parameters
@@ -242,8 +246,15 @@ namespace MyUWPToolkit.DataGrid
             _contentGrid.Children.Add(_canvas);
 
             int sz = (int)(FontSize * 1.6 + 4);
-            Rows.DefaultSize = sz;
-            ColumnHeaders.Rows.DefaultSize = sz;
+            if (Rows.DefaultSize == 0)
+            {
+                Rows.DefaultSize = sz;
+            }
+            if (ColumnHeaders.Rows.DefaultSize == 0)
+            {
+                ColumnHeaders.Rows.DefaultSize = sz;
+            }
+
         }
 
         private void OnPointerExited(object sender, PointerRoutedEventArgs e)
@@ -278,7 +289,7 @@ namespace MyUWPToolkit.DataGrid
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
 
-            if (_verticalScrollBar.Value == 0)
+            if (_verticalScrollBar.Value == 0 && AllowPullToRefresh)
             {
                 startingPullToRefresh = true;
             }
@@ -462,6 +473,10 @@ namespace MyUWPToolkit.DataGrid
 
         private void HandlePullToRefresh(double x, double y, ManipulationDeltaRoutedEventArgs e)
         {
+            if (!AllowPullToRefresh)
+            {
+                return;
+            }
             manipulationStatus = ManipulationStatus.PullToRefresh;
             var maxThreshold = RefreshThreshold * 4 / 3.0;
             //Y not support inertial
@@ -621,7 +636,7 @@ namespace MyUWPToolkit.DataGrid
             // update frozen row, column indicators
             var hdrX = 0;
             var hdrY = ColumnHeaders.Visibility == Visibility.Visible ? ColumnHeaders.ActualHeight : 0;
-            if (Columns.Frozen > 0)
+            if (Columns.Frozen > 0 && ShowFrozenLines)
             {
                 var fx = Columns.GetFrozenSize();
                 _lnFX.X1 = _lnFX.X2 = fx;
@@ -633,7 +648,7 @@ namespace MyUWPToolkit.DataGrid
             {
                 _lnFX.Visibility = Visibility.Collapsed;
             }
-            if (Rows.Frozen > 0)
+            if (Rows.Frozen > 0 && ShowFrozenLines)
             {
                 var fy = Rows.GetFrozenSize() + hdrY;
                 _lnFY.Y1 = _lnFY.Y2 = fy;
@@ -688,18 +703,15 @@ namespace MyUWPToolkit.DataGrid
                 var col = this.Columns[column];
                 var direction = ListSortDirection.Ascending;
                 var sds = view.SortDescriptions;
-
+                var args = new SortingColumnEventArgs(this.Columns[column]);
+                if (this.SortingColumn != null)
+                {
+                    SortingColumn(this, args);
+                }
                 // get property to sort on
                 var pn = col.BoundPropertyName;
                 if (!string.IsNullOrEmpty(pn))
                 {
-
-                    var args = new SortingColumnEventArgs(this.Columns[column]);
-                    if (this.SortingColumn != null)
-                    {
-                        SortingColumn(this, args);
-                    }
-
                     if (!args.Cancel)
                     {
                         // apply new sort
@@ -743,6 +755,26 @@ namespace MyUWPToolkit.DataGrid
                             ManualSortDescriptions.Add(new SortDescription(pn, direction));
                             this.Invalidate();
                         }
+                    }
+                }
+                else
+                {
+                    if (this.SortMode == SortMode.Manual)
+                    {
+                        var name = this.Columns[column].ColumnName + this.Columns[column].ItemIndex;
+                        // if already sorted, reverse direction
+                        foreach (var sd in ManualSortDescriptions)
+                        {
+                            if (sd.PropertyName == name && sd.Direction == ListSortDirection.Ascending)
+                            {
+                                direction = ListSortDirection.Descending;
+                                break;
+                            }
+                        }
+                        ManualSortDescriptions.Clear();
+
+                        ManualSortDescriptions.Add(new SortDescription(name, direction));
+                        this.Invalidate();
                     }
                 }
             }
@@ -1267,9 +1299,10 @@ namespace MyUWPToolkit.DataGrid
             if (SortMode == SortMode.Manual)
             {
                 var colName = Columns[col].BoundPropertyName;
+                var name = Columns[col].ColumnName + this.Columns[col].ItemIndex;
                 foreach (var sd in ManualSortDescriptions)
                 {
-                    if (sd.PropertyName == colName)
+                    if (sd.PropertyName == colName || sd.PropertyName == name)
                     {
                         return sd.Direction;
                     }
