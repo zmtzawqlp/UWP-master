@@ -27,7 +27,7 @@ namespace XamlDemo.Model
             //{
             //    employees.Add(item);
             //}
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 30; i++)
             {
                 employees.Add(
                     new Employee

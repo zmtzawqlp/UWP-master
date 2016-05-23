@@ -137,8 +137,8 @@ namespace MyUWPToolkit.DataGrid
 
                     // update scrollbar parameters
                     _verticalScrollBar.SmallChange = _horizontalScrollBar.SmallChange = Rows.DefaultSize;
-                    _verticalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = hei;
-                    _verticalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = wid;
+                    _verticalScrollBar.LargeChange = _verticalScrollBar.ViewportSize = hei- columnHeaderHeight;
+                    _horizontalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = wid;
                     _verticalScrollBar.Maximum = Rows.GetTotalSize() - hei;
                     _horizontalScrollBar.Maximum = Columns.GetTotalSize() - wid;
 

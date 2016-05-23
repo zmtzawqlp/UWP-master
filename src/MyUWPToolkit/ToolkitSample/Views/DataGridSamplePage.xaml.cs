@@ -43,7 +43,7 @@ namespace ToolkitSample
 
             //_employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
             //{
-            //    if (count==-1)
+            //    if (count == -1)
             //    {
             //        count = 5;
             //    }
@@ -91,15 +91,15 @@ namespace ToolkitSample
         {
             e.Cancel = true;
             _employees.Clear();
-            
-            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().OrderBy(x => x.IsMale).ToList());
-          
-            //_employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
-            //{
+
+            //_employees = new ObservableCollection<Employee>(TestData.GetEmployees().OrderBy(x => x.IsMale).ToList());
+
+            _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            {
 
 
-            //    return TestData.GetEmployees().Skip(startIndex).Take(count).OrderByDescending(x=>x.IsMale).ToList();
-            //});
+                return TestData.GetEmployees().Skip(startIndex).Take(count).OrderByDescending(x => x.IsMale).ToList();
+            });
             datagrid.ItemsSource = _employees;
         }
 
