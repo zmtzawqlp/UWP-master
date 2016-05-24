@@ -171,17 +171,17 @@ namespace MyUWPToolkit.FlexGrid
         private void HandleManipulationDelta(ManipulationDeltaRoutedEventArgs e, double x, double y)
         {
             //Cross Slide left
-            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideLeft)
+            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideLeft && e.PointerDeviceType != PointerDeviceType.Mouse)
             {
                 HandleCrossSlideLeft(x, y);
             }
             //Cross Slide right
-            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideRight)
+            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideRight && e.PointerDeviceType != PointerDeviceType.Mouse)
             {
                 HandleCrossSlideRight(x, y);
             }
             //support pull to refresh
-            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _cellSV.VerticalOffset == 0 && startingPullToRefresh)
+            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _cellSV.VerticalOffset == 0 && startingPullToRefresh && e.PointerDeviceType != PointerDeviceType.Mouse)
             {
                 HandlePullToRefresh(x, y, e);
             }
