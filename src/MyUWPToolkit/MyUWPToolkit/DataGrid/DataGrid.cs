@@ -286,7 +286,7 @@ namespace MyUWPToolkit.DataGrid
 
         private void _contentGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            if (manipulationStatus == ManipulationStatus.None)
+            if (PivotItem != null && manipulationStatus == ManipulationStatus.None)
             {
                 if (FrozenColumns > 0)
                 {
