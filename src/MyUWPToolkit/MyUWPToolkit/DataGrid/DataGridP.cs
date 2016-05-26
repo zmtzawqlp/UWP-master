@@ -105,6 +105,7 @@ namespace MyUWPToolkit.DataGrid
         #endregion
 
         #region Public Properties
+
         public SortMode SortMode { get; set; }
  
         public Rows Rows

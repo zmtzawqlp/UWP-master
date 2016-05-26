@@ -137,7 +137,7 @@ namespace MyUWPToolkit.DataGrid
 
                     // update scrollbar parameters
                     _verticalScrollBar.SmallChange = _horizontalScrollBar.SmallChange = Rows.DefaultSize;
-                    _verticalScrollBar.LargeChange = _verticalScrollBar.ViewportSize = hei- columnHeaderHeight;
+                    _verticalScrollBar.LargeChange = _verticalScrollBar.ViewportSize = hei - columnHeaderHeight;
                     _horizontalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = wid;
                     _verticalScrollBar.Maximum = Rows.GetTotalSize() - hei;
                     _horizontalScrollBar.Maximum = Columns.GetTotalSize() - wid;
@@ -145,7 +145,7 @@ namespace MyUWPToolkit.DataGrid
                     // update scrollbar visibility
                     if (_verticalScrollBar != null)
                     {
-                        
+
                         switch (VerticalScrollBarVisibility)
                         {
 
@@ -342,31 +342,26 @@ namespace MyUWPToolkit.DataGrid
 
         private void _contentGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
+            if (e.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                return;
+            }
             var x = e.Delta.Translation.X;
             var y = e.Delta.Translation.Y;
-            
+
             switch (manipulationStatus)
             {
                 case ManipulationStatus.None:
                     HandleManipulationDelta(e, x, y);
                     break;
                 case ManipulationStatus.CrossSlideLeft:
-                    if (e.PointerDeviceType!=PointerDeviceType.Mouse)
-                    {
-                        HandleCrossSlideLeft(x, y);
-                    }
+                    HandleCrossSlideLeft(x, y);
                     break;
                 case ManipulationStatus.CrossSlideRight:
-                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
-                    {
-                        HandleCrossSlideRight(x, y);
-                    }
+                    HandleCrossSlideRight(x, y);
                     break;
                 case ManipulationStatus.PullToRefresh:
-                    if (e.PointerDeviceType != PointerDeviceType.Mouse)
-                    {
-                        HandlePullToRefresh(x, y, e);
-                    }
+                    HandlePullToRefresh(x, y, e);
                     break;
                 case ManipulationStatus.Scrolling:
                     HandleScrolling(x, y, e);
@@ -1317,6 +1312,14 @@ namespace MyUWPToolkit.DataGrid
         #region public Methods
         public IEnumerable<object> GetVisibleItems()
         {
+            if (FrozenRows > 0)
+            {
+                for (int i = 0; i < FrozenRows; i++)
+                {
+                    yield return _view[i];
+                }
+            }
+
             if (_cellPanel != null && _view != null)
             {
                 var viewRange = _cellPanel.ViewRange;

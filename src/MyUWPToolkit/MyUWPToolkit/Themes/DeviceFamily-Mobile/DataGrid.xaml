@@ -10,7 +10,7 @@
         <Setter Property="AllowPullToRefresh" Value="True"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="RefreshThreshold" Value="150"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="PullToRefreshHeaderTemplate">
             <Setter.Value>
