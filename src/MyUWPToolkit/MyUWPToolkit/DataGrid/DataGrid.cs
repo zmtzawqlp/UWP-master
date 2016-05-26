@@ -378,17 +378,17 @@ namespace MyUWPToolkit.DataGrid
         private void HandleManipulationDelta(ManipulationDeltaRoutedEventArgs e, double x, double y)
         {
             //Cross Slide left
-            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideLeft && e.PointerDeviceType != PointerDeviceType.Mouse)
+            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideLeft)
             {
                 HandleCrossSlideLeft(x, y);
             }
             //Cross Slide right
-            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideRight && e.PointerDeviceType != PointerDeviceType.Mouse)
+            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideRight)
             {
                 HandleCrossSlideRight(x, y);
             }
             //support pull to refresh
-            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _verticalScrollBar.Value == 0 && startingPullToRefresh && e.PointerDeviceType != PointerDeviceType.Mouse)
+            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _verticalScrollBar.Value == 0 && startingPullToRefresh)
             {
                 HandlePullToRefresh(x, y, e);
             }
