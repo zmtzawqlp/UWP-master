@@ -224,6 +224,7 @@ namespace MyUWPToolkit.DataGrid
             _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
             _contentGrid.ManipulationCompleted += _contentGrid_ManipulationCompleted;
             _contentGrid.ManipulationStarting += _contentGrid_ManipulationStarting;
+            _contentGrid.ManipulationStarted += _contentGrid_ManipulationStarted;
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 _contentGrid.PointerWheelChanged += _contentGrid_PointerWheelChanged;
@@ -280,6 +281,28 @@ namespace MyUWPToolkit.DataGrid
 
                 var verticalOffset = ScrollPosition.Y + delta;
                 ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
+            }
+        }
+
+        private void _contentGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            if (manipulationStatus == ManipulationStatus.None)
+            {
+                if (FrozenColumns > 0)
+                {
+                    var pt = e.Position;
+                    pt = this.TransformToVisual(_columnHeaderPanel).TransformPoint(pt);
+
+                    var fx = _columnHeaderPanel.Columns.GetFrozenSize();
+                    // adjust for scroll position
+                    var sp = _columnHeaderPanel.ScrollPosition;
+                    if (pt.X < 0 || pt.X > fx) pt.X -= sp.X;
+                    var column = _columnHeaderPanel.Columns.GetItemAt(pt.X);
+                    if (FrozenColumns > column)
+                    {
+                        startingCrossSlideLeft = startingCrossSlideRight = true;
+                    }
+                }
             }
         }
 
