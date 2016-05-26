@@ -12,6 +12,7 @@
         <Setter Property="RefreshThreshold" Value="150"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="Background" Value="#01010101"/>
         <Setter Property="PullToRefreshHeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
