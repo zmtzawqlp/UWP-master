@@ -36,13 +36,49 @@ namespace MyUWPToolkit.Util
         /// </summary>
         public static readonly Size DeviceResolution;
 
+        /// <summary>
+        /// 设备时区名字
+        /// </summary>
+        public static readonly string Timezone;
+
+        /// <summary>
+        /// 设备语言
+        /// </summary>
+        public static readonly string Language;
+
         static DeviceInfo()
         {
             DeviceId = GetDeviceId();
             UserAgent = GetUserAgent();
             OsVersion = GetOsVersion();
             DeviceResolution = GetDeviceResolution();
+            Timezone = GetTimezone();
+            Language = GetLanguage();
         }
+
+        /// <summary>
+        /// 获取设备语言
+        /// </summary>
+        /// <returns>设备语言</returns>
+        private static string GetLanguage()
+        {
+            var Languages = Windows.System.UserProfile.GlobalizationPreferences.Languages;
+            if (Languages.Count > 0)
+            {
+                return Languages[0];
+            }
+            return Windows.Globalization.Language.CurrentInputMethodLanguageTag;
+        }
+
+        /// <summary>
+        /// 获取设备时区名字
+        /// </summary>
+        /// <returns>设备时区名字</returns>
+        private static string GetTimezone()
+        {
+            return TimeZoneInfo.Local.DisplayName;
+        }
+
         /// <summary>
         /// 获取设备分辨率
         /// </summary>
