@@ -159,6 +159,7 @@
     <Compile Include="Util\CryptographyHelper.cs" />
     <Compile Include="Util\DeviceInfo.cs" />
     <Compile Include="Util\FrameworkElementExtensions.cs" />
+    <Compile Include="Util\NetworkInfo.cs" />
     <Compile Include="Util\NotifyTaskCompletion.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
     <Compile Include="Util\SpeechService.cs" />
