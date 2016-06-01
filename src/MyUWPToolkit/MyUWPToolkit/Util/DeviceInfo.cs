@@ -8,6 +8,7 @@ using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
+using Windows.UI.ViewManagement;
 
 namespace MyUWPToolkit.Util
 {
@@ -46,6 +47,11 @@ namespace MyUWPToolkit.Util
         /// </summary>
         public static readonly string Language;
 
+        /// <summary>
+        /// 设备类型
+        /// </summary>
+        public static readonly string DeviceType;
+
         static DeviceInfo()
         {
             DeviceId = GetDeviceId();
@@ -54,6 +60,40 @@ namespace MyUWPToolkit.Util
             DeviceResolution = GetDeviceResolution();
             Timezone = GetTimezone();
             Language = GetLanguage();
+            DeviceType = GetDeviceType();
+        }
+
+        private static string GetDeviceType()
+        {
+            var deviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
+
+            if (deviceFamily == "Windows.Desktop")
+            {
+                if (UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Mouse)
+                {
+                    return "WINDESKTOP";
+                }
+                else
+                {
+                    return "WINPAD";
+                }
+            }
+            else if (deviceFamily == "Windows.Mobile")
+            {
+                return "WINPHONE";
+            }
+            else if (deviceFamily == "Windows.Xbox")
+            {
+                return "XBOX";
+            }
+            else if (deviceFamily == "Windows.IoT")
+            {
+                return "IOT";
+            }
+            else
+            {
+                return deviceFamily.ToUpper();
+            }
         }
 
         /// <summary>
