@@ -13,6 +13,8 @@
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Background" Value="#01010101"/>
+        <Setter Property="PressedBackground" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+        <Setter Property="PointerOverBackground" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
         <Setter Property="PullToRefreshHeaderTemplate">
             <Setter.Value>
                 <DataTemplate>

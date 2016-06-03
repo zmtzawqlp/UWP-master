@@ -36,4 +36,19 @@ namespace MyUWPToolkit.DataGrid
         Manual
     }
 
+    public enum ScollingDirectionMode
+    {
+        //Horizontal and Vertical Scolling will happen at the same time.
+        TwoDirection,
+        //Only one direction(Horizontal or Vertical) scolling will happen at the same time.
+        OneDirection,
+    }
+
+    internal enum ScollingDirection
+    {
+        None,
+        Horizontal,
+        Vertical
+    }
+
 }

@@ -11,10 +11,12 @@ using Windows.UI.Xaml;
 using System.Collections.Specialized;
 using System.Threading;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.Devices.Input;
 
 namespace MyUWPToolkit.DataGrid
 {
-    public class DataGridPanel:Panel
+    public class DataGridPanel : Panel
     {
         #region ** fields
 
@@ -240,7 +242,7 @@ namespace MyUWPToolkit.DataGrid
             CellRangeDictionary showCells = new CellRangeDictionary();
             foreach (int r in Rows.EnumerateVisibleElements(_viewRange.TopRow, _viewRange.BottomRow))
             {
-    
+
                 var left = _viewRange.LeftColumn;
 
                 // enumerate visible columns
@@ -284,10 +286,7 @@ namespace MyUWPToolkit.DataGrid
                 {
                     // get rectangle to arrange cell
                     var rc = GetCellRect(rng);
-                    if (rng.Column == 0)
-                    {
 
-                    }
                     // set clipping to account for frozen rows/columns
                     if (Rows.Frozen > 0 || Columns.Frozen > 0)
                     {
@@ -328,12 +327,20 @@ namespace MyUWPToolkit.DataGrid
                     // limit editor size to grid cell (so trimming will work)
                     cell.Width = rc.Width;
                     cell.Height = rc.Height;
-
                     // to finish the layout
                     cell.Measure(new Size(rc.Width, rc.Height));
                     cell.Arrange(rc);
                 }
             }
+            if (currentPressedRow > -1)
+            {
+                HandlePointerPressed(currentPressedRow);
+            }
+            else
+            {
+                HandlePointerOver(currentpointerOverRow);
+            }
+
             // measure content
             return new Size(_cols.GetTotalSize(), _rows.GetTotalSize());
         }
@@ -489,6 +496,116 @@ namespace MyUWPToolkit.DataGrid
                     UpdateViewRange();
                 }
             }
+        }
+
+        CellRangeDictionary _pressedCells = new CellRangeDictionary();
+        internal int currentPressedRow = -1;
+        internal void HandlePointerPressed(int row)
+        {
+            _pressedCells.Clear();
+            if (row > -1)
+            {
+                currentPressedRow = row;
+                foreach (var item in _cells)
+                {
+                    if (item.Key.Row == row)
+                    {
+                        var cell = (item.Value as Border);
+
+                        FrameworkElement element = null;
+                        if (cell.Child != null)
+                        {
+                            element = cell.Child as FrameworkElement;
+                        }
+                        else
+                        {
+                            element = cell;
+                        }
+
+                        if (item.Key.Column == 0)
+                        {
+                            element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = element.ActualWidth, CenterY = element.ActualHeight / 2 };
+                        }
+                        else if (item.Key.Column == this.Columns.Count - 1)
+                        {
+                            element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
+                        }
+                        else
+                        {
+                            element.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
+                        }
+                        cell.Background = Grid.PressedBackground;
+                        _pressedCells.Add(item.Key, item.Value);
+                    }
+                }
+            }
+
+        }
+
+        internal void ClearPointerPressedAnimation()
+        {
+            currentPressedRow = -1;
+            foreach (var item in _pressedCells)
+            {
+                var cell = (item.Value as Border);
+
+                FrameworkElement element = null;
+                if (cell.Child != null)
+                {
+                    element = cell.Child as FrameworkElement;
+                }
+                else
+                {
+                    element = cell;
+                }
+
+                element.RenderTransform = null;
+
+
+                var even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
+                cell.Background = even || Grid.AlternatingRowBackground == null
+                    ? Grid.RowBackground
+                    : Grid.AlternatingRowBackground;
+
+
+            }
+            _pressedCells.Clear();
+        }
+
+        CellRangeDictionary _pointerOverCells = new CellRangeDictionary();
+        internal int currentpointerOverRow = -1;
+        internal void HandlePointerOver(int row)
+        {
+            //clear all
+            {
+                currentpointerOverRow = -1;
+                foreach (var item in _pointerOverCells)
+                {
+                    var element = item.Value as Border;
+                    var even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
+                    element.Background = even || Grid.AlternatingRowBackground == null
+                        ? Grid.RowBackground
+                        : Grid.AlternatingRowBackground;
+                }
+                _pointerOverCells.Clear();
+            }
+
+            if (row > -1)
+            {
+                currentpointerOverRow = row;
+                foreach (var item in _cells)
+                {
+                    var element = item.Value as Border;
+                    if (item.Key.Row == row)
+                    {
+                        element.Background = Grid.PointerOverBackground;
+                        _pointerOverCells.Add(item.Key, item.Value);
+                    }
+
+                }
+            }
+
+
         }
         #endregion
 

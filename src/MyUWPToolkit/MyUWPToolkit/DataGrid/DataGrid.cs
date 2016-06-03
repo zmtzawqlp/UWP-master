@@ -230,16 +230,20 @@ namespace MyUWPToolkit.DataGrid
                 _contentGrid.PointerWheelChanged += _contentGrid_PointerWheelChanged;
                 this.PointerEntered += OnPointerEntered;
                 this.PointerExited += OnPointerExited;
+                this.PointerMoved += DataGrid_PointerMoved;
             }
+            //handle pressed event for mouse
+            this.PointerPressed += DataGrid_PointerPressed;
+            this.PointerReleased += DataGrid_PointerReleased;
+            //handle pressed event for touch
+            this.IsHoldingEnabled = true;
+            this.Holding += DataGrid_Holding;
 
             _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
             _pullToRefreshHeader.DataContext = this;
 
             _cellPanel.SetValue(Grid.RowProperty, 2);
             _columnHeaderPanel.SetValue(Grid.RowProperty, 0);
-            _cellPanel.LayoutUpdated += _cellPanel_LayoutUpdated;
-            _columnHeaderPanel.Tapped += _columnHeaderPanel_Tapped;
-            _cellPanel.Tapped += _cellPanel_Tapped;
 
             _canvas.SetValue(Grid.RowSpanProperty, 3);
             _contentGrid.Children.Add(_cellPanel);
@@ -258,10 +262,122 @@ namespace MyUWPToolkit.DataGrid
 
         }
 
+        private void DataGrid_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            if (e.PointerDeviceType != PointerDeviceType.Mouse)
+            {
+                if (e.HoldingState == HoldingState.Started)
+                {
+                    var pt = e.GetPosition(_cellPanel);
+
+                    pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+                    var fy = _cellPanel.Rows.GetFrozenSize();
+                    pt.Y += _columnHeaderPanel.ActualHeight;
+                    var sp = _cellPanel.ScrollPosition;
+                    if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+                    // get row and column at given coordinates
+                    var row = _cellPanel.Rows.GetItemAt(pt.Y);
+
+                    _cellPanel.HandlePointerPressed(row);
+
+                }
+                //Completed when pointer release
+
+                //Canceled when pointer move
+                else
+                {
+                    _cellPanel.ClearPointerPressedAnimation();
+                }
+
+            }
+        }
+
+        private void DataGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                _cellPanel.ClearPointerPressedAnimation();
+                if (!e.Pointer.IsInContact)
+                {
+                    _cellPanel.HandlePointerOver(_cellPanel.currentpointerOverRow);
+                }
+
+            }
+        }
+
+        private void DataGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                var pt = e.GetCurrentPoint(_cellPanel).Position;
+
+                pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+                var fy = _cellPanel.Rows.GetFrozenSize();
+                pt.Y += _columnHeaderPanel.ActualHeight;
+                var sp = _cellPanel.ScrollPosition;
+                if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+                // get row and column at given coordinates
+                var row = _cellPanel.Rows.GetItemAt(pt.Y);
+                _cellPanel.HandlePointerPressed(row);
+
+            }
+            //else
+            //{
+            //    //to avoid this is Manipulation event. 
+            //    Task.Delay(300).ContinueWith((Action<Task>)(_ =>
+            //    {
+            //        this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+            //        {
+            //            if (e.Pointer.IsInContact)
+            //            {
+            //                HandleHandlePointerPressed(e, pt1);
+            //            }
+
+            //        });
+            //    }));
+            //}
+
+        }
+
+        private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+
+                var pt = e.GetCurrentPoint(_cellPanel).Position;
+                pointerOverPoint = pt;
+                pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+                var fy = _cellPanel.Rows.GetFrozenSize();
+                pt.Y += _columnHeaderPanel.ActualHeight;
+                var sp = _cellPanel.ScrollPosition;
+                if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+                // get row and column at given coordinates
+                var row = _cellPanel.Rows.GetItemAt(pt.Y);
+                if (row == -1)
+                {
+                    pointerOverPoint = null;
+                }
+                //System.Diagnostics.Debug.WriteLine(row + "," + _cellPanel.currentPressedRow);
+                if (row != _cellPanel.currentPressedRow)
+                {
+                    _cellPanel.ClearPointerPressedAnimation();
+                    _cellPanel.HandlePointerOver(row);
+                }
+                //else
+
+
+
+            }
+        }
+
         private void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            {
+                _cellPanel.HandlePointerOver(-1);
                 VisualStateManager.GoToState(this, "NoIndicator", true);
+            }
         }
 
         private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -276,11 +392,13 @@ namespace MyUWPToolkit.DataGrid
 
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
+                _cellPanel.ClearPointerPressedAnimation();
                 PointerPoint mousePosition = e.GetCurrentPoint(sender as Grid);
                 var delta = mousePosition.Properties.MouseWheelDelta;
 
                 var verticalOffset = ScrollPosition.Y + delta;
                 ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
+                VisualStateManager.GoToState(this, "MouseIndicator", true);
             }
         }
 
@@ -308,6 +426,7 @@ namespace MyUWPToolkit.DataGrid
 
         private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
+
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
@@ -356,6 +475,7 @@ namespace MyUWPToolkit.DataGrid
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
             manipulationStatus = ManipulationStatus.None;
+            scollingDirection = ScollingDirection.None;
             preDeltaTranslationX = 0;
             preDeltaTranslationY = 0;
 
@@ -411,7 +531,7 @@ namespace MyUWPToolkit.DataGrid
                 HandleCrossSlideRight(x, y);
             }
             //support pull to refresh
-            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _verticalScrollBar.Value == 0 && startingPullToRefresh)
+            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _verticalScrollBar.Value == 0 && startingPullToRefresh && OuterScrollViewer == null)
             {
                 HandlePullToRefresh(x, y, e);
             }
@@ -537,7 +657,38 @@ namespace MyUWPToolkit.DataGrid
             manipulationStatus = ManipulationStatus.Scrolling;
             preDeltaTranslationX = x;
             preDeltaTranslationY = y;
-            var point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y + y };
+            Point point = new Point();
+            switch (ScollingDirectionMode)
+            {
+                case ScollingDirectionMode.TwoDirection:
+                    point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y + y };
+                    break;
+                case ScollingDirectionMode.OneDirection:
+                    switch (scollingDirection)
+                    {
+                        case ScollingDirection.None:
+                            if (Math.Abs(x) <= Math.Abs(y))
+                            {
+                                point = new Point() { X = ScrollPosition.X, Y = ScrollPosition.Y + y };
+                                scollingDirection = ScollingDirection.Vertical;
+                            }
+                            else
+                            {
+                                point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
+                                scollingDirection = ScollingDirection.Horizontal;
+                            }
+                            break;
+                        case ScollingDirection.Horizontal:
+                            point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
+                            break;
+                        case ScollingDirection.Vertical:
+                            point = new Point() { X = ScrollPosition.X, Y = ScrollPosition.Y + y };
+                            break;
+                    }
+
+                    break;
+            }
+
 
             ScrollPosition = point;
 
@@ -575,7 +726,6 @@ namespace MyUWPToolkit.DataGrid
 
         private void HandleCrossSlide(CrossSlideMode mode)
         {
-
             _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
             if (PivotItem != null)
             {
@@ -623,6 +773,12 @@ namespace MyUWPToolkit.DataGrid
             _columnHeaderPanel.Columns = _cellPanel.Columns;
 
             _columnHeaderPanel.Rows.Add(new Row());
+
+
+            _columnHeaderPanel.Tapped += _columnHeaderPanel_Tapped;
+            _cellPanel.LayoutUpdated += _cellPanel_LayoutUpdated;
+            _cellPanel.Tapped += _cellPanel_Tapped;
+
             #region frozen
             _canvas = new Canvas();
             _lnFX = new Line();
@@ -641,6 +797,7 @@ namespace MyUWPToolkit.DataGrid
             #endregion
 
         }
+
 
         private void _cellPanel_LayoutUpdated(object sender, object e)
         {
@@ -679,6 +836,7 @@ namespace MyUWPToolkit.DataGrid
                 _lnFY.Visibility = Visibility.Collapsed;
             }
         }
+
         private void _cellPanel_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var pt = e.GetPosition(_cellPanel);

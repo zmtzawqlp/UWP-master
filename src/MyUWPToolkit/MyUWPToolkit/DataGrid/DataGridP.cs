@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI.Input;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -51,6 +52,9 @@ namespace MyUWPToolkit.DataGrid
         double preDeltaTranslationX;
         double preDeltaTranslationY;
         ManipulationStatus manipulationStatus;
+        ScollingDirection scollingDirection;
+        bool pointerEntering;
+        Point? pointerOverPoint;
         #endregion
 
         #region Internal Properties
@@ -58,7 +62,7 @@ namespace MyUWPToolkit.DataGrid
         internal IList<SortDescription> ManualSortDescriptions { get { return _manualSort; } }
 
         bool firstTimeTrytoFindPivotItem = true;
-
+        bool firstTimeTrytoFindScrollViewer = true;
         PivotItem _pivotItem;
         internal PivotItem PivotItem
         {
@@ -83,11 +87,36 @@ namespace MyUWPToolkit.DataGrid
             }
         }
 
+        ScrollViewer _outerScrollViewer;
+        internal ScrollViewer OuterScrollViewer
+        {
+            get
+            {
+                if (_outerScrollViewer == null && firstTimeTrytoFindScrollViewer)
+                {
+                    firstTimeTrytoFindScrollViewer = false;
+                    var parent = this.Parent as FrameworkElement;
+                    while (parent != null)
+                    {
+                        _outerScrollViewer = parent as ScrollViewer;
+                        if (_outerScrollViewer != null)
+                        {
+                            break;
+                        }
+                        parent = parent.Parent as FrameworkElement;
+                    }
+
+                }
+                return _outerScrollViewer;
+            }
+
+        }
+
         internal TranslateTransform PivotItemTT
         {
             get
             {
-                if (PivotItem!=null)
+                if (PivotItem != null)
                 {
                     var tt = PivotItem.RenderTransform as TranslateTransform;
                     if (tt == null)
@@ -107,7 +136,7 @@ namespace MyUWPToolkit.DataGrid
         #region Public Properties
 
         public SortMode SortMode { get; set; }
- 
+
         public Rows Rows
         {
             get { return _cellPanel.Rows; }
@@ -165,6 +194,7 @@ namespace MyUWPToolkit.DataGrid
                 var sz = _cellPanel.DesiredSize;
                 var maxV = Rows.GetTotalSize() - sz.Height;
                 var maxH = Columns.GetTotalSize() - sz.Width;
+                var temp = value;
                 value.X = Math.Max(-maxH, Math.Min(value.X, 0));
                 value.Y = Math.Max(-maxV, Math.Min(value.Y, 0));
 
@@ -182,6 +212,25 @@ namespace MyUWPToolkit.DataGrid
                         _horizontalScrollBar.Value = -value.X;
                         _verticalScrollBar.Value = -value.Y;
                     }
+                    if (pointerOverPoint!=null)
+                    {
+                        var pt = pointerOverPoint.Value;
+                        pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+                        var fy = _cellPanel.Rows.GetFrozenSize();
+                        pt.Y += _columnHeaderPanel.ActualHeight;
+                        var sp = _cellPanel.ScrollPosition;
+                        if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+                        // get row and column at given coordinates
+                        var row = _cellPanel.Rows.GetItemAt(pt.Y);
+                        _cellPanel.HandlePointerOver(row);
+                    }
+                }
+                //handle outer scrollviewer
+                else if (OuterScrollViewer != null && temp != ScrollPosition)
+                {
+                    var horizontalOffset = OuterScrollViewer.HorizontalOffset+ ScrollPosition.X - temp.X;
+                    var verticalOffset = OuterScrollViewer.VerticalOffset+ ScrollPosition.Y - temp.Y;
+                    OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
                 }
             }
         }
@@ -474,12 +523,47 @@ namespace MyUWPToolkit.DataGrid
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty =
             DependencyProperty.Register("HorizontalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(DataGrid), new PropertyMetadata(ScrollBarVisibility.Auto));
 
+        public ScollingDirectionMode ScollingDirectionMode
+        {
+            get { return (ScollingDirectionMode)GetValue(ScollingDirectionModeProperty); }
+            set { SetValue(ScollingDirectionModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ScollingDirectionMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ScollingDirectionModeProperty =
+            DependencyProperty.Register("ScollingDirectionMode", typeof(ScollingDirectionMode), typeof(DataGrid), new PropertyMetadata(ScollingDirectionMode.TwoDirection));
+
+       
+        public Brush PressedBackground
+        {
+            get { return (Brush)GetValue(PressedBackgroundProperty); }
+            set { SetValue(PressedBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PressedBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PressedBackgroundProperty =
+            DependencyProperty.Register("PressedBackground", typeof(Brush), typeof(DataGrid), new PropertyMetadata(null));
+
+        public Brush PointerOverBackground
+        {
+            get { return (Brush)GetValue(PointerOverBackgroundProperty); }
+            set { SetValue(PointerOverBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PointerOverBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PointerOverBackgroundProperty =
+            DependencyProperty.Register("PointerOverBackground", typeof(Brush), typeof(DataGrid), new PropertyMetadata(null));
+
+
+
+
 
         #endregion
 
+
     }
 
-    public class SortingColumnEventArgs: CancelEventArgs
+    public class SortingColumnEventArgs : CancelEventArgs
     {
         public Column Column { get; private set; }
         public SortingColumnEventArgs(Column col)
