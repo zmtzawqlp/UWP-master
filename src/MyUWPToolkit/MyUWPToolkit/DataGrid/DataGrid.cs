@@ -230,11 +230,11 @@ namespace MyUWPToolkit.DataGrid
                 _contentGrid.PointerWheelChanged += _contentGrid_PointerWheelChanged;
                 this.PointerEntered += OnPointerEntered;
                 this.PointerExited += OnPointerExited;
-                this.PointerMoved += DataGrid_PointerMoved;
             }
             //handle pressed event for mouse
             this.PointerPressed += DataGrid_PointerPressed;
             this.PointerReleased += DataGrid_PointerReleased;
+            this.PointerMoved += DataGrid_PointerMoved;
             //handle pressed event for touch
             this.IsHoldingEnabled = true;
             this.Holding += DataGrid_Holding;
@@ -294,10 +294,9 @@ namespace MyUWPToolkit.DataGrid
 
         private void DataGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-
+            _cellPanel.ClearPointerPressedAnimation();
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
-                _cellPanel.ClearPointerPressedAnimation();
                 if (!e.Pointer.IsInContact)
                 {
                     _cellPanel.HandlePointerOver(_cellPanel.currentpointerOverRow);
@@ -322,29 +321,12 @@ namespace MyUWPToolkit.DataGrid
                 _cellPanel.HandlePointerPressed(row);
 
             }
-            //else
-            //{
-            //    //to avoid this is Manipulation event. 
-            //    Task.Delay(300).ContinueWith((Action<Task>)(_ =>
-            //    {
-            //        this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
-            //        {
-            //            if (e.Pointer.IsInContact)
-            //            {
-            //                HandleHandlePointerPressed(e, pt1);
-            //            }
-
-            //        });
-            //    }));
-            //}
-
         }
 
         private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            //if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
-
                 var pt = e.GetCurrentPoint(_cellPanel).Position;
                 pointerOverPoint = pt;
                 pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
@@ -354,20 +336,30 @@ namespace MyUWPToolkit.DataGrid
                 if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
                 // get row and column at given coordinates
                 var row = _cellPanel.Rows.GetItemAt(pt.Y);
-                if (row == -1)
+                if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
                 {
-                    pointerOverPoint = null;
+                    if (row == -1)
+                    {
+                        pointerOverPoint = null;
+                    }
+                    else
+                    {
+                        VisualStateManager.GoToState(this, "MouseIndicator", true);
+                    }
+                    //System.Diagnostics.Debug.WriteLine(row + "," + _cellPanel.currentPressedRow);
+                    if (row != _cellPanel.currentPressedRow)
+                    {
+                        _cellPanel.ClearPointerPressedAnimation();
+                        _cellPanel.HandlePointerOver(row);
+                    }
                 }
-                //System.Diagnostics.Debug.WriteLine(row + "," + _cellPanel.currentPressedRow);
-                if (row != _cellPanel.currentPressedRow)
+                else
                 {
-                    _cellPanel.ClearPointerPressedAnimation();
-                    _cellPanel.HandlePointerOver(row);
+                    if (row != _cellPanel.currentPressedRow)
+                    {
+                        _cellPanel.ClearPointerPressedAnimation();
+                    }
                 }
-                //else
-
-
-
             }
         }
 
