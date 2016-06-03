@@ -561,11 +561,13 @@ namespace MyUWPToolkit.DataGrid
 
                 element.RenderTransform = null;
 
-
-                var even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
-                cell.Background = even || Grid.AlternatingRowBackground == null
-                    ? Grid.RowBackground
-                    : Grid.AlternatingRowBackground;
+                if (Grid.Rows.Count > item.Key.Row)
+                {
+                    var even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
+                    cell.Background = even || Grid.AlternatingRowBackground == null
+                        ? Grid.RowBackground
+                        : Grid.AlternatingRowBackground;
+                }
 
 
             }
@@ -576,6 +578,11 @@ namespace MyUWPToolkit.DataGrid
         internal int currentpointerOverRow = -1;
         internal void HandlePointerOver(int row)
         {
+            if (Grid.Rows.Count <= row)
+            {
+                _pointerOverCells.Clear();
+                return;
+            }
             //clear all
             {
                 currentpointerOverRow = -1;
