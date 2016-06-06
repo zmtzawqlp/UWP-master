@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -87,13 +88,13 @@ namespace MyUWPToolkit
             }
             else
             {
-                 base.ItemClick += (s, e) =>
-                 {
-                     if (this.ItemClick != null)
-                     {
-                         ItemClick(this, e);
-                     }
-                 };
+                base.ItemClick += (s, e) =>
+                {
+                    if (this.ItemClick != null)
+                    {
+                        ItemClick(this, e);
+                    }
+                };
             }
         }
 
@@ -106,7 +107,7 @@ namespace MyUWPToolkit
                 // ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(0, 0));
 
                 double windowMinwidth = 500;
-                double windowMaxwidth = 1920;
+                double windowMaxwidth = DeviceInfo.DeviceScreenSize.Width;
                 double rangwidth = (windowMaxwidth - windowMinwidth) / 4.0;
 
                 #region 4
@@ -205,7 +206,7 @@ namespace MyUWPToolkit
             {
                 var resizeableItem = ResizeableItems.GetItem(e.NewSize.Width);
 
-                if (resizeableItem!=null)
+                if (resizeableItem != null)
                 {
                     resizeableItem.ItemWidth = (int)(e.NewSize.Width / resizeableItem.Columns - 7);
 
@@ -222,7 +223,7 @@ namespace MyUWPToolkit
                         }
                     }
                 }
-               
+
             }
         }
 
@@ -243,46 +244,57 @@ namespace MyUWPToolkit
                     //variableSizedGridViews.Add(gridview);
 
                     var resizeableItem = ResizeableItems.GetItem(this.ActualWidth);
-                    resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);
-                    gridview.ResizeableItem = resizeableItem;
-                    //Container Recycling so don't need to remove event,and it will case a bug ItemClick fire twice.
-                    //gridview.ItemClick += Gridview_ItemClick;
+                    if (resizeableItem != null)
+                    {
+                        resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);
+                        gridview.ResizeableItem = resizeableItem;
+                        gridview.ItemClick -= Gridview_ItemClick;
+                        gridview.ItemClick += Gridview_ItemClick;
+                    }
+
                 }
                 else
                 {
+                    gridviewItem.Loaded -= GridviewItem_Loaded;
                     gridviewItem.Loaded += GridviewItem_Loaded;
                 }
             }
 
         }
-        //Container Recycling so don't need to remove event,and it will case a bug ItemClick fire twice.
-        //protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-        //{
-        //    if (!PlatformIndependent.IsWindowsPhoneDevice)
-        //    {
-        //        var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
-        //        //gridview.ItemClick -= Gridview_ItemClick;
-        //        //variableSizedGridViews.Remove(gridview);
-        //    }
 
-        //    base.ClearContainerForItemOverride(element, item);
-        //}
+        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
+        {
+            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
+                gridview.ItemClick -= Gridview_ItemClick;
+                //variableSizedGridViews.Remove(gridview);
+            }
+
+            base.ClearContainerForItemOverride(element, item);
+        }
 
         private void GridviewItem_Loaded(object sender, RoutedEventArgs e)
         {
             var gridview = (sender as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
 
             var resizeableItem = ResizeableItems.GetItem(this.ActualWidth);
-            resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);
-            gridview.ResizeableItem = resizeableItem;
-            gridview.ItemClick += Gridview_ItemClick;
-            gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
-            gridview.Unloaded += Gridview_Unloaded;
+            if (resizeableItem != null)
+            {
+                resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);
+                gridview.ResizeableItem = resizeableItem;
+                gridview.ItemClick -= Gridview_ItemClick;
+                gridview.ItemClick += Gridview_ItemClick;
+                gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
+                gridview.Unloaded += Gridview_Unloaded;
+            }
+
             (sender as ListViewItem).Loaded -= GridviewItem_Loaded;
         }
 
         private void Gridview_Unloaded(object sender, RoutedEventArgs e)
         {
+            (sender as VariableSizedGridView).Unloaded -= Gridview_Unloaded;
             (sender as VariableSizedGridView).ItemClick -= Gridview_ItemClick;
         }
 

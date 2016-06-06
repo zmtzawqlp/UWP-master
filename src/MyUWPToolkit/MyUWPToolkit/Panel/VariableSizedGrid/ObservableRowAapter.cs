@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -7,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Data;
 
 namespace MyUWPToolkit
@@ -89,10 +92,10 @@ namespace MyUWPToolkit
             {
                 _resizeableItems = new ResizeableItems();
 
-                // ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(0, 0));
-
+                //ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(200, 200));
+               
                 double windowMinwidth = 500;
-                double windowMaxwidth = 1920;
+                double windowMaxwidth = DeviceInfo.DeviceScreenSize.Width;
                 double rangwidth = (windowMaxwidth - windowMinwidth) / 4.0;
 
                 #region 4
@@ -138,7 +141,6 @@ namespace MyUWPToolkit
                 var c3 = new ResizeableItem() { Columns = 3, Items = list, Min = windowMinwidth + rangwidth * 2 + 1, Max = windowMinwidth + rangwidth * 3 };
                 _resizeableItems.Add(c3);
                 #endregion
-
 
                 #region 2
                 list = new List<Resizable>();

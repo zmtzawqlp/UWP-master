@@ -52,6 +52,11 @@ namespace MyUWPToolkit.Util
         /// </summary>
         public static readonly string DeviceType;
 
+        /// <summary>
+        /// 设备屏幕大小
+        /// </summary>
+        public static readonly Size DeviceScreenSize;
+
         static DeviceInfo()
         {
             DeviceId = GetDeviceId();
@@ -61,6 +66,24 @@ namespace MyUWPToolkit.Util
             Timezone = GetTimezone();
             Language = GetLanguage();
             DeviceType = GetDeviceType();
+            DeviceScreenSize = GetDeviceScreenSize();
+        }
+
+
+        /// <summary>
+        /// 获取设备屏幕大小
+        /// </summary>
+        /// <returns></returns>
+        private static Size GetDeviceScreenSize()
+        {
+            Size resolution = Size.Empty;
+            foreach (var item in PointerDevice.GetPointerDevices())
+            {
+                resolution.Width = item.ScreenRect.Width;
+                resolution.Height = item.ScreenRect.Height;
+                break;
+            }
+            return resolution;
         }
 
         private static string GetDeviceType()
@@ -123,16 +146,12 @@ namespace MyUWPToolkit.Util
         /// 获取设备分辨率
         /// </summary>
         /// <returns>设备分辨率</returns>
-        private static Size GetDeviceResolution()
+        public static Size GetDeviceResolution()
         {
             Size resolution = Size.Empty;
             var rawPixelsPerViewPixel = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
-            foreach (var item in PointerDevice.GetPointerDevices())
-            {
-                resolution.Width = item.ScreenRect.Width * rawPixelsPerViewPixel;
-                resolution.Height = item.ScreenRect.Height * rawPixelsPerViewPixel;
-                break;
-            }
+            resolution.Width = DeviceScreenSize.Width * rawPixelsPerViewPixel;
+            resolution.Height = DeviceScreenSize.Height * rawPixelsPerViewPixel;
             return resolution;
         }
 

@@ -221,6 +221,7 @@ namespace MyUWPToolkit.DataGrid
         {
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
             _contentGrid.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            //touch
             _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
             _contentGrid.ManipulationCompleted += _contentGrid_ManipulationCompleted;
             _contentGrid.ManipulationStarting += _contentGrid_ManipulationStarting;
@@ -228,16 +229,21 @@ namespace MyUWPToolkit.DataGrid
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 _contentGrid.PointerWheelChanged += _contentGrid_PointerWheelChanged;
+                //pen,mouse
                 this.PointerEntered += OnPointerEntered;
+                //pen,mouse
                 this.PointerExited += OnPointerExited;
             }
             //handle pressed event for mouse
             this.PointerPressed += DataGrid_PointerPressed;
             this.PointerReleased += DataGrid_PointerReleased;
-            this.PointerMoved += DataGrid_PointerMoved;
-            //handle pressed event for touch
+
+            //handle pressed event for touch/pen
             this.IsHoldingEnabled = true;
             this.Holding += DataGrid_Holding;
+
+            //handle pointer over for mouse/pen, and clear pressd evnet for touch
+            this.PointerMoved += DataGrid_PointerMoved;
 
             _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
             _pullToRefreshHeader.DataContext = this;
@@ -346,26 +352,21 @@ namespace MyUWPToolkit.DataGrid
                     {
                         VisualStateManager.GoToState(this, "MouseIndicator", true);
                     }
-                    //System.Diagnostics.Debug.WriteLine(row + "," + _cellPanel.currentPressedRow);
-                    if (row != _cellPanel.currentPressedRow)
-                    {
-                        _cellPanel.ClearPointerPressedAnimation();
-                        _cellPanel.HandlePointerOver(row);
-                    }
                 }
-                else
+
+                if (row != _cellPanel.currentPressedRow)
                 {
-                    if (row != _cellPanel.currentPressedRow)
-                    {
-                        _cellPanel.ClearPointerPressedAnimation();
-                    }
+                    _cellPanel.ClearPointerPressedAnimation();
+                    if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
+                        _cellPanel.HandlePointerOver(row);
                 }
             }
         }
 
         private void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            //pen,mouse
+            if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
             {
                 _cellPanel.HandlePointerOver(-1);
                 VisualStateManager.GoToState(this, "NoIndicator", true);
@@ -374,7 +375,8 @@ namespace MyUWPToolkit.DataGrid
 
         private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            //pen,mouse
+            if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
                 VisualStateManager.GoToState(this, "MouseIndicator", true);
         }
 
@@ -396,6 +398,10 @@ namespace MyUWPToolkit.DataGrid
 
         private void _contentGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
+            if (e.PointerDeviceType != PointerDeviceType.Touch)
+            {
+                return;
+            }
             if (PivotItem != null && manipulationStatus == ManipulationStatus.None)
             {
                 if (FrozenColumns > 0)
@@ -418,7 +424,6 @@ namespace MyUWPToolkit.DataGrid
 
         private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
-
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
@@ -444,6 +449,10 @@ namespace MyUWPToolkit.DataGrid
         private void _contentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
 
+            if (e != null && e.PointerDeviceType != PointerDeviceType.Touch)
+            {
+                return;
+            }
             VisualStateManager.GoToState(this, "NoIndicator", true);
             _pullToRefreshHeader.Height = 0;
             _contentGrid.RowDefinitions[1].Height = new GridLength(0);
@@ -452,7 +461,6 @@ namespace MyUWPToolkit.DataGrid
             {
                 PivotItem.RenderTransform = new TranslateTransform();
             }
-
 
             if (IsReachThreshold && manipulationStatus == ManipulationStatus.PullToRefresh)
             {
@@ -471,13 +479,14 @@ namespace MyUWPToolkit.DataGrid
             preDeltaTranslationX = 0;
             preDeltaTranslationY = 0;
 
+            _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
             _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
 
         }
 
         private void _contentGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            if (e.PointerDeviceType == PointerDeviceType.Mouse)
+            if (e.PointerDeviceType != PointerDeviceType.Touch)
             {
                 return;
             }
@@ -1075,6 +1084,12 @@ namespace MyUWPToolkit.DataGrid
                     break;
 
                 default: // Reset, Move
+                    if (_cellPanel != null)
+                    {
+                        _cellPanel.currentpointerOverRow = -1;
+                        _cellPanel.currentPressedRow = -1;
+                        pointerOverPoint = null;
+                    }
                     LoadRows();
                     break;
             }
