@@ -36,7 +36,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <local:VariableSizedGridView ItemsSource="{Binding}" SelectionMode="None" IsItemClickEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Hidden" >
+                    <local:VariableSizedGridView ItemsSource="{Binding}" SelectionMode="None" IsItemClickEnabled="True" ScrollViewer.VerticalScrollMode="Disabled" >
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VariableSizedWrapGrid Orientation="Horizontal"  MaximumRowsOrColumns="4" />

@@ -18,10 +18,18 @@ namespace MyUWPToolkit
     /// Only for VirtualizedVariableSizedGridView control and sourceList must be ISupportIncrementalLoading
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObservableRowAapter<T> : ObservableCollection<IEnumerable<T>>, ISupportIncrementalLoading, IResizeableItems
+    public class ObservableRowAapter<T> : ObservableCollection<IEnumerable<T>>, ISupportIncrementalLoading, IResizeableItems, IObservableRowAapter
     {
         private RowAdapter<T> rowAdapter = null;
         private readonly IList<T> sourceList;
+
+        public int SourceCount
+        {
+            get
+            {
+                return sourceList.Count;
+            }
+        }
         public int RowItemsCount
         {
             //default is 15.
@@ -470,4 +478,8 @@ namespace MyUWPToolkit
         }
     }
 
+    public interface IObservableRowAapter
+    {
+        int SourceCount { get; }
+    }
 }

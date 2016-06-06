@@ -45,6 +45,17 @@ namespace MyUWPToolkit
                     return item;
                 }
             }
+
+            var min = this.Min(x => x.Min);
+            if (width < min)
+            {
+                return this.FirstOrDefault(x => x.Min == min);
+            }
+            var max = this.Min(x => x.Max);
+            if (width > max)
+            {
+                return this.FirstOrDefault(x => x.Max == max);
+            }
             return null;
         }
     }

@@ -62,11 +62,11 @@ namespace MyUWPToolkit.Util
             DeviceId = GetDeviceId();
             UserAgent = GetUserAgent();
             OsVersion = GetOsVersion();
+            DeviceScreenSize = GetDeviceScreenSize();
             DeviceResolution = GetDeviceResolution();
             Timezone = GetTimezone();
             Language = GetLanguage();
             DeviceType = GetDeviceType();
-            DeviceScreenSize = GetDeviceScreenSize();
         }
 
 

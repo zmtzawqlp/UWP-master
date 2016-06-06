@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,6 +58,7 @@ namespace ToolkitSample
             // just ensure that the window is active
             if (rootFrame == null)
             {
+                var a= DeviceInfo.DeviceScreenSize;
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
                 rootFrame.Navigated += RootFrame_Navigated;
@@ -66,7 +68,7 @@ namespace ToolkitSample
                 {
                     //TODO: Load state from previously suspended application
                 }
-
+                Window.Current.SizeChanged += Current_SizeChanged;
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
                 SystemNavigationManager.GetForCurrentView().BackRequested += (s, ea) =>
@@ -85,6 +87,11 @@ namespace ToolkitSample
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
+        {
+           
         }
 
         private void RootFrame_Navigated(object sender, NavigationEventArgs e)

@@ -11,6 +11,7 @@ using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
 namespace MyUWPToolkit
@@ -41,16 +42,17 @@ namespace MyUWPToolkit
         {
             get
             {
-                if (_resizeableItems == null && ItemsSource != null)
+
+                if (_resizeableItems == null && ItemsSource != null && ItemsSource is IResizeableItems)
                 {
                     _resizeableItems = (ItemsSource as IResizeableItems).ResizeableItems;
                 }
-                if (_resizeableItems == null)
-                {
-                    //if null, will use default
-                    Debug.Assert(false, "ItemsSource must be IResizeableItems");
-                    InitializeResizeableItems();
-                }
+                //if (_resizeableItems == null)
+                //{
+                //    //if null, will use default
+                //    Debug.Assert(false, "ItemsSource must be IResizeableItems");
+                //    InitializeResizeableItems();
+                //}
                 return _resizeableItems;
             }
         }
@@ -106,6 +108,7 @@ namespace MyUWPToolkit
 
                 // ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(0, 0));
 
+                //minwindow 500
                 double windowMinwidth = 500;
                 double windowMaxwidth = DeviceInfo.DeviceScreenSize.Width;
                 double rangwidth = (windowMaxwidth - windowMinwidth) / 4.0;
@@ -202,7 +205,7 @@ namespace MyUWPToolkit
 
         private void VirtualizedVariableSizedGridView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (ItemsSource != null)
+            if (ItemsSource != null && ItemsSource is IResizeableItems)
             {
                 var resizeableItem = ResizeableItems.GetItem(e.NewSize.Width);
 
@@ -227,14 +230,10 @@ namespace MyUWPToolkit
             }
         }
 
-        #region Method
-
-        #endregion
-
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);
-            if (!PlatformIndependent.IsWindowsPhoneDevice)
+            if (!PlatformIndependent.IsWindowsPhoneDevice && ItemsSource != null && ItemsSource is IResizeableItems)
             {
                 var gridviewItem = element as ListViewItem;
                 //Container Recycling, so ContentTemplateRoot maybe not null.
@@ -262,17 +261,17 @@ namespace MyUWPToolkit
 
         }
 
-        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-        {
-            if (!PlatformIndependent.IsWindowsPhoneDevice)
-            {
-                var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
-                gridview.ItemClick -= Gridview_ItemClick;
-                //variableSizedGridViews.Remove(gridview);
-            }
+        //protected override void ClearContainerForItemOverride(DependencyObject element, object item)
+        //{
+        //    if (!PlatformIndependent.IsWindowsPhoneDevice)
+        //    {
+        //        var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
+        //        gridview.ItemClick -= Gridview_ItemClick;
+        //        //variableSizedGridViews.Remove(gridview);
+        //    }
 
-            base.ClearContainerForItemOverride(element, item);
-        }
+        //    base.ClearContainerForItemOverride(element, item);
+        //}
 
         private void GridviewItem_Loaded(object sender, RoutedEventArgs e)
         {
@@ -285,7 +284,14 @@ namespace MyUWPToolkit
                 gridview.ResizeableItem = resizeableItem;
                 gridview.ItemClick -= Gridview_ItemClick;
                 gridview.ItemClick += Gridview_ItemClick;
-                gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
+                //gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
+                Binding binding = new Binding();
+                binding.Source = this;
+                binding.Mode = BindingMode.OneWay;
+                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                binding.Path = new PropertyPath("VirtualizedVariableSizedGridViewItemTemplate");
+                gridview.SetBinding(GridView.ItemTemplateProperty, binding);
+
                 gridview.Unloaded += Gridview_Unloaded;
             }
 
