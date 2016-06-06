@@ -72,8 +72,12 @@ namespace MyUWPToolkit.DataGrid
                 {
                     firstTimeTrytoFindPivotItem = false;
                     var parent = this.Parent as FrameworkElement;
-                    while (parent != null && !(parent is Page))
+                    while (parent != null)
                     {
+                        if (parent is Page)
+                        {
+                            break;
+                        }
                         _pivotItem = parent as PivotItem;
                         if (_pivotItem != null)
                         {
@@ -96,8 +100,12 @@ namespace MyUWPToolkit.DataGrid
                 {
                     firstTimeTrytoFindScrollViewer = false;
                     var parent = this.Parent as FrameworkElement;
-                    while (parent != null && !(parent is Page))
+                    while (parent != null)
                     {
+                        if (parent is Page)
+                        {
+                            break;
+                        }
                         _outerScrollViewer = parent as ScrollViewer;
                         if (_outerScrollViewer != null)
                         {
