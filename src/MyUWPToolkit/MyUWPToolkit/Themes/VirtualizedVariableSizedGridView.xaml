@@ -29,7 +29,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Vertical"/>
+                    <ItemsStackPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>

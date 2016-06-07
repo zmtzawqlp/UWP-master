@@ -61,7 +61,29 @@
                         </control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
                     </control:VirtualizedVariableSizedGridView>
                 </control:PullToRefreshPanel>
-
+                <!--<control:PullToRefreshPanel Background="Red" Grid.Row="1">-->
+                <!--<ListView x:Name="list" Grid.Row="1">
+                    <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2" >
+                                    <Image Source="{Binding Image}"
+                               Stretch="UniformToFill"
+                               VerticalAlignment="Stretch"
+                               HorizontalAlignment="Stretch" />
+                                    <StackPanel Margin="4"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Left">
+                                        <TextBlock Text="{Binding Name}"
+                                       HorizontalAlignment="Center"
+                                       Foreground="White"
+                                       FontSize="16"
+                                       Margin="6" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>-->
+                <!--</control:PullToRefreshPanel>-->
             </Grid>
         </PivotItem>
         <PivotItem Header="2"></PivotItem>

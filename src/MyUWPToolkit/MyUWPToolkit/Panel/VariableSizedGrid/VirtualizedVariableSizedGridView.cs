@@ -61,12 +61,9 @@ namespace MyUWPToolkit
             Loaded -= CustomListView_Loaded;
         }
 
-        private ScrollViewer _scrollViewer;
         protected override void OnApplyTemplate()
         {
             _emptyContent = GetTemplateChild("EmptyContent") as ContentPresenter;
-            _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
-
             base.OnApplyTemplate();
         }
 
@@ -184,10 +181,10 @@ namespace MyUWPToolkit
         public VirtualizedVariableSizedGridView()
         {
             this.DefaultStyleKey = typeof(VirtualizedVariableSizedGridView);
+
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 this.SizeChanged += VirtualizedVariableSizedGridView_SizeChanged;
-                Loaded += VirtualizedVariableSizedGridView_Loaded;
                 this.IsItemClickEnabled = false;
                 this.SelectionMode = ListViewSelectionMode.None;
             }
@@ -200,58 +197,6 @@ namespace MyUWPToolkit
                         ItemClick(this, e);
                     }
                 };
-            }
-        }
-
-        //bool firstTimeTrytoFindPivotItem = true;
-        //PivotItem _pivotItem;
-        //internal PivotItem PivotItem
-        //{
-        //    get
-        //    {
-        //        if (_pivotItem == null && firstTimeTrytoFindPivotItem)
-        //        {
-        //            firstTimeTrytoFindPivotItem = false;
-        //            var parent = this.Parent as FrameworkElement;
-        //            while (parent != null)
-        //            {
-        //                if (parent is Page)
-        //                {
-        //                    break;
-        //                }
-        //                _pivotItem = parent as PivotItem;
-        //                if (_pivotItem != null)
-        //                {
-        //                    break;
-        //                }
-        //                parent = parent.Parent as FrameworkElement;
-        //            }
-
-        //        }
-        //        return _pivotItem;
-        //    }
-        //}
-
-        double deafultVertiacalOffset = double.MinValue;
-        private void VirtualizedVariableSizedGridView_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= VirtualizedVariableSizedGridView_Loaded;
-            //there is a bug when VirtualizedVariableSizedGridView in PivotItem
-            //the deafult vertiacalOffset of ScrollViewer will be 2
-            //and this will casue default offset error when reset ItemsSource.
-            if (_scrollViewer != null && _scrollViewer.VerticalOffset != 0)
-            {
-                deafultVertiacalOffset = _scrollViewer.VerticalOffset;
-                _scrollViewer.ViewChanged += _scrollViewer_ViewChanged;
-            }
-        }
-
-        private void _scrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            if (deafultVertiacalOffset != double.MinValue && _scrollViewer.VerticalOffset == deafultVertiacalOffset)
-            {
-                _scrollViewer.ChangeView(0, deafultVertiacalOffset + 1, null);
-                _scrollViewer.ChangeView(0, deafultVertiacalOffset, null);
             }
         }
 
