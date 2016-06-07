@@ -32,6 +32,107 @@ namespace MyUWPToolkit
     /// </summary>
     public class VirtualizedVariableSizedGridView : ListView
     {
+
+        #region EmptyContent
+        private ContentPresenter _emptyContent;
+
+        public object EmptyContent
+        {
+            get { return (object)GetValue(EmptyContentProperty); }
+            set { SetValue(EmptyContentProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for EmptyContent.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EmptyContentProperty =
+            DependencyProperty.Register("EmptyContent", typeof(object), typeof(VirtualizedVariableSizedGridView), new PropertyMetadata(null));
+
+        public DataTemplate EmptyContentTemplate
+        {
+            get { return GetValue(EmptyContentTemplateProperty) as DataTemplate; }
+            set { SetValue(EmptyContentTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty EmptyContentTemplateProperty =
+            DependencyProperty.Register("EmptyContentTemplate", typeof(DataTemplate), typeof(VirtualizedVariableSizedGridView), new PropertyMetadata(null));
+
+        private void CustomListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateEmptyContentVisibility();
+            Loaded -= CustomListView_Loaded;
+        }
+
+        private ScrollViewer _scrollViewer;
+        protected override void OnApplyTemplate()
+        {
+            _emptyContent = GetTemplateChild("EmptyContent") as ContentPresenter;
+            _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
+
+            base.OnApplyTemplate();
+        }
+
+
+        protected override void OnItemsChanged(object e)
+        {
+            if (Items.Count == 1)
+            {
+                UpdateEmptyContentVisibility();
+            }
+            base.OnItemsChanged(e);
+        }
+
+        public void UpdateEmptyContentVisibility()
+        {
+            if (_emptyContent == null)
+            {
+                Loaded += CustomListView_Loaded;
+                return;
+            }
+
+            int count = 0;
+            if (ItemsSource != null && ItemsSource is IObservableRowAapter)
+            {
+                var resizeableItems = ItemsSource as IObservableRowAapter;
+                count = resizeableItems.SourceCount;
+            }
+            else
+            {
+                count = this.Items.Count;
+            }
+
+            if (count == 0)
+            {
+                _emptyContent.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _emptyContent.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        public void VisibleEmptyContent()
+        {
+            if (_emptyContent == null)
+            {
+                return;
+            }
+
+            _emptyContent.Visibility = Visibility.Visible;
+
+        }
+
+        public void CollapseEmptyContent()
+        {
+            if (_emptyContent == null)
+            {
+                return;
+            }
+
+            _emptyContent.Visibility = Visibility.Collapsed;
+
+        }
+        #endregion
+
         #region Property
 
         public new event ItemClickEventHandler ItemClick;
@@ -67,6 +168,7 @@ namespace MyUWPToolkit
         public static readonly DependencyProperty VirtualizedVariableSizedGridViewItemTemplateProperty =
             DependencyProperty.Register("VirtualizedVariableSizedGridViewItemTemplate", typeof(DataTemplate), typeof(VirtualizedVariableSizedGridView), new PropertyMetadata(null, OnVirtualizedVariableSizedGridViewItemTemplateChanged));
 
+
         private static void OnVirtualizedVariableSizedGridViewItemTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (PlatformIndependent.IsWindowsPhoneDevice)
@@ -85,6 +187,7 @@ namespace MyUWPToolkit
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 this.SizeChanged += VirtualizedVariableSizedGridView_SizeChanged;
+                Loaded += VirtualizedVariableSizedGridView_Loaded;
                 this.IsItemClickEnabled = false;
                 this.SelectionMode = ListViewSelectionMode.None;
             }
@@ -97,6 +200,58 @@ namespace MyUWPToolkit
                         ItemClick(this, e);
                     }
                 };
+            }
+        }
+
+        //bool firstTimeTrytoFindPivotItem = true;
+        //PivotItem _pivotItem;
+        //internal PivotItem PivotItem
+        //{
+        //    get
+        //    {
+        //        if (_pivotItem == null && firstTimeTrytoFindPivotItem)
+        //        {
+        //            firstTimeTrytoFindPivotItem = false;
+        //            var parent = this.Parent as FrameworkElement;
+        //            while (parent != null)
+        //            {
+        //                if (parent is Page)
+        //                {
+        //                    break;
+        //                }
+        //                _pivotItem = parent as PivotItem;
+        //                if (_pivotItem != null)
+        //                {
+        //                    break;
+        //                }
+        //                parent = parent.Parent as FrameworkElement;
+        //            }
+
+        //        }
+        //        return _pivotItem;
+        //    }
+        //}
+
+        double deafultVertiacalOffset = double.MinValue;
+        private void VirtualizedVariableSizedGridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= VirtualizedVariableSizedGridView_Loaded;
+            //there is a bug when VirtualizedVariableSizedGridView in PivotItem
+            //the deafult vertiacalOffset of ScrollViewer will be 2
+            //and this will casue default offset error when reset ItemsSource.
+            if (_scrollViewer != null && _scrollViewer.VerticalOffset != 0)
+            {
+                deafultVertiacalOffset = _scrollViewer.VerticalOffset;
+                _scrollViewer.ViewChanged += _scrollViewer_ViewChanged;
+            }
+        }
+
+        private void _scrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (deafultVertiacalOffset != double.MinValue && _scrollViewer.VerticalOffset == deafultVertiacalOffset)
+            {
+                _scrollViewer.ChangeView(0, deafultVertiacalOffset + 1, null);
+                _scrollViewer.ChangeView(0, deafultVertiacalOffset, null);
             }
         }
 
@@ -263,7 +418,7 @@ namespace MyUWPToolkit
 
         //protected override void ClearContainerForItemOverride(DependencyObject element, object item)
         //{
-        //    if (!PlatformIndependent.IsWindowsPhoneDevice)
+        //    if (!PlatformIndependent.IsWindowsPhoneDevice && ItemsSource != null && ItemsSource is IResizeableItems)
         //    {
         //        var gridview = (element as ListViewItem).ContentTemplateRoot as VariableSizedGridView;
         //        gridview.ItemClick -= Gridview_ItemClick;
@@ -282,27 +437,21 @@ namespace MyUWPToolkit
             {
                 resizeableItem.ItemWidth = (int)(this.ActualWidth / resizeableItem.Columns - 7);
                 gridview.ResizeableItem = resizeableItem;
-                gridview.ItemClick -= Gridview_ItemClick;
-                gridview.ItemClick += Gridview_ItemClick;
-                //gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
-                Binding binding = new Binding();
-                binding.Source = this;
-                binding.Mode = BindingMode.OneWay;
-                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-                binding.Path = new PropertyPath("VirtualizedVariableSizedGridViewItemTemplate");
-                gridview.SetBinding(GridView.ItemTemplateProperty, binding);
 
-                gridview.Unloaded += Gridview_Unloaded;
             }
+            gridview.ItemClick -= Gridview_ItemClick;
+            gridview.ItemClick += Gridview_ItemClick;
+            //gridview.ItemTemplate = VirtualizedVariableSizedGridViewItemTemplate;
+            Binding binding = new Binding();
+            binding.Source = this;
+            binding.Mode = BindingMode.OneWay;
+            binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            binding.Path = new PropertyPath("VirtualizedVariableSizedGridViewItemTemplate");
+            gridview.SetBinding(GridView.ItemTemplateProperty, binding);
 
             (sender as ListViewItem).Loaded -= GridviewItem_Loaded;
         }
 
-        private void Gridview_Unloaded(object sender, RoutedEventArgs e)
-        {
-            (sender as VariableSizedGridView).Unloaded -= Gridview_Unloaded;
-            (sender as VariableSizedGridView).ItemClick -= Gridview_ItemClick;
-        }
 
         private void Gridview_ItemClick(object sender, ItemClickEventArgs e)
         {

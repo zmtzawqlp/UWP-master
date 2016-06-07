@@ -8,13 +8,15 @@
     xmlns:control="using:MyUWPToolkit"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Button Content="Refresh" Click="Button_Click"/>
-        <!--<control:VariableSizedGridView x:Name="demoList"  >
+    <Pivot>
+        <PivotItem Header="1">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Content="Refresh" Click="Button_Click"/>
+                <!--<control:VariableSizedGridView x:Name="demoList"  >
             <control:VariableSizedGridView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="2" >
@@ -35,30 +37,34 @@
                 </DataTemplate>
             </control:VariableSizedGridView.ItemTemplate>
         </control:VariableSizedGridView>-->
-        
-            <control:VirtualizedVariableSizedGridView x:Name="demoList" Grid.Row="1" ItemClick="demoList_ItemClick">
+                <control:PullToRefreshPanel Background="Red" Grid.Row="1">
+                    <control:VirtualizedVariableSizedGridView x:Name="demoList" Margin="10" Grid.Row="1" ItemClick="demoList_ItemClick">
 
-                <control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="2" >
-                            <Image Source="{Binding Image}"
+                        <control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2" >
+                                    <Image Source="{Binding Image}"
                                Stretch="UniformToFill"
                                VerticalAlignment="Stretch"
                                HorizontalAlignment="Stretch" />
-                            <StackPanel Margin="4"
+                                    <StackPanel Margin="4"
                                     VerticalAlignment="Bottom"
                                     HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding Name}"
+                                        <TextBlock Text="{Binding Name}"
                                        HorizontalAlignment="Center"
                                        Foreground="White"
                                        FontSize="16"
                                        Margin="6" />
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
-            </control:VirtualizedVariableSizedGridView>
-       
-        
-    </Grid>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </control:VirtualizedVariableSizedGridView.VirtualizedVariableSizedGridViewItemTemplate>
+                    </control:VirtualizedVariableSizedGridView>
+                </control:PullToRefreshPanel>
+
+            </Grid>
+        </PivotItem>
+        <PivotItem Header="2"></PivotItem>
+    </Pivot>
+  
 </Page>
