@@ -185,18 +185,15 @@ namespace MyUWPToolkit
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
                 this.SizeChanged += VirtualizedVariableSizedGridView_SizeChanged;
-                this.IsItemClickEnabled = false;
-                this.SelectionMode = ListViewSelectionMode.None;
             }
-            else
+            base.ItemClick += VirtualizedVariableSizedGridView_ItemClick;
+        }
+
+        private void VirtualizedVariableSizedGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (this.ItemClick != null)
             {
-                base.ItemClick += (s, e) =>
-                {
-                    if (this.ItemClick != null)
-                    {
-                        ItemClick(this, e);
-                    }
-                };
+                ItemClick(this, e);
             }
         }
 
@@ -335,6 +332,7 @@ namespace MyUWPToolkit
             base.PrepareContainerForItemOverride(element, item);
             if (!PlatformIndependent.IsWindowsPhoneDevice && ItemsSource != null && ItemsSource is IResizeableItems)
             {
+                base.ItemClick -= VirtualizedVariableSizedGridView_ItemClick;
                 var gridviewItem = element as ListViewItem;
                 //Container Recycling, so ContentTemplateRoot maybe not null.
                 if (gridviewItem.ContentTemplateRoot != null)
