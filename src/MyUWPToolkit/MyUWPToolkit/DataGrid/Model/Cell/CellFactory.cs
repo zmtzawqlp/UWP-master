@@ -208,12 +208,14 @@ namespace MyUWPToolkit.DataGrid.Model.Cell
             e2.SetValue(Grid.ColumnProperty, 1);
             bdr.Child = g;
         }
-        FrameworkElement GetGlyphSort(ListSortDirection dir, Brush brush)
+
+        public virtual FrameworkElement GetGlyphSort(ListSortDirection dir, Brush brush)
         {
             return dir == ListSortDirection.Ascending
                 ? CreatePolygon(brush, 0, 8, 12, 8, 6, 0)
                 : CreatePolygon(brush, 0, 0, 12, 0, 6, 8);
         }
+
         public virtual bool IsSortSymbolRow(DataGrid grid, CellRange rng)
         {
             return rng.BottomRow == grid.ColumnHeaders.Rows.Count - 1;

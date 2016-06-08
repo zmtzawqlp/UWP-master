@@ -55,6 +55,11 @@ namespace MyUWPToolkit.DataGrid.Model.RowCol
             }
         }
 
+        internal void SetIsDirty(bool dirty)
+        {
+            _dirty = dirty;
+        }
+
         public int Frozen
         {
             get { return _frozen; }

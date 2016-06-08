@@ -30,6 +30,7 @@ namespace ToolkitSample
     public sealed partial class VirtualizedVariableSizedGridViewPage : Page
     {
         private MyIncrementalLoading<Thing> _things;
+        private ResizeableItems _resizeableItems;
         public VirtualizedVariableSizedGridViewPage()
         {
             this.InitializeComponent();
@@ -40,9 +41,6 @@ namespace ToolkitSample
         private async void VirtualizedVariableSizedGridView_Loaded(object sender, RoutedEventArgs e)
         {
 
-            //demoList.IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
-            //demoList.DataFetchSize = 2.0;
-            //demoList.IncrementalLoadingThreshold = 1.0;
             _things = new MyIncrementalLoading<Thing>(1000, (startIndex, count) =>
             {
 
@@ -55,12 +53,127 @@ namespace ToolkitSample
             }
             else
             {
-                var a = new ObservableRowAapter<Thing>(_things);
-
-                this.demoList.ItemsSource = a;
+                var rowAapter = new ObservableRowAapter<Thing>(_things);
+                //you can define your ResizeableItems as you wish
+                InitializeResizeableItems();
+                rowAapter.ResizeableItems = _resizeableItems;
+                this.demoList.ItemsSource = rowAapter;
             }
 
         }
+
+        /// you can define it in ObservableRowAapter's ResizeableItems property.
+        /// for example, windowMinwidth is 500, windowMaxwidth is 1920
+        /// default is (1920-500)/4=355
+        /// that means 
+        /// 1- 501 to 501+355 is two column style
+        /// 2- 501 + 355*2+1 to 501 + 355*3 is two column style
+        /// 3- 501 + 355*3+1 to 501 + 355*4 is three column style
+        /// 4- 501 + 355*4+1 to double.PositiveInfinity is four column style
+        /// Notice:make sure each group has the same items. 
+        /// for example, each ResizeableItem has 15 Resizable.
+        private void InitializeResizeableItems()
+        {
+            if (_resizeableItems == null)
+            {
+                _resizeableItems = new ResizeableItems();
+
+                //ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(200, 200));
+
+                double windowMinwidth = 500;
+                double windowMaxwidth = DeviceInfo.DeviceScreenSize.Width;
+                double rangwidth = (windowMaxwidth - windowMinwidth) / 4.0;
+
+                #region 4
+                var list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+
+                var c4 = new ResizeableItem() { Columns = 4, Items = list, Min = windowMinwidth + rangwidth * 3 + 1, Max = double.PositiveInfinity };
+                _resizeableItems.Add(c4);
+                #endregion
+
+                #region 3
+                list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+
+                var c3 = new ResizeableItem() { Columns = 3, Items = list, Min = windowMinwidth + rangwidth * 2 + 1, Max = windowMinwidth + rangwidth * 3 };
+                _resizeableItems.Add(c3);
+                #endregion
+
+                #region 2
+                list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 2 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+                list.Add(new Resizable() { Width = 1, Height = 1 });
+
+                var c2 = new ResizeableItem() { Columns = 2, Items = list, Min = windowMinwidth + rangwidth * 1 + 1, Max = windowMinwidth + rangwidth * 2 };
+                _resizeableItems.Add(c2);
+                #endregion
+
+                #region 1
+                list = new List<Resizable>();
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+                list.Add(new Resizable() { Width = 2, Height = 1 });
+
+                var c1 = new ResizeableItem() { Columns = 2, Items = list, Min = windowMinwidth + +1, Max = windowMinwidth + rangwidth * 1 };
+                _resizeableItems.Add(c1);
+                #endregion
+            }
+        }
+
 
         private async void demoList_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -70,6 +183,14 @@ namespace ToolkitSample
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (_things!=null)
+            {
+                _things.Clear();
+            }
+        }
+
+        private void PullToRefreshPanel_PullToRefresh(object sender, EventArgs e)
+        {
+            if (_things != null)
             {
                 _things.Clear();
             }

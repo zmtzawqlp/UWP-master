@@ -138,13 +138,17 @@ namespace ToolkitSample
 
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
 
-         
-            savePicker.FileTypeChoices["jpg"]=new List<string>{ ".jpg" };
+
+            savePicker.FileTypeChoices["jpg"] = new List<string> { ".jpg" };
             savePicker.FileTypeChoices["jpeg"] = new List<string> { ".jpeg" };
             savePicker.FileTypeChoices["png"] = new List<string> { ".png" };
 
-            var file= await savePicker.PickSaveFileAsync();
-            imageTool.SaveBitmap(file);
+            var file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                imageTool.SaveBitmap(file);
+            }
+
         }
 
         private void CancelEditButton_Click(object sender, RoutedEventArgs e)

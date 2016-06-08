@@ -286,6 +286,17 @@ namespace MyUWPToolkit.DataGrid
                 {
                     // get rectangle to arrange cell
                     var rc = GetCellRect(rng);
+                    //fix auto column,if Width is Auto, the width will the adapt to UI width.
+                    if (Columns[rng.Column].Width.IsAuto)
+                    {
+                        cell.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                        if (cell.DesiredSize.Width > rc.Width)
+                        {
+                            rc.Width = cell.DesiredSize.Width + 5;
+                            Columns[rng.Column].SetSize(rc.Width);
+                            Columns.SetIsDirty(true);
+                        }
+                    }
 
                     // set clipping to account for frozen rows/columns
                     if (Rows.Frozen > 0 || Columns.Frozen > 0)

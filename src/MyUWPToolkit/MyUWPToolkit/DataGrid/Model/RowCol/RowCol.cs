@@ -28,6 +28,7 @@ namespace MyUWPToolkit.DataGrid.Model.RowCol
             set
             {
                 _isVisible = value;
+                OnPropertyChanged("IsVisible");
             }
         }
         public int ItemIndex { get; internal set; }

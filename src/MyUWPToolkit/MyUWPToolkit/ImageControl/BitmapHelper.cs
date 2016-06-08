@@ -124,7 +124,10 @@ namespace MyUWPToolkit
         async public static Task SaveCroppedBitmapAsync(StorageFile originalImageFile, StorageFile newImageFile,
             Point startPoint, Size cropSize, Size? imageSize = null)
         {
-
+            if (originalImageFile == null || newImageFile == null)
+            {
+                return;
+            }
             // Convert start point and size to integer.
             uint startPointX = (uint)Math.Floor(startPoint.X > 0 ? startPoint.X : 0);
             uint startPointY = (uint)Math.Floor(startPoint.Y > 0 ? startPoint.Y : 0);

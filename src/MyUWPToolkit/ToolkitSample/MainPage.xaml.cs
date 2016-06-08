@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,19 +27,22 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             Loaded += MainPage_Loaded;
-            
-            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
         }
 
-        private void CoreWindow_SizeChanged(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.WindowSizeChangedEventArgs args)
-        {
-            
-        }
+
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            WebView webView = new WebView();
-            string width = await webView.InvokeScriptAsync("eval", new string[] { "window.screen.width.toString()" });
+            if (PlatformIndependent.IsWindowsPhoneDevice)
+            {
+                listView.Items.Add("CustomKeyboardPage");
+            }
+            else
+            {
+                listView.Items.Add("VirtualizedVariableSizedGridView");   
+            }
+            //WebView webView = new WebView();
+            //string width = await webView.InvokeScriptAsync("eval", new string[] { "window.screen.width.toString()" });
         }
 
         private void ListView_ItemClick(object sender, ItemClickEventArgs e)

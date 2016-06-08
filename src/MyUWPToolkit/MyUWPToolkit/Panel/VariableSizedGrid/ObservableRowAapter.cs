@@ -32,12 +32,12 @@ namespace MyUWPToolkit
         }
         public int RowItemsCount
         {
-            //default is 15.
             get { return _resizeableItems.RowItemsCount; }
         }
 
         public ObservableRowAapter(IList<T> sourceList)
         {
+            //default
             InitializeResizeableItems();
             rowAdapter = new RowAdapter<T>(sourceList, RowItemsCount);
             this.sourceList = sourceList;
@@ -231,7 +231,7 @@ namespace MyUWPToolkit
         }
         ResizeableItems _resizeableItems;
 
-        ResizeableItems IResizeableItems.ResizeableItems
+        public ResizeableItems ResizeableItems
         {
             get
             {
@@ -247,6 +247,7 @@ namespace MyUWPToolkit
                 }
             }
         }
+
 
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {

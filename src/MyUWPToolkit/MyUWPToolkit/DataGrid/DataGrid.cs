@@ -148,7 +148,6 @@ namespace MyUWPToolkit.DataGrid
 
                         switch (VerticalScrollBarVisibility)
                         {
-
                             case ScrollBarVisibility.Auto:
                                 _verticalScrollBar.Visibility = _verticalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
                                 break;
@@ -168,7 +167,6 @@ namespace MyUWPToolkit.DataGrid
                     {
                         switch (HorizontalScrollBarVisibility)
                         {
-
                             case ScrollBarVisibility.Auto:
                                 _horizontalScrollBar.Visibility = _horizontalScrollBar.Maximum > 0 ? Visibility.Visible : Visibility.Collapsed;
                                 break;
@@ -193,16 +191,24 @@ namespace MyUWPToolkit.DataGrid
                         {
                             if (_view.HasMoreItems && !_isLoadingMoreItems)
                             {
+
                                 _isLoadingMoreItems = true;
                                 var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
                                 var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
-                                uint count = Math.Max(1, (uint)(lastRow - firstRow));
-                                //uint count = Math.Max(1, (uint)(10));
-                                if (count == uint.MaxValue)
+                                int count = Math.Max(1, (lastRow - firstRow));
+                                int actualCount = (int)((this.ActualHeight - this._columnHeaderPanel.ActualHeight) / Rows.DefaultSize);
+                                uint updateCount = 1;
+                                if (count > 0)
                                 {
-                                    count = (uint)((this.ActualHeight - this._columnHeaderPanel.ActualHeight) / Rows.DefaultSize + 0.5);
+                                    updateCount = (uint)count;
                                 }
-                                _view.LoadMoreItemsAsync(count).AsTask().ContinueWith(t =>
+                                //handle when the window size changed.
+                                if (actualCount > count)
+                                {
+                                    updateCount = (uint)actualCount;
+                                }
+
+                                _view.LoadMoreItemsAsync(updateCount).AsTask().ContinueWith(t =>
                                 {
                                     _isLoadingMoreItems = false;
                                 }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
@@ -340,15 +346,23 @@ namespace MyUWPToolkit.DataGrid
                 pt.Y += _columnHeaderPanel.ActualHeight;
                 var sp = _cellPanel.ScrollPosition;
                 if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                // get row and column at given coordinates
-                var row = _cellPanel.Rows.GetItemAt(pt.Y);
+                
+                var row = -2;
+
+                if (pt.Y <= _cellPanel.Rows.GetTotalSize())
+                {
+                    // get row and column at given coordinates
+                    row = _cellPanel.Rows.GetItemAt(pt.Y);
+                }
+                //-1 means not in cellpanel, -2 means not in rows
                 if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
                 {
-                    if (row == -1)
+                    if (row < 0)
                     {
                         pointerOverPoint = null;
                     }
-                    else
+
+                    if (row >= 0 || row == -2)
                     {
                         VisualStateManager.GoToState(this, "MouseIndicator", true);
                     }

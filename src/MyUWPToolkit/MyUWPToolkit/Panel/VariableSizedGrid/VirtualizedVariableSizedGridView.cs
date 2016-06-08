@@ -23,7 +23,7 @@ namespace MyUWPToolkit
     /// for example, windowMinwidth is 500, windowMaxwidth is 1920
     /// default is (1920-500)/4=355
     /// that means 
-    /// 1- 501 to 501+355 is one column style
+    /// 1- 501 to 501+355 is two column style
     /// 2- 501 + 355*2+1 to 501 + 355*3 is two column style
     /// 3- 501 + 355*3+1 to 501 + 355*4 is three column style
     /// 4- 501 + 355*4+1 to double.PositiveInfinity is four column style
@@ -175,6 +175,19 @@ namespace MyUWPToolkit
                 gridview.ItemTemplate = gridview.VirtualizedVariableSizedGridViewItemTemplate;
             }
         }
+        /// <summary>
+        /// when ItemsSource is IResizeableItems,we should to disable point down animation and so on.
+        /// </summary>
+        public Style VirtualizedVariableSizedGridViewItemContainerStyle
+        {
+            get { return (Style)GetValue(VirtualizedVariableSizedGridViewItemContainerStyleProperty); }
+            set { SetValue(VirtualizedVariableSizedGridViewItemContainerStyleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for VirtualizedVariableSizedGridViewItemContainerStyle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VirtualizedVariableSizedGridViewItemContainerStyleProperty =
+            DependencyProperty.Register("VirtualizedVariableSizedGridViewItemContainerStyle", typeof(Style), typeof(VirtualizedVariableSizedGridView), new PropertyMetadata(null));
+
 
         #endregion
 
@@ -334,12 +347,15 @@ namespace MyUWPToolkit
             {
                 base.ItemClick -= VirtualizedVariableSizedGridView_ItemClick;
                 var gridviewItem = element as ListViewItem;
+                if (VirtualizedVariableSizedGridViewItemContainerStyle != null)
+                {
+                    gridviewItem.Style = VirtualizedVariableSizedGridViewItemContainerStyle;
+                }
                 //Container Recycling, so ContentTemplateRoot maybe not null.
                 if (gridviewItem.ContentTemplateRoot != null)
                 {
                     var gridview = gridviewItem.ContentTemplateRoot as VariableSizedGridView;
                     //variableSizedGridViews.Add(gridview);
-
                     var resizeableItem = ResizeableItems.GetItem(this.ActualWidth);
                     if (resizeableItem != null)
                     {

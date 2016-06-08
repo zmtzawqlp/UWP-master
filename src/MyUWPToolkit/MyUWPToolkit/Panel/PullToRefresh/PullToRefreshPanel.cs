@@ -98,7 +98,7 @@ namespace MyUWPToolkit
         //public static readonly DependencyProperty IsRefreshingProperty =
         //    DependencyProperty.Register("IsRefreshing", typeof(bool), typeof(PullToRefreshPanel), new PropertyMetadata(false));
 
-   
+
 
         #endregion
 
@@ -154,7 +154,7 @@ namespace MyUWPToolkit
             ScrollViewer sv = sender as ScrollViewer;
             IsReachThreshold = sv.VerticalOffset == 0;
             //fix issue that go back from other page, it will call refresh.
-            //if (IsReachThreshold && e.IsIntermediate)
+            if (IsReachThreshold)
             {
                 _scrollViewer.DirectManipulationCompleted -= _scrollViewer_DirectManipulationCompleted;
                 _scrollViewer.DirectManipulationCompleted += _scrollViewer_DirectManipulationCompleted;
@@ -172,13 +172,10 @@ namespace MyUWPToolkit
             _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
             _scrollViewer.ChangeView(null, _panelHeader.Height, null);
 
-            if (IsReachThreshold)
+            if (PullToRefresh != null)
             {
-                if (PullToRefresh != null)
-                {
-                    LastRefreshTime = DateTime.Now;
-                    PullToRefresh(this, null);
-                }
+                LastRefreshTime = DateTime.Now;
+                PullToRefresh(this, null);
             }
         }
 

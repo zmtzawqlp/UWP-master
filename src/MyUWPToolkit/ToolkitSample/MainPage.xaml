@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
-        <ListView ItemClick="ListView_ItemClick" IsItemClickEnabled="True" >
+        <ListView x:Name="listView" ItemClick="ListView_ItemClick" IsItemClickEnabled="True" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="5" Background="#fff" BorderThickness="1" BorderBrush="#d6d6d6">
@@ -18,10 +18,10 @@
             </ListView.ItemTemplate>
             <x:String>ImageTool</x:String>
             <x:String>PullToRefreshControl</x:String>
-            <x:String>CropImageControl</x:String>
+            <!--<x:String>CropImageControl</x:String>-->
             <x:String>ColumnChart</x:String>
-            <x:String>VirtualizedVariableSizedGridView</x:String>
-            <x:String>CustomKeyboardPage</x:String>
+            <!--<x:String>VirtualizedVariableSizedGridView</x:String>-->
+            <!--<x:String>CustomKeyboardPage</x:String>-->
             <!--<x:String>WIN2DPage</x:String>-->
             <x:String>DataGrid</x:String>
             <!--<x:String>FlexGrid</x:String>-->
