@@ -31,6 +31,8 @@ namespace MyUWPToolkit.DataGrid
 
         public bool AllowSorting { get; set; }
 
+        public bool AdaptUISize { get; set; }
+
         public Binding Binding
         {
             get { return _binding; }

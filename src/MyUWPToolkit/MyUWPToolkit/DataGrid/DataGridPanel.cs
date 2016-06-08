@@ -286,8 +286,8 @@ namespace MyUWPToolkit.DataGrid
                 {
                     // get rectangle to arrange cell
                     var rc = GetCellRect(rng);
-                    //fix auto column,if Width is Auto, the width will the adapt to UI width.
-                    if (Columns[rng.Column].Width.IsAuto)
+                    //fix auto  column,if Width is Auto and AdaptUISize is true, the width will the adapt to UI width.
+                    if (Columns[rng.Column].AdaptUISize)
                     {
                         cell.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                         if (cell.DesiredSize.Width > rc.Width)

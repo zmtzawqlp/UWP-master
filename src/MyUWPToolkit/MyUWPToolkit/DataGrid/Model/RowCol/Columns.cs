@@ -66,8 +66,13 @@ namespace MyUWPToolkit.DataGrid.Model.RowCol
                         }
                         else if (c.Width.IsAuto)
                         {
-                            //fix auto column,if Width is Auto, the width will the adapt to UI width.
-                            var cw = Math.Max(c.Size, Math.Max(c.MinWidth, Math.Min(c.MaxWidth, this.DefaultSize)));
+                            
+                            var cw =Math.Max(c.MinWidth, Math.Min(c.MaxWidth, this.DefaultSize));
+                            //fix auto  column,if Width is Auto and AdaptUISize is true, the width will the adapt to UI width.
+                            if (c.AdaptUISize)
+                            {
+                                cw = Math.Max(c.Size, cw);
+                            }
                             c.SetSize(cw);
                             requiredSize += GetItemSize(index);
                         }
