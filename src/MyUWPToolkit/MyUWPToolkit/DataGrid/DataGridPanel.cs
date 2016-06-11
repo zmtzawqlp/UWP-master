@@ -572,13 +572,14 @@ namespace MyUWPToolkit.DataGrid
 
                 element.RenderTransform = null;
 
+                var even = true;
                 if (Grid.Rows.Count > item.Key.Row)
                 {
-                    var even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
-                    cell.Background = even || Grid.AlternatingRowBackground == null
-                        ? Grid.RowBackground
-                        : Grid.AlternatingRowBackground;
+                    even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
                 }
+                cell.Background = even || Grid.AlternatingRowBackground == null
+                       ? Grid.RowBackground
+                       : Grid.AlternatingRowBackground;
 
 
             }
@@ -600,10 +601,14 @@ namespace MyUWPToolkit.DataGrid
                 foreach (var item in _pointerOverCells)
                 {
                     var element = item.Value as Border;
-                    var even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
+                    var even = true;
+                    if (Grid.Rows.Count > item.Key.Row)
+                    {
+                        even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;      
+                    }
                     element.Background = even || Grid.AlternatingRowBackground == null
-                        ? Grid.RowBackground
-                        : Grid.AlternatingRowBackground;
+                           ? Grid.RowBackground
+                           : Grid.AlternatingRowBackground;
                 }
                 _pointerOverCells.Clear();
             }

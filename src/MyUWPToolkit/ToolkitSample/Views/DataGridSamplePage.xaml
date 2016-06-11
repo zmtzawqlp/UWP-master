@@ -18,7 +18,7 @@
 
         <Pivot Grid.Row="1" Background="Blue" x:Name="Pivot">
             <PivotItem Header="MyDataGrid">
-                <controls:DataGrid x:Name="datagrid" Grid.Row="1"   PullToRefresh="PullToRefreshPanel_PullToRefresh" GridLinesVisibility="All" BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold" GridLinesBrush="Gold"  AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green" FrozenLinesBrush="Yellow" FrozenColumns="1" FrozenRows="1" Foreground="Red">
+                <controls:DataGrid x:Name="datagrid" Grid.Row="1"   PullToRefresh="PullToRefreshPanel_PullToRefresh"  BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold"   AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green"  FrozenColumns="1" FrozenRows="1" Foreground="Red">
                     <controls:DataGrid.Columns>
                         <controls:Column Width="auto" ColumnName="名字">
                             <controls:Column.CellTemplate>

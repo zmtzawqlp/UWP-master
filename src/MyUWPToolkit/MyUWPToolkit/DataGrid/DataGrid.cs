@@ -340,7 +340,15 @@ namespace MyUWPToolkit.DataGrid
             //if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
                 var pt = e.GetCurrentPoint(_cellPanel).Position;
-                pointerOverPoint = pt;
+                if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
+                {
+                    pointerOverPoint = pt;
+                }
+                else
+                {
+                    pointerOverPoint = null;
+                }
+
                 pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
                 var fy = _cellPanel.Rows.GetFrozenSize();
                 pt.Y += _columnHeaderPanel.ActualHeight;
@@ -441,7 +449,6 @@ namespace MyUWPToolkit.DataGrid
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
-
             if (_verticalScrollBar.Value == 0 && AllowPullToRefresh)
             {
                 startingPullToRefresh = true;
