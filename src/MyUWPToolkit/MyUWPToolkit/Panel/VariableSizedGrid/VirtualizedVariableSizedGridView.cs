@@ -13,6 +13,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
+using Windows.Foundation;
 
 namespace MyUWPToolkit
 {
@@ -195,11 +196,16 @@ namespace MyUWPToolkit
         {
             this.DefaultStyleKey = typeof(VirtualizedVariableSizedGridView);
 
+            base.ItemClick += VirtualizedVariableSizedGridView_ItemClick;
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
             if (!PlatformIndependent.IsWindowsPhoneDevice)
             {
-                this.SizeChanged += VirtualizedVariableSizedGridView_SizeChanged;
+                OnMeasureOverride(availableSize);
             }
-            base.ItemClick += VirtualizedVariableSizedGridView_ItemClick;
+            return base.MeasureOverride(availableSize);
         }
 
         private void VirtualizedVariableSizedGridView_ItemClick(object sender, ItemClickEventArgs e)
@@ -313,15 +319,15 @@ namespace MyUWPToolkit
             }
         }
 
-        private void VirtualizedVariableSizedGridView_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void OnMeasureOverride(Size availableSize)
         {
-            if (ItemsSource != null && ItemsSource is IResizeableItems)
+            if (ItemsSource != null && ItemsSource is IResizeableItems && availableSize != Size.Empty)
             {
-                var resizeableItem = ResizeableItems.GetItem(e.NewSize.Width);
+                var resizeableItem = ResizeableItems.GetItem(availableSize.Width);
 
                 if (resizeableItem != null)
                 {
-                    resizeableItem.ItemWidth = (int)(e.NewSize.Width / resizeableItem.Columns - 7);
+                    resizeableItem.ItemWidth = (int)(availableSize.Width / resizeableItem.Columns - 7);
 
                     foreach (var item in this.Items)
                     {

@@ -11,6 +11,7 @@ using Windows.Foundation.Collections;
 
 namespace MyUWPToolkit.CollectionView
 {
+    ///http://www.codeproject.com/Articles/527686/A-WinRT-CollectionView-class-with-Filtering-and-So
     /// <summary>
     /// Simple implementation of the <see cref="ICollectionViewEx"/> interface, 
     /// which extends the standard WinRT definition of the <see cref="ICollectionView"/> 

@@ -210,7 +210,6 @@ namespace MyUWPToolkit.DataGrid
                 RemoveCell(removeCells[i]);
             }
 
-            // REVIEW: not sure why this is needed
             if (removeCells.Count == 0)
             {
                 InvalidateArrange();
