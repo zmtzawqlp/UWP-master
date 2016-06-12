@@ -59,7 +59,8 @@ namespace ToolkitSample
 
         private void flexgrid_SortingColumn(object sender, MyUWPToolkit.FlexGrid.SortingColumnEventArgs e)
         {
-
+            flexgrid.ItemsSource = null;
+            flexgrid.ItemsSource = _employees;
         }
     }
 }

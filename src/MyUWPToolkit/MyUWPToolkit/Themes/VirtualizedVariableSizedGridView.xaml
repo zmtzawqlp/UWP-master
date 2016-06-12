@@ -484,7 +484,7 @@
                     <local:VariableSizedGridView ItemsSource="{Binding}" SelectionMode="None" IsItemClickEnabled="True" ScrollViewer.VerticalScrollMode="Disabled" >
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <VariableSizedWrapGrid Orientation="Horizontal"  MaximumRowsOrColumns="4" />
+                                <VariableSizedWrapGrid Orientation="Horizontal"/>
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                     </local:VariableSizedGridView>
