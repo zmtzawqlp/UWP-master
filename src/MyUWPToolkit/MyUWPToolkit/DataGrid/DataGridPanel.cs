@@ -294,6 +294,17 @@ namespace MyUWPToolkit.DataGrid
                             rc.Width = cell.DesiredSize.Width + 5;
                             Columns[rng.Column].SetSize(rc.Width);
                             Columns.SetIsDirty(true);
+                            //if Cell has dirty data, we should also update Column
+                            if (CellType == CellType.Cell)
+                            {
+                                Grid.ColumnHeaders.Invalidate();
+                            }
+                            //Column always render before cell, so we don't need invalidate cell right now.
+                            ////if column has dirty data, we should also update cell
+                            //else
+                            //{
+                            //    Grid.Cells.Invalidate();
+                            //}
                         }
                     }
 

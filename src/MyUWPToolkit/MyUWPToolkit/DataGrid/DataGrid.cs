@@ -1543,6 +1543,15 @@ namespace MyUWPToolkit.DataGrid
                 yield return null;
             }
         }
+
+        /// <summary>
+        /// Clear pointer over and pointer pressed animation
+        /// </summary>
+        public void ClearPointer()
+        {
+            Cells.HandlePointerOver(-1);
+            Cells.ClearPointerPressedAnimation();
+        }
         #endregion
     }
 
