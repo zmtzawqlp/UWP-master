@@ -113,13 +113,18 @@ namespace MyUWPToolkit
             _panelHeader.DataContext = this;
             _innerCustomPanel.SizeChanged += _innerCustomPanel_SizeChanged;
             _scrollViewer.ViewChanged += _scrollViewer_ViewChanged;
+            _scrollViewer.SizeChanged += _scrollViewer_SizeChanged;
         }
 
         public PullToRefreshPanel()
         {
             this.DefaultStyleKey = typeof(PullToRefreshPanel);
-            Window.Current.SizeChanged += Current_SizeChanged;
-            Loaded += PullToRefreshPanel_Loaded;
+            this.Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateVerticalOffset();
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -131,18 +136,11 @@ namespace MyUWPToolkit
             return base.MeasureOverride(availableSize);
         }
 
-        private void PullToRefreshPanel_Loaded(object sender, RoutedEventArgs e)
+        private void _scrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UpdateVerticalOffset();
+            _innerCustomPanel?.InvalidateMeasure();
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
-        {
-            if (_innerCustomPanel != null)
-            {
-                _innerCustomPanel.InvalidateMeasure();
-            }
-        }
 
         private void _innerCustomPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -153,7 +151,8 @@ namespace MyUWPToolkit
         {
             ScrollViewer sv = sender as ScrollViewer;
             IsReachThreshold = sv.VerticalOffset == 0;
-            //fix issue that go back from other page, it will call refresh.
+
+            //修复当scroller滚动之后，从别的页面回来的时候，会触发refresh
             if (IsReachThreshold)
             {
                 _scrollViewer.DirectManipulationCompleted -= _scrollViewer_DirectManipulationCompleted;
@@ -169,6 +168,7 @@ namespace MyUWPToolkit
         {
             //IsRefreshing = true;
             _scrollViewer.DirectManipulationCompleted -= _scrollViewer_DirectManipulationCompleted;
+
             _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
             _scrollViewer.ChangeView(null, _panelHeader.Height, null);
 
@@ -177,6 +177,7 @@ namespace MyUWPToolkit
                 LastRefreshTime = DateTime.Now;
                 PullToRefresh(this, null);
             }
+
         }
 
         private void UpdateVerticalOffset()
@@ -184,27 +185,10 @@ namespace MyUWPToolkit
             if (_scrollViewer != null && _panelHeader != null)
             //&& _panelContent != null && _panelHeader != null)
             {
-                if (double.IsInfinity(RefreshThreshold))
-                {
-                    RefreshThreshold = 100;
-                }
                 _panelHeader.Height = RefreshThreshold > _panelHeader.ActualHeight ? RefreshThreshold : _panelHeader.ActualHeight;
 
                 _scrollViewer.ChangeView(null, _panelHeader.Height, null, true);
             }
-        }
-
-        public void UpdateVerticalOffset(double verticalOffset)
-        {
-            //Debug.WriteLine(_scrollViewer.VerticalOffset);
-            //_scrollViewer.ChangeView(null, _scrollViewer.VerticalOffset-verticalOffset, null, true);
-
-            _scrollViewer.ScrollToVerticalOffset(_scrollViewer.VerticalOffset - verticalOffset);
-        }
-
-        public bool IsPulling()
-        {
-            return _panelHeader.Height != _scrollViewer.VerticalOffset;
         }
     }
 }
