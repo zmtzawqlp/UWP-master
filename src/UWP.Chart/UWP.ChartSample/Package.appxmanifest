@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="d91c5f29-83ce-488b-85ab-a62394c73444"
+    Name="dba25070-950f-47b6-812d-93e916fefd8e"
     Publisher="CN=Administrator"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="d91c5f29-83ce-488b-85ab-a62394c73444" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="dba25070-950f-47b6-812d-93e916fefd8e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>UWP.ChartSample</DisplayName>
