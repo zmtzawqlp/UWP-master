@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}</ProjectGuid>
+    <ProjectGuid>{5BDA7486-954A-44D6-BCD3-D991A6E76D77}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyUWPToolkit</RootNamespace>
-    <AssemblyName>MyUWPToolkit</AssemblyName>
+    <RootNamespace>UWP.DataGridLibrary</RootNamespace>
+    <AssemblyName>UWP.DataGridLibrary</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
@@ -107,109 +107,52 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chart\ColumnChart.cs" />
     <Compile Include="CollectionView\ICollectionViewEx.cs" />
     <Compile Include="CollectionView\UWPCollectionView.cs" />
     <Compile Include="Common\BindingEvaluator.cs" />
     <Compile Include="Common\Enums.cs" />
-    <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
-    <Compile Include="FlexGrid\FlexGrid.cs" />
-    <Compile Include="FlexGrid\FlexGridP.cs" />
-    <Compile Include="ImageControl\AspectRatio.cs" />
-    <Compile Include="ImageControl\BitmapHelper.cs" />
-    <Compile Include="ImageControl\Crop\CropImageControl.cs" />
-    <Compile Include="ImageControl\Crop\CropImageSourceChangedEventHandler.cs" />
-    <Compile Include="ImageControl\ImageTool.cs" />
-    <Compile Include="ImageControl\CropSelection.cs" />
-    <Compile Include="ImageControl\CropSelectionSize.cs" />
-    <Compile Include="ImageControl\RotationAngle.cs" />
-    <Compile Include="ImageControl\Win2DImageTool.cs" />
-    <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />
-    <Compile Include="Panel\PullToRefresh\PullToRefreshControl.cs" />
-    <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />
-    <Compile Include="Panel\PullToRefresh\ScrollPanel.cs" />
-    <Compile Include="Panel\VariableSizedGrid\IResizable.cs" />
-    <Compile Include="Panel\VariableSizedGrid\ObservableRowAapter.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VariableSizedGridView.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VariableSizedWrapGridDataContext.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedGridView.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedWrapGrid.cs" />
+    <Compile Include="DataGrid.cs" />
+    <Compile Include="DataGridP.cs" />
+    <Compile Include="DataGridPanel.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Model\Cell\CellFactory.cs" />
+    <Compile Include="Model\Cell\CellRange.cs" />
+    <Compile Include="Model\Cell\CellType.cs" />
+    <Compile Include="Model\Cell\ICellFactory.cs" />
+    <Compile Include="Model\RowCol\BoundRow.cs" />
+    <Compile Include="Model\RowCol\Column.cs" />
+    <Compile Include="Model\RowCol\Columns.cs" />
+    <Compile Include="Model\RowCol\Row.cs" />
+    <Compile Include="Model\RowCol\RowCol.cs" />
+    <Compile Include="Model\RowCol\RowCols.cs" />
+    <Compile Include="Model\RowCol\Rows.cs" />
+    <Compile Include="Model\RowCol\UnboundRowStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\AudioCapturePermissions.cs" />
-    <Compile Include="Util\CryptographyHelper.cs" />
-    <Compile Include="Util\DeviceInfo.cs" />
+    <Compile Include="Util\BindingEx.cs" />
+    <Compile Include="Util\Consts.cs" />
     <Compile Include="Util\FrameworkElementExtensions.cs" />
-    <Compile Include="Util\NetworkInfo.cs" />
-    <Compile Include="Util\NotifyTaskCompletion.cs" />
+    <Compile Include="Util\ObjectEx.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
-    <Compile Include="Util\SpeechService.cs" />
+    <Compile Include="Util\TypeEx.cs" />
     <Compile Include="Util\Util.cs" />
-    <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
+    <EmbeddedResource Include="Properties\UWP.DataGridLibrary.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Themes\ColumnChart.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\DataGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\CropImageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Themes\DeviceFamily-Mobile\VirtualizedVariableSizedGridView.xaml">
+    <Page Include="Themes\DeviceFamily-Mobile\DataGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Themes\FlexGrid.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Themes\ImageTool.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\Generic.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Themes\PullToRefreshControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Themes\PullToRefreshPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\VirtualizedVariableSizedGridView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
-    <Page Include="Themes\Win2DImageTool.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Input\" />
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
-      <Name>Windows Mobile Extensions for the UWP</Name>
-    </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resource\default_ptr_rotate.png" />
-    <Content Include="Resource\indicator_arrow.png" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
