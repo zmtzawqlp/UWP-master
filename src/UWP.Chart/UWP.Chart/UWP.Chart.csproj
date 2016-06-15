@@ -112,9 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\UWP.Chart.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Themes\DeviceFamily-Mobile\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
