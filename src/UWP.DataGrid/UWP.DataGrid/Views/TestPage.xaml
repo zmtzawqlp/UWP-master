@@ -11,8 +11,16 @@
         
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="listView">
+    <Grid Background="Black" Height="200"  Padding="0,-100,0,0" VerticalAlignment="Top">
+        <!--<ContentPresenter Height="100" Padding="0,-100,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid Height="200" Background="Red">
+                <TextBlock Text="3131313131"/>
+            </Grid>
+        </ContentPresenter>-->
+        <Grid Height="200" Background="Red">
+            <TextBlock Text="3131313131"/>
+        </Grid>
+        <ListView x:Name="listView" Visibility="Collapsed">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>

@@ -241,13 +241,13 @@ namespace UWP.DataGrid
                                 {
                                     _contentGrid.RowDefinitions[1].Height = new GridLength(_headerHeight + totalScrollPosition.Y);
                                     _header.Margin = new Thickness(0, totalScrollPosition.Y, 0, 0);
-                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, -totalScrollPosition.Y, _contentGrid.DesiredSize.Width, _headerHeight) };
+                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, -totalScrollPosition.Y, this.ActualWidth, _headerHeight) };
                                 }
                                 else if (_contentGrid.RowDefinitions[1].Height.Value != 0)
                                 {
                                     _contentGrid.RowDefinitions[1].Height = new GridLength(0);
                                     _header.Margin = new Thickness(0, _headerHeight, 0, 0);
-                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, _headerHeight, _contentGrid.DesiredSize.Width, _headerHeight) };
+                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, _headerHeight, this.ActualWidth, _headerHeight) };
                                 }
                             }
                         }
@@ -257,6 +257,47 @@ namespace UWP.DataGrid
                             var verticalOffset = OuterScrollViewer.VerticalOffset + ScrollPosition.Y - _scrollPosition.Y;
                             OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
                         }
+
+
+
+                        maxV = totalRowsSize + _headerHeight + _columnHeaderPanel.DesiredSize.Height - sz.Height;
+                        HasMoreItems(value);
+                        if ((maxV + value.Y) <= 0)
+                        {
+                            if (value.Y < 0)
+                            {
+                                var footHeight = -(maxV + value.Y);
+                                if (footHeight > 0 && footHeight <= _footerHeight)
+                                {
+                                    //_contentGrid.RowDefinitions[4].Height = new GridLength(_contentGrid.RowDefinitions[4].ActualHeight - (footHeight- _contentGrid.RowDefinitions[5].ActualHeight), GridUnitType.Star);
+                                    _contentGrid.RowDefinitions[5].Height = new GridLength(footHeight);
+                                    _footer.Margin = new Thickness(0, 0, 0, footHeight - _footerHeight);
+                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, footHeight) };
+                                    //_verticalScrollBar.Value += (footHeight - _footerHeight);
+                                   
+                                }
+                                else if (_contentGrid.RowDefinitions[5].Height.Value != 0)
+                                {
+                                    //_contentGrid.RowDefinitions[4].Height = new GridLength(_contentGrid.RowDefinitions[4].ActualHeight + _contentGrid.RowDefinitions[5].ActualHeight, GridUnitType.Star);
+                                    _contentGrid.RowDefinitions[5].Height = new GridLength(0);
+                                    _footer.Margin = new Thickness(0, 0, 0, -_footerHeight);
+                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, 0) };
+                                }
+
+
+                                //_header.RenderTransform = new TranslateTransform() { Y = value.Y };
+                            }
+                        }
+                        else
+                        {
+                            if (_contentGrid.RowDefinitions[5].Height.Value != 0)
+                            {
+                                //_contentGrid.RowDefinitions[4].Height = new GridLength(_contentGrid.RowDefinitions[4].ActualHeight + _contentGrid.RowDefinitions[5].ActualHeight, GridUnitType.Star);
+                                _contentGrid.RowDefinitions[5].Height = new GridLength(0);
+                                _footer.Margin = new Thickness(0, 0, 0, -_footerHeight);
+                                _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, 0) };
+                            }
+                        }
                         #region Cell ScrollPosition
                         //Cell ScrollPosition
 
@@ -265,7 +306,7 @@ namespace UWP.DataGrid
                         var cellScrollPosition = value;
                         cellScrollPosition.Y += _headerHeight;
 
-                        maxV = totalRowsSize - sz.Height;
+                        maxV = totalRowsSize + _columnHeaderPanel.DesiredSize.Height - sz.Height;
 
                         cellScrollPosition.X = Math.Max(-maxH, Math.Min(cellScrollPosition.X, 0));
                         cellScrollPosition.Y = Math.Max(-maxV, Math.Min(cellScrollPosition.Y, 0));
@@ -292,31 +333,8 @@ namespace UWP.DataGrid
                         {
 
                         }
-    
-                        maxV = totalHeight - sz.Height;
 
-                        if (!HasMoreItems(value) && (maxV + value.Y) <= 0)
-                        {
-                            if (value.Y < 0)
-                            {
-                                var footHeight = (value.Y - _scrollPosition.Y);
-                                if (footHeight > 0 && footHeight <= _footerHeight)
-                                {
-                                    _contentGrid.RowDefinitions[5].Height = new GridLength(footHeight);
-                                    _footer.Margin = new Thickness(0, 0, 0, -(value.Y - _scrollPosition.Y));
-                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, _footerHeight) };
-                                }
-                                else
-                                {
-                                    _contentGrid.RowDefinitions[5].Height = new GridLength(0);
-                                    _footer.Margin = new Thickness(0, 0, 0, _footerHeight);
-                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, 0) };
-                                }
-
-
-                                //_header.RenderTransform = new TranslateTransform() { Y = value.Y };
-                            }
-                        }
+                        
                         #endregion
 
                         //HasMoreItems(value);

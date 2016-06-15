@@ -70,35 +70,35 @@ namespace UWP.DataGrid
                 {
                     _header.Measure(availableSize);
 
-                    if (_header.DesiredSize != Size.Empty && _header.DesiredSize.Height != 0 && _header.DesiredSize.Width !=0)
+                    if (_header.DesiredSize != Size.Empty && _header.DesiredSize.Height != 0 && _header.DesiredSize.Width != 0 && _headerHeight == 0)
                     {
                         Grid.SetRow(_pullToRefreshHeader, 0);
                         //_header.Height = _header.DesiredSize.Height;
-                        _headerHeight = _header.DesiredSize.Height;
+                        _headerHeight = _header.DesiredSize.Height+_header.Margin.Top;
                     }
                     else
                     {
                         Grid.SetRow(_pullToRefreshHeader, 3);
-                        _headerHeight = 0;
+                        //_headerHeight = 0;
                     }
                 }
             }
 
-            if (_footer != null)
-            {
-                _footer.Measure(availableSize);
-                if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
-                {
-                    _footerHeight = _footer.DesiredSize.Height;
-                    //_footer.Height = _footer.DesiredSize.Height;
-                    //_contentGrid.RowDefinitions[5].Height = new GridLength(_footer.DesiredSize.Height);
-                    //_footer.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    _footerHeight = 0;
-                }
-            }
+            //if (_footer != null)
+            //{
+            //    _footer.Measure(availableSize);
+            //    if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
+            //    {
+            //        _footerHeight = _footer.DesiredSize.Height;
+            //        //_footer.Height = _footer.DesiredSize.Height;
+            //        //_contentGrid.RowDefinitions[5].Height = new GridLength(_footer.DesiredSize.Height);
+            //        //_footer.Visibility = Visibility.Collapsed;
+            //    }
+            //    else
+            //    {
+            //        _footerHeight = 0;
+            //    }
+            //}
             return base.MeasureOverride(availableSize);
         }
         #endregion
@@ -184,7 +184,7 @@ namespace UWP.DataGrid
                     var totalColumnsSize = Columns.GetTotalSize();
                     var totalHeight = totalRowsSize + _headerHeight + _footerHeight + _columnHeaderPanel.DesiredSize.Height;
 
-                    _verticalScrollBar.Maximum = totalHeight-hei;
+                    _verticalScrollBar.Maximum = totalHeight - hei;
                     _horizontalScrollBar.Maximum = totalColumnsSize - wid;
 
                     // update scrollbar visibility
@@ -236,7 +236,6 @@ namespace UWP.DataGrid
                         {
                             if (_view.HasMoreItems && !_isLoadingMoreItems)
                             {
-
                                 _isLoadingMoreItems = true;
                                 var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
                                 var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
@@ -308,7 +307,7 @@ namespace UWP.DataGrid
             Grid.SetRow(_canvas, 2);
             Grid.SetRowSpan(_canvas, 3);
 
-            _contentGrid.Children.Insert(0,_cellPanel);
+            _contentGrid.Children.Insert(0, _cellPanel);
             _contentGrid.Children.Add(_columnHeaderPanel);
             _contentGrid.Children.Add(_canvas);
 
@@ -801,6 +800,17 @@ namespace UWP.DataGrid
                     }
                     else
                     {
+                        if (_footerHeight ==0)
+                        {
+                            _footer.Measure(_contentGrid.DesiredSize);
+                            if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
+                            {
+                                _verticalScrollBar.Maximum -= _footerHeight;
+                                _verticalScrollBar.Maximum += _footer.DesiredSize.Height;
+                                _footerHeight = _footer.DesiredSize.Height + _footer.Margin.Bottom;
+                            }
+                        }
+                       
                         return false;
                     }
                 }
