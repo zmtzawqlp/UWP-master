@@ -28,12 +28,14 @@ using Windows.UI.Input;
 namespace UWP.DataGrid
 {
     /// <summary>
-    /// 
+    /// DataGrid
     /// </summary>
     [TemplatePart(Name = "ContentGrid", Type = typeof(Grid))]
     [TemplatePart(Name = "VerticalScrollBar", Type = typeof(ScrollBar))]
     [TemplatePart(Name = "HorizontalScrollBar", Type = typeof(ScrollBar))]
     [TemplatePart(Name = "PullToRefreshHeader", Type = typeof(ContentControl))]
+    [TemplatePart(Name = "Header", Type = typeof(ContentPresenter))]
+    [TemplatePart(Name = "Footer", Type = typeof(ContentPresenter))]
     public partial class DataGrid : Control
     {
 
@@ -53,7 +55,7 @@ namespace UWP.DataGrid
             base.OnApplyTemplate();
             this.InitializeContentGrid();
             this.InitializeScrollBar();
-            UpdateScrollBars();
+            //UpdateScrollBars();
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -61,6 +63,41 @@ namespace UWP.DataGrid
             if (RefreshThreshold == 0.0)
             {
                 RefreshThreshold = availableSize.Height * 1 / 5;
+            }
+            if (_header != null)
+            {
+                if (_pullToRefreshHeader != null)
+                {
+                    _header.Measure(availableSize);
+
+                    if (_header.DesiredSize != Size.Empty && _header.DesiredSize.Height != 0 && _header.DesiredSize.Width !=0)
+                    {
+                        Grid.SetRow(_pullToRefreshHeader, 0);
+                        //_header.Height = _header.DesiredSize.Height;
+                        _headerHeight = _header.DesiredSize.Height;
+                    }
+                    else
+                    {
+                        Grid.SetRow(_pullToRefreshHeader, 3);
+                        _headerHeight = 0;
+                    }
+                }
+            }
+
+            if (_footer != null)
+            {
+                _footer.Measure(availableSize);
+                if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
+                {
+                    _footerHeight = _footer.DesiredSize.Height;
+                    //_footer.Height = _footer.DesiredSize.Height;
+                    //_contentGrid.RowDefinitions[5].Height = new GridLength(_footer.DesiredSize.Height);
+                    //_footer.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    _footerHeight = 0;
+                }
             }
             return base.MeasureOverride(availableSize);
         }
@@ -124,23 +161,31 @@ namespace UWP.DataGrid
                 // calculate size available (client and scrollbars)
                 var wid = _contentGrid.ActualWidth;
                 var hei = _contentGrid.ActualHeight;
-                var columnHeaderHeight = _columnHeaderPanel.ActualHeight;
-                var frozenColumnsSize = Columns.GetFrozenSize();
-                var frozenRowsSize = Rows.GetFrozenSize();
+                //var columnHeaderHeight = _columnHeaderPanel.ActualHeight;
+                //var frozenColumnsSize = Columns.GetFrozenSize();
+                //var frozenRowsSize = Rows.GetFrozenSize();
+
+                var columnHeaderHeight = 0;
+                //var frozenColumnsSize = 0;
+                //var frozenRowsSize = 0;
 
                 if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                 {
-                    hei -= columnHeaderHeight;
-                    _verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
-                    _horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
+                    //hei -= columnHeaderHeight;
+                    //_verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
+                    //_horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
                     UpdateStarSizes();
 
                     // update scrollbar parameters
                     _verticalScrollBar.SmallChange = _horizontalScrollBar.SmallChange = Rows.DefaultSize;
                     _verticalScrollBar.LargeChange = _verticalScrollBar.ViewportSize = hei - columnHeaderHeight;
                     _horizontalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = wid;
-                    _verticalScrollBar.Maximum = Rows.GetTotalSize() - hei;
-                    _horizontalScrollBar.Maximum = Columns.GetTotalSize() - wid;
+                    var totalRowsSize = Rows.GetTotalSize();
+                    var totalColumnsSize = Columns.GetTotalSize();
+                    var totalHeight = totalRowsSize + _headerHeight + _footerHeight + _columnHeaderPanel.DesiredSize.Height;
+
+                    _verticalScrollBar.Maximum = totalHeight-hei;
+                    _horizontalScrollBar.Maximum = totalColumnsSize - wid;
 
                     // update scrollbar visibility
                     if (_verticalScrollBar != null)
@@ -254,11 +299,16 @@ namespace UWP.DataGrid
             _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
             _pullToRefreshHeader.DataContext = this;
 
-            _cellPanel.SetValue(Grid.RowProperty, 2);
-            _columnHeaderPanel.SetValue(Grid.RowProperty, 0);
+            _header = GetTemplateChild("Header") as ContentPresenter;
+            _footer = GetTemplateChild("Footer") as ContentPresenter;
 
-            _canvas.SetValue(Grid.RowSpanProperty, 3);
-            _contentGrid.Children.Add(_cellPanel);
+            Grid.SetRow(_cellPanel, 4);
+            Grid.SetRow(_columnHeaderPanel, 2);
+
+            Grid.SetRow(_canvas, 2);
+            Grid.SetRowSpan(_canvas, 3);
+
+            _contentGrid.Children.Insert(0,_cellPanel);
             _contentGrid.Children.Add(_columnHeaderPanel);
             _contentGrid.Children.Add(_canvas);
 
@@ -354,7 +404,7 @@ namespace UWP.DataGrid
                 pt.Y += _columnHeaderPanel.ActualHeight;
                 var sp = _cellPanel.ScrollPosition;
                 if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                
+
                 var row = -2;
 
                 if (pt.Y <= _cellPanel.Rows.GetTotalSize())
@@ -476,7 +526,7 @@ namespace UWP.DataGrid
             }
             VisualStateManager.GoToState(this, "NoIndicator", true);
             _pullToRefreshHeader.Height = 0;
-            _contentGrid.RowDefinitions[1].Height = new GridLength(0);
+            _contentGrid.RowDefinitions[Grid.GetRow(_pullToRefreshHeader)].Height = new GridLength(0);
 
             if (PivotItem != null)
             {
@@ -655,7 +705,8 @@ namespace UWP.DataGrid
                     height = maxThreshold;
                 }
                 _pullToRefreshHeader.Height = height >= 0 ? height : 0;
-                _contentGrid.RowDefinitions[1].Height = new GridLength(_pullToRefreshHeader.Height);
+
+                _contentGrid.RowDefinitions[Grid.GetRow(_pullToRefreshHeader)].Height = new GridLength(_pullToRefreshHeader.Height);
                 //Debug.WriteLine(_pullToRefreshHeader.Height);
             }
 
@@ -711,29 +762,8 @@ namespace UWP.DataGrid
                     break;
             }
 
-
             ScrollPosition = point;
-
-            if (_view != null && _verticalScrollBar != null)
-            {
-                if (-point.Y >= _verticalScrollBar.Maximum && _verticalScrollBar.Maximum > 0)
-                {
-                    if (_view.HasMoreItems && !_isLoadingMoreItems)
-                    {
-                        _isLoadingMoreItems = true;
-
-                        var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
-                        var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
-                        uint count = Math.Max(1, (uint)(lastRow - firstRow));
-
-                        _view.LoadMoreItemsAsync(count).AsTask().ContinueWith(t =>
-                        {
-                            _isLoadingMoreItems = false;
-                        }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
-
-                    }
-                }
-            }
+            //HandleLoadMore(point);
 
             this.IsReachThreshold = false;
             if (e.PointerDeviceType == PointerDeviceType.Touch)
@@ -744,6 +774,42 @@ namespace UWP.DataGrid
             {
                 VisualStateManager.GoToState(this, "MouseIndicator", true);
             }
+        }
+
+        private bool HasMoreItems(Point point)
+        {
+            if (_view != null && _verticalScrollBar != null)
+            {
+                if (-point.Y >= _verticalScrollBar.Maximum && _verticalScrollBar.Maximum > 0)
+                {
+                    if (_view.HasMoreItems)
+                    {
+                        if (!_isLoadingMoreItems)
+                        {
+                            _isLoadingMoreItems = true;
+
+                            var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
+                            var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
+                            uint count = Math.Max(1, (uint)(lastRow - firstRow));
+
+                            _view.LoadMoreItemsAsync(count).AsTask().ContinueWith(t =>
+                            {
+                                _isLoadingMoreItems = false;
+                            }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return true;
         }
 
         private void HandleCrossSlide(CrossSlideMode mode)

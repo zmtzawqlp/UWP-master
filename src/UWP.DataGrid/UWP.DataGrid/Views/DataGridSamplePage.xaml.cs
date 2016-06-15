@@ -41,7 +41,7 @@ namespace UWP.DataGridSample.Views
         private void DataGridSamplePage_Loaded(object sender, RoutedEventArgs e)
         {
 
-            _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            _employees = new MyIncrementalLoading<Employee>(50, (startIndex, count) =>
             {
                 if (count == -1)
                 {
@@ -92,13 +92,12 @@ namespace UWP.DataGridSample.Views
         private void PullToRefreshPanel_PullToRefresh(object sender, EventArgs e)
         {
             datagrid.ItemsSource = null;
-            _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            _employees = new MyIncrementalLoading<Employee>(30, (startIndex, count) =>
             {
-                if (count == -1)
+                if (_employees.Count + count > 30)
                 {
-                    count = 5;
+                    count = 30 - _employees.Count;
                 }
-
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
 
@@ -115,7 +114,7 @@ namespace UWP.DataGridSample.Views
         public int Age { get; set; }
     }
 
-    public class MyCellFactory :CellFactory
+    public class MyCellFactory : CellFactory
     {
         public override FrameworkElement GetGlyphSort(ListSortDirection dir, Brush brush)
         {

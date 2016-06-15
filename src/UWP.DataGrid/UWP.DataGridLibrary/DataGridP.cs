@@ -34,6 +34,8 @@ namespace UWP.DataGrid
         DataGridPanel _columnHeaderPanel;
         DataGridPanel _cellPanel;
         ContentControl _pullToRefreshHeader;
+        ContentPresenter _header;
+        ContentPresenter _footer;
 
         ICollectionView _view;
         ICellFactory _cellFactory;
@@ -53,8 +55,9 @@ namespace UWP.DataGrid
         double preDeltaTranslationY;
         ManipulationStatus manipulationStatus;
         ScollingDirection scollingDirection;
-        bool pointerEntering;
         Point? pointerOverPoint;
+        double _headerHeight = 0;
+        double _footerHeight = 0;
         #endregion
 
         #region Internal Properties
@@ -187,59 +190,176 @@ namespace UWP.DataGrid
         {
             get { return _columnHeaderPanel; }
         }
-
+        private Point _scrollPosition;
 
         public Point ScrollPosition
         {
             get
             {
-                return _cellPanel.ScrollPosition;
+                return _scrollPosition;
+                //return _cellPanel.ScrollPosition;
             }
             set
             {
-
-                // validate range
-                var sz = _cellPanel.DesiredSize;
-                var maxV = Rows.GetTotalSize() - sz.Height;
-                var maxH = Columns.GetTotalSize() - sz.Width;
-                var temp = value;
-                value.X = Math.Max(-maxH, Math.Min(value.X, 0));
-                value.Y = Math.Max(-maxV, Math.Min(value.Y, 0));
-
-                // apply new value
-                if (value != ScrollPosition)
+                if (_contentGrid != null)
                 {
-                    _cellPanel.ScrollPosition = value;
-                    _columnHeaderPanel.ScrollPosition = new Point(value.X, 0);
+                    var wid = _contentGrid.ActualWidth;
+                    var hei = _contentGrid.ActualHeight;
 
-                    //HorizontalOffset = -value.X;
-                    //VerticalOffset = -value.Y;
+                    //if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
+                    {
+                        //viewPort
+                        var sz = new Size(wid, hei);
+                        sz = _contentGrid.DesiredSize;
+                        //total size
+                        var totalRowsSize = Rows.GetTotalSize();
+                        var totalColumnsSize = Columns.GetTotalSize();
+                        var totalHeight = totalRowsSize + _headerHeight + _footerHeight + _columnHeaderPanel.DesiredSize.Height;
 
-                    if (_horizontalScrollBar != null && _verticalScrollBar != null)
-                    {
-                        _horizontalScrollBar.Value = -value.X;
-                        _verticalScrollBar.Value = -value.Y;
+                        var maxV = totalHeight - sz.Height;
+                        maxV = maxV >= 0 ? maxV : 0;
+                        var maxH = totalColumnsSize - sz.Width;
+
+                        var totalScrollPosition = new Point();
+                        totalScrollPosition.X = Math.Max(-maxH, Math.Min(value.X, 0));
+                        totalScrollPosition.Y = Math.Max(-maxV, Math.Min(value.Y, 0));
+
+                        if (_scrollPosition != totalScrollPosition)
+                        {
+                            _scrollPosition = totalScrollPosition;
+                            if (_horizontalScrollBar != null && _verticalScrollBar != null)
+                            {
+                                _horizontalScrollBar.Value = -totalScrollPosition.X;
+                                _verticalScrollBar.Value = -totalScrollPosition.Y;
+                            }
+
+                            //_header.Measure(_contentGrid.DesiredSize);
+                            if (totalScrollPosition.Y <= 0)
+                            {
+                                var headerHeight = _headerHeight + totalScrollPosition.Y;
+                                if (headerHeight > 0)
+                                {
+                                    _contentGrid.RowDefinitions[1].Height = new GridLength(_headerHeight + totalScrollPosition.Y);
+                                    _header.Margin = new Thickness(0, totalScrollPosition.Y, 0, 0);
+                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, -totalScrollPosition.Y, _contentGrid.DesiredSize.Width, _headerHeight) };
+                                }
+                                else if (_contentGrid.RowDefinitions[1].Height.Value != 0)
+                                {
+                                    _contentGrid.RowDefinitions[1].Height = new GridLength(0);
+                                    _header.Margin = new Thickness(0, _headerHeight, 0, 0);
+                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, _headerHeight, _contentGrid.DesiredSize.Width, _headerHeight) };
+                                }
+                            }
+                        }
+                        else if (OuterScrollViewer != null && value != _scrollPosition)
+                        {
+                            var horizontalOffset = OuterScrollViewer.HorizontalOffset + ScrollPosition.X - _scrollPosition.X;
+                            var verticalOffset = OuterScrollViewer.VerticalOffset + ScrollPosition.Y - _scrollPosition.Y;
+                            OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
+                        }
+                        #region Cell ScrollPosition
+                        //Cell ScrollPosition
+
+
+                        // validate range
+                        var cellScrollPosition = value;
+                        cellScrollPosition.Y += _headerHeight;
+
+                        maxV = totalRowsSize - sz.Height;
+
+                        cellScrollPosition.X = Math.Max(-maxH, Math.Min(cellScrollPosition.X, 0));
+                        cellScrollPosition.Y = Math.Max(-maxV, Math.Min(cellScrollPosition.Y, 0));
+
+                        if (cellScrollPosition != _cellPanel.ScrollPosition)
+                        {
+                            _cellPanel.ScrollPosition = cellScrollPosition;
+                            _columnHeaderPanel.ScrollPosition = new Point(cellScrollPosition.X, 0);
+
+                            if (pointerOverPoint != null)
+                            {
+                                var pt = pointerOverPoint.Value;
+                                pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+                                var fy = _cellPanel.Rows.GetFrozenSize();
+                                pt.Y += _columnHeaderPanel.ActualHeight;
+                                var sp = _cellPanel.ScrollPosition;
+                                if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+                                // get row and column at given coordinates
+                                var row = _cellPanel.Rows.GetItemAt(pt.Y);
+                                _cellPanel.HandlePointerOver(row);
+                            }
+                        }
+                        else
+                        {
+
+                        }
+    
+                        maxV = totalHeight - sz.Height;
+
+                        if (!HasMoreItems(value) && (maxV + value.Y) <= 0)
+                        {
+                            if (value.Y < 0)
+                            {
+                                var footHeight = (value.Y - _scrollPosition.Y);
+                                if (footHeight > 0 && footHeight <= _footerHeight)
+                                {
+                                    _contentGrid.RowDefinitions[5].Height = new GridLength(footHeight);
+                                    _footer.Margin = new Thickness(0, 0, 0, -(value.Y - _scrollPosition.Y));
+                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, _footerHeight) };
+                                }
+                                else
+                                {
+                                    _contentGrid.RowDefinitions[5].Height = new GridLength(0);
+                                    _footer.Margin = new Thickness(0, 0, 0, _footerHeight);
+                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, 0) };
+                                }
+
+
+                                //_header.RenderTransform = new TranslateTransform() { Y = value.Y };
+                            }
+                        }
+                        #endregion
+
+                        //HasMoreItems(value);
+
+
+
+
+
+                        // apply new value
+                        if (cellScrollPosition != _cellPanel.ScrollPosition)
+                        {
+                            //_cellPanel.ScrollPosition = cellScrollPosition;
+                            //_columnHeaderPanel.ScrollPosition = new Point(cellScrollPosition.X, 0);
+
+                            ////HorizontalOffset = -value.X;
+                            ////VerticalOffset = -value.Y;
+
+                            //if (_horizontalScrollBar != null && _verticalScrollBar != null)
+                            //{
+                            //    _horizontalScrollBar.Value = -value.X;
+                            //    _verticalScrollBar.Value = -value.Y;
+                            //}
+
+                            //if (pointerOverPoint != null)
+                            //{
+                            //    var pt = pointerOverPoint.Value;
+                            //    pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+                            //    var fy = _cellPanel.Rows.GetFrozenSize();
+                            //    pt.Y += _columnHeaderPanel.ActualHeight;
+                            //    var sp = _cellPanel.ScrollPosition;
+                            //    if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+                            //    // get row and column at given coordinates
+                            //    var row = _cellPanel.Rows.GetItemAt(pt.Y);
+                            //    _cellPanel.HandlePointerOver(row);
+                            //}
+                        }
+                        //handle outer scrollviewer
+
+
                     }
-                    if (pointerOverPoint!=null)
-                    {
-                        var pt = pointerOverPoint.Value;
-                        pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-                        var fy = _cellPanel.Rows.GetFrozenSize();
-                        pt.Y += _columnHeaderPanel.ActualHeight;
-                        var sp = _cellPanel.ScrollPosition;
-                        if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                        // get row and column at given coordinates
-                        var row = _cellPanel.Rows.GetItemAt(pt.Y);
-                        _cellPanel.HandlePointerOver(row);
-                    }
+
                 }
-                //handle outer scrollviewer
-                else if (OuterScrollViewer != null && temp != ScrollPosition)
-                {
-                    var horizontalOffset = OuterScrollViewer.HorizontalOffset+ ScrollPosition.X - temp.X;
-                    var verticalOffset = OuterScrollViewer.VerticalOffset+ ScrollPosition.Y - temp.Y;
-                    OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
-                }
+
             }
         }
         /// <summary>
@@ -487,6 +607,16 @@ namespace UWP.DataGrid
         public static readonly DependencyProperty PullToRefreshHeaderTemplateProperty =
             DependencyProperty.Register("PullToRefreshHeaderTemplate", typeof(DataTemplate), typeof(DataGrid), new PropertyMetadata(null));
 
+        public object PullToRefreshHeader
+        {
+            get { return (object)GetValue(PullToRefreshHeaderProperty); }
+            set { SetValue(PullToRefreshHeaderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PullToRefreshHeader.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PullToRefreshHeaderProperty =
+            DependencyProperty.Register("PullToRefreshHeader", typeof(object), typeof(DataGrid), new PropertyMetadata(null));
+
 
         public bool IsReachThreshold
         {
@@ -541,7 +671,7 @@ namespace UWP.DataGrid
         public static readonly DependencyProperty ScollingDirectionModeProperty =
             DependencyProperty.Register("ScollingDirectionMode", typeof(ScollingDirectionMode), typeof(DataGrid), new PropertyMetadata(ScollingDirectionMode.TwoDirection));
 
-       
+
         public Brush PressedBackground
         {
             get { return (Brush)GetValue(PressedBackgroundProperty); }
@@ -563,8 +693,52 @@ namespace UWP.DataGrid
             DependencyProperty.Register("PointerOverBackground", typeof(Brush), typeof(DataGrid), new PropertyMetadata(null));
 
 
+        #region Header
+        public object Header
+        {
+            get { return (object)GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Header.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HeaderProperty =
+            DependencyProperty.Register("Header", typeof(object), typeof(DataGrid), new PropertyMetadata(null));
+
+        public DataTemplate HeaderTemplate
+        {
+            get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
+            set { SetValue(HeaderTemplateProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HeaderTemplate.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HeaderTemplateProperty =
+            DependencyProperty.Register("HeaderTemplate", typeof(DataTemplate), typeof(DataGrid), new PropertyMetadata(null));
 
 
+        #endregion
+
+        #region Footer
+        public object Footer
+        {
+            get { return (object)GetValue(FooterProperty); }
+            set { SetValue(FooterProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Footer.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FooterProperty =
+            DependencyProperty.Register("Footer", typeof(object), typeof(DataGrid), new PropertyMetadata(null));
+
+        public DataTemplate FooterTemplate
+        {
+            get { return (DataTemplate)GetValue(FooterTemplateProperty); }
+            set { SetValue(FooterTemplateProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FooterTemplate.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FooterTemplateProperty =
+            DependencyProperty.Register("FooterTemplate", typeof(DataTemplate), typeof(DataGrid), new PropertyMetadata(null));
+
+        #endregion
 
         #endregion
 

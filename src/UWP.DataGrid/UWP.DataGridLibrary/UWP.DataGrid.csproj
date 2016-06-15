@@ -7,8 +7,8 @@
     <ProjectGuid>{5BDA7486-954A-44D6-BCD3-D991A6E76D77}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UWP.DataGridLibrary</RootNamespace>
-    <AssemblyName>UWP.DataGridLibrary</AssemblyName>
+    <RootNamespace>UWP.DataGrid</RootNamespace>
+    <AssemblyName>UWP.DataGrid</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
@@ -152,7 +152,10 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resource\default_ptr_rotate.png" />
+    <Content Include="Resource\indicator_arrow.png" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

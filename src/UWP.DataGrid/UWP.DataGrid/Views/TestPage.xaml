@@ -6,6 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.Resources>
+        
+        
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView x:Name="listView">
@@ -15,10 +19,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
-                <TextBlock Text="I'm Header"/>
+                <TextBlock Text="I'm Header" Width="1000"/>
             </ListView.Header>
             <ListView.Footer>
-                <TextBlock Text="I'm Footer"/>
+                <TextBlock Text="I'm Footer" Width="1000" Height="300"/>
             </ListView.Footer>
         </ListView>
     </Grid>
