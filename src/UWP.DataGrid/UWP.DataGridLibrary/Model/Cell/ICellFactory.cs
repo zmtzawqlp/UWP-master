@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
-namespace UWP.DataGridLibrary.DataGrid.Model.Cell
+namespace UWP.DataGrid.Model.Cell
 {
     public interface ICellFactory
     {

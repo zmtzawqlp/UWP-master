@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 
-namespace UWP.DataGridLibrary.Util
+namespace UWP.DataGrid.Util
 {
     public static class PlatformIndependent
     {

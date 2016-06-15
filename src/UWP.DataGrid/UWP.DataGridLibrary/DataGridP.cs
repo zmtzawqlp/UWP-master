@@ -1,7 +1,7 @@
-﻿using UWP.DataGridLibrary.CollectionView;
-using UWP.DataGridLibrary.Common;
-using UWP.DataGridLibrary.DataGrid.Model.Cell;
-using UWP.DataGridLibrary.DataGrid.Model.RowCol;
+﻿using UWP.DataGrid.CollectionView;
+using UWP.DataGrid.Common;
+using UWP.DataGrid.Model.Cell;
+using UWP.DataGrid.Model.RowCol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
-namespace UWP.DataGridLibrary.DataGrid
+namespace UWP.DataGrid
 {
     public partial class DataGrid : Control
     {

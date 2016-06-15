@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace UWP.DataGridLibrary.Converters
+namespace UWP.DataGrid.Converters
 {
     /// <summary>
     /// Value converter that translates true to <see cref="Visibility.Visible"/> and false to

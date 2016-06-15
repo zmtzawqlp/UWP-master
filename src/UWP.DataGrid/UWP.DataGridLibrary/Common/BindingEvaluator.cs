@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace UWP.DataGridLibrary.Common
+namespace UWP.DataGrid.Common
 {
     /// <summary>
     /// Utility class to facilitate temporary binding evaluation

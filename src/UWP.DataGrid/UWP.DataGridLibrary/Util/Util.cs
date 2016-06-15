@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using Windows.Foundation;
 
-namespace UWP.DataGridLibrary.Util
+namespace UWP.DataGrid.Util
 {
     internal static class Util
     {

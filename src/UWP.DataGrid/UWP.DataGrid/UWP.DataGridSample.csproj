@@ -104,6 +104,9 @@
     <Compile Include="Views\DataGridSamplePage.xaml.cs">
       <DependentUpon>DataGridSamplePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestPage.xaml.cs">
+      <DependentUpon>TestPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -134,11 +137,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UWP.DataGridLibrary\UWP.DataGridLibrary.csproj">
+    <ProjectReference Include="..\UWP.DataGridLibrary\UWP.DataGrid.csproj">
       <Project>{5bda7486-954a-44d6-bcd3-d991a6e76d77}</Project>
-      <Name>UWP.DataGridLibrary</Name>
+      <Name>UWP.DataGrid</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

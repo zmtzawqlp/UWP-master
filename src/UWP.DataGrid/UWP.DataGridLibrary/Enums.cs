@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.DataGridLibrary.DataGrid
+namespace UWP.DataGrid
 {
     [Flags]
     public enum GridLinesVisibility

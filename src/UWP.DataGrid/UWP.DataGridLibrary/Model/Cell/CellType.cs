@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.DataGridLibrary.DataGrid.Model.Cell
+namespace UWP.DataGrid.Model.Cell
 {
     public enum CellType
     {

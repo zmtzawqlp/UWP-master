@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 
-namespace UWP.DataGridLibrary.DataGrid.Util
+namespace UWP.DataGrid.Util
 {
     internal static class TypeEx
     {

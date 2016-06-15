@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Data;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-namespace UWP.DataGridLibrary.CollectionView
+namespace UWP.DataGrid.CollectionView
 {
     ///http://www.codeproject.com/Articles/527686/A-WinRT-CollectionView-class-with-Filtering-and-So
     /// <summary>

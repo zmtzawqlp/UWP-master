@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:UWP.DataGridLibrary.Converters"
-    xmlns:local="using:UWP.DataGridLibrary.DataGrid">
+    xmlns:converters="using:UWP.DataGrid.Converters"
+    xmlns:local="using:UWP.DataGrid">
     <converters:VisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:VisibilityConverter x:Key="InversedBooleanToVisibilityConverter" IsInversed="True"/>
     <converters:DateTimeConverter x:Key="dateTimeConverter"/>
@@ -19,7 +19,7 @@
                 <DataTemplate>
                     <Grid>
                         <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsReachThreshold,Converter={StaticResource InversedBooleanToVisibilityConverter}}">
-                            <Image Margin="-50,0,0,0" Width="50" Height="50" Source="ms-appx:///UWP.DataGridLibrary/Resource/indicator_arrow.png"></Image>
+                            <Image Margin="-50,0,0,0" Width="50" Height="50" Source="ms-appx:///UWP.DataGrid/Resource/indicator_arrow.png"></Image>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock  Text="Pull to refresh" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock>
@@ -30,7 +30,7 @@
                             </StackPanel>
                         </StackPanel>
                         <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsReachThreshold, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Image Margin="-50,0,0,0" Width="50" Height="50" RenderTransformOrigin="0.5,0.5"  Source="ms-appx:///UWP.DataGridLibrary/Resource/indicator_arrow.png">
+                            <Image Margin="-50,0,0,0" Width="50" Height="50" RenderTransformOrigin="0.5,0.5"  Source="ms-appx:///UWP.DataGrid/Resource/indicator_arrow.png">
                                 <Image.RenderTransform>
                                     <ScaleTransform ScaleY="-1"/>
                                 </Image.RenderTransform>

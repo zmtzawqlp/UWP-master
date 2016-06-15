@@ -1,6 +1,6 @@
-﻿using UWP.DataGridLibrary.DataGrid.Model.Cell;
-using UWP.DataGridLibrary.DataGrid.Model.RowCol;
-using UWP.DataGridLibrary.DataGrid.Util;
+﻿using UWP.DataGrid.Model.Cell;
+using UWP.DataGrid.Model.RowCol;
+using UWP.DataGrid.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace UWP.DataGridLibrary.DataGrid
+namespace UWP.DataGrid
 {
     public class Row : RowCol
     {

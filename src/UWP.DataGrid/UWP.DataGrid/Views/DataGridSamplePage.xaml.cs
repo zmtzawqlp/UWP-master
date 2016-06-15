@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using UWP.DataGridLibrary.CollectionView;
-using UWP.DataGridLibrary.DataGrid;
-using UWP.DataGridLibrary.DataGrid.Model.Cell;
+using UWP.DataGrid.CollectionView;
+using UWP.DataGrid;
+using UWP.DataGrid.Model.Cell;
 using UWP.DataGridSample.Model;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -57,7 +57,7 @@ namespace UWP.DataGridSample.Views
             datagrid.CellFactory = new MyCellFactory();
         }
 
-        private async void datagrid_ItemClick(object sender, DataGridLibrary.DataGrid.ItemClickEventArgs e)
+        private async void datagrid_ItemClick(object sender, DataGrid.ItemClickEventArgs e)
         {
             Employee ee = e.ClickedItem as Employee;
             await new MessageDialog("Click on " + ee.Name).ShowAsync();

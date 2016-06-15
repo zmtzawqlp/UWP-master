@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.DataGridLibrary.Common
+namespace UWP.DataGrid.Common
 {
     internal enum ManipulationStatus
     {

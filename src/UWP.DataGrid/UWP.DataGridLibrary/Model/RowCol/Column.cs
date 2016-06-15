@@ -1,4 +1,4 @@
-﻿using UWP.DataGridLibrary.DataGrid.Model.RowCol;
+﻿using UWP.DataGrid.Model.RowCol;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace UWP.DataGridLibrary.DataGrid
+namespace UWP.DataGrid
 {
     public class Column:RowCol
     {

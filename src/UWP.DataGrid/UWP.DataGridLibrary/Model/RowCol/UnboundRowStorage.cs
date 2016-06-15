@@ -1,11 +1,11 @@
-﻿using UWP.DataGridLibrary.DataGrid.Model.Cell;
+﻿using UWP.DataGrid.Model.Cell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.DataGridLibrary.DataGrid.Model.RowCol
+namespace UWP.DataGrid.Model.RowCol
 {
     internal class UnboundRowStorage : Dictionary<Column, object>
     {

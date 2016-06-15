@@ -1,5 +1,5 @@
-﻿using UWP.DataGridLibrary.DataGrid.Model.Cell;
-using UWP.DataGridLibrary.DataGrid.Model.RowCol;
+﻿using UWP.DataGrid.Model.Cell;
+using UWP.DataGrid.Model.RowCol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.Devices.Input;
 
-namespace UWP.DataGridLibrary.DataGrid
+namespace UWP.DataGrid
 {
     public class DataGridPanel : Panel
     {

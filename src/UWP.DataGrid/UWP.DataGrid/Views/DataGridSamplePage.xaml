@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UWP.DataGridSample.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:controls="using:UWP.DataGridLibrary.DataGrid">
+    xmlns:controls="using:UWP.DataGrid">
 
     <Grid >
         <Grid.RowDefinitions>

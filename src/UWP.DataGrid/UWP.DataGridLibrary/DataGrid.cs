@@ -1,6 +1,6 @@
-﻿using UWP.DataGridLibrary.DataGrid.Model.Cell;
-using UWP.DataGridLibrary.DataGrid.Util;
-using UWP.DataGridLibrary.CollectionView;
+﻿using UWP.DataGrid.Model.Cell;
+using UWP.DataGrid.Util;
+using UWP.DataGrid.CollectionView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +11,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using System.Reflection;
-using UWP.DataGridLibrary.DataGrid.Model.RowCol;
-using UWP.DataGridLibrary.Util;
+using UWP.DataGrid.Model.RowCol;
+using UWP.DataGrid.Util;
 using Windows.Foundation;
 using System.Globalization;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,10 +22,10 @@ using Windows.Foundation.Collections;
 using Windows.Devices.Input;
 using System.Diagnostics;
 using Windows.UI;
-using UWP.DataGridLibrary.Common;
+using UWP.DataGrid.Common;
 using Windows.UI.Input;
 
-namespace UWP.DataGridLibrary.DataGrid
+namespace UWP.DataGrid
 {
     /// <summary>
     /// 
@@ -1044,7 +1044,7 @@ namespace UWP.DataGridLibrary.DataGrid
         {
             if (_props == null || _props.Count == 0 || _itemType != GetItemType(_view))
             {
-                if (_itemType == null || !UWP.DataGridLibrary.Util.Util.IsPrimitive(_itemType))
+                if (_itemType == null || !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
                 {
                     if (GetItemType(_view) != typeof(object))
                     {
@@ -1158,7 +1158,7 @@ namespace UWP.DataGridLibrary.DataGrid
             {
                 // special case: binding directly to primitive types (int, string, etc)
                 var type = GetItemType(_view);
-                if (UWP.DataGridLibrary.Util.Util.IsPrimitive(type))
+                if (UWP.DataGrid.Util.Util.IsPrimitive(type))
                 {
                     var col = new Column();
                     BindAutoColumn(col, type);
@@ -1325,7 +1325,7 @@ namespace UWP.DataGridLibrary.DataGrid
                 // get item type
                 _itemType = GetItemType(_view);
 
-                if (_itemType != null && !UWP.DataGridLibrary.Util.Util.IsPrimitive(_itemType))
+                if (_itemType != null && !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
                 {
 
                     foreach (var pi in _itemType.GetRuntimeProperties())

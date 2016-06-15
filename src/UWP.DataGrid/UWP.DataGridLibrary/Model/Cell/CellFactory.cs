@@ -1,5 +1,5 @@
-﻿using UWP.DataGridLibrary.CollectionView;
-using UWP.DataGridLibrary.DataGrid.Model.RowCol;
+﻿using UWP.DataGrid.CollectionView;
+using UWP.DataGrid.Model.RowCol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
-namespace UWP.DataGridLibrary.DataGrid.Model.Cell
+namespace UWP.DataGrid.Model.Cell
 {
     public class CellFactory : ICellFactory
     {

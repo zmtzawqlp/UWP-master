@@ -1,5 +1,5 @@
-﻿using UWP.DataGridLibrary.DataGrid;
-using UWP.DataGridLibrary.DataGrid.Model.Cell;
+﻿using UWP.DataGrid;
+using UWP.DataGrid.Model.Cell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.DataGridLibrary.DataGrid.Model.RowCol
+namespace UWP.DataGrid.Model.RowCol
 {
     public abstract class RowCols<T>
        : ObservableCollection<T> where T : RowCol

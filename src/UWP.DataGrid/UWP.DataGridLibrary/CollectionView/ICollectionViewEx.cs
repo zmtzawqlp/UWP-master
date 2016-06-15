@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Windows.UI.Xaml.Data;
 
 //http://www.codeproject.com/Articles/527686/A-WinRT-CollectionView-class-with-Filtering-and-So
-namespace UWP.DataGridLibrary.CollectionView
+namespace UWP.DataGrid.CollectionView
 {
     //--------------------------------------------------------------------------------
     #region ** ICollectionViewEx

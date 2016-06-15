@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWP.DataGridSample", "UWP.DataGrid\UWP.DataGridSample.csproj", "{844245B1-70B7-4FEB-A5A3-6DA2A3A33AC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWP.DataGridLibrary", "UWP.DataGridLibrary\UWP.DataGridLibrary.csproj", "{5BDA7486-954A-44D6-BCD3-D991A6E76D77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWP.DataGrid", "UWP.DataGridLibrary\UWP.DataGrid.csproj", "{5BDA7486-954A-44D6-BCD3-D991A6E76D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

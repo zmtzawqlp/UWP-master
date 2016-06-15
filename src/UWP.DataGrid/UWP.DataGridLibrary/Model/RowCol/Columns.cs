@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.DataGridLibrary.DataGrid.Model.RowCol
+namespace UWP.DataGrid.Model.RowCol
 {
     public class Columns : RowCols<Column>
     {

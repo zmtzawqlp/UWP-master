@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:UWP.DataGridLibrary">
+    xmlns:local="using:UWP.DataGrid">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///UWP.DataGridLibrary/themes/DataGrid.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///UWP.DataGrid/themes/DataGrid.Xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
