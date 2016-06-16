@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -23,7 +24,8 @@ namespace UWP.DataGridSample.Views
     /// </summary>
     public sealed partial class TestPage : Page
     {
-        private MyIncrementalLoading<Employee> _employees;
+        //private MyIncrementalLoading<Employee> _employees;
+        private ObservableCollection<Employee> _employees;
         public TestPage()
         {
             this.InitializeComponent();
@@ -32,10 +34,11 @@ namespace UWP.DataGridSample.Views
 
         private void TestPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _employees = new MyIncrementalLoading<Employee>(200, (startIndex, count) =>
-            {
-                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
-            });
+            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(1).ToList());
+            //_employees = new MyIncrementalLoading<Employee>(200, (startIndex, count) =>
+            //{
+            //    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+            //});
 
             //_employees = TestData.GetEmployees();
             listView.ItemsSource = _employees;

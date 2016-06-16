@@ -91,7 +91,7 @@ namespace UWP.DataGrid.Model.Cell
                     break;
 
                 case CellType.ColumnHeader:
-                    bdr.BorderThickness = _bdrFixed;
+                    bdr.BorderThickness = GetColumnHeaderBorderThickness(grid);
                     bdr.BorderBrush = grid.HeaderGridLinesBrush;
                     bdr.Padding = GetCellPadding(grid, grid.ColumnHeaders, rng);
 
@@ -110,6 +110,15 @@ namespace UWP.DataGrid.Model.Cell
 
             // done
             return bdr;
+        }
+
+        public virtual Thickness GetColumnHeaderBorderThickness(DataGrid grid)
+        {
+            if (grid.HasHeader())
+            {
+                return new Thickness(0, 1, 1, 1);
+            }
+            return _bdrFixed;
         }
 
         public virtual Thickness GetBorderThickness(DataGrid grid, CellRange rng)

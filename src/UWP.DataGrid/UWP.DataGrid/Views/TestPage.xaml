@@ -11,26 +11,25 @@
         
     </Page.Resources>
 
-    <Grid Background="Black" Height="200"  Padding="0,-100,0,0" VerticalAlignment="Top">
-        <!--<ContentPresenter Height="100" Padding="0,-100,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid Height="200" Background="Red">
-                <TextBlock Text="3131313131"/>
-            </Grid>
-        </ContentPresenter>-->
-        <Grid Height="200" Background="Red">
-            <TextBlock Text="3131313131"/>
-        </Grid>
-        <ListView x:Name="listView" Visibility="Collapsed">
+    <Grid >
+
+        <ListView x:Name="listView"  VerticalAlignment="Center">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
-                <TextBlock Text="I'm Header" Width="1000"/>
+                <Grid Height="300" Background="Green">
+                    <TextBlock Text="I'm Header" Width="1000"  Height="300"/>
+                </Grid>
+
             </ListView.Header>
             <ListView.Footer>
-                <TextBlock Text="I'm Footer" Width="1000" Height="300"/>
+                <Grid Height="300" Background="Blue">
+                    <TextBlock Text="I'm Footer" Width="1000" Height="300"/>
+                </Grid>
+
             </ListView.Footer>
         </ListView>
     </Grid>

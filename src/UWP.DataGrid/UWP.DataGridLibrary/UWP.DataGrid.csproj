@@ -113,6 +113,10 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Converters\Converter.cs" />
     <Compile Include="DataGrid.cs" />
+    <Compile Include="DataGridFooterMethods.cs" />
+    <Compile Include="DataGridHeaderMethods.cs" />
+    <Compile Include="DataGridMouseMethods.cs" />
+    <Compile Include="DataGridTouchMethods.cs" />
     <Compile Include="DataGridP.cs" />
     <Compile Include="DataGridPanel.cs" />
     <Compile Include="Enums.cs" />

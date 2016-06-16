@@ -162,7 +162,7 @@
                                 <!--Cell-->
                                 <RowDefinition Height="*"/>
                                 <!--Footer-->
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="0"/>
                             </Grid.RowDefinitions>
                             <ContentControl x:Name="PullToRefreshHeader" Height="0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              Content="{TemplateBinding PullToRefreshHeader}" ContentTemplate="{TemplateBinding PullToRefreshHeaderTemplate}"  HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />

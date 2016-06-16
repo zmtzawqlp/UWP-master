@@ -43,16 +43,12 @@ namespace UWP.DataGridSample.Views
 
             _employees = new MyIncrementalLoading<Employee>(50, (startIndex, count) =>
             {
-                if (count == -1)
-                {
-                    count = 5;
-                }
-
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
-
+            //_employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(50).ToList());
             //_employees = TestData.GetEmployees();
             datagrid.ItemsSource = _employees;
+            //datagrid1.ItemsSource = _employees;
             //you can custom cell if you want 
             datagrid.CellFactory = new MyCellFactory();
         }
@@ -92,18 +88,23 @@ namespace UWP.DataGridSample.Views
         private void PullToRefreshPanel_PullToRefresh(object sender, EventArgs e)
         {
             datagrid.ItemsSource = null;
-            _employees = new MyIncrementalLoading<Employee>(30, (startIndex, count) =>
-            {
-                if (_employees.Count + count > 30)
-                {
-                    count = 30 - _employees.Count;
-                }
-                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
-            });
+            //_employees = new MyIncrementalLoading<Employee>(30, (startIndex, count) =>
+            //{
+            //    if (_employees.Count + count > 30)
+            //    {
+            //        count = 30 - _employees.Count;
+            //    }
+            //    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+            //});
 
             //_employees.CollectionChanged += _employees_CollectionChanged;
 
             datagrid.ItemsSource = _employees;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            datagrid.GoToTop();
         }
     }
 

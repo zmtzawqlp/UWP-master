@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace UWP.DataGrid
 {
-    public partial class DataGrid : Control
+    public partial class DataGrid
     {
         #region fields
         //ScrollViewer _scrollViewer;
@@ -142,6 +142,47 @@ namespace UWP.DataGrid
                 }
             }
         }
+
+        internal double HeaderActualHeight
+        {
+            get
+            {
+                return _contentGrid.RowDefinitions[1].ActualHeight;
+            }
+        }
+
+        internal double FooterActualHeight
+        {
+            get
+            {
+                return _contentGrid.RowDefinitions[5].ActualHeight;
+            }
+        }
+        
+
+        internal GridLength HeaderHeight
+        {
+            get
+            {
+                return _contentGrid.RowDefinitions[1].Height;
+            }
+            set
+            {
+                _contentGrid.RowDefinitions[1].Height = value;
+            }
+        }
+
+        internal GridLength FooterHeight
+        {
+            get
+            {
+                return _contentGrid.RowDefinitions[5].Height;
+            }
+            set
+            {
+                _contentGrid.RowDefinitions[5].Height = value;
+            }
+        }
         #endregion
 
         #region Public Properties
@@ -205,16 +246,15 @@ namespace UWP.DataGrid
                 {
                     var wid = _contentGrid.ActualWidth;
                     var hei = _contentGrid.ActualHeight;
-
-                    //if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
+                    if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                     {
                         //viewPort
+                        //var sz = _contentGrid.DesiredSize;
                         var sz = new Size(wid, hei);
-                        sz = _contentGrid.DesiredSize;
                         //total size
                         var totalRowsSize = Rows.GetTotalSize();
                         var totalColumnsSize = Columns.GetTotalSize();
-                        var totalHeight = totalRowsSize + _headerHeight + _footerHeight + _columnHeaderPanel.DesiredSize.Height;
+                        var totalHeight = totalRowsSize + _headerHeight + _columnHeaderPanel.DesiredSize.Height + _footerHeight;
 
                         var maxV = totalHeight - sz.Height;
                         maxV = maxV >= 0 ? maxV : 0;
@@ -233,153 +273,28 @@ namespace UWP.DataGrid
                                 _verticalScrollBar.Value = -totalScrollPosition.Y;
                             }
 
-                            //_header.Measure(_contentGrid.DesiredSize);
-                            if (totalScrollPosition.Y <= 0)
-                            {
-                                var headerHeight = _headerHeight + totalScrollPosition.Y;
-                                if (headerHeight > 0)
-                                {
-                                    _contentGrid.RowDefinitions[1].Height = new GridLength(_headerHeight + totalScrollPosition.Y);
-                                    _header.Margin = new Thickness(0, totalScrollPosition.Y, 0, 0);
-                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, -totalScrollPosition.Y, this.ActualWidth, _headerHeight) };
-                                }
-                                else if (_contentGrid.RowDefinitions[1].Height.Value != 0)
-                                {
-                                    _contentGrid.RowDefinitions[1].Height = new GridLength(0);
-                                    _header.Margin = new Thickness(0, _headerHeight, 0, 0);
-                                    _header.Clip = new RectangleGeometry() { Rect = new Rect(0, _headerHeight, this.ActualWidth, _headerHeight) };
-                                }
-                            }
+                            HandleHeader(totalScrollPosition);
                         }
+                        //Handle outerScrollViewer
                         else if (OuterScrollViewer != null && value != _scrollPosition)
                         {
-                            var horizontalOffset = OuterScrollViewer.HorizontalOffset + ScrollPosition.X - _scrollPosition.X;
-                            var verticalOffset = OuterScrollViewer.VerticalOffset + ScrollPosition.Y - _scrollPosition.Y;
+                            var horizontalOffset = OuterScrollViewer.HorizontalOffset + _scrollPosition.X - value.X;
+                            var verticalOffset = OuterScrollViewer.VerticalOffset + _scrollPosition.Y - value.Y;
                             OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
                         }
+                        HandleCellScrollPosition(value, sz, totalRowsSize, maxH);
 
-
-
-                        maxV = totalRowsSize + _headerHeight + _columnHeaderPanel.DesiredSize.Height - sz.Height;
-                        HasMoreItems(value);
-                        if ((maxV + value.Y) <= 0)
-                        {
-                            if (value.Y < 0)
-                            {
-                                var footHeight = -(maxV + value.Y);
-                                if (footHeight > 0 && footHeight <= _footerHeight)
-                                {
-                                    //_contentGrid.RowDefinitions[4].Height = new GridLength(_contentGrid.RowDefinitions[4].ActualHeight - (footHeight- _contentGrid.RowDefinitions[5].ActualHeight), GridUnitType.Star);
-                                    _contentGrid.RowDefinitions[5].Height = new GridLength(footHeight);
-                                    _footer.Margin = new Thickness(0, 0, 0, footHeight - _footerHeight);
-                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, footHeight) };
-                                    //_verticalScrollBar.Value += (footHeight - _footerHeight);
-                                   
-                                }
-                                else if (_contentGrid.RowDefinitions[5].Height.Value != 0)
-                                {
-                                    //_contentGrid.RowDefinitions[4].Height = new GridLength(_contentGrid.RowDefinitions[4].ActualHeight + _contentGrid.RowDefinitions[5].ActualHeight, GridUnitType.Star);
-                                    _contentGrid.RowDefinitions[5].Height = new GridLength(0);
-                                    _footer.Margin = new Thickness(0, 0, 0, -_footerHeight);
-                                    _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, 0) };
-                                }
-
-
-                                //_header.RenderTransform = new TranslateTransform() { Y = value.Y };
-                            }
-                        }
-                        else
-                        {
-                            if (_contentGrid.RowDefinitions[5].Height.Value != 0)
-                            {
-                                //_contentGrid.RowDefinitions[4].Height = new GridLength(_contentGrid.RowDefinitions[4].ActualHeight + _contentGrid.RowDefinitions[5].ActualHeight, GridUnitType.Star);
-                                _contentGrid.RowDefinitions[5].Height = new GridLength(0);
-                                _footer.Margin = new Thickness(0, 0, 0, -_footerHeight);
-                                _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _contentGrid.DesiredSize.Width, 0) };
-                            }
-                        }
-                        #region Cell ScrollPosition
-                        //Cell ScrollPosition
-
-
-                        // validate range
-                        var cellScrollPosition = value;
-                        cellScrollPosition.Y += _headerHeight;
-
-                        maxV = totalRowsSize + _columnHeaderPanel.DesiredSize.Height - sz.Height;
-
-                        cellScrollPosition.X = Math.Max(-maxH, Math.Min(cellScrollPosition.X, 0));
-                        cellScrollPosition.Y = Math.Max(-maxV, Math.Min(cellScrollPosition.Y, 0));
-
-                        if (cellScrollPosition != _cellPanel.ScrollPosition)
-                        {
-                            _cellPanel.ScrollPosition = cellScrollPosition;
-                            _columnHeaderPanel.ScrollPosition = new Point(cellScrollPosition.X, 0);
-
-                            if (pointerOverPoint != null)
-                            {
-                                var pt = pointerOverPoint.Value;
-                                pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-                                var fy = _cellPanel.Rows.GetFrozenSize();
-                                pt.Y += _columnHeaderPanel.ActualHeight;
-                                var sp = _cellPanel.ScrollPosition;
-                                if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                                // get row and column at given coordinates
-                                var row = _cellPanel.Rows.GetItemAt(pt.Y);
-                                _cellPanel.HandlePointerOver(row);
-                            }
-                        }
-                        else
-                        {
-
-                        }
-
-                        
-                        #endregion
-
-                        //HasMoreItems(value);
-
-
-
-
-
-                        // apply new value
-                        if (cellScrollPosition != _cellPanel.ScrollPosition)
-                        {
-                            //_cellPanel.ScrollPosition = cellScrollPosition;
-                            //_columnHeaderPanel.ScrollPosition = new Point(cellScrollPosition.X, 0);
-
-                            ////HorizontalOffset = -value.X;
-                            ////VerticalOffset = -value.Y;
-
-                            //if (_horizontalScrollBar != null && _verticalScrollBar != null)
-                            //{
-                            //    _horizontalScrollBar.Value = -value.X;
-                            //    _verticalScrollBar.Value = -value.Y;
-                            //}
-
-                            //if (pointerOverPoint != null)
-                            //{
-                            //    var pt = pointerOverPoint.Value;
-                            //    pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-                            //    var fy = _cellPanel.Rows.GetFrozenSize();
-                            //    pt.Y += _columnHeaderPanel.ActualHeight;
-                            //    var sp = _cellPanel.ScrollPosition;
-                            //    if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                            //    // get row and column at given coordinates
-                            //    var row = _cellPanel.Rows.GetItemAt(pt.Y);
-                            //    _cellPanel.HandlePointerOver(row);
-                            //}
-                        }
-                        //handle outer scrollviewer
-
-
+                        var hasMoreItems = HasMoreItems(value);
+                        //if maxV <0 and value.Y==0, it means, rows height +_headerHeight +column height is less than this control height.
+                        //we should handle footer also
+                        HandleFooter(value, sz, totalRowsSize, hasMoreItems);
                     }
 
                 }
 
             }
         }
+
         /// <summary>
         /// fire when tap in column header
         /// </summary>

@@ -15,79 +15,155 @@
 
         <Pivot Grid.Row="1" Background="Blue" x:Name="Pivot">
             <PivotItem Header="MyDataGrid">
-                <controls:DataGrid x:Name="datagrid" Grid.Row="1"   PullToRefresh="PullToRefreshPanel_PullToRefresh"  BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold"   AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green"  FrozenColumns="1" FrozenRows="1" Foreground="Red">
-                    <controls:DataGrid.Header>
-                        <Grid Height="300" Background="Yellow">
-                            <TextBlock Text="I'm header"/>
-                        </Grid>
-                    </controls:DataGrid.Header>
-                    <controls:DataGrid.Footer>
-                        <Grid Height="300" Background="Yellow">
-                            <TextBlock Text="I'm footer"/>
-                        </Grid>
-                    </controls:DataGrid.Footer>
-                    <controls:DataGrid.Columns>
-                        <controls:Column Width="auto" ColumnName="名字">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="年龄" Binding="{Binding Age}" AllowSorting="True">
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="性别">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding IsMale}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="年龄">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Age}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="性别">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding IsMale}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="年龄">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Age}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="性别">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding IsMale}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="年龄">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Age}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                        <controls:Column Width="auto" ColumnName="性别">
-                            <controls:Column.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding IsMale}"/>
-                                </DataTemplate>
-                            </controls:Column.CellTemplate>
-                        </controls:Column>
-                    </controls:DataGrid.Columns>
-                </controls:DataGrid>
-
+                <!--<ScrollViewer>
+                    <StackPanel Orientation="Vertical">-->
+                        <controls:DataGrid x:Name="datagrid" Grid.Row="1" PullToRefresh="PullToRefreshPanel_PullToRefresh"  BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold"   AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green"  FrozenColumns="1" FrozenRows="1" Foreground="Red">
+                            <controls:DataGrid.Header>
+                                <Grid Background="Yellow">
+                                    <TextBlock Text="I'm header" Height="30" VerticalAlignment="Center"/>
+                                </Grid>
+                            </controls:DataGrid.Header>
+                            <controls:DataGrid.Footer>
+                                <Grid Background="Yellow">
+                                    <Button Content="I'm footer,click to go to top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="Button_Click_1"/>
+                                </Grid>
+                            </controls:DataGrid.Footer>
+                            <controls:DataGrid.Columns>
+                                <controls:Column Width="auto" ColumnName="名字">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄" Binding="{Binding Age}" AllowSorting="True">
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Age}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Age}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Age}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                            </controls:DataGrid.Columns>
+                        </controls:DataGrid>
+                        <!--<controls:DataGrid x:Name="datagrid1" Grid.Row="1" PullToRefresh="PullToRefreshPanel_PullToRefresh"  BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold"   AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green"  FrozenColumns="1" FrozenRows="5" Foreground="Red">
+                            <controls:DataGrid.Header>
+                                <Grid Background="Yellow">
+                                    <TextBlock Text="I'm header"/>
+                                </Grid>
+                            </controls:DataGrid.Header>
+                            <controls:DataGrid.Footer>
+                                <Grid Background="Yellow">
+                                    <TextBlock Text="I'm footer"/>
+                                </Grid>
+                            </controls:DataGrid.Footer>
+                            <controls:DataGrid.Columns>
+                                <controls:Column Width="auto" ColumnName="名字">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄" Binding="{Binding Age}" AllowSorting="True">
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Age}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Age}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="年龄">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Age}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                                <controls:Column Width="auto" ColumnName="性别">
+                                    <controls:Column.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsMale}"/>
+                                        </DataTemplate>
+                                    </controls:Column.CellTemplate>
+                                </controls:Column>
+                            </controls:DataGrid.Columns>
+                        </controls:DataGrid>
+                    </StackPanel>
+                </ScrollViewer>-->
+                
             </PivotItem>
             <PivotItem Header="test">
                 <Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Fill="Red"/>

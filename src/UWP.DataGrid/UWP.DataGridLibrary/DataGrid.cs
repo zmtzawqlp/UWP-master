@@ -74,30 +74,32 @@ namespace UWP.DataGrid
                     {
                         Grid.SetRow(_pullToRefreshHeader, 0);
                         //_header.Height = _header.DesiredSize.Height;
-                        _headerHeight = _header.DesiredSize.Height+_header.Margin.Top;
+                        _headerHeight = _header.DesiredSize.Height;
                     }
-                    else
+                    if (_headerHeight == 0)
                     {
                         Grid.SetRow(_pullToRefreshHeader, 3);
-                        //_headerHeight = 0;
                     }
+                    //else
+                    //{
+                    //    Grid.SetRow(_pullToRefreshHeader, 3);
+                    //    //_headerHeight = 0;
+                    //}
                 }
             }
 
             //if (_footer != null)
             //{
             //    _footer.Measure(availableSize);
-            //    if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
+            //    if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0 && _footerHeight==0)
             //    {
             //        _footerHeight = _footer.DesiredSize.Height;
-            //        //_footer.Height = _footer.DesiredSize.Height;
-            //        //_contentGrid.RowDefinitions[5].Height = new GridLength(_footer.DesiredSize.Height);
-            //        //_footer.Visibility = Visibility.Collapsed;
+            //        _verticalScrollBar.Maximum += _footerHeight;
             //    }
-            //    else
-            //    {
-            //        _footerHeight = 0;
-            //    }
+            //    //else
+            //    //{
+            //    //    _footerHeight = 0;
+            //    //}
             //}
             return base.MeasureOverride(availableSize);
         }
@@ -117,34 +119,6 @@ namespace UWP.DataGrid
             _horizontalScrollBar.PointerWheelChanged += _horizontalScrollBar_PointerWheelChanged;
         }
 
-        private void _horizontalScrollBar_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            e.Handled = true;
-
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                PointerPoint mousePosition = e.GetCurrentPoint(sender as ScrollBar);
-                var delta = mousePosition.Properties.MouseWheelDelta;
-
-                var horizontalOffset = ScrollPosition.X + delta;
-                ScrollPosition = new Point(horizontalOffset, ScrollPosition.Y);
-            }
-        }
-
-        private void _verticalScrollBar_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            e.Handled = true;
-
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                PointerPoint mousePosition = e.GetCurrentPoint(sender as ScrollBar);
-                var delta = mousePosition.Properties.MouseWheelDelta;
-
-                var verticalOffset = ScrollPosition.Y + delta;
-                ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
-            }
-        }
-
         private void ScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
             // get new scroll position from bars
@@ -161,19 +135,18 @@ namespace UWP.DataGrid
                 // calculate size available (client and scrollbars)
                 var wid = _contentGrid.ActualWidth;
                 var hei = _contentGrid.ActualHeight;
-                //var columnHeaderHeight = _columnHeaderPanel.ActualHeight;
-                //var frozenColumnsSize = Columns.GetFrozenSize();
-                //var frozenRowsSize = Rows.GetFrozenSize();
-
-                var columnHeaderHeight = 0;
-                //var frozenColumnsSize = 0;
-                //var frozenRowsSize = 0;
+                var columnHeaderHeight = _columnHeaderPanel.ActualHeight;
+                var frozenColumnsSize = Columns.GetFrozenSize();
+                var frozenRowsSize = Rows.GetFrozenSize();
 
                 if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                 {
                     //hei -= columnHeaderHeight;
-                    //_verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
-                    //_horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
+                    if (!HasHeader())
+                    {
+                        _verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
+                    }
+                    _horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
                     UpdateStarSizes();
 
                     // update scrollbar parameters
@@ -182,7 +155,7 @@ namespace UWP.DataGrid
                     _horizontalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = wid;
                     var totalRowsSize = Rows.GetTotalSize();
                     var totalColumnsSize = Columns.GetTotalSize();
-                    var totalHeight = totalRowsSize + _headerHeight + _footerHeight + _columnHeaderPanel.DesiredSize.Height;
+                    var totalHeight = totalRowsSize + _headerHeight + _footerHeight + columnHeaderHeight;
 
                     _verticalScrollBar.Maximum = totalHeight - hei;
                     _horizontalScrollBar.Maximum = totalColumnsSize - wid;
@@ -230,36 +203,6 @@ namespace UWP.DataGrid
 
                     // make sure current scroll position is valid
                     ScrollPosition = ScrollPosition;
-                    if (_view != null && _verticalScrollBar != null)
-                    {
-                        if (-ScrollPosition.Y >= _verticalScrollBar.Maximum && _verticalScrollBar.Maximum >= 0)
-                        {
-                            if (_view.HasMoreItems && !_isLoadingMoreItems)
-                            {
-                                _isLoadingMoreItems = true;
-                                var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
-                                var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
-                                int count = Math.Max(1, (lastRow - firstRow));
-                                int actualCount = (int)((this.ActualHeight - this._columnHeaderPanel.ActualHeight) / Rows.DefaultSize);
-                                uint updateCount = 1;
-                                if (count > 0)
-                                {
-                                    updateCount = (uint)count;
-                                }
-                                //handle when the window size changed.
-                                if (actualCount > count)
-                                {
-                                    updateCount = (uint)actualCount;
-                                }
-
-                                _view.LoadMoreItemsAsync(updateCount).AsTask().ContinueWith(t =>
-                                {
-                                    _isLoadingMoreItems = false;
-                                }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
-
-                            }
-                        }
-                    }
                 }
             }
 
@@ -321,505 +264,6 @@ namespace UWP.DataGrid
                 ColumnHeaders.Rows.DefaultSize = sz;
             }
 
-        }
-
-        private void DataGrid_Holding(object sender, HoldingRoutedEventArgs e)
-        {
-            if (e.PointerDeviceType != PointerDeviceType.Mouse)
-            {
-                if (e.HoldingState == HoldingState.Started)
-                {
-                    var pt = e.GetPosition(_cellPanel);
-
-                    pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-                    var fy = _cellPanel.Rows.GetFrozenSize();
-                    pt.Y += _columnHeaderPanel.ActualHeight;
-                    var sp = _cellPanel.ScrollPosition;
-                    if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                    // get row and column at given coordinates
-                    var row = _cellPanel.Rows.GetItemAt(pt.Y);
-
-                    _cellPanel.HandlePointerPressed(row);
-
-                }
-                //Completed when pointer release
-
-                //Canceled when pointer move
-                else
-                {
-                    _cellPanel.ClearPointerPressedAnimation();
-                }
-
-            }
-        }
-
-        private void DataGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            _cellPanel.ClearPointerPressedAnimation();
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                if (!e.Pointer.IsInContact)
-                {
-                    _cellPanel.HandlePointerOver(_cellPanel.currentpointerOverRow);
-                }
-
-            }
-        }
-
-        private void DataGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                var pt = e.GetCurrentPoint(_cellPanel).Position;
-
-                pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-                var fy = _cellPanel.Rows.GetFrozenSize();
-                pt.Y += _columnHeaderPanel.ActualHeight;
-                var sp = _cellPanel.ScrollPosition;
-                if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-                // get row and column at given coordinates
-                var row = _cellPanel.Rows.GetItemAt(pt.Y);
-                _cellPanel.HandlePointerPressed(row);
-
-            }
-        }
-
-        private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            //if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                var pt = e.GetCurrentPoint(_cellPanel).Position;
-                if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
-                {
-                    pointerOverPoint = pt;
-                }
-                else
-                {
-                    pointerOverPoint = null;
-                }
-
-                pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-                var fy = _cellPanel.Rows.GetFrozenSize();
-                pt.Y += _columnHeaderPanel.ActualHeight;
-                var sp = _cellPanel.ScrollPosition;
-                if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
-
-                var row = -2;
-
-                if (pt.Y <= _cellPanel.Rows.GetTotalSize())
-                {
-                    // get row and column at given coordinates
-                    row = _cellPanel.Rows.GetItemAt(pt.Y);
-                }
-                //-1 means not in cellpanel, -2 means not in rows
-                if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-                {
-                    if (row < 0)
-                    {
-                        pointerOverPoint = null;
-                    }
-
-                    if (row >= 0 || row == -2)
-                    {
-                        VisualStateManager.GoToState(this, "MouseIndicator", true);
-                    }
-                }
-
-                if (row != _cellPanel.currentPressedRow)
-                {
-                    _cellPanel.ClearPointerPressedAnimation();
-                    if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
-                        _cellPanel.HandlePointerOver(row);
-                }
-            }
-        }
-
-        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            //pen,mouse
-            if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
-            {
-                _cellPanel.HandlePointerOver(-1);
-                VisualStateManager.GoToState(this, "NoIndicator", true);
-            }
-        }
-
-        private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            //pen,mouse
-            if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
-                VisualStateManager.GoToState(this, "MouseIndicator", true);
-        }
-
-        private void _contentGrid_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            e.Handled = true;
-
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                _cellPanel.ClearPointerPressedAnimation();
-                PointerPoint mousePosition = e.GetCurrentPoint(sender as Grid);
-                var delta = mousePosition.Properties.MouseWheelDelta;
-
-                var verticalOffset = ScrollPosition.Y + delta;
-                ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
-                VisualStateManager.GoToState(this, "MouseIndicator", true);
-            }
-        }
-
-        private void _contentGrid_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        {
-            if (e.PointerDeviceType != PointerDeviceType.Touch)
-            {
-                return;
-            }
-            if (PivotItem != null && manipulationStatus == ManipulationStatus.None)
-            {
-                if (FrozenColumns > 0)
-                {
-                    var pt = e.Position;
-                    pt = this.TransformToVisual(_columnHeaderPanel).TransformPoint(pt);
-
-                    var fx = _columnHeaderPanel.Columns.GetFrozenSize();
-                    // adjust for scroll position
-                    var sp = _columnHeaderPanel.ScrollPosition;
-                    if (pt.X < 0 || pt.X > fx) pt.X -= sp.X;
-                    var column = _columnHeaderPanel.Columns.GetItemAt(pt.X);
-                    if (FrozenColumns > column)
-                    {
-                        startingCrossSlideLeft = startingCrossSlideRight = true;
-                    }
-                }
-            }
-        }
-
-        private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
-        {
-            startingPullToRefresh = false;
-            startingCrossSlideLeft = false;
-            startingCrossSlideRight = false;
-            if (_verticalScrollBar.Value == 0 && AllowPullToRefresh)
-            {
-                startingPullToRefresh = true;
-            }
-
-            //Cross Slide left
-            if (_horizontalScrollBar.Value == 0)
-            {
-                startingCrossSlideLeft = true;
-            }
-            //double
-            if (Math.Abs(_horizontalScrollBar.Value - _horizontalScrollBar.Maximum) < 0.0001)
-            {
-                startingCrossSlideRight = true;
-            }
-
-        }
-
-        private void _contentGrid_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-
-            if (e != null && e.PointerDeviceType != PointerDeviceType.Touch)
-            {
-                return;
-            }
-            VisualStateManager.GoToState(this, "NoIndicator", true);
-            _pullToRefreshHeader.Height = 0;
-            _contentGrid.RowDefinitions[Grid.GetRow(_pullToRefreshHeader)].Height = new GridLength(0);
-
-            if (PivotItem != null)
-            {
-                PivotItem.RenderTransform = new TranslateTransform();
-            }
-
-            if (IsReachThreshold && manipulationStatus == ManipulationStatus.PullToRefresh)
-            {
-                if (PullToRefresh != null)
-                {
-                    LastRefreshTime = DateTime.Now;
-                    PullToRefresh(this, null);
-                }
-            }
-            IsReachThreshold = false;
-            startingPullToRefresh = false;
-            startingCrossSlideLeft = false;
-            startingCrossSlideRight = false;
-            manipulationStatus = ManipulationStatus.None;
-            scollingDirection = ScollingDirection.None;
-            preDeltaTranslationX = 0;
-            preDeltaTranslationY = 0;
-
-            _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-            _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
-
-        }
-
-        private void _contentGrid_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            if (e.PointerDeviceType != PointerDeviceType.Touch)
-            {
-                return;
-            }
-            var x = e.Delta.Translation.X;
-            var y = e.Delta.Translation.Y;
-
-            switch (manipulationStatus)
-            {
-                case ManipulationStatus.None:
-                    HandleManipulationDelta(e, x, y);
-                    break;
-                case ManipulationStatus.CrossSlideLeft:
-                    HandleCrossSlideLeft(x, y);
-                    break;
-                case ManipulationStatus.CrossSlideRight:
-                    HandleCrossSlideRight(x, y);
-                    break;
-                case ManipulationStatus.PullToRefresh:
-                    HandlePullToRefresh(x, y, e);
-                    break;
-                case ManipulationStatus.Scrolling:
-                    HandleScrolling(x, y, e);
-                    break;
-                default:
-                    HandleManipulationDelta(e, x, y);
-                    break;
-            }
-
-
-
-        }
-
-        private void HandleManipulationDelta(ManipulationDeltaRoutedEventArgs e, double x, double y)
-        {
-            //Cross Slide left
-            if (PivotItem != null && ((x > 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideLeft)
-            {
-                HandleCrossSlideLeft(x, y);
-            }
-            //Cross Slide right
-            else if (PivotItem != null && ((x < 0) || PivotItemTT.X != 0) && Math.Abs(x) > Math.Abs(y) && startingCrossSlideRight)
-            {
-                HandleCrossSlideRight(x, y);
-            }
-            //support pull to refresh
-            else if (((_pullToRefreshHeader.Height == 0 && y > 0) || _pullToRefreshHeader.Height > 0) && Math.Abs(x) < Math.Abs(y) && _verticalScrollBar.Value == 0 && startingPullToRefresh && OuterScrollViewer == null)
-            {
-                HandlePullToRefresh(x, y, e);
-            }
-            else if (_pullToRefreshHeader.Height == 0)
-            {
-                HandleScrolling(x, y, e);
-            }
-        }
-
-        private void HandleCrossSlideLeft(double x, double y)
-        {
-            manipulationStatus = ManipulationStatus.CrossSlideLeft;
-            VisualStateManager.GoToState(this, "NoIndicator", true);
-            var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 4 / 5.0;
-            var tt = PivotItemTT;
-            if (Math.Abs(tt.X) <= maxThreshold && preDeltaTranslationX != x)
-            {
-                preDeltaTranslationX = x;
-                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
-                if (tt.X >= maxThreshold)
-                {
-                    HandleCrossSlide(CrossSlideMode.Left);
-                }
-                else
-                {
-                    var width = tt.X + x;
-
-                    if (width > maxThreshold)
-                    {
-                        width = maxThreshold;
-                        tt.X = width >= 0 ? width : 0;
-                        PivotItem.RenderTransform = tt;
-                        HandleCrossSlide(CrossSlideMode.Left);
-                        return;
-                    }
-
-                    tt.X = width >= 0 ? width : 0;
-                    PivotItem.RenderTransform = tt;
-                }
-            }
-        }
-
-        private void HandleCrossSlideRight(double x, double y)
-        {
-            manipulationStatus = ManipulationStatus.CrossSlideRight;
-            VisualStateManager.GoToState(this, "NoIndicator", true);
-            var maxThreshold = (PivotItem.Parent as Pivot).ActualWidth * 4 / 5.0;
-            var tt = PivotItemTT;
-            if (Math.Abs(tt.X) <= maxThreshold && preDeltaTranslationX != x)
-            {
-                preDeltaTranslationX = x;
-                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
-
-                if (Math.Abs(tt.X) >= maxThreshold)
-                {
-                    HandleCrossSlide(CrossSlideMode.Right);
-                }
-                else
-                {
-                    var width = tt.X + x;
-                    if (Math.Abs(width) > maxThreshold)
-                    {
-                        width = -maxThreshold;
-                        tt.X = width <= 0 ? width : 0;
-                        PivotItem.RenderTransform = tt;
-                        HandleCrossSlide(CrossSlideMode.Right);
-                        return;
-                    }
-
-                    tt.X = width <= 0 ? width : 0;
-                    PivotItem.RenderTransform = tt;
-                }
-            }
-        }
-
-        private void HandlePullToRefresh(double x, double y, ManipulationDeltaRoutedEventArgs e)
-        {
-            if (!AllowPullToRefresh)
-            {
-                return;
-            }
-            manipulationStatus = ManipulationStatus.PullToRefresh;
-            var maxThreshold = RefreshThreshold * 4 / 3.0;
-            //Y not support inertial
-            if (e.IsInertial)
-            {
-                _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
-                _contentGrid_ManipulationCompleted(null, null);
-                return;
-            }
-            if (_pullToRefreshHeader.Height <= maxThreshold && preDeltaTranslationY != y)
-            {
-                preDeltaTranslationY = y;
-                var height = _pullToRefreshHeader.Height + y;
-                if (height > maxThreshold)
-                {
-                    height = maxThreshold;
-                }
-                _pullToRefreshHeader.Height = height >= 0 ? height : 0;
-
-                _contentGrid.RowDefinitions[Grid.GetRow(_pullToRefreshHeader)].Height = new GridLength(_pullToRefreshHeader.Height);
-                //Debug.WriteLine(_pullToRefreshHeader.Height);
-            }
-
-            if (_pullToRefreshHeader.Height >= RefreshThreshold)
-            {
-                this.IsReachThreshold = true;
-            }
-            else
-            {
-                this.IsReachThreshold = false;
-            }
-            VisualStateManager.GoToState(this, "NoIndicator", true);
-        }
-
-        private void HandleScrolling(double x, double y, ManipulationDeltaRoutedEventArgs e)
-        {
-            if (preDeltaTranslationX == x && preDeltaTranslationY == y)
-            {
-                return;
-            }
-            manipulationStatus = ManipulationStatus.Scrolling;
-            preDeltaTranslationX = x;
-            preDeltaTranslationY = y;
-            Point point = new Point();
-            switch (ScollingDirectionMode)
-            {
-                case ScollingDirectionMode.TwoDirection:
-                    point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y + y };
-                    break;
-                case ScollingDirectionMode.OneDirection:
-                    switch (scollingDirection)
-                    {
-                        case ScollingDirection.None:
-                            if (Math.Abs(x) <= Math.Abs(y))
-                            {
-                                point = new Point() { X = ScrollPosition.X, Y = ScrollPosition.Y + y };
-                                scollingDirection = ScollingDirection.Vertical;
-                            }
-                            else
-                            {
-                                point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
-                                scollingDirection = ScollingDirection.Horizontal;
-                            }
-                            break;
-                        case ScollingDirection.Horizontal:
-                            point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
-                            break;
-                        case ScollingDirection.Vertical:
-                            point = new Point() { X = ScrollPosition.X, Y = ScrollPosition.Y + y };
-                            break;
-                    }
-
-                    break;
-            }
-
-            ScrollPosition = point;
-            //HandleLoadMore(point);
-
-            this.IsReachThreshold = false;
-            if (e.PointerDeviceType == PointerDeviceType.Touch)
-            {
-                VisualStateManager.GoToState(this, "TouchIndicator", true);
-            }
-            else if (e.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                VisualStateManager.GoToState(this, "MouseIndicator", true);
-            }
-        }
-
-        private bool HasMoreItems(Point point)
-        {
-            if (_view != null && _verticalScrollBar != null)
-            {
-                if (-point.Y >= _verticalScrollBar.Maximum && _verticalScrollBar.Maximum > 0)
-                {
-                    if (_view.HasMoreItems)
-                    {
-                        if (!_isLoadingMoreItems)
-                        {
-                            _isLoadingMoreItems = true;
-
-                            var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
-                            var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
-                            uint count = Math.Max(1, (uint)(lastRow - firstRow));
-
-                            _view.LoadMoreItemsAsync(count).AsTask().ContinueWith(t =>
-                            {
-                                _isLoadingMoreItems = false;
-                            }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
-                        }
-                        return true;
-                    }
-                    else
-                    {
-                        if (_footerHeight ==0)
-                        {
-                            _footer.Measure(_contentGrid.DesiredSize);
-                            if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
-                            {
-                                _verticalScrollBar.Maximum -= _footerHeight;
-                                _verticalScrollBar.Maximum += _footer.DesiredSize.Height;
-                                _footerHeight = _footer.DesiredSize.Height + _footer.Margin.Bottom;
-                            }
-                        }
-                       
-                        return false;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            return true;
         }
 
         private void HandleCrossSlide(CrossSlideMode mode)
@@ -938,13 +382,8 @@ namespace UWP.DataGrid
         private void _cellPanel_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var pt = e.GetPosition(_cellPanel);
-            pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
-            var fy = _cellPanel.Rows.GetFrozenSize();
-            pt.Y += _columnHeaderPanel.ActualHeight;
-            var sp = _cellPanel.ScrollPosition;
-            if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
             // get row and column at given coordinates
-            var row = _cellPanel.Rows.GetItemAt(pt.Y);
+            var row = GetRowFromPoint(pt);
             if (ItemClick != null && row > -1)
             {
                 var args = new ItemClickEventArgs(this.Rows[row]);
@@ -1185,6 +624,7 @@ namespace UWP.DataGrid
                     {
                         _cellPanel.currentpointerOverRow = -1;
                         _cellPanel.currentPressedRow = -1;
+                        _cellPanel.footerHeight = 0;
                         pointerOverPoint = null;
                     }
                     LoadRows();
@@ -1445,7 +885,6 @@ namespace UWP.DataGrid
             return null;
         }
 
-
         internal void Invalidate()
         {
             if (_contentGrid != null)
@@ -1590,6 +1029,99 @@ namespace UWP.DataGrid
             }
             return null;
         }
+
+        private int GetRowFromPoint(Point pt)
+        {
+            pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
+            var fy = _cellPanel.Rows.GetFrozenSize();
+            pt.Y += (_columnHeaderPanel.ActualHeight + HeaderActualHeight + _cellPanel.footerHeight);
+            var sp = _cellPanel.ScrollPosition;
+            if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+            // get row and column at given coordinates
+            var row = _cellPanel.Rows.GetItemAt(pt.Y);
+            return row;
+        }
+
+        private void HandleCellScrollPosition(Point value, Size sz, double totalRowsSize, double maxH)
+        {
+            double maxV;
+            var cellScrollPosition = value;
+            cellScrollPosition.Y += _headerHeight;
+
+            maxV = totalRowsSize + _columnHeaderPanel.DesiredSize.Height - sz.Height;
+
+            cellScrollPosition.X = Math.Max(-maxH, Math.Min(cellScrollPosition.X, 0));
+            cellScrollPosition.Y = Math.Max(-maxV, Math.Min(cellScrollPosition.Y, 0));
+
+            if (cellScrollPosition != _cellPanel.ScrollPosition)
+            {
+                _cellPanel.ScrollPosition = cellScrollPosition;
+                _columnHeaderPanel.ScrollPosition = new Point(cellScrollPosition.X, 0);
+
+                if (pointerOverPoint != null)
+                {
+                    var row = GetRowFromPoint(pointerOverPoint.Value);
+                    _cellPanel.HandlePointerOver(row);
+                }
+            }
+        }
+
+        private bool HasMoreItems(Point point)
+        {
+            if (_view != null && _verticalScrollBar != null)
+            {
+                if (-point.Y >= _verticalScrollBar.Maximum && _verticalScrollBar.Maximum >= 0)
+                {
+                    if (_view.HasMoreItems)
+                    {
+                        if (!_isLoadingMoreItems)
+                        {
+                            _isLoadingMoreItems = true;
+
+                            var firstRow = Math.Max(0, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value)));
+                            var lastRow = Math.Max(-1, Math.Min(Rows.Count - 1, Rows.GetItemAt(_verticalScrollBar.Value + _cellPanel.ActualHeight)));
+                            uint count = Math.Max(1, (uint)(lastRow - firstRow));
+                            int actualCount = (int)((this.ActualHeight - (_columnHeaderPanel.ActualHeight + HeaderActualHeight + FooterActualHeight)) / Rows.DefaultSize);
+                            uint updateCount = 1;
+                            if (count > 0)
+                            {
+                                updateCount = (uint)count;
+                            }
+                            //handle when the window size changed.
+                            if (actualCount > count || count == uint.MaxValue)
+                            {
+                                updateCount = (uint)actualCount;
+                            }
+                            _view.LoadMoreItemsAsync(updateCount).AsTask().ContinueWith(t =>
+                            {
+                                _isLoadingMoreItems = false;
+                            }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return _isLoadingMoreItems;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        internal bool HasHeader()
+        {
+            return HeaderActualHeight != 0;
+        }
+
+        internal bool HasFooter()
+        {
+            return FooterActualHeight != 0;
+        }
+
         #endregion
 
         #endregion
@@ -1627,6 +1159,14 @@ namespace UWP.DataGrid
         {
             Cells.HandlePointerOver(-1);
             Cells.ClearPointerPressedAnimation();
+        }
+
+        /// <summary>
+        /// Go to Top
+        /// </summary>
+        public void GoToTop()
+        {
+            ScrollPosition = new Point(ScrollPosition.X, 0);
         }
         #endregion
     }

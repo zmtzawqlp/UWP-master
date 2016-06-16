@@ -285,6 +285,16 @@ namespace UWP.DataGrid
                 {
                     // get rectangle to arrange cell
                     var rc = GetCellRect(rng);
+                    //if we has footerHeight 
+                    //for example, footerHeight is 30, and row height is 30.
+                    //at the begining, show rows are 38-61,
+                    //after we has footerHeight, we should get 39-61
+                    //and rect is not right at this time, we should rc.Y -= footerHeight;
+                    if (!Rows.IsFrozen(rng.Row))
+                    {
+                        rc.Y -= footerHeight;
+                    }
+
                     //fix auto  column,if Width is Auto and AdaptUISize is true, the width will the adapt to UI width.
                     if (Columns[rng.Column].AdaptUISize)
                     {
@@ -454,11 +464,19 @@ namespace UWP.DataGrid
             // done
             return rc;
         }
+
+        //handle footerHeight
+        internal double footerHeight;
         internal CellRange GetViewRange(Point scrollPosition)
         {
             // get size, position, range
             var sz = DesiredSize;
-
+            //if we has footerHeight 
+            //for example, footerHeight is 30, and row height is 30.
+            //at the begining, show rows are 38-61,
+            //after we has footerHeight, we should get 39-61
+            //so why we scrollPosition.Y -= footerHeight;
+            scrollPosition.Y -= footerHeight;
             // account for frozen rows/columns
             var fx = Columns.GetFrozenSize();
             var fy = Rows.GetFrozenSize();
