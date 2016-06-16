@@ -13,6 +13,10 @@ namespace UWP.DataGrid
     {
         private void HandleFooter(Point value, Size sz, double totalRowsSize, bool hasMoreItems)
         {
+            if (Footer == null && FooterTemplate == null)
+            {
+                return;
+            }
             var maxV = totalRowsSize + _headerHeight + _columnHeaderPanel.DesiredSize.Height - sz.Height;
             if ((maxV + value.Y) <= 0)
             {

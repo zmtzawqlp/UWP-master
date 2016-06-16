@@ -13,6 +13,10 @@ namespace UWP.DataGrid
     {
         private void HandleHeader(Point totalScrollPosition)
         {
+            if (Header == null && HeaderTemplate == null)
+            {
+                return;
+            }
             var headerHeight = _headerHeight + totalScrollPosition.Y;
             if (headerHeight > 0)
             {
