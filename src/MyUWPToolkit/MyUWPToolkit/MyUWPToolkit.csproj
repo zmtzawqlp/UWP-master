@@ -125,6 +125,9 @@
     <Compile Include="ImageControl\CropSelectionSize.cs" />
     <Compile Include="ImageControl\RotationAngle.cs" />
     <Compile Include="ImageControl\Win2DImageTool.cs" />
+    <Compile Include="ItemsControl\GroupListView.cs" />
+    <Compile Include="ItemsControl\GroupObservableCollection.cs" />
+    <Compile Include="ItemsControl\IGroupCollection.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshControl.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />
@@ -159,6 +162,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\DeviceFamily-Mobile\VirtualizedVariableSizedGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\GroupListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

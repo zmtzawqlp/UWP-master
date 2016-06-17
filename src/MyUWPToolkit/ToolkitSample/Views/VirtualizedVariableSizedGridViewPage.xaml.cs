@@ -29,7 +29,7 @@ namespace ToolkitSample
     /// </summary>
     public sealed partial class VirtualizedVariableSizedGridViewPage : Page
     {
-        private MyIncrementalLoading<Thing> _things;
+        private ObservableCollection<Thing> _things;
         private ResizeableItems _resizeableItems;
         public VirtualizedVariableSizedGridViewPage()
         {
@@ -41,7 +41,7 @@ namespace ToolkitSample
         private async void VirtualizedVariableSizedGridView_Loaded(object sender, RoutedEventArgs e)
         {
 
-            _things = new MyIncrementalLoading<Thing>(1000, (startIndex, count) =>
+            _things = new ObservableCollection<Thing>(1000, (startIndex, count) =>
             {
 
                 return new MainPageViewModel().Things;

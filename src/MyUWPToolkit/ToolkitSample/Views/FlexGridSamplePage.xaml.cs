@@ -24,7 +24,7 @@ namespace ToolkitSample
     /// </summary>
     public sealed partial class FlexGridSamplePage : Page
     {
-        private MyIncrementalLoading<Employee> _employees;
+        private ObservableCollection<Employee> _employees;
 
         public FlexGridSamplePage()
         {
@@ -35,7 +35,7 @@ namespace ToolkitSample
 
         private void FlexGridSamplePage_Loaded(object sender, RoutedEventArgs e)
         {
-            _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            _employees = new ObservableCollection<Employee>(1000, (startIndex, count) =>
             {
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });

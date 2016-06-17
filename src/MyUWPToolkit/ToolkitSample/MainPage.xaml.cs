@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using ToolkitSample.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -74,6 +75,9 @@ namespace ToolkitSample
                     break;
                 case "FlexGrid":
                     Frame.Navigate(typeof(FlexGridSamplePage));
+                    break;
+                case "GroupListView":
+                    Frame.Navigate(typeof(GroupListViewPage));
                     break;
                 default:
                     break;

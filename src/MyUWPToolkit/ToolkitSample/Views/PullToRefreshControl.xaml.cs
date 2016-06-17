@@ -32,7 +32,7 @@ namespace ToolkitSample
     public sealed partial class PullToRefreshControl : Page
     {
 
-        private MyIncrementalLoading<Employee> _employees;
+        private ObservableCollection<Employee> _employees;
 
         public PullToRefreshControl()
         {
@@ -47,7 +47,7 @@ namespace ToolkitSample
             listView.DataFetchSize = 1.0;
             listView.IncrementalLoadingThreshold = 1.0;
 
-            _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            _employees = new ObservableCollection<Employee>(1000, (startIndex, count) =>
             {
                 lblLog.Text += string.Format("从索引 {0} 处开始获取 {1} 条数据", startIndex, count);
                 lblLog.Text += Environment.NewLine;
@@ -71,7 +71,7 @@ namespace ToolkitSample
         }
     }
 
-    public class MyIncrementalLoading<T> : ObservableCollection<T>, ISupportIncrementalLoading
+    public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>, ISupportIncrementalLoading
     {
         // 是否正在异步加载中
         private bool _isBusy = false;
@@ -87,12 +87,13 @@ namespace ToolkitSample
         /// </summary>
         /// <param name="totalCount">最大可显示的数据量</param>
         /// <param name="getDataFunc">提供数据的 Func</param>
-        public MyIncrementalLoading(uint totalCount, Func<int, int, List<T>> getDataFunc)
+        public ObservableCollection(uint totalCount, Func<int, int, List<T>> getDataFunc)
         {
             _funcGetData = getDataFunc;
             _totalCount = totalCount;
         }
-     
+
+
         /// <summary>
         /// 是否还有更多的数据
         /// </summary>
@@ -419,7 +420,7 @@ namespace ToolkitSample
         // factory
         public static ICollectionView GetProducts(int count)
         {
-            var list = new ObservableCollection<Product>();
+            var list = new System.Collections.ObjectModel.ObservableCollection<Product>();
             var rnd = new Random();
             for (int i = 0; i < count; i++)
             {

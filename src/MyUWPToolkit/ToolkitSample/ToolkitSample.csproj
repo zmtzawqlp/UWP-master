@@ -123,6 +123,9 @@
     <Compile Include="Views\FlexGridSamplePage.xaml.cs">
       <DependentUpon>FlexGridSamplePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GroupListViewPage.xaml.cs">
+      <DependentUpon>GroupListViewPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImageToolPage.xaml.cs">
       <DependentUpon>ImageToolPage.xaml</DependentUpon>
     </Compile>
@@ -192,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FlexGridSamplePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GroupListViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
