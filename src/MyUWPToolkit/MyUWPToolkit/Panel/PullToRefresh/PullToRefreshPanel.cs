@@ -114,11 +114,19 @@ namespace MyUWPToolkit
             _innerCustomPanel.SizeChanged += _innerCustomPanel_SizeChanged;
             _scrollViewer.ViewChanged += _scrollViewer_ViewChanged;
             _scrollViewer.SizeChanged += _scrollViewer_SizeChanged;
+            _scrollViewer.DirectManipulationStarted += _scrollViewer_DirectManipulationStarted;
+        }
+
+        private void _scrollViewer_DirectManipulationStarted(object sender, object e)
+        {
+            _scrollViewer.DirectManipulationStarted -= _scrollViewer_DirectManipulationStarted;
+            _panelHeader.Opacity = 1;
         }
 
         public PullToRefreshPanel()
         {
             this.DefaultStyleKey = typeof(PullToRefreshPanel);
+
             this.Loaded += OnLoaded;
         }
 
@@ -140,7 +148,6 @@ namespace MyUWPToolkit
         {
             _innerCustomPanel?.InvalidateMeasure();
         }
-
 
         private void _innerCustomPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
