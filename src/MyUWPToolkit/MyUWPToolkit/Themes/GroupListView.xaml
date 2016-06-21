@@ -149,6 +149,7 @@
         <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
         <Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
+        <Setter Property="ShowsScrollingPlaceholders" Value="False"/>
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>

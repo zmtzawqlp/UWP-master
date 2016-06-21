@@ -9,19 +9,31 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <control:GroupListView x:Name="listView">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="nextButton" Content="Go to Next Group" Click="nextButton_Click" Margin="10"/>
+            <Button x:Name="previousButton" Content="Go to Previous Group" Click="previousButton_Click" Margin="10"/>
+            <ComboBox x:Name="comboBox" Margin="10" SelectedIndex="1">
+                <ComboBoxItem>ScrollIntoViewAlignment.Default</ComboBoxItem>
+                <ComboBoxItem>ScrollIntoViewAlignment.Leading</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <control:GroupListView x:Name="listView" Grid.Row="1">
             <control:GroupListView.GroupHeaderTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="1" Background="Red"  Height="50" VerticalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch"  BorderBrush="Black" BorderThickness="1" Background="Red"  Height="50" VerticalAlignment="Stretch">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        <Button Content="NextGroup" Click="Button_Click" HorizontalAlignment="Right"/>
+                        <!--<Button Content="NextGroup" Click="Button_Click" HorizontalAlignment="Right"/>-->
                     </Grid>
                 </DataTemplate>
             </control:GroupListView.GroupHeaderTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="Margin" Value="0,50,0,0"/>
+                    <Setter Property="Margin" Value="0,5,0,0"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>

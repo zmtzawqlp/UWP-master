@@ -236,5 +236,57 @@ namespace MyUWPToolkit.Util
 
             return false;
         }
+
+        public static uint GetVisibleItemsCount(this ItemsControl itemsControl)
+        {
+            uint count = 0;
+            // First checking if no items source or an empty one is used
+            if (itemsControl.ItemsSource == null)
+            {
+                return count;
+            }
+
+            var enumItemsSource = itemsControl.ItemsSource as IEnumerable;
+
+            if (enumItemsSource != null && !enumItemsSource.GetEnumerator().MoveNext())
+            {
+                return count;
+            }
+
+            // Check if a modern panel is used as an items panel
+            var sourcePanel = itemsControl.ItemsPanelRoot;
+
+            if (sourcePanel == null)
+            {
+                throw new InvalidOperationException("Can't get items from an ItemsControl with no ItemsPanel.");
+            }
+
+            // Check containers for first one in view
+            if (sourcePanel.Children.Count == 0)
+            {
+                return count;
+            }
+
+            if (itemsControl.ActualWidth == 0 || itemsControl.ActualHeight == 0)
+            {
+                throw new InvalidOperationException("Can't get items from an ItemsControl that is not loaded or has zero size.");
+            }
+
+            for (int i = 0; i < sourcePanel.Children.Count; i++)
+            {
+                var container = (FrameworkElement)sourcePanel.Children[i];
+                var bounds = container.TransformToVisual(itemsControl).TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
+
+                if (bounds.Left < itemsControl.ActualWidth &&
+                    bounds.Top < itemsControl.ActualHeight &&
+                    bounds.Right > 0 &&
+                    bounds.Bottom > 0)
+                {
+                    count++;
+                }
+            }
+            return count;
+            //throw new InvalidOperationException();
+        }
     }
 }

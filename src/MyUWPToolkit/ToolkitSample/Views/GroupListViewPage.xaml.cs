@@ -70,9 +70,14 @@ namespace ToolkitSample.Views
             listView.ItemsSource = list1;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            await listView.GoToNextGroup(ScrollIntoViewAlignment.Leading);
+            await listView.GoToNextGroup((ScrollIntoViewAlignment)comboBox.SelectedIndex);
+        }
+
+        private async void previousButton_Click(object sender, RoutedEventArgs e)
+        {
+            await listView.GoToPreviousGroup((ScrollIntoViewAlignment)comboBox.SelectedIndex);
         }
     }
 

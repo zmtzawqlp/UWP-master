@@ -128,37 +128,7 @@ namespace MyUWPToolkit
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-
-            if (gotoItemIndex != -1)
-            {
-                var container = ContainerFromIndex(gotoItemIndex) as FrameworkElement;
-                if (container != null)
-                {
-                    GeneralTransform gt = container.TransformToVisual(this);
-                    var rect = gt.TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
-                    scrollViewer.ChangeView(scrollViewer.HorizontalOffset, scrollViewer.VerticalOffset + rect.Top, null);
-                    gotoItemIndex = -1;
-                }
-                //var firstVisibleItemIndex = this.GetFirstVisibleIndex();
-                //if (gotoItemIndex != firstVisibleItemIndex)
-                //{
-                //    ScrollIntoView(this.Items[gotoItemIndex], goToScrollIntoViewAlignment);
-                //}
-                //else
-                //{
-                //    gotoItemIndex = -1;
-                //}
-            }
-            //else
-            {
-                UpdateGroupHeaders();
-            }
-
-            //if (!e.IsIntermediate && gotoGroupItem!=null)
-            //{
-            //    //ScrollIntoView(gotoGroupItem, goToScrollIntoViewAlignment);
-            //    //gotoGroupItem = null;
-            //}
+            UpdateGroupHeaders();
         }
 
         private void UpdateGroupHeaders()
@@ -335,9 +305,6 @@ namespace MyUWPToolkit
             return currentGroupIndex;
         }
 
-        object gotoGroupItem = null;
-        int gotoItemIndex = -1;
-        ScrollIntoViewAlignment goToScrollIntoViewAlignment = ScrollIntoViewAlignment.Default;
         public async Task GoToNextGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
             if (groupCollection != null)
@@ -386,55 +353,15 @@ namespace MyUWPToolkit
                 var gc = groupCollection;
                 if (groupIndex < gc.GroupHeaders.Count && groupIndex >= 0)
                 {
+                    //load more so that ScrollIntoViewAlignment.Leading can go to top
+                    var loadcount = this.GetVisibleItemsCount() + 1;
                     while (gc.GroupHeaders[groupIndex].FirstIndex == -1)
                     {
-                        await gc.LoadMoreItemsAsync(1);
+                        await gc.LoadMoreItemsAsync(loadcount);
                     }
+
                     var groupFirstIndex = gc.GroupHeaders[groupIndex].FirstIndex;
-
-                    switch (scrollIntoViewAlignment)
-                    {
-                        case ScrollIntoViewAlignment.Default:
-                            ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
-                            break;
-                        case ScrollIntoViewAlignment.Leading:
-                            {
-
-                                var container = ContainerFromIndex(groupFirstIndex);
-                                if (container == null)
-                                {
-                                    //ScrollIntoView(item1, scrollIntoViewAlignment);
-                                    //Panel panel = this.ItemsPanelRoot;
-                                    //if (panel.Children.Count > 0)
-                                    //{
-                                    //    var firstIndex = this.IndexFromContainer(panel.Children[0]);
-                                    //    var lastIndex = this.IndexFromContainer(panel.Children[panel.Children.Count - 1]);
-
-                                    //    if (groupFirstIndex < firstIndex)
-                                    //    {
-                                    //        ScrollIntoView(this.ItemFromContainer(panel.Children[0]), scrollIntoViewAlignment);
-                                    //    }
-                                    //    else if (groupFirstIndex > lastIndex)
-                                    //    {
-                                    //        ScrollIntoView(this.ItemFromContainer(panel.Children[panel.Children.Count - 1]), scrollIntoViewAlignment);
-                                    //    }
-                                    //}
-                                    //scrollViewer.ViewChanged -= ScrollViewer_ViewChanged; 
-                                    //ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
-                                    //scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-                                    //UpdateGroupHeaders();
-                                    gotoGroupItem = this.Items[groupFirstIndex];
-                                    goToScrollIntoViewAlignment = scrollIntoViewAlignment;
-                                    gotoItemIndex = groupFirstIndex;
-                                }
-                                //else
-                                {
-                                    ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
-                                }
-
-                            }
-                            break;
-                    }
+                    ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
                 }
             }
         }
