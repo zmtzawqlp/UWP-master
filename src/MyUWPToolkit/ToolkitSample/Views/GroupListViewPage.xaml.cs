@@ -69,6 +69,11 @@ namespace ToolkitSample.Views
 
             listView.ItemsSource = list1;
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await listView.GoToNextGroup(ScrollIntoViewAlignment.Leading);
+        }
     }
 
 

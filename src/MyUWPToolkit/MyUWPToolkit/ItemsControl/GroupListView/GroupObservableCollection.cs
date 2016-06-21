@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Data;
 
 namespace MyUWPToolkit
 {
-    public class GroupObservableCollection<T> : ObservableCollection<T>, ISupportIncrementalLoading, IGroupCollection
+    public class GroupObservableCollection<T> : ObservableCollection<T>, IGroupCollection
     {
         private List<IList<T>> souresList;
 
@@ -117,6 +117,7 @@ namespace MyUWPToolkit
                     }
                     else if (count == this.Count)
                     {
+                        currentGroupIndex = i;
                         if ((source is ISupportIncrementalLoading))
                         {
                             if (!(source as ISupportIncrementalLoading).HasMoreItems)
@@ -124,23 +125,20 @@ namespace MyUWPToolkit
                                 if (!_isLoadingMoreItems)
                                 {
                                     groupHeaders[i].LastIndex = this.Count - 1;
-                                    currentGroupIndex = i + 1;
+                                    if (currentGroupIndex + 1 < souresList.Count)
+                                    {
+                                        currentGroupIndex = i + 1;
+                                    }
                                 }
-                                else
-                                {
-                                    currentGroupIndex = i;
-                                }
-                            }
-                            else
-                            {
-                                //next
-                                currentGroupIndex = i;
                             }
                         }
                         else
                         {
                             //next
-                            currentGroupIndex = i + 1;
+                            if (currentGroupIndex + 1 < souresList.Count)
+                            {
+                                currentGroupIndex = i + 1;
+                            }  
                         }
 
                         return currentGroupIndex;

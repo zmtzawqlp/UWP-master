@@ -13,7 +13,8 @@
             <control:GroupListView.GroupHeaderTemplate>
                 <DataTemplate>
                     <Grid HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="1" Background="Red"  Height="50" VerticalAlignment="Stretch">
-                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <Button Content="NextGroup" Click="Button_Click" HorizontalAlignment="Right"/>
                     </Grid>
                 </DataTemplate>
             </control:GroupListView.GroupHeaderTemplate>

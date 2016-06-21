@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Data;
 
 namespace MyUWPToolkit
 {
-    public interface IGroupCollection
+    public interface IGroupCollection: ISupportIncrementalLoading
     {
         List<IGroupHeader> GroupHeaders { get; set; }
         int CurrentGroupIndex { get; }

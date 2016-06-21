@@ -23,6 +23,7 @@ namespace MyUWPToolkit
     public class GroupListView : ListView
     {
         private ContentControl currentTopGroupHeader;
+        private IGroupHeader currentGroup;
         private ScrollViewer scrollViewer;
         private Grid groupHeadersGrid;
         Dictionary<IGroupHeader, ContentControl> visibleGroupHeaders;
@@ -152,6 +153,7 @@ namespace MyUWPToolkit
                         item.Value.Margin = new Thickness(0);
                         item.Value.Clip = null;
                         currentTopGroupHeader = item.Value;
+                        currentGroup = item.Key;
                     }
 
                     //other
@@ -252,6 +254,7 @@ namespace MyUWPToolkit
                     groupheader.SetBinding(ContentControl.ContentTemplateProperty, binding);
                     groupheader.DataContext = group;
                     groupheader.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    groupheader.HorizontalContentAlignment = HorizontalAlignment.Stretch;
                     groupheader.VerticalAlignment = VerticalAlignment.Top;
                     groupheader.VerticalContentAlignment = VerticalAlignment.Stretch;
                     visibleGroupHeaders[group] = groupheader;
@@ -291,12 +294,13 @@ namespace MyUWPToolkit
         }
 
 
-        public async void GoToNextGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Default)
+        public async Task GoToNextGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
-            if (ItemsSource != null && ItemsSource is IGroupCollection)
+            if (ItemsSource != null && ItemsSource is IGroupCollection && currentGroup != null)
             {
                 var gc = (ItemsSource as IGroupCollection);
-                var currentGroupIndex = gc.CurrentGroupIndex;
+                var currentGroupIndex = gc.GroupHeaders.IndexOf(currentGroup);
+
                 if (currentGroupIndex + 1 < gc.GroupHeaders.Count)
                 {
                     currentGroupIndex++;
@@ -308,20 +312,21 @@ namespace MyUWPToolkit
 
                 while (gc.GroupHeaders[currentGroupIndex].FirstIndex == -1)
                 {
-                    await this.LoadMoreItemsAsync();
+                    await gc.LoadMoreItemsAsync(1);
                 }
-                var item = this.ItemFromContainer(this.ContainerFromIndex(gc.GroupHeaders[currentGroupIndex].FirstIndex));
+                var item = this.Items[gc.GroupHeaders[currentGroupIndex].FirstIndex];
 
                 ScrollIntoView(item, scrollIntoViewAlignment);
+                currentGroup = gc.GroupHeaders[currentGroupIndex];
             }
         }
 
-        public async void GoToPreviousGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Default)
+        public async Task GoToPreviousGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
-            if (ItemsSource != null && ItemsSource is IGroupCollection)
+            if (ItemsSource != null && ItemsSource is IGroupCollection && currentGroup != null)
             {
                 var gc = (ItemsSource as IGroupCollection);
-                var currentGroupIndex = gc.CurrentGroupIndex;
+                var currentGroupIndex = gc.GroupHeaders.IndexOf(currentGroup);
                 if (currentGroupIndex - 1 < 0)
                 {
                     currentGroupIndex = gc.GroupHeaders.Count - 1;
@@ -333,15 +338,15 @@ namespace MyUWPToolkit
 
                 while (gc.GroupHeaders[currentGroupIndex].FirstIndex == -1)
                 {
-                    await this.LoadMoreItemsAsync();
+                    await gc.LoadMoreItemsAsync(1);
                 }
-                var item = this.ItemFromContainer(this.ContainerFromIndex(gc.GroupHeaders[currentGroupIndex].FirstIndex));
-
+                var item = this.Items[gc.GroupHeaders[currentGroupIndex].FirstIndex];
                 ScrollIntoView(item, scrollIntoViewAlignment);
+                currentGroup = gc.GroupHeaders[currentGroupIndex];
             }
         }
 
-        public async void GoToGroup(int groupIndex, ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Default)
+        public async Task GoToGroup(int groupIndex, ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
             if (ItemsSource != null && ItemsSource is IGroupCollection)
             {
@@ -350,11 +355,12 @@ namespace MyUWPToolkit
                 {
                     while (gc.GroupHeaders[groupIndex].FirstIndex == -1)
                     {
-                        await this.LoadMoreItemsAsync();
+                        await gc.LoadMoreItemsAsync(1);
                     }
-                    var item = this.ItemFromContainer(this.ContainerFromIndex(gc.GroupHeaders[groupIndex].FirstIndex));
+                    var item = this.Items[gc.GroupHeaders[groupIndex].FirstIndex];
 
                     ScrollIntoView(item, scrollIntoViewAlignment);
+                    currentGroup = gc.GroupHeaders[groupIndex];
                 }
             }
         }
