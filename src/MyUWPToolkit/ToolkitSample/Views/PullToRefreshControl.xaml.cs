@@ -99,7 +99,7 @@ namespace ToolkitSample
         /// </summary>
         public bool HasMoreItems
         {
-            get { return this.Count < _totalCount; }
+            get { return this.Count < _totalCount && !_isBusy; }
         }
       
         /// <summary>

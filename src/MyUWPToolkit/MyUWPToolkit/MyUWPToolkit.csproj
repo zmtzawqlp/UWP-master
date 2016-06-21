@@ -125,9 +125,9 @@
     <Compile Include="ImageControl\CropSelectionSize.cs" />
     <Compile Include="ImageControl\RotationAngle.cs" />
     <Compile Include="ImageControl\Win2DImageTool.cs" />
-    <Compile Include="ItemsControl\GroupListView.cs" />
-    <Compile Include="ItemsControl\GroupObservableCollection.cs" />
-    <Compile Include="ItemsControl\IGroupCollection.cs" />
+    <Compile Include="ItemsControl\GroupListView\GroupListView.cs" />
+    <Compile Include="ItemsControl\GroupListView\GroupObservableCollection.cs" />
+    <Compile Include="ItemsControl\GroupListView\IGroupCollection.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshControl.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />

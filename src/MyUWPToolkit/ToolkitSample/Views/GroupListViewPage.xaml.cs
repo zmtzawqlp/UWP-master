@@ -23,6 +23,9 @@ namespace ToolkitSample.Views
 
         private System.Collections.ObjectModel.ObservableCollection<Employee> _employees;
         private ObservableCollection<Employee> _employees1;
+        private ObservableCollection<Employee> _employees2;
+        private ObservableCollection<Employee> _employees3;
+        private ObservableCollection<Employee> _employees4;
 
         public GroupListViewPage()
         {
@@ -36,16 +39,31 @@ namespace ToolkitSample.Views
             {
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
-            _employees = new System.Collections.ObjectModel.ObservableCollection<Employee>(TestData.GetEmployees().Take(50).ToList());
+            _employees2 = new ObservableCollection<Employee>(50, (startIndex, count) =>
+            {
+                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+            });
+            _employees3 = new ObservableCollection<Employee>(50, (startIndex, count) =>
+            {
+                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+            });
+            _employees4 = new ObservableCollection<Employee>(50, (startIndex, count) =>
+            {
+                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+            });
+            _employees = new System.Collections.ObjectModel.ObservableCollection<Employee>(TestData.GetEmployees().Take(20).ToList());
 
 
             GroupObservableCollection<Employee> list1 = new GroupObservableCollection<Employee>
                 (
-                new List<IList<Employee>>() { _employees, _employees1 },
-                new List<GroupHeader>()
+                new List<IList<Employee>>() { _employees, _employees1,_employees2,_employees3,_employees4 },
+                new List<IGroupHeader>()
                 {
-                    new DefaultGroupHeader() { Name = "a" },
-                    new DefaultGroupHeader() { Name = "b" }
+                    new DefaultGroupHeader() { Name = "i'm group1" },
+                    new DefaultGroupHeader() { Name = "i'm group2" },
+                    new DefaultGroupHeader() { Name = "i'm group3" },
+                    new DefaultGroupHeader() { Name = "i'm group4" },
+                    new DefaultGroupHeader() { Name = "i'm group5" },
                 }
                 );
 

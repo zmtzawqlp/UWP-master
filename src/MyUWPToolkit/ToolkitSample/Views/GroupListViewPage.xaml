@@ -10,16 +10,17 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <control:GroupListView x:Name="listView">
-            <control:GroupListView.GroupHeaderDataTemplate>
+            <control:GroupListView.GroupHeaderTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Background="Red" Height="50" VerticalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch" BorderBrush="Black" BorderThickness="1" Background="Red"  Height="50" VerticalAlignment="Stretch">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
-            </control:GroupListView.GroupHeaderDataTemplate>
+            </control:GroupListView.GroupHeaderTemplate>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0,50,0,0"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
