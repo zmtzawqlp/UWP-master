@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,73 +28,6 @@ namespace MyUWPToolkit.Util
                 if (result != null) { return result; }
             }
             return null;
-        }
-
-
-        public static IEnumerable<object> GetVisibleItems(this ItemsControl itemsControl)
-        {
-            for (int i = 0; i < itemsControl.Items.Count; i++)
-            {
-                var obj = itemsControl.ContainerFromIndex(i) as FrameworkElement;
-                if (obj != null)
-                {
-                    GeneralTransform gt = obj.TransformToVisual(itemsControl);
-                    var rect = gt.TransformBounds(new Rect(0, 0, obj.ActualWidth, obj.ActualHeight));
-
-                    if (rect.Bottom < 0 || rect.Top > itemsControl.ActualHeight)
-                    {
-                        continue;
-                    }
-
-                    yield return itemsControl.Items[i];
-                }
-            }
-        }
-
-        public static object GetFirstVisibleItem(this ItemsControl itemsControl)
-        {
-            for (int i = 0; i < itemsControl.Items.Count; i++)
-            {
-                var obj = itemsControl.ContainerFromIndex(i) as FrameworkElement;
-                if (obj != null)
-                {
-                    GeneralTransform gt = obj.TransformToVisual(itemsControl);
-                    var rect = gt.TransformBounds(new Rect(0, 0, obj.ActualWidth, obj.ActualHeight));
-
-                    if (rect.Bottom < 0 || rect.Top > itemsControl.ActualHeight)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        return itemsControl.Items[i];
-                    }
-                }
-            }
-            return null;
-        }
-
-        public static int GetFirstVisibleItemIndex(this ItemsControl itemsControl)
-        {
-            for (int i = 0; i < itemsControl.Items.Count; i++)
-            {
-                var obj = itemsControl.ContainerFromIndex(i) as FrameworkElement;
-                if (obj != null)
-                {
-                    GeneralTransform gt = obj.TransformToVisual(itemsControl);
-                    var rect = gt.TransformBounds(new Rect(0, 0, obj.ActualWidth, obj.ActualHeight));
-
-                    if (rect.Bottom < 0 || rect.Top > itemsControl.ActualHeight)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        return i;
-                    }
-                }
-            }
-            return -1;
         }
     }
 }

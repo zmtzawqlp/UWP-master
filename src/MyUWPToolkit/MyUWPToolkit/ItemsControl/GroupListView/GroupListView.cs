@@ -23,7 +23,6 @@ namespace MyUWPToolkit
     public class GroupListView : ListView
     {
         private ContentControl currentTopGroupHeader;
-        private IGroupHeader currentGroup;
         private ScrollViewer scrollViewer;
         private Grid groupHeadersGrid;
         Dictionary<IGroupHeader, ContentControl> visibleGroupHeaders;
@@ -129,12 +128,42 @@ namespace MyUWPToolkit
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            UpdateGroupHeaders();
+
+            if (gotoItemIndex != -1)
+            {
+                var container = ContainerFromIndex(gotoItemIndex) as FrameworkElement;
+                if (container != null)
+                {
+                    GeneralTransform gt = container.TransformToVisual(this);
+                    var rect = gt.TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
+                    scrollViewer.ChangeView(scrollViewer.HorizontalOffset, scrollViewer.VerticalOffset + rect.Top, null);
+                    gotoItemIndex = -1;
+                }
+                //var firstVisibleItemIndex = this.GetFirstVisibleIndex();
+                //if (gotoItemIndex != firstVisibleItemIndex)
+                //{
+                //    ScrollIntoView(this.Items[gotoItemIndex], goToScrollIntoViewAlignment);
+                //}
+                //else
+                //{
+                //    gotoItemIndex = -1;
+                //}
+            }
+            //else
+            {
+                UpdateGroupHeaders();
+            }
+
+            //if (!e.IsIntermediate && gotoGroupItem!=null)
+            //{
+            //    //ScrollIntoView(gotoGroupItem, goToScrollIntoViewAlignment);
+            //    //gotoGroupItem = null;
+            //}
         }
 
         private void UpdateGroupHeaders()
         {
-            var firstVisibleItemIndex = this.GetFirstVisibleItemIndex();
+            var firstVisibleItemIndex = this.GetFirstVisibleIndex();
             foreach (var item in visibleGroupHeaders)
             {
                 ListViewItem listViewItem = ContainerFromIndex(item.Key.FirstIndex) as ListViewItem;
@@ -153,7 +182,6 @@ namespace MyUWPToolkit
                         item.Value.Margin = new Thickness(0);
                         item.Value.Clip = null;
                         currentTopGroupHeader = item.Value;
-                        currentGroup = item.Key;
                     }
 
                     //other
@@ -213,11 +241,6 @@ namespace MyUWPToolkit
         {
             (sender as ListViewItem).Loaded -= ListViewItem_Loaded;
             UpdateGroupHeaders();
-        }
-
-        protected override void OnItemsChanged(object e)
-        {
-            base.OnItemsChanged(e);
         }
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
@@ -293,13 +316,35 @@ namespace MyUWPToolkit
             return new Thickness(defaultListViewItemMargin.Left, defaultListViewItemMargin.Top + heightdelta, defaultListViewItemMargin.Right, defaultListViewItemMargin.Bottom);
         }
 
+        private int GetCurrentVisibleGroupIndex()
+        {
 
+            var currentGroupIndex = 0;
+            if (groupCollection != null)
+            {
+                var firstVisibleItemIndex = this.GetFirstVisibleIndex();
+                foreach (var item in visibleGroupHeaders)
+                {
+                    if (item.Key.FirstIndex <= firstVisibleItemIndex && (firstVisibleItemIndex <= item.Key.LastIndex || item.Key.LastIndex == -1))
+                    {
+                        currentGroupIndex = groupCollection.GroupHeaders.IndexOf(item.Key);
+                        break;
+                    }
+                }
+            }
+            return currentGroupIndex;
+        }
+
+        object gotoGroupItem = null;
+        int gotoItemIndex = -1;
+        ScrollIntoViewAlignment goToScrollIntoViewAlignment = ScrollIntoViewAlignment.Default;
         public async Task GoToNextGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
-            if (ItemsSource != null && ItemsSource is IGroupCollection && currentGroup != null)
+            if (groupCollection != null)
             {
-                var gc = (ItemsSource as IGroupCollection);
-                var currentGroupIndex = gc.GroupHeaders.IndexOf(currentGroup);
+                var gc = groupCollection;
+
+                var currentGroupIndex = GetCurrentVisibleGroupIndex();
 
                 if (currentGroupIndex + 1 < gc.GroupHeaders.Count)
                 {
@@ -310,23 +355,18 @@ namespace MyUWPToolkit
                     currentGroupIndex = 0;
                 }
 
-                while (gc.GroupHeaders[currentGroupIndex].FirstIndex == -1)
-                {
-                    await gc.LoadMoreItemsAsync(1);
-                }
-                var item = this.Items[gc.GroupHeaders[currentGroupIndex].FirstIndex];
-
-                ScrollIntoView(item, scrollIntoViewAlignment);
-                currentGroup = gc.GroupHeaders[currentGroupIndex];
+                await GoToGroup(currentGroupIndex, scrollIntoViewAlignment);
             }
         }
 
         public async Task GoToPreviousGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
-            if (ItemsSource != null && ItemsSource is IGroupCollection && currentGroup != null)
+            if (groupCollection != null)
             {
-                var gc = (ItemsSource as IGroupCollection);
-                var currentGroupIndex = gc.GroupHeaders.IndexOf(currentGroup);
+                var gc = groupCollection;
+
+                var currentGroupIndex = GetCurrentVisibleGroupIndex();
+
                 if (currentGroupIndex - 1 < 0)
                 {
                     currentGroupIndex = gc.GroupHeaders.Count - 1;
@@ -335,32 +375,66 @@ namespace MyUWPToolkit
                 {
                     currentGroupIndex--;
                 }
-
-                while (gc.GroupHeaders[currentGroupIndex].FirstIndex == -1)
-                {
-                    await gc.LoadMoreItemsAsync(1);
-                }
-                var item = this.Items[gc.GroupHeaders[currentGroupIndex].FirstIndex];
-                ScrollIntoView(item, scrollIntoViewAlignment);
-                currentGroup = gc.GroupHeaders[currentGroupIndex];
+                await GoToGroup(currentGroupIndex, scrollIntoViewAlignment);
             }
         }
 
         public async Task GoToGroup(int groupIndex, ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
-            if (ItemsSource != null && ItemsSource is IGroupCollection)
+            if (groupCollection != null)
             {
-                var gc = (ItemsSource as IGroupCollection);
+                var gc = groupCollection;
                 if (groupIndex < gc.GroupHeaders.Count && groupIndex >= 0)
                 {
                     while (gc.GroupHeaders[groupIndex].FirstIndex == -1)
                     {
                         await gc.LoadMoreItemsAsync(1);
                     }
-                    var item = this.Items[gc.GroupHeaders[groupIndex].FirstIndex];
+                    var groupFirstIndex = gc.GroupHeaders[groupIndex].FirstIndex;
 
-                    ScrollIntoView(item, scrollIntoViewAlignment);
-                    currentGroup = gc.GroupHeaders[groupIndex];
+                    switch (scrollIntoViewAlignment)
+                    {
+                        case ScrollIntoViewAlignment.Default:
+                            ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
+                            break;
+                        case ScrollIntoViewAlignment.Leading:
+                            {
+
+                                var container = ContainerFromIndex(groupFirstIndex);
+                                if (container == null)
+                                {
+                                    //ScrollIntoView(item1, scrollIntoViewAlignment);
+                                    //Panel panel = this.ItemsPanelRoot;
+                                    //if (panel.Children.Count > 0)
+                                    //{
+                                    //    var firstIndex = this.IndexFromContainer(panel.Children[0]);
+                                    //    var lastIndex = this.IndexFromContainer(panel.Children[panel.Children.Count - 1]);
+
+                                    //    if (groupFirstIndex < firstIndex)
+                                    //    {
+                                    //        ScrollIntoView(this.ItemFromContainer(panel.Children[0]), scrollIntoViewAlignment);
+                                    //    }
+                                    //    else if (groupFirstIndex > lastIndex)
+                                    //    {
+                                    //        ScrollIntoView(this.ItemFromContainer(panel.Children[panel.Children.Count - 1]), scrollIntoViewAlignment);
+                                    //    }
+                                    //}
+                                    //scrollViewer.ViewChanged -= ScrollViewer_ViewChanged; 
+                                    //ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
+                                    //scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+                                    //UpdateGroupHeaders();
+                                    gotoGroupItem = this.Items[groupFirstIndex];
+                                    goToScrollIntoViewAlignment = scrollIntoViewAlignment;
+                                    gotoItemIndex = groupFirstIndex;
+                                }
+                                //else
+                                {
+                                    ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
+                                }
+
+                            }
+                            break;
+                    }
                 }
             }
         }
