@@ -15,6 +15,7 @@ namespace MyUWPToolkit
 
         private List<int> firstIndexInEachGroup = new List<int>();
         private List<IGroupHeader> groupHeaders;
+
         bool _isLoadingMoreItems = false;
 
         public GroupObservableCollection(List<IList<T>> souresList, List<IGroupHeader> groupHeaders)
@@ -36,8 +37,15 @@ namespace MyUWPToolkit
                         {
                             if (!_isLoadingMoreItems)
                             {
-                                groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
-                                return false;
+                                if (this.Count < GetSourceListTotoalCount())
+                                {
+                                    return false;
+                                }
+                                else
+                                {
+                                    groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
+                                    return true;
+                                }
                             }
                             else
                             {
@@ -53,7 +61,7 @@ namespace MyUWPToolkit
                     {
                         if (CurrentGroupIndex == source.Count - 1)
                         {
-                            return false;
+                            return this.Count < GetSourceListTotoalCount();
                         }
                         else
                         {
@@ -63,9 +71,19 @@ namespace MyUWPToolkit
                 }
                 else
                 {
-                    return false;
+                    return this.Count < GetSourceListTotoalCount();
                 }
             }
+        }
+
+        int GetSourceListTotoalCount()
+        {
+            int i = 0;
+            foreach (var item in souresList)
+            {
+                i += item.Count;
+            }
+            return i;
         }
 
         public List<int> FirstIndexInEachGroup
@@ -138,7 +156,7 @@ namespace MyUWPToolkit
                             if (currentGroupIndex + 1 < souresList.Count)
                             {
                                 currentGroupIndex = i + 1;
-                            }  
+                            }
                         }
 
                         return currentGroupIndex;
@@ -199,5 +217,4 @@ namespace MyUWPToolkit
             }
         }
     }
-
 }
