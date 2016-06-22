@@ -35,7 +35,7 @@ namespace ToolkitSample.Views
 
         private void GroupListViewPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _employees1 = new ObservableCollection<Employee>(50, (startIndex, count) =>
+            _employees1 = new ObservableCollection<Employee>(1000, (startIndex, count) =>
             {
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });

@@ -17,17 +17,18 @@ namespace MyUWPToolkit
     /// <summary>
     /// Group ListView to support each group ISupportIncrementalLoading and UI Virtualized
     /// </summary>
-    //[TemplatePart(Name = "TopGroupHeader", Type = typeof(ContentControl))]
-    //[TemplatePart(Name = "MovingGroupHeader", Type = typeof(ContentControl))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
+    [TemplatePart(Name = "ProgressRing", Type = typeof(ProgressRing))]
     public class GroupListView : ListView
     {
         private ContentControl currentTopGroupHeader;
         private ScrollViewer scrollViewer;
         private Grid groupHeadersGrid;
+        private ProgressRing progressRing;
         Dictionary<IGroupHeader, ContentControl> visibleGroupHeaders;
         private double groupHeaderDelta = 30;
         private Thickness defaultListViewItemMargin = new Thickness(0);
+        private bool isGotoGrouping = false;
         #region Property
 
         public DataTemplate GroupHeaderTemplate
@@ -86,6 +87,7 @@ namespace MyUWPToolkit
         protected override void OnApplyTemplate()
         {
             scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
+            progressRing = GetTemplateChild("ProgressRing") as ProgressRing;
             scrollViewer.Loaded += scrollViewer_Loaded;
             base.OnApplyTemplate();
         }
@@ -129,6 +131,9 @@ namespace MyUWPToolkit
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             UpdateGroupHeaders();
+            //
+            isGotoGrouping = false;
+            this.IsHitTestVisible = true;
         }
 
         private void UpdateGroupHeaders()
@@ -351,17 +356,54 @@ namespace MyUWPToolkit
             if (groupCollection != null)
             {
                 var gc = groupCollection;
-                if (groupIndex < gc.GroupHeaders.Count && groupIndex >= 0)
+                if (groupIndex < gc.GroupHeaders.Count && groupIndex >= 0 && !isGotoGrouping)
                 {
+                    isGotoGrouping = true;
                     //load more so that ScrollIntoViewAlignment.Leading can go to top
                     var loadcount = this.GetVisibleItemsCount() + 1;
+                    
+                    progressRing.IsActive = true;
+                    progressRing.Visibility = Visibility.Visible;
+                    //make sure user don't do any other thing at the time.
+                    this.IsHitTestVisible = false;
+                    //await Task.Delay(3000);
                     while (gc.GroupHeaders[groupIndex].FirstIndex == -1)
                     {
-                        await gc.LoadMoreItemsAsync(loadcount);
+                        if (gc.HasMoreItems)
+                        {
+                            await gc.LoadMoreItemsAsync(loadcount);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
 
-                    var groupFirstIndex = gc.GroupHeaders[groupIndex].FirstIndex;
-                    ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
+                    if (gc.GroupHeaders[groupIndex].FirstIndex != -1)
+                    {
+                        //make sure there are enought items to go ScrollIntoViewAlignment.Leading
+                        //this.count > (firstIndex + loadcount)
+                        if (scrollIntoViewAlignment == ScrollIntoViewAlignment.Leading)
+                        {
+                            var more = this.Items.Count - (gc.GroupHeaders[groupIndex].FirstIndex + loadcount);
+                            if (gc.HasMoreItems && more < 0)
+                            {
+                                await gc.LoadMoreItemsAsync((uint)Math.Abs(more));
+                            }
+                        }
+                        progressRing.IsActive = false;
+                        progressRing.Visibility = Visibility.Collapsed;
+                        var groupFirstIndex = gc.GroupHeaders[groupIndex].FirstIndex;
+                        ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
+                    }
+                    else
+                    {
+                        this.IsHitTestVisible = true;
+                        isGotoGrouping = false;
+                        progressRing.IsActive = false;
+                        progressRing.Visibility = Visibility.Collapsed;
+                    }
+
                 }
             }
         }
