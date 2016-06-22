@@ -310,7 +310,7 @@ namespace MyUWPToolkit
             return currentGroupIndex;
         }
 
-        public async Task GoToNextGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
+        public async Task GoToNextGroupAsync(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
             if (groupCollection != null)
             {
@@ -327,11 +327,11 @@ namespace MyUWPToolkit
                     currentGroupIndex = 0;
                 }
 
-                await GoToGroup(currentGroupIndex, scrollIntoViewAlignment);
+                await GoToGroupAsync(currentGroupIndex, scrollIntoViewAlignment);
             }
         }
 
-        public async Task GoToPreviousGroup(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
+        public async Task GoToPreviousGroupAsync(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
             if (groupCollection != null)
             {
@@ -347,11 +347,11 @@ namespace MyUWPToolkit
                 {
                     currentGroupIndex--;
                 }
-                await GoToGroup(currentGroupIndex, scrollIntoViewAlignment);
+                await GoToGroupAsync(currentGroupIndex, scrollIntoViewAlignment);
             }
         }
 
-        public async Task GoToGroup(int groupIndex, ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
+        public async Task GoToGroupAsync(int groupIndex, ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
             if (groupCollection != null)
             {

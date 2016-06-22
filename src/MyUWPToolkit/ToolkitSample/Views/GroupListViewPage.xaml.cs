@@ -72,12 +72,12 @@ namespace ToolkitSample.Views
 
         private async void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            await listView.GoToNextGroup((ScrollIntoViewAlignment)comboBox.SelectedIndex);
+            await listView.GoToNextGroupAsync((ScrollIntoViewAlignment)comboBox.SelectedIndex);
         }
 
         private async void previousButton_Click(object sender, RoutedEventArgs e)
         {
-            await listView.GoToPreviousGroup((ScrollIntoViewAlignment)comboBox.SelectedIndex);
+            await listView.GoToPreviousGroupAsync((ScrollIntoViewAlignment)comboBox.SelectedIndex);
         }
     }
 
