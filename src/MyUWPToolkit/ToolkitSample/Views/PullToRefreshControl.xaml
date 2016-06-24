@@ -27,7 +27,7 @@
             </ListView>
         </controls:PullToRefreshControl>-->
 
-        <controls:PullToRefreshPanel Background="Red" Grid.Row="1" Height="400"  Width="330" PullToRefresh="PullToRefreshPanel_PullToRefresh">
+        <controls:PullToRefreshGrid1 Background="Red" RefreshThreshold="150" Grid.Row="1" Height="400"  Width="330" PullToRefresh="PullToRefreshPanel_PullToRefresh">
             <ListView x:Name="listView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -37,7 +37,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </controls:PullToRefreshPanel>
+        </controls:PullToRefreshGrid1>
         <TextBlock Name="lblLog" Grid.Row="2" />
     </Grid>
 </Page>

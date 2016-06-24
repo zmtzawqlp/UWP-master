@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace MyUWPToolkit
 {
+    //[TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
+    //[TemplatePart(Name = "ProgressRing", Type = typeof(ProgressRing))]
     //public class GroupListView : ListView
     //{
     //    private ContentControl currentTopGroupHeader;
@@ -105,16 +107,25 @@ namespace MyUWPToolkit
     //        foreach (var item in expressionAnimationDic)
     //        {
     //            item.Value.StopAnimation("Offset.Y");
-    //            Debug.WriteLine(item.Value.Offset.Y);
-    //            if (item.Value.Offset.Y > -_maxOffset)
-    //            {
-    //                item.Value.StartAnimation("Offset.Y", expression);
+    //            Debug.WriteLine(item.Value.Offset.Y + "," + -_maxOffset);
+    //            //if (item.Value.Offset.Y > -_maxOffset)
+    //            //{
+    //            //    item.Value.StartAnimation("Offset.Y", expression);
 
+    //            //}
+    //            //else
+    //            //{
+    //            //    test = true;
+
+    //            //}
+    //            if (item.Value.Offset.Y == -_maxOffset)
+    //            {
+    //                item.Value.Offset = new System.Numerics.Vector3(0, 0, 1);
+    //                test = true;
     //            }
     //            else
     //            {
-    //                test = true;
-
+    //                item.Value.StartAnimation("Offset.Y", expression);
     //            }
 
     //        }
@@ -265,34 +276,61 @@ namespace MyUWPToolkit
     //                            if (item.Value.Visibility == Visibility.Visible)
     //                            {
 
+    //                                //if (!expressionAnimationDic.ContainsKey(item.Value))
+    //                                //{
+    //                                //    if (item.Value.Clip == null)
+    //                                //    {
+    //                                //item.Value.Margin = itemMargin;
+    //                                //StartExpressionAnimation(item.Value);
+    //                                //}
+    //                                //if (item.Value.Clip != null)
+    //                                //{
+    //                                //    StopExpressionAnimation(item.Value);
+    //                                //}
+    //                                //else
+    //                                //{
+
+    //                                //}
+
     //                                if (!expressionAnimationDic.ContainsKey(item.Value))
     //                                {
-    //                                    if (item.Value.Clip == null)
-    //                                    {
-    //                                        item.Value.Margin = itemMargin;
-    //                                        StartExpressionAnimation(item.Value);
-    //                                    }
-
-
-    //                                    //if (item.Value.Clip != null)
-    //                                    //{
-    //                                    //    var clipRect = (item.Value.Clip as RectangleGeometry).Rect;
-    //                                    //    expressionAnimationDic[item.Value].Clip = expressionAnimationDic[item.Value].Compositor.CreateInsetClip((Single)clipRect.Left, (Single)clipRect.Top, (Single)clipRect.Right, (Single)clipRect.Bottom);
-    //                                    //}
-    //                                    //else
-    //                                    //{
-    //                                    //    expressionAnimationDic[item.Value].Clip = expressionAnimationDic[item.Value].Compositor.CreateInsetClip(0,0,0,0);
-    //                                    //}
+    //                                    item.Value.Tag = item.Value.Clip;
+    //                                    item.Value.Margin = itemMargin;
+    //                                    StartExpressionAnimation(item.Value);
     //                                }
     //                                else
     //                                {
-    //                                    if (expressionAnimationDic[item.Value] == null || item.Value.Clip != null)
+    //                                    if (item.Value.Tag != null)
     //                                    {
+    //                                        item.Value.Tag = item.Value.Clip;
     //                                        item.Value.Margin = itemMargin;
+    //                                        StopExpressionAnimation(item.Value);
+    //                                        StartExpressionAnimation(item.Value);
     //                                    }
-
-
+    //                                    else
+    //                                    {
+    //                                        //item.Value.Tag = nul;
+    //                                    }
     //                                }
+    //                                //if (item.Value.Clip != null)
+    //                                //{
+    //                                //    var clipRect = (item.Value.Clip as RectangleGeometry).Rect;
+    //                                //    expressionAnimationDic[item.Value].Clip = expressionAnimationDic[item.Value].Compositor.CreateInsetClip((Single)clipRect.Left, (Single)clipRect.Top, (Single)clipRect.Right, (Single)clipRect.Bottom);
+    //                                //}
+    //                                //else
+    //                                //{
+    //                                //    expressionAnimationDic[item.Value].Clip = expressionAnimationDic[item.Value].Compositor.CreateInsetClip(0,0,0,0);
+    //                                //}
+    //                                //}
+    //                                //else
+    //                                //{
+    //                                //    //if (expressionAnimationDic[item.Value]==null || item.Value.Clip != null)
+    //                                //    //{
+    //                                //    //    item.Value.Margin = itemMargin;
+    //                                //    //}
+
+
+    //                                //}
     //                                //else
     //                                //{
     //                                //    item.Value.Margin = itemMargin;
@@ -376,6 +414,7 @@ namespace MyUWPToolkit
     //    {
     //        Visual visual = ElementCompositionPreview.GetElementVisual(element);
     //        visual.StartAnimation("Offset.Y", CreateExpressionAnimation((float)scrollViewer.VerticalOffset, (float)(element.Margin.Top)));
+    //        visual.Offset = new System.Numerics.Vector3(0, 0, 1);
     //        expressionAnimationDic[element] = visual;
     //    }
 
@@ -386,7 +425,7 @@ namespace MyUWPToolkit
     //        {
     //            //(expressionAnimationDic[element] as ContainerVisual).StopAnimation("Offset.Y");
     //            expressionAnimationDic[element].StopAnimation("Offset.Y");
-    //            expressionAnimationDic.Remove(element);
+    //            //expressionAnimationDic.Remove(element);
     //        }
     //    }
 

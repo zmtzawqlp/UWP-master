@@ -131,6 +131,7 @@
     <Compile Include="ItemsControl\GroupListView\IGroupCollection.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshControl.cs" />
+    <Compile Include="Panel\PullToRefresh\PullToRefreshGrid.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />
     <Compile Include="Panel\PullToRefresh\ScrollPanel.cs" />
     <Compile Include="Panel\VariableSizedGrid\IResizable.cs" />
@@ -192,6 +193,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\PullToRefreshGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\PullToRefreshPanel.xaml">
       <Generator>MSBuild:Compile</Generator>

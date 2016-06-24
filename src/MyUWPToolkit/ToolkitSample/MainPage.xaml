@@ -27,5 +27,6 @@
             <!--<x:String>FlexGrid</x:String>-->
             <x:String>GroupListView</x:String>
         </ListView>
+        <ContentControl x:Name="contentControl"/>
     </Grid>
 </Page>

@@ -11,7 +11,6 @@
             <Setter.Value>
                 <DataTemplate>
                     <Grid >
-                        <!--<Grid Visibility="{Binding IsRefreshing,Converter={StaticResource InversedBooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">-->
                         <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsReachThreshold,Converter={StaticResource InversedBooleanToVisibilityConverter}}">
                             <Image Margin="-50,0,0,0" Width="50" Height="50" Source="ms-appx:///MyUWPToolkit/Resource/indicator_arrow.png"></Image>
                             <StackPanel Orientation="Vertical">
@@ -38,20 +37,6 @@
                                 </TextBlock>
                             </StackPanel>
                         </StackPanel>
-                        <!--</Grid>-->
-                        <!--<StackPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsRefreshing, Converter={StaticResource BooleanToVisibilityConverter},UpdateSourceTrigger=PropertyChanged}">
-                            <Image Width="40" Height="40" Source="ms-appx:///MyUWPToolkit/Resource/default_ptr_rotate.png">
-
-                            </Image>
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Margin="5,0,5,0" Text="正在刷新" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <TextBlock>
-                                    <Run Text="最近刷新:"/>
-                                    <Run Text="{Binding LastRefreshTime,Converter={StaticResource dateTimeConverter},ConverterParameter=MM-dd}"/>
-                                    <Run Text="{Binding LastRefreshTime,Converter={StaticResource dateTimeConverter},ConverterParameter=hh:mm}"/>
-                                </TextBlock>
-                            </StackPanel>
-                        </StackPanel>-->
                     </Grid>
                 </DataTemplate>
             </Setter.Value>
