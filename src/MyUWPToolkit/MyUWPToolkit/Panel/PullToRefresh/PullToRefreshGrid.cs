@@ -112,8 +112,11 @@ namespace MyUWPToolkit
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            _content.Width = finalSize.Width;
-            _content.Height = finalSize.Height;
+            if (_content != null)
+            {
+                _content.Width = finalSize.Width;
+                _content.Height = finalSize.Height;
+            }
             return base.ArrangeOverride(finalSize);
         }
 
@@ -125,6 +128,7 @@ namespace MyUWPToolkit
 
             if (_refresh)
             {
+                _refresh = false;
                 if (cancelled)
                 {
                     Debug.WriteLine("Refresh cancelled...");
@@ -224,7 +228,7 @@ namespace MyUWPToolkit
 
     /// <summary>
     /// use Composition API
-    /// PullToRefreshGrid for Content's first child is ScrollViewer/ListView/GridView...
+    /// PullToRefreshGrid1 for Content's first child is ScrollViewer/ListView/GridView...
     /// </summary>
     [TemplatePart(Name = "Header", Type = typeof(ContentControl))]
     [TemplatePart(Name = "Content", Type = typeof(ContentPresenter))]
@@ -349,8 +353,10 @@ namespace MyUWPToolkit
 
             if (_refresh)
             {
+                _refresh = false;
                 if (cancelled)
                 {
+                    
                     Debug.WriteLine("Refresh cancelled...");
                 }
                 else

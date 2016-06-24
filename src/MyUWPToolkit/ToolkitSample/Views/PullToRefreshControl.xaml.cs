@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -65,7 +66,22 @@ namespace ToolkitSample
             lblMsg.Text = "已获取的数据量：" + _employees.Count.ToString();
         }
 
-        private async void PullToRefreshPanel_PullToRefresh(object sender, EventArgs e)
+   
+
+        private void PullToRefreshGrid_PullToRefresh(object sender, EventArgs e)
+        {
+            if ((rectangle.Fill as SolidColorBrush).Color==Colors.Green)
+            {
+                rectangle.Fill = new SolidColorBrush(Colors.Red);
+            }
+            else
+            {
+                rectangle.Fill = new SolidColorBrush(Colors.Green);
+            }
+            
+        }
+
+        private void PullToRefreshGrid1_PullToRefresh(object sender, EventArgs e)
         {
             _employees.LoadMoreItemsAsync(20);
         }
