@@ -39,13 +39,15 @@ namespace MyUWPToolkit
                             {
                                 if (this.Count < GetSourceListTotoalCount())
                                 {
-                                    return false;
+                                    int start = source.IndexOf(this.LastOrDefault());
+                                    for (int i = start + 1; i < source.Count; i++)
+                                    {
+                                        this.Add(source[i]);
+                                    }
                                 }
-                                else
-                                {
-                                    groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
-                                    return true;
-                                }
+                                groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
+
+                                return false;
                             }
                             else
                             {
@@ -61,7 +63,16 @@ namespace MyUWPToolkit
                     {
                         if (CurrentGroupIndex == source.Count - 1)
                         {
-                            return this.Count < GetSourceListTotoalCount();
+                            if (this.Count < GetSourceListTotoalCount())
+                            {
+                                int start = source.IndexOf(this.LastOrDefault());
+                                for (int i = start + 1; i < source.Count; i++)
+                                {
+                                    this.Add(source[i]);
+                                }
+                            }
+                            groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
+                            return false;
                         }
                         else
                         {
@@ -71,7 +82,7 @@ namespace MyUWPToolkit
                 }
                 else
                 {
-                    return this.Count < GetSourceListTotoalCount();
+                    return false;
                 }
             }
         }

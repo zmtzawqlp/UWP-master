@@ -37,18 +37,34 @@ namespace ToolkitSample.Views
         {
             _employees1 = new ObservableCollection<Employee>(1000, (startIndex, count) =>
             {
+                if (_employees1.Count + count >= 1000)
+                {
+                    count =  1000- _employees1.Count;
+                }
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
             _employees2 = new ObservableCollection<Employee>(50, (startIndex, count) =>
             {
+                if (_employees2.Count + count >= 50)
+                {
+                    count = 50 - _employees2.Count;
+                }
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
             _employees3 = new ObservableCollection<Employee>(50, (startIndex, count) =>
             {
+                if (_employees3.Count + count >= 50)
+                {
+                    count = 50 - _employees3.Count;
+                }
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
             _employees4 = new ObservableCollection<Employee>(50, (startIndex, count) =>
             {
+                if (_employees4.Count + count >= 50)
+                {
+                    count = 50 - _employees4.Count;
+                }
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
             _employees = new System.Collections.ObjectModel.ObservableCollection<Employee>(TestData.GetEmployees().Take(20).ToList());
@@ -56,7 +72,7 @@ namespace ToolkitSample.Views
 
             GroupObservableCollection<Employee> list1 = new GroupObservableCollection<Employee>
                 (
-                new List<IList<Employee>>() { _employees, _employees1,_employees2,_employees3,_employees4 },
+                new List<IList<Employee>>() { _employees, _employees1, _employees2, _employees3, _employees4 },
                 new List<IGroupHeader>()
                 {
                     new DefaultGroupHeader() { Name = "i'm group1" },

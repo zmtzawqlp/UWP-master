@@ -126,8 +126,8 @@
     <Compile Include="ImageControl\RotationAngle.cs" />
     <Compile Include="ImageControl\Win2DImageTool.cs" />
     <Compile Include="ItemsControl\GroupListView\Class1.cs" />
-    <Compile Include="ItemsControl\GroupListView\ExpressionItem.cs" />
-    <Compile Include="ItemsControl\GroupListView\GroupListView - Copy.cs" />
+    <Compile Include="ItemsControl\GroupListView\ExpressionAnimationItem.cs" />
+    <Compile Include="ItemsControl\GroupListView\GroupHeaderItem.cs" />
     <Compile Include="ItemsControl\GroupListView\GroupListView.cs" />
     <Compile Include="ItemsControl\GroupListView\GroupObservableCollection.cs" />
     <Compile Include="ItemsControl\GroupListView\IGroupCollection.cs" />

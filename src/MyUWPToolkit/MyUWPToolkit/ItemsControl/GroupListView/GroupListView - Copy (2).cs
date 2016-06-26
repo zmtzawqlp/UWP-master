@@ -29,13 +29,29 @@ namespace MyUWPToolkit
         private ScrollViewer scrollViewer;
         private Grid groupHeadersGrid;
         private ProgressRing progressRing;
-        //Dictionary<IGroupHeader, ContentControl> visibleGroupHeaders;
+        Dictionary<IGroupHeader, ContentControl> visibleGroupHeaders;
         private double groupHeaderDelta = 30;
         private Thickness defaultListViewItemMargin = new Thickness(0);
-        //Dictionary<ContentControl, ExpressionAnimationItem> expressionAnimationDic;
+        Dictionary<ContentControl, ExpressionAnimationItem> expressionAnimationDic;
         Dictionary<IGroupHeader, ExpressionAnimationItem> groupDic;
         private bool isGotoGrouping = false;
+        bool animationIsActive = false;
         private IGroupCollection groupCollection;
+        private Border expressionAnimationElement;
+        //private ExpressionItem expressionItem;
+
+        CompositionPropertySet scrollviewerManipProps;
+        internal CompositionPropertySet ScrollviewerManipProps
+        {
+            get
+            {
+                if (scrollviewerManipProps == null)
+                {
+                    scrollviewerManipProps = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
+                }
+                return scrollviewerManipProps;
+            }
+        }
 
         #region Property
 
@@ -53,9 +69,12 @@ namespace MyUWPToolkit
 
         #endregion
 
+
         public GroupListView()
         {
             this.DefaultStyleKey = typeof(GroupListView);
+            visibleGroupHeaders = new Dictionary<IGroupHeader, ContentControl>();
+            expressionAnimationDic = new Dictionary<ContentControl, ExpressionAnimationItem>();
             groupDic = new Dictionary<IGroupHeader, ExpressionAnimationItem>();
             this.RegisterPropertyChangedCallback(ListView.ItemsSourceProperty, new DependencyPropertyChangedCallback(OnItemsSourceChanged));
         }
@@ -71,9 +90,10 @@ namespace MyUWPToolkit
             {
                 groupHeadersGrid.Children.Clear();
             }
-
+            visibleGroupHeaders.Clear();
+            expressionAnimationDic.Clear();
             groupDic.Clear();
-
+            //expressionItem = null;
             if (currentTopGroupHeader != null)
             {
                 currentTopGroupHeader.DataContext = null;
@@ -95,44 +115,69 @@ namespace MyUWPToolkit
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
             groupHeadersGrid.Loaded += GroupHeadersGrid_Loaded;
 
-            currentTopGroupHeader = CreateGroupHeader(null);
-            groupHeadersGrid.Children.Add(currentTopGroupHeader);
+            ContentControl groupheader = new ContentControl();
+            Binding binding = new Binding();
+            binding.Source = this;
+            binding.Mode = BindingMode.OneWay;
+            binding.Path = new PropertyPath("GroupHeaderTemplate");
+            groupheader.SetBinding(ContentControl.ContentTemplateProperty, binding);
+            groupheader.DataContext = null;
+            groupheader.HorizontalAlignment = HorizontalAlignment.Stretch;
+            groupheader.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            groupheader.VerticalAlignment = VerticalAlignment.Top;
+            groupheader.VerticalContentAlignment = VerticalAlignment.Stretch;
+            currentTopGroupHeader = groupheader;
+            groupHeadersGrid.Children.Add(groupheader);
+
+
+            expressionAnimationElement = new Border();
+            expressionAnimationElement.Width = 1;
+            expressionAnimationElement.Height = 1;
+            groupHeadersGrid.Children.Add(expressionAnimationElement);
 
         }
 
         private void GroupHeadersGrid_Loaded(object sender, RoutedEventArgs e)
         {
             groupHeadersGrid.Loaded -= GroupHeadersGrid_Loaded;
-
-            foreach (var item in groupDic)
+            foreach (var item in visibleGroupHeaders)
             {
-                if (item.Value.VisualElement.Parent == null)
+                if (item.Value.Parent == null)
                 {
+                    var groupheader = item.Value;
 
-                    var groupheader = item.Key;
+                    groupHeadersGrid.Children.Add(groupheader);
 
-                    groupHeadersGrid.Children.Add(item.Value.VisualElement);
-                    groupHeadersGrid.Children.Add(item.Value.TempElement);
+                    groupheader.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
 
-                    item.Value.VisualElement.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
-
-                    item.Key.Height = item.Value.VisualElement.DesiredSize.Height;
+                    item.Key.Height = groupheader.DesiredSize.Height;
 
                     var listViewItem = ContainerFromIndex(item.Key.FirstIndex) as ListViewItem;
                     listViewItem.Tag = listViewItem.Margin;
                     listViewItem.Margin = GetItemMarginBaseOnDeafult(item.Key.Height);
-
-                    item.Value.VisualElement.Visibility = Visibility.Collapsed;
-                    item.Value.TempElement.Visibility = Visibility.Collapsed;
+                    groupheader.Visibility = Visibility.Collapsed;
                     UpdateGroupHeaders();
                 }
             }
         }
 
+        public bool NeedViewChanged
+        {
+            get
+            {
+                var a = expressionAnimationDic.FirstOrDefault(x => x.Value.IsActive);
+                return a.Key == null;
+            }
+
+        }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            UpdateGroupHeaders(e.IsIntermediate);
+            //if (NeedViewChanged)
+            {
+                UpdateGroupHeaders(e.IsIntermediate);
+            }
+
             if (!e.IsIntermediate)
             {
                 isGotoGrouping = false;
@@ -143,7 +188,7 @@ namespace MyUWPToolkit
         internal void UpdateGroupHeaders(bool isIntermediate = false)
         {
             var firstVisibleItemIndex = this.GetFirstVisibleIndex();
-            foreach (var item in groupDic)
+            foreach (var item in visibleGroupHeaders)
             {
                 //top header
                 if (item.Key.FirstIndex <= firstVisibleItemIndex && (firstVisibleItemIndex <= item.Key.LastIndex || item.Key.LastIndex == -1))
@@ -152,14 +197,17 @@ namespace MyUWPToolkit
                     currentTopGroupHeader.Margin = new Thickness(0);
                     currentTopGroupHeader.Clip = null;
                     currentTopGroupHeader.DataContext = item.Key;
-
-
-                    item.Value.TempElement.Visibility = Visibility.Collapsed;
-                    item.Value.TempElement.Margin = new Thickness(0);
-                    item.Value.TempElement.Clip = null;
-
-                    item.Value.StopAnimation();
-                    item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                    if (expressionAnimationDic.ContainsKey(item.Value))
+                    {
+                        expressionAnimationDic[item.Value].StopAnimation();
+                        if (expressionAnimationDic[item.Value].TempElement.Parent != null)
+                        {
+                            this.groupHeadersGrid.Children.Remove(expressionAnimationDic[item.Value].TempElement);
+                        }
+                    }
+                    item.Value.Visibility = Visibility.Collapsed;
+                    item.Value.Margin = new Thickness(0);
+                    item.Value.Clip = null;
                 }
                 else
                 {
@@ -186,12 +234,17 @@ namespace MyUWPToolkit
 
                             if (rect.Bottom + groupHeaderDelta < 0 || rect.Top > this.ActualHeight + groupHeaderDelta)
                             {
-                                item.Value.TempElement.Visibility = Visibility.Collapsed;
-                                item.Value.TempElement.Margin = new Thickness(0);
-                                item.Value.TempElement.Clip = null;
-
-                                item.Value.StopAnimation();
-                                item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                                if (expressionAnimationDic.ContainsKey(item.Value))
+                                {
+                                    expressionAnimationDic[item.Value].StopAnimation();
+                                    if (expressionAnimationDic[item.Value].TempElement.Parent != null)
+                                    {
+                                        this.groupHeadersGrid.Children.Remove(expressionAnimationDic[item.Value].TempElement);
+                                    }
+                                }
+                                item.Value.Visibility = Visibility.Collapsed;
+                                item.Value.Margin = new Thickness(0);
+                                item.Value.Clip = null;
                             }
                             //in view port
                             else
@@ -249,56 +302,90 @@ namespace MyUWPToolkit
                                     }
                                 }
 
-
+                                
 
                                 //all in viewport
                                 if (itemVisibility == Visibility.Visible)
                                 {
-                                    if (!item.Value.IsActive)
+
+                                    if (!expressionAnimationDic.ContainsKey(item.Value))
                                     {
-                                        //when isIntermediate is false and clip is null, so that make sure animation is accurate
-                                        if (item.Value.TempElement.Clip == null && !isIntermediate)
+                                        if (item.Value.Clip == null && !isIntermediate)
                                         {
-                                            ExpressionAnimationItem expressionItem = item.Value;
-                                            expressionItem.StopAnimation();
-                                            item.Value.TempElement.Visibility = Visibility.Collapsed;
-                                            item.Value.TempElement.Margin = new Thickness(0);
-                                            item.Value.TempElement.Clip = null;
-
-                                            item.Value.VisualElement.Margin = itemMargin;
-                                            item.Value.VisualElement.Clip = itemClip;
-                                            item.Value.VisualElement.Visibility = itemVisibility;
-
-
-                                            if (expressionItem.ScrollViewer == null)
-                                            {
-                                                expressionItem.ScrollViewer = scrollViewer;
-                                            }
-                                            expressionItem.StartAnimation(true);
+                                            item.Value.Margin = itemMargin;
+                                            item.Value.Clip = itemClip;
+                                            item.Value.Visibility = itemVisibility;
+                                            ExpressionAnimationItem expressionItem = new ExpressionAnimationItem(ScrollviewerManipProps, scrollViewer, item.Value, item.Key, expressionAnimationElement, this);
+                                            expressionItem.StartAnimation();
+                                            expressionAnimationDic[item.Value] = expressionItem;
+                                            expressionAnimationDic[item.Value].OutofViewPort = false;
+                                            expressionItem.TempElement = CreateGroupHeader(item.Key);
                                         }
-                                        //use tempElemnt for Clip and isIntermediate is true
                                         else
                                         {
-                                            item.Value.TempElement.Margin = itemMargin;
-                                            item.Value.TempElement.Clip = itemClip;
-                                            item.Value.TempElement.Visibility = itemVisibility;
+                                            item.Value.Margin = itemMargin;
+                                            item.Value.Clip = itemClip;
+                                            item.Value.Visibility = itemVisibility;
                                         }
                                     }
-                                    //use active animation
                                     else
                                     {
+                                        if (!expressionAnimationDic[item.Value].IsActive)
+                                        {
+                                            if (isIntermediate)
+                                            {
+                                                expressionAnimationDic[item.Value].TempElement.Margin = itemMargin;
+                                                expressionAnimationDic[item.Value].TempElement.Clip = itemClip;
+                                                expressionAnimationDic[item.Value].TempElement.Visibility = itemVisibility;
+                                                if (expressionAnimationDic[item.Value].TempElement.Parent==null)
+                                                {
+                                                    this.groupHeadersGrid.Children.Add(expressionAnimationDic[item.Value].TempElement);
+                                                }
 
+                                            }
+                                            else
+                                            {
+                                                if (item.Value.Clip != null)
+                                                {
+                                                    expressionAnimationDic[item.Value].TempElement.Margin = itemMargin;
+                                                    expressionAnimationDic[item.Value].TempElement.Clip = itemClip;
+                                                    expressionAnimationDic[item.Value].TempElement.Visibility = itemVisibility;
+                                                    if (expressionAnimationDic[item.Value].TempElement.Parent == null)
+                                                    {
+                                                        this.groupHeadersGrid.Children.Add(expressionAnimationDic[item.Value].TempElement);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    item.Value.Margin = itemMargin;
+                                                    item.Value.Clip = itemClip;
+                                                    item.Value.Visibility = itemVisibility;
+                                                    if (expressionAnimationDic[item.Value].TempElement.Parent != null)
+                                                    {
+                                                        this.groupHeadersGrid.Children.Remove(expressionAnimationDic[item.Value].TempElement);
+                                                    }
+                                                    ExpressionAnimationItem expressionItem = expressionAnimationDic[item.Value];
+                                                    expressionItem.StartAnimation(true);
+                                                    expressionAnimationDic[item.Value] = expressionItem;
+                                                    expressionAnimationDic[item.Value].OutofViewPort = false;
+                                                }
+
+                                            }
+
+                                        }
+                                        //use animation
+                                        else
+                                        {
+
+                                        }
                                     }
-                                    
                                 }
                                 else
                                 {
-                                    item.Value.TempElement.Margin = itemMargin;
-                                    item.Value.TempElement.Clip = itemClip;
-                                    item.Value.TempElement.Visibility = itemVisibility;
 
-                                    //item.Value.StopAnimation();
-                                    //item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                                    item.Value.Margin = itemMargin;
+                                    //item.Value.Clip = itemClip;
+                                    item.Value.Visibility = itemVisibility;
                                 }
 
                             }
@@ -308,12 +395,17 @@ namespace MyUWPToolkit
                     {
                         if (item.Key != currentTopGroupHeader.DataContext)
                         {
-                            item.Value.TempElement.Visibility = Visibility.Collapsed;
-                            item.Value.TempElement.Margin = new Thickness(0);
-                            item.Value.TempElement.Clip = null;
-
-                            item.Value.StopAnimation();
-                            item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                            if (expressionAnimationDic.ContainsKey(item.Value))
+                            {
+                                expressionAnimationDic[item.Value].StopAnimation();
+                                if (expressionAnimationDic[item.Value].TempElement.Parent != null)
+                                {
+                                    this.groupHeadersGrid.Children.Remove(expressionAnimationDic[item.Value].TempElement);
+                                }
+                            }
+                            item.Value.Visibility = Visibility.Collapsed;
+                            item.Value.Margin = new Thickness(0);
+                            item.Value.Clip = null;
                         }
 
                     }
@@ -344,27 +436,30 @@ namespace MyUWPToolkit
                 if (group != null)
                 {
 
-                    if (!groupDic.ContainsKey(group))
+                    //if has exist,remove from groupHeadersGrid first.
+                    //if (visibleGroupHeaders.ContainsKey(group) && visibleGroupHeaders[group].Parent != null)
+                    //{
+                    //    //remove binding
+                    //    visibleGroupHeaders[group].ClearValue(ContentControl.ContentTemplateProperty);
+                    //    (visibleGroupHeaders[group].Parent as Grid).Children.Remove(visibleGroupHeaders[group]);
+                    //    visibleGroupHeaders[group] = null;
+                    //}
+                    if (!visibleGroupHeaders.ContainsKey(group))
                     {
-                        ContentControl tempGroupheader = CreateGroupHeader(group);
                         ContentControl groupheader = CreateGroupHeader(group);
-
-                        ExpressionAnimationItem expressionAnimationItem = new ExpressionAnimationItem();
-                        expressionAnimationItem.TempElement = tempGroupheader;
-                        expressionAnimationItem.VisualElement = groupheader;
-
-                        groupDic[group] = expressionAnimationItem;
-
-                        var temp = new Dictionary<IGroupHeader, ExpressionAnimationItem>();
-                        foreach (var keyValue in groupDic.OrderBy(x => x.Key.FirstIndex))
+                        visibleGroupHeaders[group] = groupheader;
+                        //top header alway at ahead, so that we should order by firstIndex,
+                        //so that in UpdateGroupHeaders() method, we can find TopHeader correctly.                    
+                        var temp = new Dictionary<IGroupHeader, ContentControl>();
+                        foreach (var keyValue in visibleGroupHeaders.OrderBy(x => x.Key.FirstIndex))
                         {
                             temp[keyValue.Key] = keyValue.Value;
                         }
-                        groupDic = temp;
+                        visibleGroupHeaders = temp;
+
                         if (groupHeadersGrid != null)
                         {
                             groupHeadersGrid.Children.Add(groupheader);
-                            groupHeadersGrid.Children.Add(tempGroupheader);
 
                             groupheader.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
 
@@ -377,10 +472,9 @@ namespace MyUWPToolkit
                             }
 
                             groupheader.Visibility = Visibility.Collapsed;
-                            tempGroupheader.Visibility = Visibility.Collapsed;
+
                             UpdateGroupHeaders();
                         }
-
                     }
                     else
                     {
@@ -394,7 +488,6 @@ namespace MyUWPToolkit
                             listViewItem.Margin = defaultListViewItemMargin;
                         }
                     }
-
                 }
                 else
                 {
@@ -435,7 +528,7 @@ namespace MyUWPToolkit
             {
                 if (currentTopGroupHeader != null)
                 {
-                    foreach (var item in groupDic)
+                    foreach (var item in visibleGroupHeaders)
                     {
                         if (currentTopGroupHeader.DataContext == item.Key)
                         {
@@ -448,7 +541,7 @@ namespace MyUWPToolkit
                 {
                     Debug.Assert(false, "why not has top Group");
                     var firstVisibleItemIndex = this.GetFirstVisibleIndex();
-                    foreach (var item in groupDic)
+                    foreach (var item in visibleGroupHeaders)
                     {
                         if (item.Key.FirstIndex <= firstVisibleItemIndex && (firstVisibleItemIndex <= item.Key.LastIndex || item.Key.LastIndex == -1))
                         {
@@ -548,7 +641,7 @@ namespace MyUWPToolkit
                         var groupFirstIndex = gc.GroupHeaders[groupIndex].FirstIndex;
                         ScrollIntoView(this.Items[groupFirstIndex], scrollIntoViewAlignment);
                         //already in viewport, maybe it will not change view 
-                        if (groupDic.ContainsKey(gc.GroupHeaders[groupIndex]) && groupDic[gc.GroupHeaders[groupIndex]].Visibility == Visibility.Visible)
+                        if (visibleGroupHeaders.ContainsKey(gc.GroupHeaders[groupIndex]) && visibleGroupHeaders[gc.GroupHeaders[groupIndex]].Visibility == Visibility.Visible)
                         {
                             this.IsHitTestVisible = true;
                             isGotoGrouping = false;
