@@ -114,17 +114,13 @@ namespace MyUWPToolkit
             if (IsActive)
             {
                 StopAnimation();
-                Debug.WriteLine(visual.Offset.Y);
+                //Debug.WriteLine(visual.Offset.Y);
                 if (min == visual.Offset.Y || max == visual.Offset.Y)
                 {
 
                 }
                 else
                 {
-                    //if (visual.Offset.Y != preOffsetY)
-                    //{
-                    //    listView.UpdateGroupHeaders();
-                    //}
                     StartAnimation(false);
                     preOffsetY = visual.Offset.Y;
                 }
@@ -141,5 +137,4 @@ namespace MyUWPToolkit
             return false;
         }
     }
-
 }

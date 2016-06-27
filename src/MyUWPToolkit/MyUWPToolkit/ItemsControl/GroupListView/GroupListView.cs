@@ -77,6 +77,20 @@ namespace MyUWPToolkit
             if (currentTopGroupHeader != null)
             {
                 currentTopGroupHeader.DataContext = null;
+                currentTopGroupHeader.Visibility = Visibility.Collapsed;
+                if (groupHeadersGrid != null)
+                {
+                    groupHeadersGrid.Children.Add(currentTopGroupHeader);
+                }
+            }
+            else
+            {
+                if (groupHeadersGrid != null)
+                {
+                    currentTopGroupHeader = CreateGroupHeader(null);
+                    currentTopGroupHeader.Visibility = Visibility.Collapsed;
+                    groupHeadersGrid.Children.Add(currentTopGroupHeader);
+                }
             }
         }
 
@@ -93,11 +107,12 @@ namespace MyUWPToolkit
             scrollViewer.Loaded -= scrollViewer_Loaded;
             groupHeadersGrid = this.scrollViewer.FindDescendantByName("GroupHeadersGrid") as Grid;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+            scrollViewer.ViewChanging += ScrollViewer_ViewChanging;
             groupHeadersGrid.Loaded += GroupHeadersGrid_Loaded;
 
             currentTopGroupHeader = CreateGroupHeader(null);
+            currentTopGroupHeader.Visibility = Visibility.Collapsed;
             groupHeadersGrid.Children.Add(currentTopGroupHeader);
-
         }
 
         private void GroupHeadersGrid_Loaded(object sender, RoutedEventArgs e)
@@ -129,6 +144,16 @@ namespace MyUWPToolkit
             }
         }
 
+        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            //if (e.NextView.VerticalOffset != e.FinalView.VerticalOffset && e.IsInertial)
+            //{
+            //    Debug.WriteLine(e.NextView.VerticalOffset + "," + e.FinalView.VerticalOffset);
+            //    Debug.WriteLine("ScrollViewer_ViewChanging," + e.IsInertial);
+            //    UpdateGroupHeaders(e.IsInertial);
+            //}
+
+        }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
@@ -143,6 +168,10 @@ namespace MyUWPToolkit
         internal void UpdateGroupHeaders(bool isIntermediate = false)
         {
             var firstVisibleItemIndex = this.GetFirstVisibleIndex();
+            if (firstVisibleItemIndex < 0)
+            {
+                return;
+            }
             foreach (var item in groupDic)
             {
                 //top header
@@ -217,7 +246,6 @@ namespace MyUWPToolkit
                                 }
                                 else if (itemMargin.Top + groupHeaderDelta > this.ActualHeight)
                                 {
-
                                     var clipHeight = groupHeaderDelta - (groupHeaderDelta + itemMargin.Top - this.ActualHeight);
                                     //moving header has part in viewport
                                     if (clipHeight > 0)
@@ -257,7 +285,7 @@ namespace MyUWPToolkit
                                     if (!item.Value.IsActive)
                                     {
                                         //when isIntermediate is false and clip is null, so that make sure animation is accurate
-                                        if (item.Value.TempElement.Clip == null && itemClip==null && !isIntermediate)
+                                        if (item.Value.TempElement.Clip == null && itemClip == null && !isIntermediate)
                                         {
                                             ExpressionAnimationItem expressionItem = item.Value;
                                             expressionItem.StopAnimation();
@@ -289,7 +317,7 @@ namespace MyUWPToolkit
                                     {
 
                                     }
-                                    
+
                                 }
                                 else
                                 {
@@ -297,8 +325,8 @@ namespace MyUWPToolkit
                                     item.Value.TempElement.Clip = itemClip;
                                     item.Value.TempElement.Visibility = itemVisibility;
 
-                                    //item.Value.StopAnimation();
-                                    //item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                                    item.Value.StopAnimation();
+                                    item.Value.VisualElement.Visibility = Visibility.Collapsed;
                                 }
 
                             }
