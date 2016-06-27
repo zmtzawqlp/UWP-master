@@ -257,7 +257,7 @@ namespace MyUWPToolkit
                                     if (!item.Value.IsActive)
                                     {
                                         //when isIntermediate is false and clip is null, so that make sure animation is accurate
-                                        if (item.Value.TempElement.Clip == null && !isIntermediate)
+                                        if (item.Value.TempElement.Clip == null && itemClip==null && !isIntermediate)
                                         {
                                             ExpressionAnimationItem expressionItem = item.Value;
                                             expressionItem.StopAnimation();

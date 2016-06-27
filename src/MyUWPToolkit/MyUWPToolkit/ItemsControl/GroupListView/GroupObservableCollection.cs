@@ -39,12 +39,21 @@ namespace MyUWPToolkit
                             {
                                 if (this.Count < GetSourceListTotoalCount())
                                 {
-                                    int start = source.IndexOf(this.LastOrDefault());
-                                    for (int i = start + 1; i < source.Count; i++)
+                                    int count = 0;
+                                    int preCount = this.Count;
+                                    foreach (var item in souresList)
                                     {
-                                        this.Add(source[i]);
+                                        foreach (var item1 in item)
+                                        {
+                                            if (count > preCount)
+                                            {
+                                                this.Add(item1);
+                                            }
+                                            count++;
+                                        }
                                     }
                                 }
+
                                 groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
 
                                 return false;
@@ -65,10 +74,18 @@ namespace MyUWPToolkit
                         {
                             if (this.Count < GetSourceListTotoalCount())
                             {
-                                int start = source.IndexOf(this.LastOrDefault());
-                                for (int i = start + 1; i < source.Count; i++)
+                                int count = 0;
+                                int preCount = this.Count;
+                                foreach (var item in souresList)
                                 {
-                                    this.Add(source[i]);
+                                    foreach (var item1 in item)
+                                    {
+                                        if (count > preCount)
+                                        {
+                                            this.Add(item1);
+                                        }
+                                        count++;
+                                    }
                                 }
                             }
                             groupHeaders[currentGroupIndex].LastIndex = this.Count - 1;
