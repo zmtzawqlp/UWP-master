@@ -15,13 +15,15 @@ namespace MyUWPToolkit
     internal class ExpressionAnimationItem
     {
         private Visual visual;
-        //private float min;
-        //private float max;
+        private float min;
+        private float max;
         private CompositionPropertySet scrollViewerManipProps;
         private ExpressionAnimation expression;
 
         //animation active
         public bool IsActive { get; set; }
+        //use tempElemnt for Clip and isIntermediate is true
+        public ContentControl TempElement { get; set; }
 
         //VisualElement for ExpressionAnimation
         public ContentControl VisualElement { get; set; }
@@ -33,34 +35,35 @@ namespace MyUWPToolkit
             get
             {
 
-                return VisualElement.Visibility;
+                return VisualElement.Visibility & TempElement.Visibility;
 
             }
             set
             {
                 VisualElement.Visibility = value;
+                TempElement.Visibility = value;
             }
         }
-        double VerticalOffset = -1;
+
         public void StartAnimation(bool update = false)
         {
 
             if (update || expression == null || visual == null)
             {
                 visual = ElementCompositionPreview.GetElementVisual(VisualElement);
-                //if (0 <= VisualElement.Margin.Top && VisualElement.Margin.Top <= ScrollViewer.ActualHeight)
-                //{
-                //    min = (float)-VisualElement.Margin.Top;
-                //    max = (float)ScrollViewer.ActualHeight + min;
-                //}
-                //else if (VisualElement.Margin.Top < 0)
-                //{
+                if (0 <= VisualElement.Margin.Top && VisualElement.Margin.Top <= ScrollViewer.ActualHeight)
+                {
+                    min = (float)-VisualElement.Margin.Top;
+                    max = (float)ScrollViewer.ActualHeight + min;
+                }
+                else if (VisualElement.Margin.Top < 0)
+                {
 
-                //}
-                //else if (VisualElement.Margin.Top > ScrollViewer.ActualHeight)
-                //{
+                }
+                else if (VisualElement.Margin.Top > ScrollViewer.ActualHeight)
+                {
 
-                //}
+                }
                 if (scrollViewerManipProps == null)
                 {
                     scrollViewerManipProps = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(ScrollViewer);
@@ -68,19 +71,11 @@ namespace MyUWPToolkit
                 Compositor compositor = scrollViewerManipProps.Compositor;
 
                 // Create the expression
-                //expression = compositor.CreateExpressionAnimation("min(max((ScrollViewerManipProps.Translation.Y + VerticalOffset), MinValue), MaxValue)");
-                ////Expression = compositor.CreateExpressionAnimation("ScrollViewerManipProps.Translation.Y +VerticalOffset");
+                expression = compositor.CreateExpressionAnimation("min(max((ScrollViewerManipProps.Translation.Y + VerticalOffset), MinValue), MaxValue)");
+                //Expression = compositor.CreateExpressionAnimation("ScrollViewerManipProps.Translation.Y +VerticalOffset");
 
-                //expression.SetScalarParameter("MinValue", min);
-                //expression.SetScalarParameter("MaxValue", max);
-                //expression.SetScalarParameter("VerticalOffset", (float)ScrollViewer.VerticalOffset);
-
-                expression = compositor.CreateExpressionAnimation("ScrollViewerManipProps.Translation.Y + VerticalOffset");
-                ////Expression = compositor.CreateExpressionAnimation("ScrollViewerManipProps.Translation.Y +VerticalOffset");
-
-                //expression.SetScalarParameter("MinValue", min);
-                //expression.SetScalarParameter("MaxValue", max);
-                VerticalOffset = ScrollViewer.VerticalOffset;
+                expression.SetScalarParameter("MinValue", min);
+                expression.SetScalarParameter("MaxValue", max);
                 expression.SetScalarParameter("VerticalOffset", (float)ScrollViewer.VerticalOffset);
 
                 // set "dynamic" reference parameter that will be used to evaluate the current position of the scrollbar every frame
@@ -94,13 +89,13 @@ namespace MyUWPToolkit
 
             IsActive = true;
             //Windows.UI.Xaml.Media.CompositionTarget.Rendering -= OnCompositionTargetRendering;
-
-            //Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
+            Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
         }
 
         private void OnCompositionTargetRendering(object sender, object e)
         {
-            //Update();
+            Update();
+
         }
 
         public void StopAnimation()
@@ -110,24 +105,36 @@ namespace MyUWPToolkit
                 visual.StopAnimation("Offset.Y");
             }
             IsActive = false;
-            //Windows.UI.Xaml.Media.CompositionTarget.Rendering -= OnCompositionTargetRendering;
+            Windows.UI.Xaml.Media.CompositionTarget.Rendering -= OnCompositionTargetRendering;
         }
 
+        double preOffsetY = -1;
         public void Update()
         {
             if (IsActive)
             {
                 StopAnimation();
-                Debug.WriteLine(visual.Offset.Y + "," + VerticalOffset);
-                //if (min == visual.Offset.Y || max == visual.Offset.Y)
-                //{
+                //Debug.WriteLine(visual.Offset.Y);
+                if (min == visual.Offset.Y || max == visual.Offset.Y)
+                {
 
-                //}
-                //else
+                }
+                else
                 {
                     StartAnimation(false);
+                    preOffsetY = visual.Offset.Y;
                 }
             }
+        }
+
+        public void Fix(Thickness newMargin)
+        {
+
+        }
+
+        public bool IsAllInViewPort()
+        {
+            return false;
         }
     }
 }

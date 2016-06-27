@@ -27,7 +27,7 @@ namespace MyUWPToolkit
     {
         private ContentControl currentTopGroupHeader;
         private ScrollViewer scrollViewer;
-        private Grid groupHeadersGrid;
+        private Canvas groupHeadersCanvas;
         private ProgressRing progressRing;
         //Dictionary<IGroupHeader, ContentControl> visibleGroupHeaders;
         private double groupHeaderDelta = 30;
@@ -58,6 +58,33 @@ namespace MyUWPToolkit
             this.DefaultStyleKey = typeof(GroupListView);
             groupDic = new Dictionary<IGroupHeader, ExpressionAnimationItem>();
             this.RegisterPropertyChangedCallback(ListView.ItemsSourceProperty, new DependencyPropertyChangedCallback(OnItemsSourceChanged));
+            Loaded += GroupListView_Loaded;
+            Unloaded += GroupListView_Unloaded;
+        }
+
+        private void GroupListView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Window.Current.SizeChanged -= Current_SizeChanged;
+        }
+
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            //if (e.Size != e.NewSize)
+            {
+                foreach (var item in groupDic)
+                {
+                    if (item.Value.VisualElement.Width != this.ActualWidth)
+                    {
+                        item.Value.VisualElement.Width = this.ActualWidth;
+                    }
+                }
+                UpdateGroupHeaders(true, true);
+            }
+        }
+
+        private void GroupListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Window.Current.SizeChanged += Current_SizeChanged;
         }
 
         private void OnItemsSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -67,31 +94,24 @@ namespace MyUWPToolkit
                 groupCollection = (ItemsSource as IGroupCollection);
             }
 
-            if (groupHeadersGrid != null)
+            if (groupHeadersCanvas != null)
             {
-                groupHeadersGrid.Children.Clear();
+                groupHeadersCanvas.Children.Clear();
             }
-
+            foreach (var item in groupDic)
+            {
+                item.Value.VisualElement.ClearValue(ContentControl.ContentTemplateProperty);
+            }
             groupDic.Clear();
 
             if (currentTopGroupHeader != null)
             {
                 currentTopGroupHeader.DataContext = null;
                 currentTopGroupHeader.Visibility = Visibility.Collapsed;
-                if (groupHeadersGrid != null)
-                {
-                    groupHeadersGrid.Children.Add(currentTopGroupHeader);
-                }
             }
-            else
-            {
-                if (groupHeadersGrid != null)
-                {
-                    currentTopGroupHeader = CreateGroupHeader(null);
-                    currentTopGroupHeader.Visibility = Visibility.Collapsed;
-                    groupHeadersGrid.Children.Add(currentTopGroupHeader);
-                }
-            }
+            groupHeaderDelta = 30;
+            defaultListViewItemMargin = new Thickness(0);
+            isGotoGrouping = false;
         }
 
         protected override void OnApplyTemplate()
@@ -105,59 +125,56 @@ namespace MyUWPToolkit
         private void scrollViewer_Loaded(object sender, RoutedEventArgs e)
         {
             scrollViewer.Loaded -= scrollViewer_Loaded;
-            groupHeadersGrid = this.scrollViewer.FindDescendantByName("GroupHeadersGrid") as Grid;
+            groupHeadersCanvas = this.scrollViewer.FindDescendantByName("GroupHeadersCanvas") as Canvas;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            scrollViewer.ViewChanging += ScrollViewer_ViewChanging;
-            groupHeadersGrid.Loaded += GroupHeadersGrid_Loaded;
+            groupHeadersCanvas.Loaded += GroupHeadersGrid_Loaded;
 
-            currentTopGroupHeader = CreateGroupHeader(null);
-            currentTopGroupHeader.Visibility = Visibility.Collapsed;
-            groupHeadersGrid.Children.Add(currentTopGroupHeader);
+            currentTopGroupHeader = this.scrollViewer.FindDescendantByName("TopGroupHeader") as ContentControl;
+            Binding binding = new Binding();
+            binding.Source = this;
+            binding.Mode = BindingMode.OneWay;
+            binding.Path = new PropertyPath("GroupHeaderTemplate");
+            currentTopGroupHeader.SetBinding(ContentControl.ContentTemplateProperty, binding);
         }
+
 
         private void GroupHeadersGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            groupHeadersGrid.Loaded -= GroupHeadersGrid_Loaded;
+            groupHeadersCanvas.Loaded -= GroupHeadersGrid_Loaded;
 
             foreach (var item in groupDic)
             {
                 if (item.Value.VisualElement.Parent == null)
                 {
-
                     var groupheader = item.Key;
 
-                    groupHeadersGrid.Children.Add(item.Value.VisualElement);
-                    groupHeadersGrid.Children.Add(item.Value.TempElement);
+                    groupHeadersCanvas.Children.Add(item.Value.VisualElement);
 
                     item.Value.VisualElement.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
 
                     item.Key.Height = item.Value.VisualElement.DesiredSize.Height;
+
+                    item.Value.VisualElement.Height = item.Key.Height;
+                    item.Value.VisualElement.Width = this.ActualWidth;
 
                     var listViewItem = ContainerFromIndex(item.Key.FirstIndex) as ListViewItem;
                     listViewItem.Tag = listViewItem.Margin;
                     listViewItem.Margin = GetItemMarginBaseOnDeafult(item.Key.Height);
 
                     item.Value.VisualElement.Visibility = Visibility.Collapsed;
-                    item.Value.TempElement.Visibility = Visibility.Collapsed;
                     UpdateGroupHeaders();
                 }
             }
         }
 
-        private void ScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
-        {
-            //if (e.NextView.VerticalOffset != e.FinalView.VerticalOffset && e.IsInertial)
-            //{
-            //    Debug.WriteLine(e.NextView.VerticalOffset + "," + e.FinalView.VerticalOffset);
-            //    Debug.WriteLine("ScrollViewer_ViewChanging," + e.IsInertial);
-            //    UpdateGroupHeaders(e.IsInertial);
-            //}
 
-        }
-
+        bool isViewChanging = false;
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
+            isViewChanging = e.IsIntermediate;
+
             UpdateGroupHeaders(e.IsIntermediate);
+
             if (!e.IsIntermediate)
             {
                 isGotoGrouping = false;
@@ -165,13 +182,10 @@ namespace MyUWPToolkit
             }
         }
 
-        internal void UpdateGroupHeaders(bool isIntermediate = false)
+        //double preVerticalOffset = 0;
+        internal void UpdateGroupHeaders(bool isIntermediate = true, bool forceUpdate = false)
         {
             var firstVisibleItemIndex = this.GetFirstVisibleIndex();
-            if (firstVisibleItemIndex < 0)
-            {
-                return;
-            }
             foreach (var item in groupDic)
             {
                 //top header
@@ -182,171 +196,216 @@ namespace MyUWPToolkit
                     currentTopGroupHeader.Clip = null;
                     currentTopGroupHeader.DataContext = item.Key;
 
-
-                    item.Value.TempElement.Visibility = Visibility.Collapsed;
-                    item.Value.TempElement.Margin = new Thickness(0);
-                    item.Value.TempElement.Clip = null;
-
-                    item.Value.StopAnimation();
-                    item.Value.VisualElement.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    ListViewItem listViewItem = ContainerFromIndex(item.Key.FirstIndex) as ListViewItem;
-
-                    if (listViewItem == null && item.Key.LastIndex != -1)
+                    if (item.Key.FirstIndex == firstVisibleItemIndex)
                     {
-                        listViewItem = ContainerFromIndex(item.Key.LastIndex) as ListViewItem;
-                    }
-                    if (listViewItem != null)
-                    {
-                        //unloaded
-                        if (listViewItem.ActualHeight == 0 || listViewItem.ActualWidth == 0)
+                        if (item.Value.ScrollViewer == null)
                         {
-                            listViewItem.Loaded += ListViewItem_Loaded;
+                            item.Value.ScrollViewer = scrollViewer;
+                        }
+
+                        var isActive = item.Value.IsActive;
+
+                        item.Value.StopAnimation();
+                        item.Value.VisualElement.Clip = null;
+                        item.Value.VisualElement.Visibility = Visibility.Collapsed;
+
+                        if (!isActive)
+                        {
+                            item.Value.VisualElement.Margin = new Thickness(0);
+                            item.Value.StartAnimation(true);
                         }
                         else
                         {
-
-                            GeneralTransform gt = listViewItem.TransformToVisual(this);
-                            var rect = gt.TransformBounds(new Rect(0, 0, listViewItem.ActualWidth, listViewItem.ActualHeight));
-                            groupHeaderDelta = item.Key.Height;
-                            //add delta,so that it does not look like suddenly
-
-                            if (rect.Bottom + groupHeaderDelta < 0 || rect.Top > this.ActualHeight + groupHeaderDelta)
+                            if (!isIntermediate)
                             {
-                                item.Value.TempElement.Visibility = Visibility.Collapsed;
-                                item.Value.TempElement.Margin = new Thickness(0);
-                                item.Value.TempElement.Clip = null;
-
-                                item.Value.StopAnimation();
-                                item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                                item.Value.VisualElement.Margin = new Thickness(0);
+                                item.Value.StartAnimation(true);
                             }
-                            //in view port
                             else
                             {
-                                var itemMargin = new Thickness(0, rect.Top - groupHeaderDelta - defaultListViewItemMargin.Top, 0, 0);
-                                RectangleGeometry itemClip = null;
-                                Visibility itemVisibility = Visibility.Collapsed;
-                                if (itemMargin.Top < 0)
-                                {
-                                    var clipHeight = groupHeaderDelta + itemMargin.Top;
-                                    //moving header has part in viewport
-                                    if (clipHeight > 0)
-                                    {
-                                        itemVisibility = Visibility.Visible;
-                                        itemClip = new RectangleGeometry() { Rect = new Rect(0, -itemMargin.Top, this.ActualWidth, clipHeight) };
-                                    }
-                                    //moving header not in viewport
-                                    else
-                                    {
-                                        itemVisibility = Visibility.Collapsed;
-                                        itemClip = null;
-                                    }
-                                }
-                                else if (itemMargin.Top + groupHeaderDelta > this.ActualHeight)
-                                {
-                                    var clipHeight = groupHeaderDelta - (groupHeaderDelta + itemMargin.Top - this.ActualHeight);
-                                    //moving header has part in viewport
-                                    if (clipHeight > 0)
-                                    {
-                                        itemVisibility = Visibility.Visible;
-                                        itemClip = new RectangleGeometry() { Rect = new Rect(0, 0, this.ActualWidth, clipHeight) };
-                                    }
-                                    //moving header not in viewport
-                                    else
-                                    {
-                                        itemVisibility = Visibility.Collapsed;
-                                        itemClip = null;
-                                    }
-                                }
-                                //moving header all in viewport
-                                else
-                                {
-                                    itemVisibility = Visibility.Visible;
-                                    itemClip = null;
-                                }
-
-                                if (currentTopGroupHeader != null)
-                                {
-                                    var delta = currentTopGroupHeader.ActualHeight - (itemMargin.Top);
-                                    if (delta > 0)
-                                    {
-                                        currentTopGroupHeader.Margin = new Thickness(0, -delta, 0, 0);
-                                        currentTopGroupHeader.Clip = new RectangleGeometry() { Rect = new Rect(0, delta, currentTopGroupHeader.ActualWidth, currentTopGroupHeader.ActualHeight) };
-                                    }
-                                }
-
-
-
-                                //all in viewport
-                                if (itemVisibility == Visibility.Visible)
-                                {
-                                    if (!item.Value.IsActive)
-                                    {
-                                        //when isIntermediate is false and clip is null, so that make sure animation is accurate
-                                        if (item.Value.TempElement.Clip == null && itemClip == null && !isIntermediate)
-                                        {
-                                            ExpressionAnimationItem expressionItem = item.Value;
-                                            expressionItem.StopAnimation();
-                                            item.Value.TempElement.Visibility = Visibility.Collapsed;
-                                            item.Value.TempElement.Margin = new Thickness(0);
-                                            item.Value.TempElement.Clip = null;
-
-                                            item.Value.VisualElement.Margin = itemMargin;
-                                            item.Value.VisualElement.Clip = itemClip;
-                                            item.Value.VisualElement.Visibility = itemVisibility;
-
-
-                                            if (expressionItem.ScrollViewer == null)
-                                            {
-                                                expressionItem.ScrollViewer = scrollViewer;
-                                            }
-                                            expressionItem.StartAnimation(true);
-                                        }
-                                        //use tempElemnt for Clip and isIntermediate is true
-                                        else
-                                        {
-                                            item.Value.TempElement.Margin = itemMargin;
-                                            item.Value.TempElement.Clip = itemClip;
-                                            item.Value.TempElement.Visibility = itemVisibility;
-                                        }
-                                    }
-                                    //use active animation
-                                    else
-                                    {
-
-                                    }
-
-                                }
-                                else
-                                {
-                                    item.Value.TempElement.Margin = itemMargin;
-                                    item.Value.TempElement.Clip = itemClip;
-                                    item.Value.TempElement.Visibility = itemVisibility;
-
-                                    item.Value.StopAnimation();
-                                    item.Value.VisualElement.Visibility = Visibility.Collapsed;
-                                }
-
+                                item.Value.StartAnimation(false);
                             }
+                            //if (Math.Abs(preVerticalOffset - scrollViewer.VerticalOffset) > this.ActualHeight)
+                            //{
+                            //    item.Value.VisualElement.Margin = new Thickness(0);
+                            //    item.Value.StartAnimation(true);
+                            //}
+                            //else
+                            //{
+                            //    item.Value.StartAnimation(false);
+                            //}
                         }
-                    }
-                    else
-                    {
-                        if (item.Key != currentTopGroupHeader.DataContext)
-                        {
-                            item.Value.TempElement.Visibility = Visibility.Collapsed;
-                            item.Value.TempElement.Margin = new Thickness(0);
-                            item.Value.TempElement.Clip = null;
-
-                            item.Value.StopAnimation();
-                            item.Value.VisualElement.Visibility = Visibility.Collapsed;
-                        }
-
+                        //preVerticalOffset = scrollViewer.VerticalOffset;
                     }
                 }
+                //moving header
+                else
+                {
+                    HandleGroupHeader(isIntermediate, item, forceUpdate);
+                }
             }
+        }
+
+        private void HandleGroupHeader(bool isIntermediate, KeyValuePair<IGroupHeader, ExpressionAnimationItem> item, bool forceUpdate = false)
+        {
+            ListViewItem listViewItem = ContainerFromIndex(item.Key.FirstIndex) as ListViewItem;
+
+            //if (listViewItem == null && item.Key.LastIndex != -1)
+            //{
+            //    listViewItem = ContainerFromIndex(item.Key.LastIndex) as ListViewItem;
+            //}
+            if (listViewItem != null)
+            {
+                //unloaded
+                if (listViewItem.ActualHeight == 0 || listViewItem.ActualWidth == 0)
+                {
+                    listViewItem.Loaded += ListViewItem_Loaded;
+                }
+                else
+                {
+                    HandleItemsInItemsPanel(isIntermediate, item, listViewItem, forceUpdate);
+                }
+            }
+            //not in items panel
+            else
+            {
+                if (item.Key != currentTopGroupHeader.DataContext)
+                {
+                    //stop
+                    if (item.Value.IsActive)
+                    {
+                        item.Value.StopAnimation();
+                        item.Value.VisualElement.Margin = new Thickness(0);
+                        item.Value.VisualElement.Clip = null;
+                        item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                        //item.Value.StartAnimation(false);
+                    }
+                }
+
+            }
+        }
+
+        private void HandleItemsInItemsPanel(bool isIntermediate, KeyValuePair<IGroupHeader, ExpressionAnimationItem> item, ListViewItem listViewItem, bool forceUpdate = false)
+        {
+            GeneralTransform gt = listViewItem.TransformToVisual(this);
+            var rect = gt.TransformBounds(new Rect(0, 0, listViewItem.ActualWidth, listViewItem.ActualHeight));
+            groupHeaderDelta = item.Key.Height;
+            //add delta,so that it does not look like suddenly
+
+            var itemMargin = new Thickness(0, rect.Top - groupHeaderDelta - defaultListViewItemMargin.Top, 0, 0);
+            RectangleGeometry itemClip = null;
+            Visibility itemVisibility = Visibility.Collapsed;
+            if (itemMargin.Top < 0)
+            {
+                var clipHeight = groupHeaderDelta + itemMargin.Top;
+                //moving header has part in viewport
+                if (clipHeight > 0)
+                {
+                    itemVisibility = Visibility.Visible;
+                    itemClip = new RectangleGeometry() { Rect = new Rect(0, -itemMargin.Top, this.ActualWidth, clipHeight) };
+                }
+                //moving header not in viewport
+                else
+                {
+                    itemVisibility = Visibility.Collapsed;
+                    itemClip = null;
+                }
+            }
+            else if (itemMargin.Top + groupHeaderDelta > this.ActualHeight)
+            {
+                var clipHeight = groupHeaderDelta - (groupHeaderDelta + itemMargin.Top - this.ActualHeight);
+                //moving header has part in viewport
+                if (clipHeight > 0)
+                {
+                    itemVisibility = Visibility.Visible;
+                    itemClip = new RectangleGeometry() { Rect = new Rect(0, 0, this.ActualWidth, clipHeight) };
+                }
+                //moving header not in viewport
+                else
+                {
+                    itemVisibility = Visibility.Collapsed;
+                    itemClip = null;
+                }
+            }
+            //moving header all in viewport
+            else
+            {
+                itemVisibility = Visibility.Visible;
+                itemClip = null;
+            }
+
+            if (currentTopGroupHeader != null)
+            {
+                var delta = currentTopGroupHeader.ActualHeight - (itemMargin.Top);
+                if (delta > 0)
+                {
+                    currentTopGroupHeader.Margin = new Thickness(0, -delta, 0, 0);
+                    currentTopGroupHeader.Clip = new RectangleGeometry() { Rect = new Rect(0, delta, currentTopGroupHeader.ActualWidth, currentTopGroupHeader.ActualHeight) };
+                    if (delta >= groupHeaderDelta)
+                    {
+                        currentTopGroupHeader.Visibility = Visibility.Visible;
+                        currentTopGroupHeader.Margin = new Thickness(0);
+                        currentTopGroupHeader.Clip = null;
+                        currentTopGroupHeader.DataContext = item.Key;
+                    }
+                }
+
+            }
+
+            if (!item.Value.IsActive)
+            {
+                bool isInViewport = false;
+                if (itemMargin.Top > 0)
+                {
+                    var groupheaderRect = new Rect(0, itemMargin.Top, this.ActualWidth, groupHeaderDelta);
+                    isInViewport = (groupheaderRect.Top < this.ActualHeight && groupheaderRect.Bottom > 0 && !isViewChanging);
+                }
+
+                // isIntermediate is false or groupheaderRect has into view port and view not changing
+                if (!isIntermediate || isInViewport)
+                {
+                    ExpressionAnimationItem expressionItem = item.Value;
+                    expressionItem.StopAnimation();
+
+                    item.Value.VisualElement.Margin = itemMargin;
+                    item.Value.VisualElement.Clip = itemClip;
+                    item.Value.VisualElement.Visibility = itemVisibility;
+
+                    if (expressionItem.ScrollViewer == null)
+                    {
+                        expressionItem.ScrollViewer = scrollViewer;
+                    }
+                    expressionItem.StartAnimation(true);
+                }
+            }
+            //use active animation
+            else
+            {
+                if (item.Value.VisualElement.Clip != itemClip || item.Value.VisualElement.Visibility != itemVisibility || forceUpdate)
+                {
+                    ExpressionAnimationItem expressionItem = item.Value;
+                    expressionItem.StopAnimation();
+
+                    if (forceUpdate)
+                    {
+                        item.Value.VisualElement.Margin = itemMargin;
+                    }
+                    //item.Value.VisualElement.Margin = itemMargin;
+                    expressionItem.VisualElement.Clip = itemClip;
+                    expressionItem.VisualElement.Visibility = itemVisibility;
+
+
+                    if (expressionItem.ScrollViewer == null)
+                    {
+                        expressionItem.ScrollViewer = scrollViewer;
+                    }
+
+                    expressionItem.StartAnimation(forceUpdate);
+                }
+
+            }
+
+
         }
 
         private void ListViewItem_Loaded(object sender, RoutedEventArgs e)
@@ -357,7 +416,6 @@ namespace MyUWPToolkit
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
-
             base.PrepareContainerForItemOverride(element, item);
             ListViewItem listViewItem = element as ListViewItem;
             if (listViewItem.Tag == null)
@@ -371,14 +429,11 @@ namespace MyUWPToolkit
                 var group = groupCollection.GroupHeaders.FirstOrDefault(x => x.FirstIndex == index || x.LastIndex == index);
                 if (group != null)
                 {
-
                     if (!groupDic.ContainsKey(group))
                     {
-                        ContentControl tempGroupheader = CreateGroupHeader(group);
                         ContentControl groupheader = CreateGroupHeader(group);
 
                         ExpressionAnimationItem expressionAnimationItem = new ExpressionAnimationItem();
-                        expressionAnimationItem.TempElement = tempGroupheader;
                         expressionAnimationItem.VisualElement = groupheader;
 
                         groupDic[group] = expressionAnimationItem;
@@ -389,14 +444,16 @@ namespace MyUWPToolkit
                             temp[keyValue.Key] = keyValue.Value;
                         }
                         groupDic = temp;
-                        if (groupHeadersGrid != null)
+                        if (groupHeadersCanvas != null)
                         {
-                            groupHeadersGrid.Children.Add(groupheader);
-                            groupHeadersGrid.Children.Add(tempGroupheader);
+                            groupHeadersCanvas.Children.Add(groupheader);
 
                             groupheader.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
 
                             group.Height = groupheader.DesiredSize.Height;
+
+                            groupheader.Height = group.Height;
+                            groupheader.Width = this.ActualWidth;
 
                             if (group.FirstIndex == index)
                             {
@@ -405,7 +462,6 @@ namespace MyUWPToolkit
                             }
 
                             groupheader.Visibility = Visibility.Collapsed;
-                            tempGroupheader.Visibility = Visibility.Collapsed;
                             UpdateGroupHeaders();
                         }
 

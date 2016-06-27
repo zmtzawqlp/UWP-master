@@ -48,7 +48,7 @@ namespace MyUWPToolkit
                                             if (count >= preCount)
                                             {
                                                 this.Add(item1);
-                                                if (item == source && groupHeaders[currentGroupIndex].FirstIndex==-1)
+                                                if (item == source && groupHeaders[currentGroupIndex].FirstIndex == -1)
                                                 {
                                                     groupHeaders[currentGroupIndex].FirstIndex = this.Count - 1;
                                                 }

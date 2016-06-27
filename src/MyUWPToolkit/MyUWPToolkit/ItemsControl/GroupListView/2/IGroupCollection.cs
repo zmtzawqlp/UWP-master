@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Data;
 
 namespace MyUWPToolkit
 {
-    public interface IGroupCollection: ISupportIncrementalLoading
+    public interface IGroupCollection : ISupportIncrementalLoading
     {
         List<IGroupHeader> GroupHeaders { get; set; }
         int CurrentGroupIndex { get; }

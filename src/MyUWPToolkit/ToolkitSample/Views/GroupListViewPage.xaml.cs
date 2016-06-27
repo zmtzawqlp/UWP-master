@@ -67,7 +67,7 @@ namespace ToolkitSample.Views
                 }
                 return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             });
-            _employees = new System.Collections.ObjectModel.ObservableCollection<Employee>(TestData.GetEmployees().Take(20).ToList());
+            _employees = new System.Collections.ObjectModel.ObservableCollection<Employee>(TestData.GetEmployees().Take(5).ToList());
 
 
             GroupObservableCollection<Employee> list1 = new GroupObservableCollection<Employee>
