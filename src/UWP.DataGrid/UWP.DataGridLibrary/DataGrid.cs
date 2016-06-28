@@ -146,6 +146,7 @@ namespace UWP.DataGrid
                     {
                         _verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
                     }
+
                     _horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
                     UpdateStarSizes();
 
@@ -382,6 +383,7 @@ namespace UWP.DataGrid
         private void _cellPanel_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var pt = e.GetPosition(_cellPanel);
+
             // get row and column at given coordinates
             var row = GetRowFromPoint(pt);
             if (ItemClick != null && row > -1)
@@ -559,7 +561,7 @@ namespace UWP.DataGrid
         {
             if (_props == null || _props.Count == 0 || _itemType != GetItemType(_view))
             {
-                if (_itemType == null || !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
+                if (_itemType == null || !Util.Util.IsPrimitive(_itemType))
                 {
                     if (GetItemType(_view) != typeof(object))
                     {
@@ -674,7 +676,7 @@ namespace UWP.DataGrid
             {
                 // special case: binding directly to primitive types (int, string, etc)
                 var type = GetItemType(_view);
-                if (UWP.DataGrid.Util.Util.IsPrimitive(type))
+                if (Util.Util.IsPrimitive(type))
                 {
                     var col = new Column();
                     BindAutoColumn(col, type);
@@ -841,7 +843,7 @@ namespace UWP.DataGrid
                 // get item type
                 _itemType = GetItemType(_view);
 
-                if (_itemType != null && !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
+                if (_itemType != null && !Util.Util.IsPrimitive(_itemType))
                 {
 
                     foreach (var pi in _itemType.GetRuntimeProperties())
@@ -1035,11 +1037,19 @@ namespace UWP.DataGrid
             pt = this.TransformToVisual(_cellPanel).TransformPoint(pt);
             var fy = _cellPanel.Rows.GetFrozenSize();
             pt.Y += (_columnHeaderPanel.ActualHeight + HeaderActualHeight + _cellPanel.footerHeight);
+            var fx = _columnHeaderPanel.Columns.GetFrozenSize();
+            // adjust for scroll position
             var sp = _cellPanel.ScrollPosition;
+            if (pt.X < 0 || pt.X > fx) pt.X -= sp.X;
             if (pt.Y < 0 || pt.Y > fy) pt.Y -= sp.Y;
+
+            //not in rows and columns 
+            if (pt.Y <= _cellPanel.Rows.GetTotalSize() && pt.X <= _cellPanel.Columns.GetTotalSize())
+            {
+                return _cellPanel.Rows.GetItemAt(pt.Y);
+            }
             // get row and column at given coordinates
-            var row = _cellPanel.Rows.GetItemAt(pt.Y);
-            return row;
+            return -2;
         }
 
         private void HandleCellScrollPosition(Point value, Size sz, double totalRowsSize, double maxH)

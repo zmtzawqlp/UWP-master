@@ -54,14 +54,9 @@ namespace UWP.DataGrid
                     pointerOverPoint = null;
                 }
 
-                var row = -2;
+                var row = GetRowFromPoint(pt);
 
-                if (pt.Y <= _cellPanel.Rows.GetTotalSize())
-                {
-                    // get row and column at given coordinates
-                    row= GetRowFromPoint(pt);
-                }
-                //-1 means not in cellpanel, -2 means not in rows
+                //-2 means not in rows
                 if (e.Pointer.PointerDeviceType == PointerDeviceType.Mouse)
                 {
                     if (row < 0)
@@ -69,7 +64,7 @@ namespace UWP.DataGrid
                         pointerOverPoint = null;
                     }
 
-                    if (row >= 0 || row == -2)
+                    if (row >= 0)
                     {
                         VisualStateManager.GoToState(this, "MouseIndicator", true);
                     }
