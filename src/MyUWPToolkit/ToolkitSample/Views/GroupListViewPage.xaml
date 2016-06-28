@@ -21,7 +21,7 @@
                 <ComboBoxItem>ScrollIntoViewAlignment.Leading</ComboBoxItem>
             </ComboBox>
         </StackPanel>
-        <control:GroupListView1 x:Name="listView" Grid.Row="1">
+        <control:GroupListView1 x:Name="listView" SelectionMode="None" Grid.Row="1">
             <control:GroupListView1.GroupHeaderTemplate>
                 <DataTemplate>
                     <Grid HorizontalAlignment="Stretch"  BorderBrush="Black" BorderThickness="1" Background="Red"  Height="50" VerticalAlignment="Stretch">

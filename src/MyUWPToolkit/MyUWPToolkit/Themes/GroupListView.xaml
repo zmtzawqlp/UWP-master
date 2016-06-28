@@ -703,8 +703,8 @@
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                                           ContentTemplate="{TemplateBinding HeaderTemplate}"
                                                           Content="{TemplateBinding Header}"
-                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          HorizontalAlignment="Stretch"
+                                                          VerticalAlignment="Stretch"
                                                           />
                             <Grid Grid.Row="1">
                                 <Path x:Name="SelectingGlyph" Opacity="0" Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{ThemeResource ListViewItemCheckSelectingThemeBrush}" Height="13" Stretch="Fill" Width="15" HorizontalAlignment="Right" Margin="0,9.5,9.5,0" VerticalAlignment="Top" FlowDirection="LeftToRight"/>
