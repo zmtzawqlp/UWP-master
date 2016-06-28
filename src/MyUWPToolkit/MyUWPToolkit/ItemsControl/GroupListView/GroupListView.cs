@@ -76,6 +76,7 @@ namespace MyUWPToolkit
             foreach (var item in groupDic)
             {
                 item.Value.VisualElement.ClearValue(ContentControl.ContentTemplateProperty);
+                item.Value.TempElement.ClearValue(ContentControl.ContentTemplateProperty);
             }
             groupDic.Clear();
 
@@ -125,20 +126,23 @@ namespace MyUWPToolkit
                     var groupheader = item.Key;
 
                     groupHeadersCanvas.Children.Add(item.Value.VisualElement);
+                    groupHeadersCanvas.Children.Add(item.Value.TempElement);
 
                     item.Value.VisualElement.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
 
                     item.Key.Height = item.Value.VisualElement.DesiredSize.Height;
 
-                    item.Value.VisualElement.Height = item.Key.Height;
-                    item.Value.VisualElement.Width = this.ActualWidth;
+                    item.Value.VisualElement.Height = item.Value.TempElement.Height= item.Key.Height;
+                    item.Value.VisualElement.Width = item.Value.TempElement.Width = this.ActualWidth;
 
                     var listViewItem = ContainerFromIndex(item.Key.FirstIndex) as ListViewItem;
                     listViewItem.Tag = listViewItem.Margin;
                     listViewItem.Margin = GetItemMarginBaseOnDeafult(item.Key.Height);
+                    listViewItem.SizeChanged -= ListViewItem_SizeChanged;
                     listViewItem.SizeChanged += ListViewItem_SizeChanged;
 
                     item.Value.VisualElement.Visibility = Visibility.Collapsed;
+                    item.Value.TempElement.Visibility = Visibility.Collapsed;
                     UpdateGroupHeaders();
                 }
             }
@@ -200,6 +204,7 @@ namespace MyUWPToolkit
                         }
 
                     }
+                    ClearTempElement(item);
                 }
                 //moving header
                 else
@@ -207,6 +212,13 @@ namespace MyUWPToolkit
                     HandleGroupHeader(isIntermediate, item);
                 }
             }
+        }
+
+        private void ClearTempElement(KeyValuePair<IGroupHeader, ExpressionAnimationItem> item)
+        {
+            item.Value.TempElement.Margin = new Thickness(0);
+            item.Value.TempElement.Clip = null;
+            item.Value.TempElement.Visibility = Visibility.Collapsed;
         }
 
         internal void ForceUpdateGroupHeader(ListViewItem listViewItem, KeyValuePair<IGroupHeader, ExpressionAnimationItem> item)
@@ -326,6 +338,7 @@ namespace MyUWPToolkit
                         item.Value.VisualElement.Visibility = Visibility.Collapsed;
                         //item.Value.StartAnimation(false);
                     }
+                    ClearTempElement(item);
                 }
 
             }
@@ -397,21 +410,28 @@ namespace MyUWPToolkit
                 }
 
             }
+            bool isInViewport = false;
+            if (itemMargin.Top > 0)
+            {
+                var groupheaderRect = new Rect(0, itemMargin.Top, this.ActualWidth, groupHeaderDelta);
+                isInViewport = (groupheaderRect.Top < this.ActualHeight && groupheaderRect.Bottom > 0);
+            }
+            if (!isInViewport)
+            {
+                ClearTempElement(item);
+            }
 
             if (!item.Value.IsActive)
             {
-                bool isInViewport = false;
-                if (itemMargin.Top > 0)
-                {
-                    var groupheaderRect = new Rect(0, itemMargin.Top, this.ActualWidth, groupHeaderDelta);
-                    isInViewport = (groupheaderRect.Top < this.ActualHeight && groupheaderRect.Bottom > 0 && !isViewChanging);
-                }
-
                 // isIntermediate is false or groupheaderRect has into view port and view not changing
-                if (!isIntermediate || isInViewport)
+                if (!isIntermediate || (isInViewport && !isViewChanging))
                 {
                     ExpressionAnimationItem expressionItem = item.Value;
                     expressionItem.StopAnimation();
+
+                    item.Value.TempElement.Margin = new Thickness(0);
+                    item.Value.TempElement.Clip = null;
+                    item.Value.TempElement.Visibility = Visibility.Collapsed;
 
                     item.Value.VisualElement.Margin = itemMargin;
                     item.Value.VisualElement.Clip = itemClip;
@@ -422,6 +442,13 @@ namespace MyUWPToolkit
                         expressionItem.ScrollViewer = scrollViewer;
                     }
                     expressionItem.StartAnimation(true);
+                }
+                //temp use
+                else if (isInViewport)
+                {
+                    item.Value.TempElement.Margin = itemMargin;
+                    item.Value.TempElement.Clip = itemClip;
+                    item.Value.TempElement.Visibility = itemVisibility;
                 }
             }
             //use active animation
@@ -479,9 +506,11 @@ namespace MyUWPToolkit
                     if (!groupDic.ContainsKey(group))
                     {
                         ContentControl groupheader = CreateGroupHeader(group);
+                        ContentControl tempGroupheader = CreateGroupHeader(group);
 
                         ExpressionAnimationItem expressionAnimationItem = new ExpressionAnimationItem();
                         expressionAnimationItem.VisualElement = groupheader;
+                        expressionAnimationItem.TempElement = tempGroupheader;
 
                         groupDic[group] = expressionAnimationItem;
 
@@ -494,13 +523,14 @@ namespace MyUWPToolkit
                         if (groupHeadersCanvas != null)
                         {
                             groupHeadersCanvas.Children.Add(groupheader);
+                            groupHeadersCanvas.Children.Add(tempGroupheader);
 
                             groupheader.Measure(new Windows.Foundation.Size(this.ActualWidth, this.ActualHeight));
 
                             group.Height = groupheader.DesiredSize.Height;
 
-                            groupheader.Height = group.Height;
-                            groupheader.Width = this.ActualWidth;
+                            groupheader.Height = tempGroupheader.Height = group.Height;
+                            groupheader.Width = tempGroupheader.Width = this.ActualWidth;
 
                             if (group.FirstIndex == index)
                             {
@@ -510,6 +540,7 @@ namespace MyUWPToolkit
                             }
 
                             groupheader.Visibility = Visibility.Collapsed;
+                            tempGroupheader.Visibility = Visibility.Collapsed;
                             UpdateGroupHeaders();
                         }
 
@@ -559,6 +590,7 @@ namespace MyUWPToolkit
                     if (item.Value.VisualElement.Width != this.ActualWidth)
                     {
                         item.Value.VisualElement.Width = this.ActualWidth;
+                        item.Value.TempElement.Width = this.ActualWidth;
                     }
                     if (item.Value.IsActive)
                     {

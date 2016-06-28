@@ -26,6 +26,8 @@ namespace MyUWPToolkit
         //VisualElement for ExpressionAnimation
         public ContentControl VisualElement { get; set; }
 
+        public ContentControl TempElement { get; set; }
+
         public ScrollViewer ScrollViewer { get; set; }
 
         public Visibility Visibility
