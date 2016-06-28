@@ -128,6 +128,8 @@
     <Compile Include="ItemsControl\GroupListView\Class1.cs" />
     <Compile Include="ItemsControl\GroupListView\ExpressionAnimationItem.cs" />
     <Compile Include="ItemsControl\GroupListView\GroupListView.cs" />
+    <Compile Include="ItemsControl\GroupListView\GroupListView1.cs" />
+    <Compile Include="ItemsControl\GroupListView\GroupListViewItem.cs" />
     <Compile Include="ItemsControl\GroupListView\GroupObservableCollection.cs" />
     <Compile Include="ItemsControl\GroupListView\IGroupCollection.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />

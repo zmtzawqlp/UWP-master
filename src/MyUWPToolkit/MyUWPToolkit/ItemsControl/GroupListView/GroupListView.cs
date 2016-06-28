@@ -47,7 +47,7 @@ namespace MyUWPToolkit
 
         // Using a DependencyProperty as the backing store for GroupHeaderTemplate.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty GroupHeaderTemplateProperty =
-            DependencyProperty.Register("GroupHeaderTemplate", typeof(DataTemplate), typeof(GroupListView), new PropertyMetadata(0));
+            DependencyProperty.Register("GroupHeaderTemplate", typeof(DataTemplate), typeof(GroupListView), new PropertyMetadata(null));
 
 
 
@@ -64,6 +64,7 @@ namespace MyUWPToolkit
 
         private void OnItemsSourceChanged(DependencyObject sender, DependencyProperty dp)
         {
+            groupCollection = null;
             if (this.ItemsSource != null && ItemsSource is IGroupCollection)
             {
                 groupCollection = (ItemsSource as IGroupCollection);
