@@ -37,6 +37,7 @@ namespace MyUWPToolkit
         public static readonly DependencyProperty GroupHeaderTemplateProperty =
             DependencyProperty.Register("GroupHeaderTemplate", typeof(DataTemplate), typeof(GroupListView1), new PropertyMetadata(null));
 
+
         #endregion
 
         public GroupListView1()
@@ -241,51 +242,9 @@ namespace MyUWPToolkit
                                     //in view port
                                     else
                                     {
-                                        var itemMargin = new Thickness(0, rect.Top, 0, 0);
-                                        RectangleGeometry itemClip = null;
-                                        Visibility itemVisibility = Visibility.Collapsed;
-                                        if (itemMargin.Top < 0)
-                                        {
-                                            var clipHeight = itemMargin.Top;
-                                            //moving header has part in viewport
-                                            if (clipHeight > 0)
-                                            {
-                                                itemVisibility = Visibility.Visible;
-                                                itemClip = new RectangleGeometry() { Rect = new Rect(0, -itemMargin.Top, this.ActualWidth, clipHeight) };
-                                            }
-                                            //moving header not in viewport
-                                            else
-                                            {
-                                                itemVisibility = Visibility.Collapsed;
-                                                itemClip = null;
-                                            }
-                                        }
-                                        else if (itemMargin.Top > this.ActualHeight)
-                                        {
-                                            var clipHeight = -(itemMargin.Top - this.ActualHeight);
-                                            //moving header has part in viewport
-                                            if (clipHeight > 0)
-                                            {
-                                                itemVisibility = Visibility.Visible;
-                                                itemClip = new RectangleGeometry() { Rect = new Rect(0, 0, this.ActualWidth, clipHeight) };
-                                            }
-                                            //moving header not in viewport
-                                            else
-                                            {
-                                                itemVisibility = Visibility.Collapsed;
-                                                itemClip = null;
-                                            }
-                                        }
-                                        //moving header all in viewport
-                                        else
-                                        {
-                                            itemVisibility = Visibility.Visible;
-                                            itemClip = null;
-                                        }
-
                                         if (currentTopGroupHeader != null)
                                         {
-                                            var delta = currentTopGroupHeader.ActualHeight - (itemMargin.Top);
+                                            var delta = currentTopGroupHeader.ActualHeight - (rect.Top);
                                             if (delta > 0)
                                             {
                                                 if (visual != null)
@@ -311,16 +270,6 @@ namespace MyUWPToolkit
                                     }
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (item != currentTopGroupHeader.DataContext)
-                            {
-                                //item.Value.Visibility = Visibility.Collapsed;
-                                //item.Value.Margin = new Thickness(0);
-                                //item.Value.Clip = null;
-                            }
-
                         }
                     }
                 }
@@ -365,7 +314,6 @@ namespace MyUWPToolkit
             }
             return currentGroupIndex;
         }
-
 
         public async Task GoToNextGroupAsync(ScrollIntoViewAlignment scrollIntoViewAlignment = ScrollIntoViewAlignment.Leading)
         {
