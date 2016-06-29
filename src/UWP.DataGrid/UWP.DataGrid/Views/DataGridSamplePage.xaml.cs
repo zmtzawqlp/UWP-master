@@ -107,9 +107,20 @@ namespace UWP.DataGridSample.Views
             datagrid.GoToTop();
         }
 
+        bool cancel = true;
         private void datagrid_ReachFirstRow(object sender, ReachingFirstRowEventArgs e)
         {
-            //e.Cancel = true;
+            if (cancel)
+            {
+                e.Cancel = cancel;
+
+                for (int i = 0; i < 30; i++)
+                {
+                    _employees.Insert(0, new Employee() { Name = "wdjalkdja", Age = 1, IsMale = false });
+                }
+                cancel = false;
+            }
+
         }
 
         private void datagrid_ReachLastRow(object sender, ReachingLastRowEventArgs e)
