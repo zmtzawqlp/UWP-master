@@ -17,7 +17,7 @@
             <PivotItem Header="MyDataGrid">
                 <!--<ScrollViewer>
                     <StackPanel Orientation="Vertical">-->
-                        <controls:DataGrid x:Name="datagrid" Grid.Row="1" PullToRefresh="PullToRefreshPanel_PullToRefresh"  BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold"   AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green"  FrozenColumns="1" FrozenRows="1" Foreground="Red">
+                <controls:DataGrid x:Name="datagrid" Grid.Row="1" PullToRefresh="PullToRefreshPanel_PullToRefresh"  BorderBrush="Gold" BorderThickness="1" HeaderGridLinesBrush="Gold"   AutoGenerateColumns="False" ItemClick="datagrid_ItemClick" SortMode="Auto" SortingColumn="datagrid_SortingColumn" Background="Green"  FrozenColumns="1" FrozenRows="1" Foreground="Red" ReachingFirstRow="datagrid_ReachFirstRow" ReachingLastRow="datagrid_ReachLastRow">
                             <controls:DataGrid.Header>
                                 <Grid Background="Yellow">
                                     <TextBlock Text="I'm header" Height="100" VerticalAlignment="Center"/>

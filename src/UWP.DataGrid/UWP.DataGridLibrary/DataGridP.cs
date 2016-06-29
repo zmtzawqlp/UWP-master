@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using System.Diagnostics;
 
 namespace UWP.DataGrid
 {
@@ -275,6 +276,25 @@ namespace UWP.DataGrid
                         var totalColumnsSize = Columns.GetTotalSize();
                         var totalHeight = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height + FooterMeasureHeight;
 
+                        if (_scrollPosition.Y < value.Y)
+                        {
+                            if (HeaderMeasureHeight != 0)
+                            {
+                                if (Math.Abs(value.Y) <= HeaderMeasureHeight || value.Y > 0)
+                                {
+                                    if (ReachingFirstRow != null)
+                                    {
+                                        var eventArgs = new ReachingFirstRowEventArgs();
+                                        ReachingFirstRow(this, eventArgs);
+                                        if (eventArgs.Cancel)
+                                        {
+                                            value.Y = -HeaderMeasureHeight;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         var maxV = totalHeight - sz.Height;
                         maxV = maxV >= 0 ? maxV : 0;
                         var maxH = totalColumnsSize - sz.Width;
@@ -282,6 +302,7 @@ namespace UWP.DataGrid
                         var totalScrollPosition = new Point();
                         totalScrollPosition.X = Math.Max(-maxH, Math.Min(value.X, 0));
                         totalScrollPosition.Y = Math.Max(-maxV, Math.Min(value.Y, 0));
+
 
                         if (_scrollPosition != totalScrollPosition)
                         {
@@ -304,6 +325,15 @@ namespace UWP.DataGrid
                         HandleCellScrollPosition(value, sz, totalRowsSize, maxH);
 
                         var hasMoreItems = HasMoreItems(value);
+                        if (!hasMoreItems && ReachingLastRow != null)
+                        {
+                            var eventArgs = new ReachingLastRowEventArgs();
+                            ReachingLastRow(this, eventArgs);
+                            if (eventArgs.Cancel)
+                            {
+                                return;
+                            }
+                        }
                         //if maxV <0 and value.Y==0, it means, rows height +_headerHeight +column height is less than this control height.
                         //we should handle footer also
                         HandleFooter(value, sz, totalRowsSize, hasMoreItems);
@@ -330,6 +360,17 @@ namespace UWP.DataGrid
         /// </summary>
         public event EventHandler PullToRefresh;
 
+        /// <summary>
+        /// occur when reach first row.
+        /// if cancel is true, it won't go to header if it has.
+        /// </summary>
+        public event EventHandler<ReachingFirstRowEventArgs> ReachingFirstRow;
+
+        /// <summary>
+        /// occur when reach last row.
+        /// if cancel is true, it won't go to footer if it has.
+        /// </summary>
+        public event EventHandler<ReachingLastRowEventArgs> ReachingLastRow;
         #endregion
 
         #region Dependency Properties
@@ -727,4 +768,12 @@ namespace UWP.DataGrid
         }
     }
 
+    public class ReachingFirstRowEventArgs : CancelEventArgs
+    {
+
+    }
+    public class ReachingLastRowEventArgs : CancelEventArgs
+    {
+
+    }
 }

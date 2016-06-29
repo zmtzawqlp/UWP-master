@@ -106,6 +106,16 @@ namespace UWP.DataGridSample.Views
         {
             datagrid.GoToTop();
         }
+
+        private void datagrid_ReachFirstRow(object sender, ReachingFirstRowEventArgs e)
+        {
+            //e.Cancel = true;
+        }
+
+        private void datagrid_ReachLastRow(object sender, ReachingLastRowEventArgs e)
+        {
+            //e.Cancel = true;
+        }
     }
 
     public class People
