@@ -200,18 +200,10 @@ namespace MyUWPToolkit
                     }
                     if (item.FirstIndex <= firstVisibleItemIndex && (firstVisibleItemIndex <= item.LastIndex || item.LastIndex == -1))
                     {
-                        if (visual != null)
-                        {
-                            visual.StopAnimation("Offset.Y");
-                        }
                         currentTopGroupHeader.Visibility = Visibility.Visible;
                         currentTopGroupHeader.Margin = new Thickness(0);
                         currentTopGroupHeader.Clip = null;
                         currentTopGroupHeader.DataContext = item;
-                        if (visual != null)
-                        {
-                            visual.StartAnimation("Offset.Y", expression);
-                        }
                     }
                     else
                     {
@@ -247,10 +239,6 @@ namespace MyUWPToolkit
                                             var delta = currentTopGroupHeader.ActualHeight - (rect.Top);
                                             if (delta > 0)
                                             {
-                                                if (visual != null)
-                                                {
-                                                    visual.StopAnimation("Offset.Y");
-                                                }
                                                 currentTopGroupHeader.Margin = new Thickness(0, -delta, 0, 0);
                                                 currentTopGroupHeader.Clip = new RectangleGeometry() { Rect = new Rect(0, delta, currentTopGroupHeader.ActualWidth, currentTopGroupHeader.ActualHeight) };
                                                 if (delta >= currentTopGroupHeader.ActualHeight)
@@ -259,10 +247,6 @@ namespace MyUWPToolkit
                                                     currentTopGroupHeader.Margin = new Thickness(0);
                                                     currentTopGroupHeader.Clip = null;
                                                     currentTopGroupHeader.DataContext = item;
-                                                }
-                                                if (visual != null)
-                                                {
-                                                    visual.StartAnimation("Offset.Y", expression);
                                                 }
                                             }
 
