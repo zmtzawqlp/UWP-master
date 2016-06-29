@@ -25,6 +25,12 @@ namespace ToolkitSample.Views
         public BlankPage1()
         {
             this.InitializeComponent();
+            
         }
+    }
+
+    public class Grid1 : Grid
+    {
+        override 
     }
 }

@@ -15,7 +15,8 @@ using Windows.UI.Xaml.Media;
 
 namespace MyUWPToolkit
 {
-
+    [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
+    [TemplatePart(Name = "ProgressRing", Type = typeof(ProgressRing))]
     public class GroupListView1 : ListView
     {
         private IGroupCollection groupCollection;
@@ -44,16 +45,6 @@ namespace MyUWPToolkit
         {
             this.DefaultStyleKey = typeof(GroupListView1);
             this.RegisterPropertyChangedCallback(ListView.ItemsSourceProperty, new DependencyPropertyChangedCallback(OnItemsSourceChanged));
-            Unloaded += GroupListView1_Unloaded;
-        }
-
-        private void GroupListView1_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (visual != null)
-            {
-                visual.Dispose();
-                visual = null;
-            }
         }
 
         private void OnItemsSourceChanged(DependencyObject sender, DependencyProperty dp)

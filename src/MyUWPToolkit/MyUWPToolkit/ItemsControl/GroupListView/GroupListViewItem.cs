@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace MyUWPToolkit
 {
+    [TemplatePart(Name = "headerPresenter", Type = typeof(ContentPresenter))]
     public class GroupListViewItem : ListViewItem
     {
         ContentPresenter headerPresenter;
@@ -46,8 +48,16 @@ namespace MyUWPToolkit
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+
             headerPresenter = GetTemplateChild("headerPresenter") as ContentPresenter;
-            headerPresenter.RegisterPropertyChangedCallback(ContentPresenter.ContentProperty, new DependencyPropertyChangedCallback(OnHeaderPresenterContentChanged));
+            if (headerPresenter != null)
+            {
+                headerPresenter.RegisterPropertyChangedCallback(ContentPresenter.ContentProperty, new DependencyPropertyChangedCallback(OnHeaderPresenterContentChanged));
+            }
+            else
+            {
+                Debug.Assert(false, "headerpresenter is missing.");
+            }
         }
 
         private void OnHeaderPresenterContentChanged(DependencyObject sender, DependencyProperty dp)
