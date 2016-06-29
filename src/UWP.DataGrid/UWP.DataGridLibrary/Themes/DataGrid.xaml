@@ -167,10 +167,10 @@
                             <ContentControl x:Name="PullToRefreshHeader" Height="0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              Content="{TemplateBinding PullToRefreshHeader}" ContentTemplate="{TemplateBinding PullToRefreshHeaderTemplate}"  HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
     
-                            <ContentPresenter x:Name="Header"  Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            <local:DataGridContentPresenter x:Name="Header"  Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
 
-                            <ContentPresenter x:Name="Footer"  Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            <local:DataGridContentPresenter x:Name="Footer"  Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              Content="{TemplateBinding Footer}" ContentTemplate="{TemplateBinding FooterTemplate}"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                             <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False"  Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Row="4" Visibility="Collapsed" />
                         </Grid>

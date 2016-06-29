@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
@@ -17,29 +12,28 @@ namespace UWP.DataGrid
             {
                 return;
             }
-            var maxV = totalRowsSize + _headerHeight + _columnHeaderPanel.DesiredSize.Height - sz.Height;
+            var maxV = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height - sz.Height;
             if ((maxV + value.Y) <= 0)
             {
                 //if (value.Y < 0)
                 {
-                    if (!hasMoreItems && _footerHeight == 0)
+                    if (!hasMoreItems && FooterMeasureHeight == 0)
                     {
                         _footer.Measure(_contentGrid.DesiredSize);
                         if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
                         {
                             _verticalScrollBar.Maximum += _footer.DesiredSize.Height;
-                            _footerHeight = _footer.DesiredSize.Height;
                         }
                     }
 
                     var footHeight = -(maxV + value.Y);
 
-                    if (footHeight > 0 && _footerHeight > 0)
+                    if (footHeight > 0 && FooterMeasureHeight > 0)
                     {
-                        if (footHeight <= _footerHeight)
+                        if (footHeight <= FooterMeasureHeight)
                         {
                             FooterHeight = new GridLength(footHeight);
-                            _footer.Margin = new Thickness(0, 0, 0, footHeight - _footerHeight);
+                            _footer.Margin = new Thickness(0, 0, 0, footHeight - FooterMeasureHeight);
                             _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, this.ActualWidth, footHeight) };
                             if (!HasHeader())
                             {
@@ -48,17 +42,17 @@ namespace UWP.DataGrid
                         }
                         else
                         {
-                            FooterHeight = new GridLength(_footerHeight);
+                            FooterHeight = new GridLength(FooterMeasureHeight);
                             if (!HasHeader())
                             {
-                                _cellPanel.footerHeight = _footerHeight;
+                                _cellPanel.footerHeight = FooterMeasureHeight;
                             }
                         } 
                     }
                     else if (HasFooter())
                     {
                         FooterHeight = new GridLength(0);
-                        _footer.Margin = new Thickness(0, 0, 0, -_footerHeight);
+                        _footer.Margin = new Thickness(0, 0, 0, -FooterMeasureHeight);
                         _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, this.ActualWidth, 0) };
                         if (!HasHeader())
                         {
@@ -72,7 +66,7 @@ namespace UWP.DataGrid
                 if (HasFooter())
                 {
                     FooterHeight = new GridLength(0);
-                    _footer.Margin = new Thickness(0, 0, 0, -_footerHeight);
+                    _footer.Margin = new Thickness(0, 0, 0, -FooterMeasureHeight);
                     _footer.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, this.ActualWidth, 0) };
                     if (!HasHeader())
                     {

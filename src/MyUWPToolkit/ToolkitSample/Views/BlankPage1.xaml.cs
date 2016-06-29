@@ -25,12 +25,28 @@ namespace ToolkitSample.Views
         public BlankPage1()
         {
             this.InitializeComponent();
-            
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            grid.Content = new TextBlock() { Text = "dada" ,Height=600};
         }
     }
 
-    public class Grid1 : Grid
+    public class Grid1 : ContentPresenter
     {
-        override 
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            var a= base.ArrangeOverride(finalSize);
+            return a;
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+
+            var b= base.MeasureOverride(availableSize);
+            return b;
+        }
     }
 }

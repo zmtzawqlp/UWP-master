@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UWP.DataGrid.Common;
+﻿using UWP.DataGrid.Common;
+using System;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.UI.Input;
@@ -45,6 +41,15 @@ namespace UWP.DataGrid
 
         private void _contentGrid_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
+            if (_header.ContentHeight > 0)
+            {
+                Grid.SetRow(_pullToRefreshHeader, 0);
+            }
+            else
+            {
+                Grid.SetRow(_pullToRefreshHeader, 3);
+            }
+
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
@@ -244,7 +249,7 @@ namespace UWP.DataGrid
                 return;
             }
             manipulationStatus = ManipulationStatus.PullToRefresh;
-            var maxThreshold = RefreshThreshold * 4 / 3.0;
+            var maxThreshold = RefreshThreshold * 5 / 4;
             //Y not support inertial
             if (e.IsInertial)
             {

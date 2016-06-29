@@ -8,13 +8,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.UI.Input;
-using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -34,8 +29,8 @@ namespace UWP.DataGrid
         DataGridPanel _columnHeaderPanel;
         DataGridPanel _cellPanel;
         ContentControl _pullToRefreshHeader;
-        ContentPresenter _header;
-        ContentPresenter _footer;
+        DataGridContentPresenter _header;
+        DataGridContentPresenter _footer;
 
         ICollectionView _view;
         ICellFactory _cellFactory;
@@ -56,11 +51,35 @@ namespace UWP.DataGrid
         ManipulationStatus manipulationStatus;
         ScollingDirection scollingDirection;
         Point? pointerOverPoint;
-        double _headerHeight = 0;
-        double _footerHeight = 0;
         #endregion
 
         #region Internal Properties
+
+        internal double HeaderMeasureHeight
+        {
+
+            get
+            {
+                if (_header != null)
+                {
+                    return _header.ContentHeight;
+                }
+                return 0.0;
+            }
+        }
+
+        internal double FooterMeasureHeight
+        {
+
+            get
+            {
+                if (_footer != null)
+                {
+                    return _footer.ContentHeight;
+                }
+                return 0.0;
+            }
+        }
 
         internal IList<SortDescription> ManualSortDescriptions { get { return _manualSort; } }
 
@@ -158,7 +177,7 @@ namespace UWP.DataGrid
                 return _contentGrid.RowDefinitions[5].ActualHeight;
             }
         }
-        
+
 
         internal GridLength HeaderHeight
         {
@@ -254,7 +273,7 @@ namespace UWP.DataGrid
                         //total size
                         var totalRowsSize = Rows.GetTotalSize();
                         var totalColumnsSize = Columns.GetTotalSize();
-                        var totalHeight = totalRowsSize + _headerHeight + _columnHeaderPanel.DesiredSize.Height + _footerHeight;
+                        var totalHeight = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height + FooterMeasureHeight;
 
                         var maxV = totalHeight - sz.Height;
                         maxV = maxV >= 0 ? maxV : 0;
@@ -516,7 +535,7 @@ namespace UWP.DataGrid
         public static readonly DependencyProperty AllowPullToRefreshProperty =
             DependencyProperty.Register("AllowPullToRefresh", typeof(bool), typeof(DataGrid), new PropertyMetadata(false));
         /// <summary>
-        /// The threshold for release to refresh，defautl value is 1/5 of PullToRefreshPanel's height.
+        /// The threshold for release to refresh，defautl value is 1/5 of PullToRefreshGrid's height.
         /// </summary>
         public double RefreshThreshold
         {

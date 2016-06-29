@@ -1,29 +1,22 @@
-﻿using UWP.DataGrid.Model.Cell;
-using UWP.DataGrid.Util;
-using UWP.DataGrid.CollectionView;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using System.Reflection;
+﻿using UWP.DataGrid.CollectionView;
+using UWP.DataGrid.Common;
+using UWP.DataGrid.Model.Cell;
 using UWP.DataGrid.Model.RowCol;
 using UWP.DataGrid.Util;
-using Windows.Foundation;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
-using Windows.Foundation.Collections;
-using Windows.Devices.Input;
-using System.Diagnostics;
-using Windows.UI;
-using UWP.DataGrid.Common;
-using Windows.UI.Input;
 
 namespace UWP.DataGrid
 {
@@ -64,29 +57,29 @@ namespace UWP.DataGrid
             {
                 RefreshThreshold = availableSize.Height * 1 / 5;
             }
-            if (_header != null)
-            {
-                if (_pullToRefreshHeader != null)
-                {
-                    _header.Measure(availableSize);
+            //if (_header != null)
+            //{
+            //    if (_pullToRefreshHeader != null)
+            //    {
+            //        _header.Measure(availableSize);
 
-                    if (_header.DesiredSize != Size.Empty && _header.DesiredSize.Height != 0 && _header.DesiredSize.Width != 0 && _headerHeight == 0)
-                    {
-                        Grid.SetRow(_pullToRefreshHeader, 0);
-                        //_header.Height = _header.DesiredSize.Height;
-                        _headerHeight = _header.DesiredSize.Height;
-                    }
-                    if (_headerHeight == 0)
-                    {
-                        Grid.SetRow(_pullToRefreshHeader, 3);
-                    }
-                    //else
-                    //{
-                    //    Grid.SetRow(_pullToRefreshHeader, 3);
-                    //    //_headerHeight = 0;
-                    //}
-                }
-            }
+            //        if (_header.DesiredSize != Size.Empty && _header.DesiredSize.Height != 0 && _header.DesiredSize.Width != 0 && _headerHeight == 0)
+            //        {
+            //            Grid.SetRow(_pullToRefreshHeader, 0);
+            //            //_header.Height = _header.DesiredSize.Height;
+            //            _headerHeight = _header.DesiredSize.Height;
+            //        }
+            //        if (_headerHeight == 0)
+            //        {
+            //            Grid.SetRow(_pullToRefreshHeader, 3);
+            //        }
+            //        //else
+            //        //{
+            //        //    Grid.SetRow(_pullToRefreshHeader, 3);
+            //        //    //_headerHeight = 0;
+            //        //}
+            //    }
+            //}
 
             //if (_footer != null)
             //{
@@ -142,10 +135,10 @@ namespace UWP.DataGrid
                 if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                 {
                     //hei -= columnHeaderHeight;
-                    if (!HasHeader())
-                    {
-                        _verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
-                    }
+                    //if (HeaderMeasureHeight == 0)
+                    //{
+                    //    _verticalScrollBar.Margin = new Thickness(0, columnHeaderHeight + frozenRowsSize, 0, 0);
+                    //}
 
                     _horizontalScrollBar.Margin = new Thickness(frozenColumnsSize, 0, 0, 0);
                     UpdateStarSizes();
@@ -156,7 +149,7 @@ namespace UWP.DataGrid
                     _horizontalScrollBar.LargeChange = _horizontalScrollBar.ViewportSize = wid;
                     var totalRowsSize = Rows.GetTotalSize();
                     var totalColumnsSize = Columns.GetTotalSize();
-                    var totalHeight = totalRowsSize + _headerHeight + _footerHeight + columnHeaderHeight;
+                    var totalHeight = totalRowsSize + HeaderMeasureHeight + FooterMeasureHeight + columnHeaderHeight;
 
                     _verticalScrollBar.Maximum = totalHeight - hei;
                     _horizontalScrollBar.Maximum = totalColumnsSize - wid;
@@ -242,8 +235,10 @@ namespace UWP.DataGrid
             _pullToRefreshHeader = GetTemplateChild("PullToRefreshHeader") as ContentControl;
             _pullToRefreshHeader.DataContext = this;
 
-            _header = GetTemplateChild("Header") as ContentPresenter;
-            _footer = GetTemplateChild("Footer") as ContentPresenter;
+            _header = GetTemplateChild("Header") as DataGridContentPresenter;
+            _header.RegisterPropertyChangedCallback(DataGridContentPresenter.ContentHeightProperty, new DependencyPropertyChangedCallback(OnHeaderHeightChanged));
+            _footer = GetTemplateChild("Footer") as DataGridContentPresenter;
+            _footer.RegisterPropertyChangedCallback(DataGridContentPresenter.ContentHeightProperty, new DependencyPropertyChangedCallback(OnFooterHeightChanged));
 
             Grid.SetRow(_cellPanel, 4);
             Grid.SetRow(_columnHeaderPanel, 2);
@@ -265,6 +260,16 @@ namespace UWP.DataGrid
                 ColumnHeaders.Rows.DefaultSize = sz;
             }
 
+        }
+        private void OnHeaderHeightChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            UpdateScrollBars();
+            HandleHeader(ScrollPosition);
+        }
+
+        private void OnFooterHeightChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            UpdateScrollBars();
         }
 
         private void HandleCrossSlide(CrossSlideMode mode)
@@ -414,52 +419,76 @@ namespace UWP.DataGrid
                 // get view
                 var view = _view as ICollectionViewEx;
 
-                // get column to sort
-                var col = this.Columns[column];
-                var direction = ListSortDirection.Ascending;
-                var sds = view.SortDescriptions;
                 var args = new SortingColumnEventArgs(this.Columns[column]);
                 if (this.SortingColumn != null)
                 {
                     SortingColumn(this, args);
                 }
-                // get property to sort on
-                var pn = col.BoundPropertyName;
-                if (!string.IsNullOrEmpty(pn))
+                if (view != null)
                 {
-                    if (!args.Cancel)
+                    // get column to sort
+                    var col = this.Columns[column];
+                    var direction = ListSortDirection.Ascending;
+                    var sds = view.SortDescriptions;
+
+                    // get property to sort on
+                    var pn = col.BoundPropertyName;
+                    if (!string.IsNullOrEmpty(pn))
                     {
-                        // apply new sort
-                        try
+                        if (!args.Cancel)
                         {
-                            // if already sorted, reverse direction
-                            foreach (var sd in sds)
+                            // apply new sort
+                            try
                             {
-                                if (sd.PropertyName == pn && sd.Direction == ListSortDirection.Ascending)
+                                // if already sorted, reverse direction
+                                foreach (var sd in sds)
                                 {
-                                    direction = ListSortDirection.Descending;
-                                    break;
+                                    if (sd.PropertyName == pn && sd.Direction == ListSortDirection.Ascending)
+                                    {
+                                        direction = ListSortDirection.Descending;
+                                        break;
+                                    }
+                                }
+                                using (view.DeferRefresh())
+                                {
+                                    sds.Clear();
+                                    sds.Add(new SortDescription(pn, direction));
                                 }
                             }
-                            using (view.DeferRefresh())
+                            catch
                             {
-                                sds.Clear();
-                                sds.Add(new SortDescription(pn, direction));
+                            }
+
+                        }
+                        else
+                        {
+                            if (this.SortMode == SortMode.Manual)
+                            {
+                                // if already sorted, reverse direction
+                                foreach (var sd in ManualSortDescriptions)
+                                {
+                                    if (sd.PropertyName == pn && sd.Direction == ListSortDirection.Ascending)
+                                    {
+                                        direction = ListSortDirection.Descending;
+                                        break;
+                                    }
+                                }
+                                ManualSortDescriptions.Clear();
+
+                                ManualSortDescriptions.Add(new SortDescription(pn, direction));
+                                this.Invalidate();
                             }
                         }
-                        catch
-                        {
-                        }
-
                     }
                     else
                     {
                         if (this.SortMode == SortMode.Manual)
                         {
+                            var name = this.Columns[column].ColumnName + this.Columns[column].ItemIndex;
                             // if already sorted, reverse direction
                             foreach (var sd in ManualSortDescriptions)
                             {
-                                if (sd.PropertyName == pn && sd.Direction == ListSortDirection.Ascending)
+                                if (sd.PropertyName == name && sd.Direction == ListSortDirection.Ascending)
                                 {
                                     direction = ListSortDirection.Descending;
                                     break;
@@ -467,29 +496,9 @@ namespace UWP.DataGrid
                             }
                             ManualSortDescriptions.Clear();
 
-                            ManualSortDescriptions.Add(new SortDescription(pn, direction));
+                            ManualSortDescriptions.Add(new SortDescription(name, direction));
                             this.Invalidate();
                         }
-                    }
-                }
-                else
-                {
-                    if (this.SortMode == SortMode.Manual)
-                    {
-                        var name = this.Columns[column].ColumnName + this.Columns[column].ItemIndex;
-                        // if already sorted, reverse direction
-                        foreach (var sd in ManualSortDescriptions)
-                        {
-                            if (sd.PropertyName == name && sd.Direction == ListSortDirection.Ascending)
-                            {
-                                direction = ListSortDirection.Descending;
-                                break;
-                            }
-                        }
-                        ManualSortDescriptions.Clear();
-
-                        ManualSortDescriptions.Add(new SortDescription(name, direction));
-                        this.Invalidate();
                     }
                 }
             }
@@ -561,7 +570,7 @@ namespace UWP.DataGrid
         {
             if (_props == null || _props.Count == 0 || _itemType != GetItemType(_view))
             {
-                if (_itemType == null || !Util.Util.IsPrimitive(_itemType))
+                if (_itemType == null || !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
                 {
                     if (GetItemType(_view) != typeof(object))
                     {
@@ -676,7 +685,7 @@ namespace UWP.DataGrid
             {
                 // special case: binding directly to primitive types (int, string, etc)
                 var type = GetItemType(_view);
-                if (Util.Util.IsPrimitive(type))
+                if (UWP.DataGrid.Util.Util.IsPrimitive(type))
                 {
                     var col = new Column();
                     BindAutoColumn(col, type);
@@ -843,7 +852,7 @@ namespace UWP.DataGrid
                 // get item type
                 _itemType = GetItemType(_view);
 
-                if (_itemType != null && !Util.Util.IsPrimitive(_itemType))
+                if (_itemType != null && !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
                 {
 
                     foreach (var pi in _itemType.GetRuntimeProperties())
@@ -1056,7 +1065,7 @@ namespace UWP.DataGrid
         {
             double maxV;
             var cellScrollPosition = value;
-            cellScrollPosition.Y += _headerHeight;
+            cellScrollPosition.Y += HeaderMeasureHeight;
 
             maxV = totalRowsSize + _columnHeaderPanel.DesiredSize.Height - sz.Height;
 
