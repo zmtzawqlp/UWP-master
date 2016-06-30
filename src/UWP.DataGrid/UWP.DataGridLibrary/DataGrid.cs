@@ -591,10 +591,21 @@ namespace UWP.DataGrid
             var rows = Rows;
             var index = (int)e.Index;
             var rowIndex = GetRowIndex(index);
+
+            var topRow = -1;
+            if (_cellPanel != null)
+            {
+                var viewRange = _cellPanel.ViewRange;
+                topRow = viewRange.Row;
+            }
             switch (e.CollectionChange)
             {
                 case CollectionChange.ItemInserted:
 
+                    if (index <= topRow)
+                    {
+                        ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
+                    }
                     // create the new bound row
                     var r = CreateBoundRow(sender[index]);
 
@@ -615,6 +626,11 @@ namespace UWP.DataGrid
                     break;
 
                 case CollectionChange.ItemRemoved:
+
+                    if (index <= topRow)
+                    {
+                        ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                    }
                     if (rowIndex > -1)
                     {
                         rows.RemoveAt(rowIndex);
@@ -809,7 +825,7 @@ namespace UWP.DataGrid
         {
             if (_view != null)
             {
-                if (LoadingRows!=null)
+                if (LoadingRows != null)
                 {
                     LoadingRows(this, EventArgs.Empty);
                 }
