@@ -277,21 +277,25 @@ namespace UWP.DataGrid
                         var totalHeight = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height + FooterMeasureHeight;
 
                         bool reachingFirstRow = false;
-                        if (_scrollPosition.Y < value.Y)
+                        if (_view != null && _view.Count != 0)
                         {
-                            if (HeaderMeasureHeight != 0)
+                            if (_scrollPosition.Y < value.Y)
                             {
-                                if (Math.Abs(value.Y) <= HeaderMeasureHeight || value.Y > 0)
+
+                                if (HeaderMeasureHeight != 0)
                                 {
-                                    reachingFirstRow = true;
-                                    if (ReachingFirstRow != null)
+                                    if (Math.Abs(value.Y) <= HeaderMeasureHeight || value.Y > 0)
                                     {
-                                        var eventArgs = new ReachingFirstRowEventArgs();
-                                        ReachingFirstRow(this, eventArgs);
-                                        if (eventArgs.Cancel)
+                                        reachingFirstRow = true;
+                                        if (ReachingFirstRow != null)
                                         {
-                                            //value.Y = _scrollPosition.Y;
-                                            value.Y = -HeaderMeasureHeight;   
+                                            var eventArgs = new ReachingFirstRowEventArgs();
+                                            ReachingFirstRow(this, eventArgs);
+                                            if (eventArgs.Cancel)
+                                            {
+                                                //value.Y = _scrollPosition.Y;
+                                                value.Y = -HeaderMeasureHeight;
+                                            }
                                         }
                                     }
                                 }
@@ -328,19 +332,25 @@ namespace UWP.DataGrid
                         HandleCellScrollPosition(value, sz, totalRowsSize, maxH);
 
 
-                        if (HeaderMeasureHeight != 0 && reachingFirstRow && ReachedFirstRow != null)
+                        if (_view != null && _view.Count != 0)
                         {
-                            ReachedFirstRow(this, EventArgs.Empty);
+                            if (HeaderMeasureHeight != 0 && reachingFirstRow && ReachedFirstRow != null)
+                            {
+                                ReachedFirstRow(this, EventArgs.Empty);
+                            }
                         }
 
                         var hasMoreItems = HasMoreItems(value);
                         if (!hasMoreItems && ReachingLastRow != null)
                         {
-                            var eventArgs = new ReachingLastRowEventArgs();
-                            ReachingLastRow(this, eventArgs);
-                            if (eventArgs.Cancel)
+                            if (_view != null && _view.Count != 0)
                             {
-                                return;
+                                var eventArgs = new ReachingLastRowEventArgs();
+                                ReachingLastRow(this, eventArgs);
+                                if (eventArgs.Cancel)
+                                {
+                                    return;
+                                }
                             }
                         }
                         //if maxV <0 and value.Y==0, it means, rows height +_headerHeight +column height is less than this control height.
