@@ -41,14 +41,15 @@ namespace MyUWPToolkit
                                 {
                                     int count = 0;
                                     int preCount = this.Count;
-                                    foreach (var item in souresList)
+                                    for (int i = 0; i <= currentGroupIndex; i++)
                                     {
+                                        var item = souresList[i];
                                         foreach (var item1 in item)
                                         {
                                             if (count >= preCount)
                                             {
                                                 this.Add(item1);
-                                                if (item == source && groupHeaders[currentGroupIndex].FirstIndex==-1)
+                                                if (item == source && groupHeaders[currentGroupIndex].FirstIndex == -1)
                                                 {
                                                     groupHeaders[currentGroupIndex].FirstIndex = this.Count - 1;
                                                 }
@@ -74,14 +75,16 @@ namespace MyUWPToolkit
                     }
                     else
                     {
-                        if (CurrentGroupIndex == source.Count - 1)
+                        if (CurrentGroupIndex == souresList.Count - 1)
                         {
                             if (this.Count < GetSourceListTotoalCount())
                             {
                                 int count = 0;
                                 int preCount = this.Count;
-                                foreach (var item in souresList)
+
+                                for (int i = 0; i <= currentGroupIndex; i++)
                                 {
+                                    var item = souresList[i];
                                     foreach (var item1 in item)
                                     {
                                         if (count >= preCount)

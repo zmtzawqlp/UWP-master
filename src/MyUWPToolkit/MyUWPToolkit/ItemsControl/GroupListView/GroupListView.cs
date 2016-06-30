@@ -112,6 +112,7 @@ namespace MyUWPToolkit
             binding.Mode = BindingMode.OneWay;
             binding.Path = new PropertyPath("GroupHeaderTemplate");
             currentTopGroupHeader.SetBinding(ContentControl.ContentTemplateProperty, binding);
+            currentTopGroupHeader.Visibility = Visibility.Collapsed;
         }
 
 
