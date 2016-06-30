@@ -371,6 +371,17 @@ namespace UWP.DataGrid
         /// if cancel is true, it won't go to footer if it has.
         /// </summary>
         public event EventHandler<ReachingLastRowEventArgs> ReachingLastRow;
+
+
+        /// <summary>
+        /// Occurs when the grid starts loading the rows with items from the data source.
+        /// </summary>
+        public event EventHandler LoadingRows;
+
+        /// <summary>
+        /// Occurs when the grid finishes loading the rows with items from the data source.
+        /// </summary>
+        public event EventHandler LoadedRows;
         #endregion
 
         #region Dependency Properties
@@ -772,6 +783,7 @@ namespace UWP.DataGrid
     {
 
     }
+
     public class ReachingLastRowEventArgs : CancelEventArgs
     {
 

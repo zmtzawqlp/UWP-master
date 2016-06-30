@@ -809,11 +809,19 @@ namespace UWP.DataGrid
         {
             if (_view != null)
             {
+                if (LoadingRows!=null)
+                {
+                    LoadingRows(this, EventArgs.Empty);
+                }
                 using (Rows.DeferNotifications())
                 {
                     // add all data items
                     Rows.Clear();
                     CreateBoundRows();
+                }
+                if (LoadedRows != null)
+                {
+                    LoadedRows(this, EventArgs.Empty);
                 }
                 // show new data and sorting order
                 Invalidate();

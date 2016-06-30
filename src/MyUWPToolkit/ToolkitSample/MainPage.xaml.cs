@@ -78,7 +78,7 @@ namespace ToolkitSample
                     Frame.Navigate(typeof(FlexGridSamplePage));
                     break;
                 case "GroupListView":
-                    Frame.Navigate(typeof(BlankPage1));
+                    Frame.Navigate(typeof(GroupListViewPage));
                     break;
                 default:
                     break;
