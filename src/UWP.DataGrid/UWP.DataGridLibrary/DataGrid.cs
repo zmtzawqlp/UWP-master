@@ -604,7 +604,10 @@ namespace UWP.DataGrid
 
                     if (index <= topRow)
                     {
-                        ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
+                        if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                        {
+                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
+                        }
                     }
                     // create the new bound row
                     var r = CreateBoundRow(sender[index]);
@@ -629,7 +632,10 @@ namespace UWP.DataGrid
 
                     if (index <= topRow)
                     {
-                        ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                        if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                        {
+                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                        }
                     }
                     if (rowIndex > -1)
                     {

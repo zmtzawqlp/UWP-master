@@ -149,59 +149,96 @@ namespace UWP.DataGrid.Model.Cell
 
         public virtual void CreateColumnHeaderContent(DataGrid grid, Border bdr, CellRange rng)
         {
-            // create TextBlock content
-            var tb = new TextBlock();
-            tb.VerticalAlignment = VerticalAlignment.Center;
-            bdr.Child = tb;
-
-            // get unbound value
-            var value = grid.ColumnHeaders[rng.Row, rng.Column];
-            if (value != null)
-            {
-                tb.Text = value.ToString();
-            }
-
-            // no unbound value? show column caption on first fixed row
-            if (string.IsNullOrEmpty(tb.Text) && rng.Row == 0)
-            {
-                tb.Text = grid.Columns[rng.Column].GetHeader() ?? "";
-            }
-
-            // apply global foreground color
-            if (grid.ColumnHeaderForeground != null)
-            {
-                tb.Foreground = grid.ColumnHeaderForeground;
-            }
-
-            // honor HeaderTemplate property
             var c = grid.Columns[rng.Column];
-            if (c.HeaderTemplate != null)
+            if (c.HeaderObject != null)
             {
-                bdr.Padding = GetTemplatePadding(bdr.Padding); // Util.ThicknessEmpty;
-                bdr.Child = GetTemplatedCell(grid, c.HeaderTemplate);
-                //bdr.Child = c.HeaderTemplate.LoadContent() as UIElement;
-            }
-
-            if (c.HeaderForeground != null)
-            {
-                tb.Foreground = c.HeaderForeground;
-            }
-            tb.HorizontalAlignment = c.HeaderHorizontalAlignment;
-
-            // show sort direction (after applying styles)
-            if (grid.ShowSort && IsSortSymbolRow(grid, rng))
-            {
-                // get the grid that owns the row (we could be printing this)
-                var g = grid.Columns.Count > 0 ? grid.Columns[0].Grid : grid;
-
-                // get sort direction and show it
-                ListSortDirection? sd = g.GetColumnSort(rng.Column);
-                if (sd.HasValue)
+                var tb = new ContentPresenter();
+                tb.VerticalContentAlignment = VerticalAlignment.Center;
+                tb.Content = c.HeaderObject;
+                bdr.Child = tb;
+                // apply global foreground color
+                if (grid.ColumnHeaderForeground != null)
                 {
-                    var icon = GetGlyphSort(sd.Value, tb.Foreground);
-                    SetBorderContent(bdr, bdr.Child, icon, 1);
+                    tb.Foreground = grid.ColumnHeaderForeground;
+                }
+                if (c.HeaderForeground != null)
+                {
+                    tb.Foreground = c.HeaderForeground;
+                }
+                tb.HorizontalAlignment = c.HeaderHorizontalAlignment;
+                // show sort direction (after applying styles)
+                if (grid.ShowSort && IsSortSymbolRow(grid, rng))
+                {
+                    // get the grid that owns the row (we could be printing this)
+                    var g = grid.Columns.Count > 0 ? grid.Columns[0].Grid : grid;
+
+                    // get sort direction and show it
+                    ListSortDirection? sd = g.GetColumnSort(rng.Column);
+                    if (sd.HasValue)
+                    {
+                        var icon = GetGlyphSort(sd.Value, tb.Foreground);
+                        SetBorderContent(bdr, bdr.Child, icon, 1);
+                    }
                 }
             }
+            else
+            {
+                // create TextBlock content
+                var tb = new TextBlock();
+                tb.VerticalAlignment = VerticalAlignment.Center;
+                bdr.Child = tb;
+
+                // get unbound value
+                var value = grid.ColumnHeaders[rng.Row, rng.Column];
+                if (value != null)
+                {
+                    tb.Text = value.ToString();
+                }
+
+                // no unbound value? show column caption on first fixed row
+                if (string.IsNullOrEmpty(tb.Text) && rng.Row == 0)
+                {
+                    tb.Text = grid.Columns[rng.Column].GetHeader() ?? "";
+                }
+
+                // apply global foreground color
+                if (grid.ColumnHeaderForeground != null)
+                {
+                    tb.Foreground = grid.ColumnHeaderForeground;
+                }
+
+                // honor HeaderTemplate property
+
+                if (c.HeaderTemplate != null)
+                {
+                    bdr.Padding = GetTemplatePadding(bdr.Padding); // Util.ThicknessEmpty;
+                    bdr.Child = GetTemplatedCell(grid, c.HeaderTemplate);
+                    //bdr.Child = c.HeaderTemplate.LoadContent() as UIElement;
+                }
+
+                if (c.HeaderForeground != null)
+                {
+                    tb.Foreground = c.HeaderForeground;
+                }
+                tb.HorizontalAlignment = c.HeaderHorizontalAlignment;
+
+                // show sort direction (after applying styles)
+                if (grid.ShowSort && IsSortSymbolRow(grid, rng))
+                {
+                    // get the grid that owns the row (we could be printing this)
+                    var g = grid.Columns.Count > 0 ? grid.Columns[0].Grid : grid;
+
+                    // get sort direction and show it
+                    ListSortDirection? sd = g.GetColumnSort(rng.Column);
+                    if (sd.HasValue)
+                    {
+                        var icon = GetGlyphSort(sd.Value, tb.Foreground);
+                        SetBorderContent(bdr, bdr.Child, icon, 1);
+                    }
+                }
+            }
+            
+          
         }
         void SetBorderContent(Border bdr, UIElement e1, UIElement e2, int autoCol)
         {
@@ -300,7 +337,7 @@ namespace UWP.DataGrid.Model.Cell
             // return
             return e;
         }
-       
+
         void CreateCellContent(DataGrid grid, DataGridPanel panel, Border bdr, CellRange rng)
         {
             // get row and column

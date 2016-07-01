@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media;
 
 namespace UWP.DataGrid
 {
-    public class Column:RowCol
+    public class Column : RowCol
     {
         private Binding _binding;
         private IValueConverter _converter;
@@ -75,6 +75,19 @@ namespace UWP.DataGrid
                 }
             }
         }
+
+        private object _headerObject;
+
+        public object HeaderObject
+        {
+            get { return _headerObject; }
+            set
+            {
+                _headerObject = value;
+                OnPropertyChanged("HeaderObject");
+            }
+        }
+
 
         public string BoundPropertyName
         {
@@ -163,7 +176,7 @@ namespace UWP.DataGrid
             }
             set { _dataType = value; }
         }
-        public string Format { get;  set; }
+        public string Format { get; set; }
 
         protected override void OnPropertyChanged(string name)
         {
