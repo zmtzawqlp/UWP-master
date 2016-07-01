@@ -19,9 +19,9 @@ namespace UWP.DataGrid
             {
                 return;
             }
-            if (PivotItem != null && manipulationStatus == ManipulationStatus.None)
+            if (manipulationStatus == ManipulationStatus.None)
             {
-                if (FrozenColumns > 0)
+                if (PivotItem != null && FrozenColumns > 0)
                 {
                     var pt = e.Position;
                     pt = this.TransformToVisual(_columnHeaderPanel).TransformPoint(pt);
@@ -34,6 +34,36 @@ namespace UWP.DataGrid
                     if (FrozenColumns > column)
                     {
                         startingCrossSlideLeft = startingCrossSlideRight = true;
+                    }
+                }
+
+                if (_header != null)
+                {
+                    var pt = e.Position;
+                    pt = this.TransformToVisual(_header).TransformPoint(pt);
+                    var rect = new Rect(0, 0, _header.ActualWidth, _header.ActualHeight);
+                    if (rect.Contains(pt))
+                    {
+                        if (PivotItem != null)
+                        {
+                            startingCrossSlideLeft = startingCrossSlideRight = true;
+                        }
+                        manipulationOnHeaderOrFooter = true;
+                    }
+                }
+
+                if (_footer != null)
+                {
+                    var pt = e.Position;
+                    pt = this.TransformToVisual(_footer).TransformPoint(pt);
+                    var rect = new Rect(0, 0, _footer.ActualWidth, _footer.ActualHeight);
+                    if (rect.Contains(pt))
+                    {
+                        if (PivotItem != null)
+                        {
+                            startingCrossSlideLeft = startingCrossSlideRight = true;
+                        }
+                        manipulationOnHeaderOrFooter = true;
                     }
                 }
             }
@@ -53,6 +83,7 @@ namespace UWP.DataGrid
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
+            manipulationOnHeaderOrFooter = false;
             if (_verticalScrollBar.Value == 0 && AllowPullToRefresh)
             {
                 startingPullToRefresh = true;
@@ -106,6 +137,7 @@ namespace UWP.DataGrid
             startingPullToRefresh = false;
             startingCrossSlideLeft = false;
             startingCrossSlideRight = false;
+            manipulationOnHeaderOrFooter = false;
             manipulationStatus = ManipulationStatus.None;
             scollingDirection = ScollingDirection.None;
             preDeltaTranslationX = 0;
@@ -289,6 +321,10 @@ namespace UWP.DataGrid
                 return;
             }
             manipulationStatus = ManipulationStatus.Scrolling;
+            if (manipulationOnHeaderOrFooter)
+            {
+                x = 0;
+            }
             preDeltaTranslationX = x;
             preDeltaTranslationY = y;
             Point point = new Point();

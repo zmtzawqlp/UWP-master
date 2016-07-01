@@ -570,7 +570,7 @@ namespace UWP.DataGrid
         {
             if (_props == null || _props.Count == 0 || _itemType != GetItemType(_view))
             {
-                if (_itemType == null || !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
+                if (_itemType == null || !Util.Util.IsPrimitive(_itemType))
                 {
                     if (GetItemType(_view) != typeof(object))
                     {
@@ -595,20 +595,14 @@ namespace UWP.DataGrid
             var topRow = -1;
             if (_cellPanel != null)
             {
+                _cellPanel.UpdateViewRange();
                 var viewRange = _cellPanel.ViewRange;
                 topRow = viewRange.Row;
             }
+
             switch (e.CollectionChange)
             {
                 case CollectionChange.ItemInserted:
-
-                    if (index <= topRow)
-                    {
-                        if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
-                        {
-                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
-                        }
-                    }
                     // create the new bound row
                     var r = CreateBoundRow(sender[index]);
 
@@ -626,17 +620,17 @@ namespace UWP.DataGrid
                     {
                         LoadRows();
                     }
-                    break;
-
-                case CollectionChange.ItemRemoved:
-
                     if (index <= topRow)
                     {
                         if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
                         {
-                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
                         }
                     }
+                    break;
+
+                case CollectionChange.ItemRemoved:
+
                     if (rowIndex > -1)
                     {
                         rows.RemoveAt(rowIndex);
@@ -644,6 +638,13 @@ namespace UWP.DataGrid
                     else
                     {
                         LoadRows();
+                    }
+                    if (index <= topRow)
+                    {
+                        if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                        {
+                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                        }
                     }
                     break;
 
@@ -663,7 +664,6 @@ namespace UWP.DataGrid
                     LoadRows();
                     break;
             }
-
             // ensure scrollbars are in sync
             InvalidateArrange();
         }
@@ -707,7 +707,7 @@ namespace UWP.DataGrid
             {
                 // special case: binding directly to primitive types (int, string, etc)
                 var type = GetItemType(_view);
-                if (UWP.DataGrid.Util.Util.IsPrimitive(type))
+                if (Util.Util.IsPrimitive(type))
                 {
                     var col = new Column();
                     BindAutoColumn(col, type);
@@ -882,7 +882,7 @@ namespace UWP.DataGrid
                 // get item type
                 _itemType = GetItemType(_view);
 
-                if (_itemType != null && !UWP.DataGrid.Util.Util.IsPrimitive(_itemType))
+                if (_itemType != null && !Util.Util.IsPrimitive(_itemType))
                 {
 
                     foreach (var pi in _itemType.GetRuntimeProperties())
@@ -1219,5 +1219,6 @@ namespace UWP.DataGrid
         }
         #endregion
     }
+
 
 }

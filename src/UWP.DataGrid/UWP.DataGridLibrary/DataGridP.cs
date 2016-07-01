@@ -51,6 +51,7 @@ namespace UWP.DataGrid
         double preDeltaTranslationY;
         ManipulationStatus manipulationStatus;
         ScollingDirection scollingDirection;
+        bool manipulationOnHeaderOrFooter;
         Point? pointerOverPoint;
         #endregion
 
@@ -281,7 +282,6 @@ namespace UWP.DataGrid
                         {
                             if (_scrollPosition.Y < value.Y)
                             {
-
                                 if (HeaderMeasureHeight != 0)
                                 {
                                     if (Math.Abs(value.Y) <= HeaderMeasureHeight || value.Y > 0)
@@ -309,7 +309,6 @@ namespace UWP.DataGrid
                         var totalScrollPosition = new Point();
                         totalScrollPosition.X = Math.Max(-maxH, Math.Min(value.X, 0));
                         totalScrollPosition.Y = Math.Max(-maxV, Math.Min(value.Y, 0));
-
 
                         if (_scrollPosition != totalScrollPosition)
                         {
@@ -341,9 +340,9 @@ namespace UWP.DataGrid
                         }
 
                         var hasMoreItems = HasMoreItems(value);
-                        if (!hasMoreItems && ReachingLastRow != null)
+                        if (_view != null && _view.Count != 0)
                         {
-                            if (_view != null && _view.Count != 0)
+                            if (!hasMoreItems && ReachingLastRow != null)
                             {
                                 var eventArgs = new ReachingLastRowEventArgs();
                                 ReachingLastRow(this, eventArgs);

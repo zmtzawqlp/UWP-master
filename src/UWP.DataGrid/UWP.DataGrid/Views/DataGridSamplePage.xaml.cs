@@ -110,25 +110,25 @@ namespace UWP.DataGridSample.Views
         bool reachedFirstRow = true;
         private void datagrid_ReachFirstRow(object sender, ReachingFirstRowEventArgs e)
         {
-            e.Cancel = true;
-            if (reachedFirstRow)
-            {
-                reachedFirstRow = false;
+            //e.Cancel = true;
+            //if (reachedFirstRow)
+            //{
+            //    reachedFirstRow = false;
 
-                datagrid.ReachedFirstRow += Datagrid_ReachedFirstRow;
-            }
+            //    datagrid.ReachedFirstRow += Datagrid_ReachedFirstRow;
+            //}
 
         }
 
         private async void Datagrid_ReachedFirstRow(object sender, EventArgs e)
         {
-            datagrid.ReachedFirstRow -= Datagrid_ReachedFirstRow;
-            await Task.Delay(3000);
-            for (int i = 0; i < 30; i++)
-            {
-                _employees.Insert(0, new Employee() { Name = "wdjalkdja", Age = 1, IsMale = false });
-            }
-            reachedFirstRow = true;
+            //datagrid.ReachedFirstRow -= Datagrid_ReachedFirstRow;
+            //await Task.Delay(3000);
+            //for (int i = 0; i < 30; i++)
+            //{
+            //    _employees.Insert(0, new Employee() { Name = "wdjalkdja", Age = 1, IsMale = false });
+            //}
+            //reachedFirstRow = true;
         }
 
         private void datagrid_ReachLastRow(object sender, ReachingLastRowEventArgs e)
