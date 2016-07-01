@@ -699,7 +699,7 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <ContentPresenter x:Name="headerPresenter" Grid.Row="0" Visibility="Collapsed"
+                            <ContentPresenter x:Name="headerPresenter" Grid.Row="0"
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                                           ContentTemplate="{TemplateBinding HeaderTemplate}"
                                                           Content="{TemplateBinding Header}"

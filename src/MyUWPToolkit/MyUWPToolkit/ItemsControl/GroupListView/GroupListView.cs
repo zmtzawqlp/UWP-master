@@ -36,7 +36,8 @@ namespace MyUWPToolkit
         Dictionary<IGroupHeader, ExpressionAnimationItem> groupDic;
         private bool isGotoGrouping = false;
         private IGroupCollection groupCollection;
-
+        private Visual visual;
+        private ExpressionAnimation expression;
         #region Property
 
         public DataTemplate GroupHeaderTemplate
@@ -113,9 +114,40 @@ namespace MyUWPToolkit
             binding.Path = new PropertyPath("GroupHeaderTemplate");
             currentTopGroupHeader.SetBinding(ContentControl.ContentTemplateProperty, binding);
             currentTopGroupHeader.Visibility = Visibility.Collapsed;
+            if (scrollViewer.VerticalOffset == 0)
+            {
+                CreateVisual();
+            }
+            else
+            {
+                scrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, new DependencyPropertyChangedCallback(OnScrollViewerVerticalOffsetChanged));
+            }
         }
 
+        private void OnScrollViewerVerticalOffsetChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (scrollViewer.VerticalOffset == 0 && visual == null)
+            {
+                CreateVisual();
+            }
+        }
 
+        private void CreateVisual()
+        {
+            visual = ElementCompositionPreview.GetElementVisual(currentTopGroupHeader);
+
+            var scrollViewerManipProps = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
+
+            Compositor compositor = scrollViewerManipProps.Compositor;
+
+            expression = compositor.CreateExpressionAnimation("max(0,ScrollViewerManipProps.Translation.Y)");
+
+
+            // set "dynamic" reference parameter that will be used to evaluate the current position of the scrollbar every frame
+            expression.SetReferenceParameter("ScrollViewerManipProps", scrollViewerManipProps);
+            visual.StartAnimation("Offset.Y", expression);
+            //Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
+        }
 
         private void GroupHeadersGrid_Loaded(object sender, RoutedEventArgs e)
         {
