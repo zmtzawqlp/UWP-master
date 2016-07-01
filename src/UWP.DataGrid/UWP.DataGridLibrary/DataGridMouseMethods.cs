@@ -85,6 +85,7 @@ namespace UWP.DataGrid
             if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
             {
                 _cellPanel.HandlePointerOver(-1);
+                pointerOverPoint = null;
                 VisualStateManager.GoToState(this, "NoIndicator", true);
             }
         }
