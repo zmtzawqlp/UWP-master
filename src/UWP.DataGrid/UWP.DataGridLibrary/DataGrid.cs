@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using System.Diagnostics;
 
 namespace UWP.DataGrid
 {
@@ -37,6 +38,7 @@ namespace UWP.DataGrid
         {
             this.DefaultStyleKey = typeof(DataGrid);
             this.InitializePanel();
+            addRemoveItemHanlder = new AddRemoveItemHanlder();
         }
 
 
@@ -508,6 +510,7 @@ namespace UWP.DataGrid
         #region DP
         private void OnItemsSourceChanged()
         {
+            addRemoveItemHanlder.Reset();
             _manualSort.Clear();
             ScrollPosition = new Point(ScrollPosition.X, 0);
             if (_view != null)
@@ -585,6 +588,7 @@ namespace UWP.DataGrid
 
         }
 
+
         internal void OnViewChanged(IObservableVector<object> sender, IVectorChangedEventArgs e)
         {
             // handle action
@@ -620,11 +624,13 @@ namespace UWP.DataGrid
                     {
                         LoadRows();
                     }
+                    //addRemoveItemHanlder.AddTotalCount++;
                     if (index <= topRow)
                     {
                         if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
                         {
-                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
+                            Debug.WriteLine("Add : " + Rows.Count);
+                            addRemoveItemHanlder.AddItemLessThanTopCount++;
                         }
                     }
                     break;
@@ -639,11 +645,13 @@ namespace UWP.DataGrid
                     {
                         LoadRows();
                     }
+                    //addRemoveItemHanlder.RemoveTotalCount++;
                     if (index <= topRow)
                     {
                         if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
                         {
-                            ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                            Debug.WriteLine("Remove : " + Rows.Count);
+                            addRemoveItemHanlder.RemoveItemLessThanTopCount++;
                         }
                     }
                     break;
@@ -661,6 +669,7 @@ namespace UWP.DataGrid
                         _cellPanel.footerHeight = 0;
                         pointerOverPoint = null;
                     }
+                    addRemoveItemHanlder.Reset();
                     LoadRows();
                     break;
             }

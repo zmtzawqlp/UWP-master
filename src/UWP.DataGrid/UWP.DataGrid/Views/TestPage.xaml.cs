@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,24 +25,182 @@ namespace UWP.DataGridSample.Views
     /// </summary>
     public sealed partial class TestPage : Page
     {
-        //private MyIncrementalLoading<Employee> _employees;
-        private ObservableCollection<Employee> _employees;
+        private MyIncrementalLoading<Employee> _employees;
+        //private ObservableCollection<Employee> _employees;
+        private DispatcherTimer _timer;
+        ScrollViewer ScrollViewer;
+        ScrollBar ScrollBar;
         public TestPage()
         {
             this.InitializeComponent();
             Loaded += TestPage_Loaded;
+            _timer = new DispatcherTimer();
+            _timer.Tick += _timer_Tick;
+            _timer.Interval = new TimeSpan(0, 0, 3);
+            listView.Loaded += ListView_Loaded;
+        }
+
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScrollViewer = GetFirstChildOfType<ScrollViewer>(listView);
+            ScrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, new DependencyPropertyChangedCallback(OnScrollViewerVerticalOffsetPropertyChanged));
+            ScrollBar = GetFirstChildOfType<ScrollBar>(ScrollViewer);
+        }
+
+        private void OnScrollViewerVerticalOffsetPropertyChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            if (ScrollViewer.VerticalOffset == ScrollBar.Maximum)
+            {
+                int count = _employees.Count - 1;
+                for (int i = 0; i < 100; i++)
+                {
+                    _employees.Insert(0,new Employee() { Name = "Add" + i });
+                    //_employees.Insert(count, new Employee() { Name = "Add" + i });
+                }
+                for (int i = _employees.Count - 1; i > count; i--)
+                {
+                    _employees.RemoveAt(i);
+                }
+                //for (int i = 0; i < 100; i++)
+                //{
+                //    _employees.RemoveAt(0);
+                //}
+            }
+            //else if(ScrollViewer.VerticalOffset==0)
+            //{
+            //    int count = _employees.Count - 1;
+            //    for (int i = 0; i < 100; i++)
+            //    {
+            //        //_employees.Add(new Employee() { Name = "Add" + i });
+            //        _employees.Insert(0, new Employee() { Name = "Add" + i });
+            //    }
+            //    for (int i = _employees.Count - 1; i > count; i--)
+            //    {
+            //        _employees.RemoveAt(i);
+            //    }
+            //    //for (int i = 0; i < 100; i++)
+            //    //{
+            //    //    _employees.RemoveAt(0);
+            //    //}
+            //}
+            Debug.WriteLine("AfterVerticalOffset : " + ScrollViewer.VerticalOffset);
         }
 
         private void TestPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(1).ToList());
-            //_employees = new MyIncrementalLoading<Employee>(200, (startIndex, count) =>
-            //{
-            //    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
-            //});
+
+            //_employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(200).ToList());
+            _employees = new MyIncrementalLoading<Employee>(200, (startIndex, count) =>
+            {
+                return TestData.GetEmployees().Take(200).ToList();
+            });
+
 
             //_employees = TestData.GetEmployees();
             listView.ItemsSource = _employees;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("BeforeVerticalOffset : " + ScrollViewer.VerticalOffset);
+            istrue = true;
+            int count = _employees.Count - 1;
+
+            //_employees.Add(new Employee() { Name = "Add" + 0 });
+            ////_employees.Add(new Employee() { Name = "Add" + 0 });
+            //_employees.RemoveAt(0);
+
+            //_employees.Insert(0, new Employee() { Name = "Add" + 0 });
+            //_employees.RemoveAt(0);
+
+            for (int i = 0; i < 100; i++)
+            {
+                _employees.Insert(0, new Employee() { Name = "Add" + i });
+            }
+            for (int i = _employees.Count - 1; i > count; i--)
+            {
+                _employees.RemoveAt(i);
+            }
+            //if (!_timer.IsEnabled)
+            //{
+            //    _timer.Start();
+            //}
+            //else
+            //{
+            //    _timer.Stop();
+            //}
+        }
+
+        bool istrue = false;
+        private void _timer_Tick(object sender, object e)
+        {
+            if (!istrue)
+            {
+                Debug.WriteLine("BeforeVerticalOffset : " + ScrollViewer.VerticalOffset);
+                istrue = true;
+                int count = _employees.Count - 1;
+
+                //_employees.Add(new Employee() { Name = "Add" + 0 });
+                ////_employees.Add(new Employee() { Name = "Add" + 0 });
+                //_employees.RemoveAt(0);
+
+                //_employees.Insert(0, new Employee() { Name = "Add" + 0 });
+                //_employees.RemoveAt(0);
+
+                for (int i = 0; i < 100; i++)
+                {
+                    _employees.Insert(0, new Employee() { Name = "Add" + i });
+                }
+                for (int i = _employees.Count - 1; i > count; i--)
+                {
+                    _employees.RemoveAt(i);
+                }
+                //istrue = false;
+            }
+
+        }
+
+        /// <summary>
+        /// Gets an element's children of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type to look for.</typeparam>
+        /// <param name="e">Parent element.</param>
+        public static IEnumerable<T> GetChildrenOfType<T>(DependencyObject e) where T : DependencyObject
+        {
+            if (e != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(e); i++)
+                {
+                    var child = VisualTreeHelper.GetChild(e, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
+                    foreach (T grandChild in GetChildrenOfType<T>(child))
+                    {
+                        yield return grandChild;
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Gets an element's first child of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type to look for.</typeparam>
+        /// <param name="e">Parent element.</param>
+        /// <returns>Element's first child of type T (or the element itself if it is of type T).</returns>
+        public static T GetFirstChildOfType<T>(FrameworkElement e) where T : DependencyObject
+        {
+            var t = e as T;
+            if (t != null)
+            {
+                return t;
+            }
+            foreach (var child in GetChildrenOfType<T>(e))
+            {
+                return child;
+            }
+            return null;
         }
     }
 }

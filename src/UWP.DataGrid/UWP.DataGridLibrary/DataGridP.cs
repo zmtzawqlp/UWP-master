@@ -53,6 +53,7 @@ namespace UWP.DataGrid
         ScollingDirection scollingDirection;
         bool manipulationOnHeaderOrFooter;
         Point? pointerOverPoint;
+        AddRemoveItemHanlder addRemoveItemHanlder;
         #endregion
 
         #region Internal Properties
@@ -274,6 +275,9 @@ namespace UWP.DataGrid
                         var sz = new Size(wid, hei);
                         //total size
                         var totalRowsSize = Rows.GetTotalSize();
+                        value.Y -= (addRemoveItemHanlder.Count) * _cellPanel.Rows.DefaultSize;
+                        addRemoveItemHanlder.Reset();
+                        Debug.WriteLine("ScrollPosition : " + Rows.Count);
                         var totalColumnsSize = Columns.GetTotalSize();
                         var totalHeight = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height + FooterMeasureHeight;
 
@@ -312,6 +316,11 @@ namespace UWP.DataGrid
 
                         if (_scrollPosition != totalScrollPosition)
                         {
+                            //if (_verticalScrollBar.Maximum == -totalScrollPosition.Y && HasMoreItems(value))
+                            //{
+                            //    _scrollPosition = totalScrollPosition;
+                            //    return;
+                            //}
                             _scrollPosition = totalScrollPosition;
                             if (_horizontalScrollBar != null && _verticalScrollBar != null)
                             {
@@ -813,5 +822,41 @@ namespace UWP.DataGrid
     public class ReachingLastRowEventArgs : CancelEventArgs
     {
 
+    }
+
+    internal class AddRemoveItemHanlder
+    {
+        //public int AddTotalCount { get; set; }
+
+        //public int RemoveTotalCount { get; set; }
+
+        public int AddItemLessThanTopCount { get; set; }
+
+        public int RemoveItemLessThanTopCount { get; set; }
+
+        public void Reset()
+        {
+            //AddTotalCount = RemoveTotalCount = 
+            AddItemLessThanTopCount = RemoveItemLessThanTopCount = 0;
+        }
+
+        /// <summary>
+        /// if count is positive，we should remove row height, otherwise add.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                ////if the count is not change,return 0
+                //if (AddTotalCount == RemoveTotalCount)
+                //{
+                //    return 0;
+                //}
+                //else
+                {
+                    return AddItemLessThanTopCount - RemoveItemLessThanTopCount;
+                }
+            }
+        }
     }
 }

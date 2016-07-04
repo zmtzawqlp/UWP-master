@@ -20,10 +20,7 @@ namespace UWP.DataGrid
                     if (!hasMoreItems && FooterMeasureHeight == 0)
                     {
                         _footer.Measure(_contentGrid.DesiredSize);
-                        if (_footer.DesiredSize != Size.Empty && _footer.DesiredSize.Height != 0 && _footer.DesiredSize.Width != 0)
-                        {
-                            _verticalScrollBar.Maximum += _footer.DesiredSize.Height;
-                        }
+                        FooterHeight = new GridLength(1, GridUnitType.Auto);
                     }
 
                     var footHeight = -(maxV + value.Y);
