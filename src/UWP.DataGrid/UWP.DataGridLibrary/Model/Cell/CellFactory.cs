@@ -61,6 +61,10 @@ namespace UWP.DataGrid.Model.Cell
             if (bdr != null)
             {
                 bdr.DataContext = null;
+                if (bdr.Child is ContentPresenter)
+                {
+                    (bdr.Child as ContentPresenter).Content = null;
+                }
                 bdr.Child = null;
             }
         }

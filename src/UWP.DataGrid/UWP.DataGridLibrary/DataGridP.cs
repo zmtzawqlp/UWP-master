@@ -209,6 +209,15 @@ namespace UWP.DataGrid
 
         #region Public Properties
 
+        /// <summary>
+        /// Refresh ScrollPosition when view changed.
+        /// default value true
+        /// Sometime if you don't want refresh scrollPosition 
+        /// when you add or remove items
+        /// you can set it to false before your changes.
+        /// </summary>
+        public bool RefreshScrollPosition { get; set; }
+
         public SortMode SortMode { get; set; }
 
         public Rows Rows
@@ -275,9 +284,14 @@ namespace UWP.DataGrid
                         var sz = new Size(wid, hei);
                         //total size
                         var totalRowsSize = Rows.GetTotalSize();
-                        value.Y -= (addRemoveItemHanlder.Count) * _cellPanel.Rows.DefaultSize;
+                        Debug.WriteLine("addRemoveCount : " + addRemoveItemHanlder.Count);
+                        Debug.WriteLine("addCount : " + addRemoveItemHanlder.AddTotalCount + ", removeCount : " + addRemoveItemHanlder.RemoveTotalCount);
+                        if (RefreshScrollPosition)
+                        {
+                            value.Y -= (addRemoveItemHanlder.Count) * _cellPanel.Rows.DefaultSize;
+                        }
                         addRemoveItemHanlder.Reset();
-                        Debug.WriteLine("ScrollPosition : " + Rows.Count);
+
                         var totalColumnsSize = Columns.GetTotalSize();
                         var totalHeight = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height + FooterMeasureHeight;
 
@@ -826,18 +840,26 @@ namespace UWP.DataGrid
 
     internal class AddRemoveItemHanlder
     {
-        //public int AddTotalCount { get; set; }
+        public int AddTotalCount { get; set; }
 
-        //public int RemoveTotalCount { get; set; }
+        public int RemoveTotalCount { get; set; }
 
         public int AddItemLessThanTopCount { get; set; }
 
         public int RemoveItemLessThanTopCount { get; set; }
 
+        public int CurrentTopRow { get; set; }
+
+        public AddRemoveItemHanlder()
+        {
+            CurrentTopRow = -1;
+        }
+
         public void Reset()
         {
-            //AddTotalCount = RemoveTotalCount = 
-            AddItemLessThanTopCount = RemoveItemLessThanTopCount = 0;
+            AddTotalCount = RemoveTotalCount =
+             AddItemLessThanTopCount = RemoveItemLessThanTopCount = 0;
+            CurrentTopRow = -1;
         }
 
         /// <summary>
@@ -847,7 +869,7 @@ namespace UWP.DataGrid
         {
             get
             {
-                ////if the count is not change,return 0
+                //if the count is not change,return 0
                 //if (AddTotalCount == RemoveTotalCount)
                 //{
                 //    return 0;

@@ -104,14 +104,18 @@ namespace UWP.DataGridSample.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!_timer.IsEnabled)
+            for (int i = 0; i < 100; i++)
             {
-                _timer.Start();
+                _employees.Insert(0, new Employee() { Name = "Add" + i });
             }
-            else
-            {
-                _timer.Stop();
-            }
+            //if (!_timer.IsEnabled)
+            //{
+            //    _timer.Start();
+            //}
+            //else
+            //{
+            //    _timer.Stop();
+            //}
             //var test = datagrid.GetVisibleItems().ToList();
             //foreach (var item in test)
             //{

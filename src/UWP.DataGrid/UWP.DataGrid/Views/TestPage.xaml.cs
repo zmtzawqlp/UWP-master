@@ -52,15 +52,21 @@ namespace UWP.DataGridSample.Views
             if (ScrollViewer.VerticalOffset == ScrollBar.Maximum)
             {
                 int count = _employees.Count - 1;
+
                 for (int i = 0; i < 100; i++)
                 {
-                    _employees.Insert(0,new Employee() { Name = "Add" + i });
-                    //_employees.Insert(count, new Employee() { Name = "Add" + i });
+                    _employees.RemoveAt(0);
                 }
-                for (int i = _employees.Count - 1; i > count; i--)
+
+
+                for (int i = 0; i < 100; i++)
                 {
-                    _employees.RemoveAt(i);
+                    //_employees.Insert(0, new Employee() { Name = "Add" + i });
+                    //_employees.Insert(count, new Employee() { Name = "Add" + i });
+                    _employees.Add(new Employee() { Name = "Add" + i });
                 }
+
+
                 //for (int i = 0; i < 100; i++)
                 //{
                 //    _employees.RemoveAt(0);
@@ -113,14 +119,20 @@ namespace UWP.DataGridSample.Views
             //_employees.Insert(0, new Employee() { Name = "Add" + 0 });
             //_employees.RemoveAt(0);
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 90; i++)
             {
                 _employees.Insert(0, new Employee() { Name = "Add" + i });
             }
-            for (int i = _employees.Count - 1; i > count; i--)
+
+            for (int i = 0; i < 80; i++)
             {
-                _employees.RemoveAt(i);
+                _employees.RemoveAt(0);
             }
+
+            //for (int i = _employees.Count - 1; i > count; i--)
+            //{
+            //    _employees.RemoveAt(i);
+            //}
             //if (!_timer.IsEnabled)
             //{
             //    _timer.Start();
