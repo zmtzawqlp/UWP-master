@@ -109,8 +109,13 @@
   <ItemGroup>
     <Compile Include="Chart.cs" />
     <Compile Include="ChartP.cs" />
+    <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Marker\MarkerLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Series\BubbleSeries.cs" />
+    <Compile Include="Series\ISeries.cs" />
+    <Compile Include="Series\PointSeries.cs" />
+    <Compile Include="Series\Series.cs" />
     <Compile Include="View\ViewLayer.cs" />
     <EmbeddedResource Include="Properties\UWP.Chart.rd.xml" />
   </ItemGroup>
@@ -125,10 +130,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Axis\" />
+    <Folder Include="Data\" />
+    <Folder Include="Legend\" />
+    <Folder Include="Render\UIElementRender\" />
+    <Folder Include="Render\Win2DRender\" />
     <Folder Include="Themes\DeviceFamily-Mobile\" />
-    <Folder Include="View\Axis\" />
-    <Folder Include="View\Legend\" />
-    <Folder Include="View\Series\" />
+    <Folder Include="Util\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
