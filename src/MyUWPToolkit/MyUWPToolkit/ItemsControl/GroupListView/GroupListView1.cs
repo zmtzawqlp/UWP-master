@@ -26,6 +26,7 @@ namespace MyUWPToolkit
         private Visual visual;
         private ExpressionAnimation expression;
         private bool isGotoGrouping;
+        private Dictionary<IGroupHeader, GroupListViewItem> groupheaders;
         #region Property
 
         public DataTemplate GroupHeaderTemplate
@@ -45,6 +46,7 @@ namespace MyUWPToolkit
         {
             this.DefaultStyleKey = typeof(GroupListView1);
             this.RegisterPropertyChangedCallback(ListView.ItemsSourceProperty, new DependencyPropertyChangedCallback(OnItemsSourceChanged));
+            groupheaders = new Dictionary<IGroupHeader, GroupListViewItem>();
         }
 
         private void OnItemsSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -60,6 +62,7 @@ namespace MyUWPToolkit
                 currentTopGroupHeader.DataContext = null;
                 currentTopGroupHeader.Visibility = Visibility.Collapsed;
             }
+            groupheaders.Clear();
         }
 
         protected override void OnApplyTemplate()
@@ -142,6 +145,11 @@ namespace MyUWPToolkit
             if (group != null && element is GroupListViewItem)
             {
                 var groupListViewItem = (element as GroupListViewItem);
+                if (groupheaders.ContainsKey(group) && groupheaders[group] != groupListViewItem)
+                {
+                    groupheaders[group].ClearHeader();
+                }
+                groupheaders[group] = groupListViewItem;
                 groupListViewItem.Header = group;
                 Binding binding = new Binding();
                 binding.Source = this;
@@ -161,6 +169,10 @@ namespace MyUWPToolkit
             {
                 var groupListViewItem = (element as GroupListViewItem);
                 groupListViewItem.ClearHeader();
+                if (groupheaders.ContainsKey(group))
+                {
+                    groupheaders.Remove(group);
+                }
             }
         }
 

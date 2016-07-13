@@ -34,6 +34,7 @@ namespace MyUWPToolkit
         private Thickness defaultListViewItemMargin = new Thickness(0);
         //Dictionary<ContentControl, ExpressionAnimationItem> expressionAnimationDic;
         Dictionary<IGroupHeader, ExpressionAnimationItem> groupDic;
+        private Dictionary<IGroupHeader, ListViewItem> groupheaders;
         private bool isGotoGrouping = false;
         private IGroupCollection groupCollection;
         private Visual visual;
@@ -59,7 +60,7 @@ namespace MyUWPToolkit
             this.DefaultStyleKey = typeof(GroupListView);
             groupDic = new Dictionary<IGroupHeader, ExpressionAnimationItem>();
             this.RegisterPropertyChangedCallback(ListView.ItemsSourceProperty, new DependencyPropertyChangedCallback(OnItemsSourceChanged));
-
+            groupheaders = new Dictionary<IGroupHeader, ListViewItem>();
         }
 
 
@@ -90,6 +91,7 @@ namespace MyUWPToolkit
             groupHeaderDelta = 30;
             defaultListViewItemMargin = new Thickness(0);
             isGotoGrouping = false;
+            groupheaders.Clear();
         }
 
         protected override void OnApplyTemplate()
@@ -537,6 +539,12 @@ namespace MyUWPToolkit
                 var group = groupCollection.GroupHeaders.FirstOrDefault(x => x.FirstIndex == index || x.LastIndex == index);
                 if (group != null)
                 {
+                    if (groupheaders.ContainsKey(group) && groupheaders[group] != listViewItem)
+                    {
+                        groupheaders[group].Margin=defaultListViewItemMargin;
+                    }
+                    groupheaders[group] = listViewItem;
+
                     if (!groupDic.ContainsKey(group))
                     {
                         ContentControl groupheader = CreateGroupHeader(group);
