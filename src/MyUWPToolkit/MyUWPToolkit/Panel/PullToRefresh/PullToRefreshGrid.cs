@@ -125,7 +125,7 @@ namespace MyUWPToolkit
             Windows.UI.Xaml.Media.CompositionTarget.Rendering -= OnCompositionTargetRendering;
 
             var cancelled = (_releaseTime - _pulledDownTime) > TimeSpan.FromMilliseconds(250);
-
+            _scrollViewerBorder.Clip = null;
             if (_refresh)
             {
                 _refresh = false;
@@ -351,6 +351,7 @@ namespace MyUWPToolkit
 
             var cancelled = (_releaseTime - _pulledDownTime) > TimeSpan.FromMilliseconds(250);
 
+            _scrollViewerBorder.Clip = null;
             if (_refresh)
             {
                 _refresh = false;
