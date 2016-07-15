@@ -25,8 +25,8 @@ namespace UWP.DataGridSample.Views
     /// </summary>
     public sealed partial class TestPage : Page
     {
-        private MyIncrementalLoading<Employee> _employees;
-        //private ObservableCollection<Employee> _employees;
+        //private MyIncrementalLoading<Employee> _employees;
+        private ObservableCollection<Employee> _employees;
         private DispatcherTimer _timer;
         ScrollViewer ScrollViewer;
         ScrollBar ScrollBar;
@@ -38,13 +38,30 @@ namespace UWP.DataGridSample.Views
             _timer.Tick += _timer_Tick;
             _timer.Interval = new TimeSpan(0, 0, 3);
             listView.Loaded += ListView_Loaded;
+            listView1.Loaded += ListView1_Loaded;
+
+        }
+
+        private void ListView1_Loaded(object sender, RoutedEventArgs e)
+        {
+           
         }
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
             ScrollViewer = GetFirstChildOfType<ScrollViewer>(listView);
-            ScrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, new DependencyPropertyChangedCallback(OnScrollViewerVerticalOffsetPropertyChanged));
+            //ScrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, new DependencyPropertyChangedCallback(OnScrollViewerVerticalOffsetPropertyChanged));
             ScrollBar = GetFirstChildOfType<ScrollBar>(ScrollViewer);
+            ScrollViewer1 = GetFirstChildOfType<ScrollViewer>(listView1);
+            var ScrollBar1 = GetFirstChildOfType<ScrollBar>(ScrollViewer1);
+     
+            Binding b = new Binding();
+            b.Source = ScrollBar;
+            b.Path = new PropertyPath("Value");
+            b.Mode = BindingMode.TwoWay;
+            b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+            ScrollBar1.SetBinding(ScrollBar.ValueProperty, b);
         }
 
         private void OnScrollViewerVerticalOffsetPropertyChanged(DependencyObject sender, DependencyProperty dp)
@@ -95,15 +112,18 @@ namespace UWP.DataGridSample.Views
         private void TestPage_Loaded(object sender, RoutedEventArgs e)
         {
 
-            //_employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(200).ToList());
-            _employees = new MyIncrementalLoading<Employee>(200, (startIndex, count) =>
-            {
-                return TestData.GetEmployees().Take(200).ToList();
-            });
+            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(200).ToList());
+            //_employees = new MyIncrementalLoading<Employee>(200, (startIndex, count) =>
+            //{
+            //    return TestData.GetEmployees().Take(200).ToList();
+            //});
 
 
             //_employees = TestData.GetEmployees();
             listView.ItemsSource = _employees;
+
+            listView1.ItemsSource = _employees;
+            //listView2.ItemsSource = _employees;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -213,6 +233,38 @@ namespace UWP.DataGridSample.Views
                 return child;
             }
             return null;
+        }
+
+        private void ItemsPresenter_VerticalSnapPointsChanged(object sender, object e)
+        {
+            
+        }
+        ScrollViewer sv;
+
+        public ScrollViewer ScrollViewer1 { get; private set; }
+
+        private void ScrollViewer_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+            //sv.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, new DependencyPropertyChangedCallback(Onchanged));
+        }
+
+        private void Onchanged(DependencyObject sender, DependencyProperty dp)
+        {
+            //sv = sender as ScrollViewer;
+            //Debug.WriteLine(sv.VerticalOffset);
+            //ScrollViewer1.ChangeView(0, sv.VerticalOffset,null);
+        }
+
+        private void ScrollContentPresenter_Loaded(object sender, RoutedEventArgs e)
+        {
+            var a = (sender as ScrollContentPresenter);
+            a.ManipulationDelta += A_ManipulationDelta;
+        }
+
+        private void A_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            
         }
     }
 }

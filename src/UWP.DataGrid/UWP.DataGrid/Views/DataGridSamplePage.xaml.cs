@@ -30,8 +30,8 @@ namespace UWP.DataGridSample.Views
     /// </summary>
     public sealed partial class DataGridSamplePage : Page
     {
-        private MyIncrementalLoading<Employee> _employees;
-        //private ObservableCollection<Employee> _employees;
+        //private MyIncrementalLoading<Employee> _employees;
+        private ObservableCollection<Employee> _employees;
         private DispatcherTimer _timer;
         public DataGridSamplePage()
         {
@@ -67,14 +67,15 @@ namespace UWP.DataGridSample.Views
         private void DataGridSamplePage_Loaded(object sender, RoutedEventArgs e)
         {
 
-            _employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
-            {
-                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
-            });
-            //_employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(50).ToList());
+            //_employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            //{
+            //    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+            //});
+            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(50).ToList());
             //_employees = TestData.GetEmployees();
             datagrid.ItemsSource = _employees;
-            //datagrid1.ItemsSource = _employees;
+            datagrid1.ItemsSource = _employees;
+            datagrid2.ItemsSource = _employees;
             //you can custom cell if you want 
             datagrid.CellFactory = new MyCellFactory();
         }
@@ -172,6 +173,11 @@ namespace UWP.DataGridSample.Views
         private void datagrid_ReachLastRow(object sender, ReachingLastRowEventArgs e)
         {
             //e.Cancel = true;
+        }
+
+        private void ScrollViewer_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+          
         }
     }
 

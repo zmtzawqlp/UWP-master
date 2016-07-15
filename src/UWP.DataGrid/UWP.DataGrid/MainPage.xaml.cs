@@ -38,7 +38,7 @@ namespace UWP.DataGridSample
                     Frame.Navigate(typeof(DataGridSamplePage));
                     break;
                 case "Test":
-                    Frame.Navigate(typeof(TestPage));
+                    Frame.Navigate(typeof(BlankPage1));
                     break;
                 default:
                     break;
