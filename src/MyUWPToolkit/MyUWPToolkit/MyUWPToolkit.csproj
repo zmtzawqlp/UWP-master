@@ -114,6 +114,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
+    <Compile Include="FlexGrid\Column.cs" />
     <Compile Include="FlexGrid\FlexGrid.cs" />
     <Compile Include="FlexGrid\FlexGridP.cs" />
     <Compile Include="ImageControl\AspectRatio.cs" />

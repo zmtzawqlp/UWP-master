@@ -28,10 +28,6 @@ namespace ToolkitSample.Views
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            grid.Content = new TextBlock() { Text = "dada" ,Height=600};
-        }
     }
 
     public class Grid1 : ContentPresenter

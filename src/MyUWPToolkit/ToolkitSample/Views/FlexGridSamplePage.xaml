@@ -15,23 +15,26 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="adada">
-                <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick" PullToRefresh="flexgrid_PullToRefresh" SortingColumn="flexgrid_SortingColumn" >
+                <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick"  SortingColumn="flexgrid_SortingColumn" >
+                    <flexgrid:FlexGrid.Header>
+                        <Rectangle Height="20" Fill="Red"/>
+                    </flexgrid:FlexGrid.Header>
                     <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}"/>
+                            <TextBlock Text="{Binding ColumnName}"/>
                         </DataTemplate>
                     </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                     <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" Width="100"/>
+                            <TextBlock Text="{Binding ColumnName}" Width="100"/>
                         </DataTemplate>
                     </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
-                    <flexgrid:FlexGrid.FrozenColumnsCellItemTemplate>
+                    <flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
-                    </flexgrid:FlexGrid.FrozenColumnsCellItemTemplate>
-                    <flexgrid:FlexGrid.CellItemTemplate>
+                    </flexgrid:FlexGrid.FrozenColumnsItemTemplate>
+                    <flexgrid:FlexGrid.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -52,7 +55,7 @@
                                 <TextBlock Text="{Binding Name}" Grid.Column="6"/>
                             </Grid>
                         </DataTemplate>
-                    </flexgrid:FlexGrid.CellItemTemplate>
+                    </flexgrid:FlexGrid.ItemTemplate>
                 </flexgrid:FlexGrid>
             </PivotItem>
             <PivotItem Header="dada">

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.FlexGrid;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -30,7 +31,7 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             Loaded += FlexGridSamplePage_Loaded;
-            
+
         }
 
         private void FlexGridSamplePage_Loaded(object sender, RoutedEventArgs e)
@@ -41,8 +42,15 @@ namespace ToolkitSample
             });
 
             //_employees.CollectionChanged += _employees_CollectionChanged;
-            flexgrid.FrozenColumnsHeaderItemsSource = new List<string>() { "test1" };
-            flexgrid.ColumnsHeaderItemsSource = new List<string>() { "Name1", "Name2", "Name3", "Name4", "Name5", "Name6", "Name7"};
+            flexgrid.FrozenColumnsHeaderItemsSource = new System.Collections.ObjectModel.ObservableCollection<Column>() { new Column() { ColumnName = "test1" } };
+
+            var columns = new System.Collections.ObjectModel.ObservableCollection<Column>();
+            for (int i = 1; i < 8; i++)
+            {
+                columns.Add(new MyColumn() { ColumnName = "Name" + i });
+            }
+
+            flexgrid.ColumnsHeaderItemsSource = columns;
             flexgrid.ItemsSource = _employees;
         }
 
@@ -62,5 +70,11 @@ namespace ToolkitSample
             flexgrid.ItemsSource = null;
             flexgrid.ItemsSource = _employees;
         }
+    }
+
+    public class MyColumn : Column
+    {
+        public object Data { get; set; }
+        public string ColumnName { get; set; }
     }
 }
