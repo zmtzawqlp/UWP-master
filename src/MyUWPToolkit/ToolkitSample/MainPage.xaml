@@ -24,7 +24,7 @@
             <!--<x:String>CustomKeyboardPage</x:String>-->
             <!--<x:String>WIN2DPage</x:String>-->
             <!--<x:String>DataGrid</x:String>-->
-            <!--<x:String>FlexGrid</x:String>-->
+            <x:String>FlexGrid</x:String>
             <x:String>GroupListView</x:String>
         </ListView>
         <ContentControl x:Name="contentControl"/>
