@@ -9,7 +9,11 @@
     xmlns:flexgrid="using:MyUWPToolkit.FlexGrid"
     mc:Ignorable="d">
     <Page.Resources>
-        
+        <Style  TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -17,21 +21,27 @@
             <PivotItem Header="adada">
                 <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick"  SortingColumn="flexgrid_SortingColumn" >
                     <flexgrid:FlexGrid.Header>
-                        <Rectangle Height="20" Fill="Red"/>
+                        <Rectangle Height="200" Fill="Red"/>
                     </flexgrid:FlexGrid.Header>
                     <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ColumnName}"/>
+                            <Grid Background="Blue">
+                                <TextBlock Text="{Binding ColumnName}" Width="100"/>
+                            </Grid>
                         </DataTemplate>
                     </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                     <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ColumnName}" Width="100"/>
+                            <Grid Background="Yellow" >
+                                <TextBlock Text="{Binding ColumnName}" Width="100"/>
+                            </Grid>
                         </DataTemplate>
                     </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                     <flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
+                            <Grid Background="Blue">
+                                <TextBlock Text="{Binding Name}" Width="100"/>
+                            </Grid>
                         </DataTemplate>
                     </flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                     <flexgrid:FlexGrid.ItemTemplate>

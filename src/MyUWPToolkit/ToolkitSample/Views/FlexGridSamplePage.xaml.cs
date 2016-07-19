@@ -47,7 +47,7 @@ namespace ToolkitSample
             var columns = new System.Collections.ObjectModel.ObservableCollection<Column>();
             for (int i = 1; i < 8; i++)
             {
-                columns.Add(new MyColumn() { ColumnName = "Name" + i });
+                columns.Add(new Column() { ColumnName = "Name" + i });
             }
 
             flexgrid.ColumnsHeaderItemsSource = columns;
@@ -72,9 +72,4 @@ namespace ToolkitSample
         }
     }
 
-    public class MyColumn : Column
-    {
-        public object Data { get; set; }
-        public string ColumnName { get; set; }
-    }
 }
