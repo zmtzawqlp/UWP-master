@@ -67,17 +67,21 @@ namespace UWP.DataGridSample.Views
         private void DataGridSamplePage_Loaded(object sender, RoutedEventArgs e)
         {
 
-            //_employees = new MyIncrementalLoading<Employee>(1000, (startIndex, count) =>
+            //_employees = new MyIncrementalLoading<Employee>(300, (startIndex, count) =>
             //{
             //    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             //});
-            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(50).ToList());
+            _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(30).ToList());
+            //listview1.ItemsSource = _employees;
+            //listview2.ItemsSource = _employees;
+            //listview3.ItemsSource = _employees;
+
             //_employees = TestData.GetEmployees();
             datagrid.ItemsSource = _employees;
             datagrid1.ItemsSource = _employees;
             datagrid2.ItemsSource = _employees;
             //you can custom cell if you want 
-            datagrid.CellFactory = new MyCellFactory();
+            //datagrid.CellFactory = new MyCellFactory();
         }
 
         private async void datagrid_ItemClick(object sender, DataGrid.ItemClickEventArgs e)
@@ -126,7 +130,7 @@ namespace UWP.DataGridSample.Views
 
         private void PullToRefreshPanel_PullToRefresh(object sender, EventArgs e)
         {
-            datagrid.ItemsSource = null;
+            //datagrid.ItemsSource = null;
             //_employees = new MyIncrementalLoading<Employee>(30, (startIndex, count) =>
             //{
             //    if (_employees.Count + count > 30)
@@ -138,12 +142,12 @@ namespace UWP.DataGridSample.Views
 
             //_employees.CollectionChanged += _employees_CollectionChanged;
 
-            datagrid.ItemsSource = _employees;
+            //datagrid.ItemsSource = _employees;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            datagrid.GoToTop();
+            //datagrid.GoToTop();
         }
 
         bool reachedFirstRow = true;
@@ -177,7 +181,14 @@ namespace UWP.DataGridSample.Views
 
         private void ScrollViewer_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-          
+            //var horizontalOffset = scrollViewer.HorizontalOffset -e.Delta.Translation.X;
+            //var verticalOffset = scrollViewer.VerticalOffset - e.Delta.Translation.Y;
+            //scrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
+        }
+
+        private void scrollViewer_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+        
         }
     }
 

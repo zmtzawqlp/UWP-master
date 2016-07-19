@@ -35,7 +35,7 @@ namespace UWP.DataGrid
                 var pt = e.GetCurrentPoint(_cellPanel).Position;
                 var row = GetRowFromPoint(pt);
                 _cellPanel.HandlePointerPressed(row);
-
+                this.Focus(FocusState.Programmatic);
             }
         }
 

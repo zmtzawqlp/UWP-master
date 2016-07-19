@@ -45,26 +45,30 @@ namespace UWP.DataGridSample.Views
 
 
             //_employees = TestData.GetEmployees();
-         
+
             listview.ItemsSource = _employees;
             //ItemsControl a = new ItemsControl();
-           
+
             //listview1.ItemsSource = _employees;
-           
+
         }
 
         private void Listview_Loaded(object sender, RoutedEventArgs e)
         {
-  
+
             sv1 = GetFirstChildOfType<ScrollViewer>(this.listview) as ScrollViewer;
-            var a = GetFirstChildOfType<ScrollBar>(sv1,1);
-            //a.LayoutUpdated += A_LayoutUpdated;
+            var a = GetFirstChildOfType<ScrollBar>(sv1, 1);
+            a.ValueChanged += A_ValueChanged;
             //sv1.Loaded += Sv1_Loaded;
             //sv1.ViewChanging += Sv1_ViewChanging;
             sv1.ViewChanged += Sv1_ViewChanged;
+            a.Scroll += A_Scroll;
         }
 
+        private void A_Scroll(object sender, ScrollEventArgs e)
+        {
 
+        }
 
         private void A_LayoutUpdated(object sender, object e)
         {
@@ -81,8 +85,8 @@ namespace UWP.DataGridSample.Views
             }
             else
             {
-               
-                Debug.WriteLine("IsInertial:false : "+ e.FinalView.VerticalOffset + "," + e.NextView.VerticalOffset);
+
+                Debug.WriteLine("IsInertial:false : " + e.FinalView.VerticalOffset + "," + e.NextView.VerticalOffset);
             }
             //sv2.ChangeView(0, e.NextView.VerticalOffset, null, true);
         }
@@ -98,7 +102,7 @@ namespace UWP.DataGridSample.Views
             //sv2 = GetFirstChildOfType<ScrollViewer>(this.listview1) as ScrollViewer;
             sv2.Loaded += Sv2_Loaded;
             sv2.ViewChanging += Sv2_ViewChanging;
-    
+
         }
 
         private void Sv2_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
@@ -127,7 +131,7 @@ namespace UWP.DataGridSample.Views
             //sv2.ChangeView(0,e.NewValue,null,true);
         }
 
-   
+
 
         private void ItemsPresenter_LayoutUpdated(object sender, object e)
         {
@@ -137,12 +141,12 @@ namespace UWP.DataGridSample.Views
         ItemsPresenter ItemsPresenter;
         private void ItemsPresenter_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemsPresenter=(sender as ItemsPresenter);
-            var count= VisualTreeHelper.GetChildrenCount(ItemsPresenter);
+            ItemsPresenter = (sender as ItemsPresenter);
+            var count = VisualTreeHelper.GetChildrenCount(ItemsPresenter);
             for (int i = 0; i < count; i++)
             {
                 var item = VisualTreeHelper.GetChild(ItemsPresenter, i);
-                if (i==1)
+                if (i == 1)
                 {
                     //(item as ItemsStackPanel).ItemsUpdatingScrollMode = ItemsUpdatingScrollMode.KeepScrollOffset;
                 }
@@ -151,29 +155,59 @@ namespace UWP.DataGridSample.Views
 
         private void ListView_Loaded_1(object sender, RoutedEventArgs e)
         {
-            
+
             //(sender as ListView).IsSynchronizedWithCurrentItem = true;
 
         }
 
         double? horizontalOffset;
+        DispatcherTimer a = new DispatcherTimer();
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-             horizontalOffset=  sv1.HorizontalOffset;
-            var a= GetFirstChildOfType<ScrollBar>(sv1, 1);
-            a.ClearValue(ScrollBar.ValueProperty);
+            // sv1.HorizontalScrollMode = ScrollMode.Disabled;
+            horizontalOffset = sv1.HorizontalOffset;
+            //var a= GetFirstChildOfType<ScrollBar>(sv1, 1);
+            //a.ClearValue(ScrollBar.ValueProperty);
+            ItemsPresenter.SizeChanged += ItemsPresenter_SizeChanged;
             _employees.Clear();
-           
-            
+
+            //a.Interval = new TimeSpan(1000);
+            //a.Tick += A_Tick;
+            //a.Start();
         }
 
-        private void Sv1_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void ItemsPresenter_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (!e.IsIntermediate && horizontalOffset!=null)
+            if (horizontalOffset != null && e.NewSize!=new Size() && e.NewSize!=new Size(88,44))
             {
                 sv1.ChangeView(horizontalOffset, 0, null);
                 horizontalOffset = null;
             }
+            
+        }
+
+        private void A_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+
+        }
+        private void A_Tick(object sender, object e)
+        {
+            a.Stop();
+            sv1.ChangeView(horizontalOffset, null, null);
+            a.Tick -= A_Tick;
+        }
+
+        private void Sv1_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            Debug.WriteLine("Sv1_ViewChanged");
+            //if (horizontalOffset != null)
+            //{
+            //    //sv1.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () => { sv1.ChangeView(horizontalOffset, 0, null); });
+            //    sv1.InvalidateScrollInfo();
+            //    sv1.ChangeView(horizontalOffset, 0, null);
+            //    //sv1.ScrollToVerticalOffset(horizontalOffset.Value);
+            //    horizontalOffset = null;
+            //}
         }
 
         /// <summary>
@@ -205,7 +239,7 @@ namespace UWP.DataGridSample.Views
         /// <typeparam name="T">Type to look for.</typeparam>
         /// <param name="e">Parent element.</param>
         /// <returns>Element's first child of type T (or the element itself if it is of type T).</returns>
-        public static T GetFirstChildOfType<T>(FrameworkElement e,int index=0) where T : DependencyObject
+        public static T GetFirstChildOfType<T>(FrameworkElement e, int index = 0) where T : DependencyObject
         {
             var t = e as T;
             if (t != null)
@@ -215,7 +249,7 @@ namespace UWP.DataGridSample.Views
             int i = 0;
             foreach (var child in GetChildrenOfType<T>(e))
             {
-                if (i==index)
+                if (i == index)
                 {
                     return child;
                 }
@@ -226,7 +260,7 @@ namespace UWP.DataGridSample.Views
     }
 
 
-    public class MyItemsControl:ItemsControl
+    public class MyItemsControl : ItemsControl
     {
         protected override bool IsItemItsOwnContainerOverride(object item)
         {

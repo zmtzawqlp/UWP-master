@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using System.Diagnostics;
+using Windows.UI.Xaml.Input;
 
 namespace UWP.DataGrid
 {
@@ -87,7 +88,6 @@ namespace UWP.DataGrid
         internal IList<SortDescription> ManualSortDescriptions { get { return _manualSort; } }
 
         bool firstTimeTrytoFindPivotItem = true;
-        bool firstTimeTrytoFindScrollViewer = true;
         PivotItem _pivotItem;
         internal PivotItem PivotItem
         {
@@ -116,14 +116,16 @@ namespace UWP.DataGrid
             }
         }
 
+        internal double topToOuterScrollViewer = -1;
+        ScrollViewerView preview;
         ScrollViewer _outerScrollViewer;
+
         internal ScrollViewer OuterScrollViewer
         {
             get
             {
-                if (_outerScrollViewer == null && firstTimeTrytoFindScrollViewer)
+                if (_outerScrollViewer == null)
                 {
-                    firstTimeTrytoFindScrollViewer = false;
                     var parent = this.Parent as FrameworkElement;
                     while (parent != null)
                     {
@@ -140,9 +142,50 @@ namespace UWP.DataGrid
                     }
 
                 }
+
+                //hanlde verticalScroll by outer ScrollViewer
+                if (_outerScrollViewer != null && (_outerScrollViewer.VerticalScrollMode != ScrollMode.Disabled || _outerScrollViewer.HorizontalScrollMode != ScrollMode.Disabled) && topToOuterScrollViewer == -1)
+                {
+                    var _outerScrollViewerContent = (_outerScrollViewer.Content as FrameworkElement);
+                    if (_outerScrollViewerContent != null)
+                    {
+                        _outerScrollViewerContent.SizeChanged -= _outerScrollViewerContent_SizeChanged;
+                        _outerScrollViewerContent.SizeChanged += _outerScrollViewerContent_SizeChanged; ;
+                    }
+                    _outerScrollViewer.ViewChanging -= _outerScrollViewer_ViewChanging;
+                    _outerScrollViewer.ViewChanging += _outerScrollViewer_ViewChanging;
+                }
                 return _outerScrollViewer;
             }
 
+        }
+
+        internal bool OuterScrollViewerVerticalScrollEnable
+        {
+            get
+            {
+                if (OuterScrollViewer != null)
+                {
+                    return (OuterScrollViewer.VerticalScrollMode != ScrollMode.Disabled 
+                        //|| OuterScrollViewer.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled
+                        );
+                }
+                return false;
+            }
+        }
+
+        internal bool OuterScrollViewerHorizontalScrollEnable
+        {
+            get
+            {
+                if (OuterScrollViewer != null)
+                {
+                    return (OuterScrollViewer.HorizontalScrollMode != ScrollMode.Disabled 
+                        //|| OuterScrollViewer.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled
+                        );
+                }
+                return false;
+            }
         }
 
         internal TranslateTransform PivotItemTT
@@ -284,8 +327,8 @@ namespace UWP.DataGrid
                         var sz = new Size(wid, hei);
                         //total size
                         var totalRowsSize = Rows.GetTotalSize();
-                        Debug.WriteLine("addRemoveCount : " + addRemoveItemHanlder.Count);
-                        Debug.WriteLine("addCount : " + addRemoveItemHanlder.AddTotalCount + ", removeCount : " + addRemoveItemHanlder.RemoveTotalCount);
+                        //Debug.WriteLine("addRemoveCount : " + addRemoveItemHanlder.Count);
+                        //Debug.WriteLine("addCount : " + addRemoveItemHanlder.AddTotalCount + ", removeCount : " + addRemoveItemHanlder.RemoveTotalCount);
                         if (RefreshScrollPosition)
                         {
                             value.Y -= (addRemoveItemHanlder.Count) * _cellPanel.Rows.DefaultSize;
@@ -345,13 +388,13 @@ namespace UWP.DataGrid
                             HandleHeader(totalScrollPosition);
                         }
                         //Handle outerScrollViewer
-                        else if (OuterScrollViewer != null && value != _scrollPosition)
-                        {
-                            var horizontalOffset = OuterScrollViewer.HorizontalOffset + _scrollPosition.X - value.X;
-                            var verticalOffset = OuterScrollViewer.VerticalOffset + _scrollPosition.Y - value.Y;
-                            OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
-                        }
-                        HandleCellScrollPosition(value, sz, totalRowsSize, maxH);
+                        //else if (OuterScrollViewer != null && value != _scrollPosition)
+                        //{
+                        //    var horizontalOffset = OuterScrollViewer.HorizontalOffset + _scrollPosition.X - value.X;
+                        //    var verticalOffset = OuterScrollViewer.VerticalOffset + _scrollPosition.Y - value.Y;
+                        //    OuterScrollViewer.ChangeView(horizontalOffset, verticalOffset, null);
+                        //}
+                        HandleCellAndColumnScrollPosition(value, sz, totalRowsSize, maxH);
 
 
                         if (_view != null && _view.Count != 0)

@@ -128,13 +128,13 @@
         </Grid.RowDefinitions>
         <Button Content="click" Click="Button_Click"></Button>
         <ListView x:Name="listview" Grid.Row="1"  SelectionMode="None" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Enabled" Style="{StaticResource ListViewStyle1}" >
-            <ListView.HeaderTemplate>
+            <!--<ListView.HeaderTemplate>
                 <DataTemplate>
                     <Grid>
                         <TextBlock Margin="-100,0,0,0" Text="i'm header"/>
                     </Grid>
                 </DataTemplate>
-            </ListView.HeaderTemplate>
+            </ListView.HeaderTemplate>-->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -157,11 +157,11 @@
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.FooterTemplate>
+            <!--<ListView.FooterTemplate>
                 <DataTemplate>
                     <TextBlock Margin="-100,0,0,0" Text="i'm footer"/>
                 </DataTemplate>
-            </ListView.FooterTemplate>
+            </ListView.FooterTemplate>-->
         </ListView>
         <!--<ListView x:Name="listview1" Grid.Column="1" >
             <ListView.ItemTemplate>

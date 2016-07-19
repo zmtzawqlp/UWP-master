@@ -234,9 +234,9 @@ namespace UWP.DataGrid
             return size;
         }
 
+
         protected override Size ArrangeOverride(Size finalSize)
         {
-
             UpdateViewRange();
             CellRangeDictionary showCells = new CellRangeDictionary();
             foreach (int r in Rows.EnumerateVisibleElements(_viewRange.TopRow, _viewRange.BottomRow))
@@ -471,33 +471,93 @@ namespace UWP.DataGrid
         {
             // get size, position, range
             var sz = DesiredSize;
-            //if we has footerHeight 
-            //for example, footerHeight is 30, and row height is 30.
-            //at the begining, show rows are 38-61,
-            //after we has footerHeight, we should get 39-61
-            //so why we scrollPosition.Y -= footerHeight;
-            scrollPosition.Y -= footerHeight;
             // account for frozen rows/columns
             var fx = Columns.GetFrozenSize();
             var fy = Rows.GetFrozenSize();
-
-            // find top/bottom rows
             var r = new CellRange(Rows.Frozen, Columns.Frozen);
-            if (fy < sz.Height)
+            var sv = _grid.OuterScrollViewer;
+            if (sv != null && (_grid.OuterScrollViewerVerticalScrollEnable || _grid.OuterScrollViewerHorizontalScrollEnable))
             {
-                r.Row = Rows.GetItemAt(fy - scrollPosition.Y);
-                r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - scrollPosition.Y), Rows.Count - 1);
-            }
+                if (_grid.OuterScrollViewerVerticalScrollEnable)
+                {
+                    sz.Height = sv.ActualHeight * 1.5;
+                    var y = _grid.HeaderActualHeight - sv.VerticalOffset;
+                    y += _grid.topToOuterScrollViewer;
+                    r.Row = Rows.GetItemAt(-y - sv.ActualHeight);
+                    r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - y), Rows.Count - 1);
+                }
+                else
+                {
+                    if (fy < sz.Height)
+                    {
+                        sz.Height = sv.ActualHeight;
+                        r.Row = Rows.GetItemAt(fy - scrollPosition.Y);
+                        r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - scrollPosition.Y), Rows.Count - 1);
+                    }
+                }
+               
 
-            // find left/right columns
-            if (fx < sz.Width)
+                if (_grid.OuterScrollViewerHorizontalScrollEnable)
+                {
+                    // find left/right columns
+                    sz.Width = sv.ActualWidth * 1.5;
+                    var x = -sv.HorizontalOffset;
+                    r.Column = Columns.GetItemAt(-x - sv.ActualWidth);
+                    r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - x), Columns.Count - 1);
+                }
+                else
+                {
+                    if (fx < sz.Width)
+                    {
+                        sz.Width = sv.ActualWidth;
+                        r.Column = Columns.GetItemAt(fx - scrollPosition.X);
+                        r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - scrollPosition.X), Columns.Count - 1);
+                    }
+                }
+            }
+            else
             {
-                r.Column = Columns.GetItemAt(fx - scrollPosition.X);
-                r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - scrollPosition.X), Columns.Count - 1);
+                //if we has footerHeight 
+                //for example, footerHeight is 30, and row height is 30.
+                //at the begining, show rows are 38-61,
+                //after we has footerHeight, we should get 39-61
+                //so why we scrollPosition.Y -= footerHeight;
+                scrollPosition.Y -= footerHeight;
+
+                // find top/bottom rows
+                if (fy < sz.Height)
+                {
+                    r.Row = Rows.GetItemAt(fy - scrollPosition.Y);
+                    r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - scrollPosition.Y), Rows.Count - 1);
+                }
+
+                // find left/right columns
+                if (fx < sz.Width)
+                {
+                    r.Column = Columns.GetItemAt(fx - scrollPosition.X);
+                    r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - scrollPosition.X), Columns.Count - 1);
+                }
             }
 
             // done
             return r;
+        }
+
+        internal bool UpdateViewRange(CellRange viewRange)
+        {
+            // get old, new ranges
+            var oldRange = _viewRange;
+            _viewRange = viewRange;
+
+            // re-arrange if they're different
+            if (_viewRange != oldRange)
+            {
+                InvalidateArrange();
+                return true;
+            }
+
+            // same range
+            return false;
         }
 
         internal bool UpdateViewRange()
@@ -632,7 +692,7 @@ namespace UWP.DataGrid
                     var even = true;
                     if (Grid.Rows.Count > item.Key.Row)
                     {
-                        even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;      
+                        even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
                     }
                     element.Background = even || Grid.AlternatingRowBackground == null
                            ? Grid.RowBackground

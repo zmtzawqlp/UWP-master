@@ -116,7 +116,9 @@
     <Compile Include="DataGridContentPresenter.cs" />
     <Compile Include="DataGridFooterMethods.cs" />
     <Compile Include="DataGridHeaderMethods.cs" />
+    <Compile Include="DataGridKeyboardMethods.cs" />
     <Compile Include="DataGridMouseMethods.cs" />
+    <Compile Include="DataGridOutScrollViewerMethods.cs" />
     <Compile Include="DataGridTouchMethods.cs" />
     <Compile Include="DataGridP.cs" />
     <Compile Include="DataGridPanel.cs" />
