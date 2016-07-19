@@ -217,6 +217,7 @@ namespace UWP.DataGrid
                 preDeltaTranslationX = x;
                 _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
                 _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
+                HandleButtonbase();
                 if (tt.X >= maxThreshold)
                 {
                     HandleCrossSlide(CrossSlideMode.Left);
@@ -251,7 +252,7 @@ namespace UWP.DataGrid
                 preDeltaTranslationX = x;
                 _contentGrid.ManipulationDelta -= _contentGrid_ManipulationDelta;
                 _contentGrid.ManipulationDelta += _contentGrid_ManipulationDelta;
-
+                HandleButtonbase();
                 if (Math.Abs(tt.X) >= maxThreshold)
                 {
                     HandleCrossSlide(CrossSlideMode.Right);

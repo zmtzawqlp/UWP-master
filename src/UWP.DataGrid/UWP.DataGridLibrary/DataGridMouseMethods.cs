@@ -15,6 +15,46 @@ namespace UWP.DataGrid
 {
     public partial class DataGrid
     {
+        #region Handle buttonbase in header or footer
+        ButtonBase button;
+        private void _headerAndFooter_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            button = null;
+        }
+
+        private void _headerAndFooter_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            //handle button
+            var element = e.OriginalSource as FrameworkElement;
+            while (element != null)
+            {
+                if (element == _header || element == _footer)
+                {
+                    break;
+                }
+                if (element is ButtonBase)
+                {
+                    button = element as ButtonBase;
+                    break;
+                }
+                element = Windows.UI.Xaml.Media.VisualTreeHelper.GetParent(element) as FrameworkElement;
+            }
+        }
+
+        /// <summary>
+        /// handle button when CrossSlide left or right
+        /// </summary>
+        private void HandleButtonbase()
+        {
+            if (button != null)
+            {
+                VisualStateManager.GoToState(button, "Normal", false);
+                button.ReleasePointerCaptures();
+            }
+        }
+        #endregion
+
+
         private void DataGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             _cellPanel.ClearPointerPressedAnimation();

@@ -192,8 +192,7 @@ namespace UWP.DataGrid
         {
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
 
-            if (OuterScrollViewer != null && (OuterScrollViewerVerticalScrollEnable || OuterScrollViewerHorizontalScrollEnable)
-                )
+            if (OuterScrollViewer != null && (OuterScrollViewerVerticalScrollEnable || OuterScrollViewerHorizontalScrollEnable))
             {
 
                 if (OuterScrollViewerVerticalScrollEnable && OuterScrollViewerHorizontalScrollEnable)
@@ -248,6 +247,12 @@ namespace UWP.DataGrid
             _header.RegisterPropertyChangedCallback(DataGridContentPresenter.ContentHeightProperty, new DependencyPropertyChangedCallback(OnHeaderHeightChanged));
             _footer = GetTemplateChild("Footer") as DataGridContentPresenter;
             _footer.RegisterPropertyChangedCallback(DataGridContentPresenter.ContentHeightProperty, new DependencyPropertyChangedCallback(OnFooterHeightChanged));
+
+            //handle buttonbase in header or footer
+            _header.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(_headerAndFooter_PointerPressed), true);
+            _header.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(_headerAndFooter_PointerReleased), true);
+            _footer.AddHandler(UIElement.PointerPressedEvent, new PointerEventHandler(_headerAndFooter_PointerPressed), true);
+            _footer.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(_headerAndFooter_PointerReleased), true);
 
             Grid.SetRow(_cellPanel, 4);
             Grid.SetRow(_columnHeaderPanel, 2);
