@@ -88,9 +88,27 @@ namespace MyUWPToolkit
 
         #endregion
 
+
+        // Summary:
+        //     Occurs when any direct manipulation of the ScrollViewer finishes.
+        public event EventHandler<System.Object> DirectManipulationCompleted;
+        //
+        // Summary:
+        //     Occurs when any direct manipulation of the ScrollViewer begins.
+        public event EventHandler<System.Object> DirectManipulationStarted;
+
         public PullToRefreshGrid()
         {
             this.DefaultStyleKey = typeof(PullToRefreshGrid);
+            Unloaded += PullToRefreshGrid_Unloaded;
+        }
+
+        private void PullToRefreshGrid_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (_header != null)
+            {
+                _header.Opacity = 0;
+            }
         }
 
         protected override void OnApplyTemplate()
@@ -112,16 +130,17 @@ namespace MyUWPToolkit
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_content != null)
-            {
-                _content.Width = finalSize.Width;
-                _content.Height = finalSize.Height;
-            }
+            _content.Width = finalSize.Width;
+            _content.Height = finalSize.Height;
             return base.ArrangeOverride(finalSize);
         }
 
         private void ScrollViewer_DirectManipulationCompleted(object sender, object e)
         {
+            if (DirectManipulationCompleted != null)
+            {
+                DirectManipulationCompleted(sender, e);
+            }
             Windows.UI.Xaml.Media.CompositionTarget.Rendering -= OnCompositionTargetRendering;
 
             var cancelled = (_releaseTime - _pulledDownTime) > TimeSpan.FromMilliseconds(250);
@@ -145,13 +164,24 @@ namespace MyUWPToolkit
                     }
                 }
             }
+            if (_header != null)
+            {
+                _header.Opacity = 0;
+            }
         }
 
         private void ScrollViewer_DirectManipulationStarted(object sender, object e)
         {
+            if (DirectManipulationStarted != null)
+            {
+                DirectManipulationStarted(sender, e);
+            }
             Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
             _refresh = false;
-            _header.Opacity = 1;
+            if (_header != null)
+            {
+                _header.Opacity = 1;
+            }
         }
 
         private void OnCompositionTargetRendering(object sender, object e)
@@ -228,7 +258,7 @@ namespace MyUWPToolkit
 
     /// <summary>
     /// use Composition API
-    /// PullToRefreshGrid1 for Content's first child is ScrollViewer/ListView/GridView...
+    /// PullToRefreshGrid for Content's first child is ScrollViewer
     /// </summary>
     [TemplatePart(Name = "Header", Type = typeof(ContentControl))]
     [TemplatePart(Name = "Content", Type = typeof(ContentPresenter))]
@@ -300,9 +330,25 @@ namespace MyUWPToolkit
 
         #endregion
 
+        // Summary:
+        //     Occurs when any direct manipulation of the ScrollViewer finishes.
+        public event EventHandler<System.Object> DirectManipulationCompleted;
+        //
+        // Summary:
+        //     Occurs when any direct manipulation of the ScrollViewer begins.
+        public event EventHandler<System.Object> DirectManipulationStarted;
         public PullToRefreshGrid1()
         {
             this.DefaultStyleKey = typeof(PullToRefreshGrid1);
+            Loaded += PullToRefreshGrid1_Loaded;
+        }
+
+        private void PullToRefreshGrid1_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_header != null)
+            {
+                _header.Opacity = 0;
+            }
         }
 
         protected override void OnApplyTemplate()
@@ -347,17 +393,20 @@ namespace MyUWPToolkit
 
         private void ScrollViewer_DirectManipulationCompleted(object sender, object e)
         {
+            if (DirectManipulationCompleted != null)
+            {
+                DirectManipulationCompleted(sender, e);
+            }
+
             Windows.UI.Xaml.Media.CompositionTarget.Rendering -= OnCompositionTargetRendering;
 
             var cancelled = (_releaseTime - _pulledDownTime) > TimeSpan.FromMilliseconds(250);
-
             _scrollViewerBorder.Clip = null;
             if (_refresh)
             {
                 _refresh = false;
                 if (cancelled)
                 {
-                    
                     Debug.WriteLine("Refresh cancelled...");
                 }
                 else
@@ -372,13 +421,25 @@ namespace MyUWPToolkit
                     }
                 }
             }
+            if (_header != null)
+            {
+                _header.Opacity = 0;
+            }
         }
 
         private void ScrollViewer_DirectManipulationStarted(object sender, object e)
         {
+            if (DirectManipulationStarted != null)
+            {
+                DirectManipulationStarted(sender, e);
+            }
+
             Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
             _refresh = false;
-            _header.Opacity = 1;
+            if (_header != null)
+            {
+                _header.Opacity = 1;
+            }
         }
 
         private void OnCompositionTargetRendering(object sender, object e)

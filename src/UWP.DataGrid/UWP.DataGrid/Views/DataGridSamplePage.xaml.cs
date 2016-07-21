@@ -41,13 +41,13 @@ namespace UWP.DataGridSample.Views
             _timer.Tick += _timer_Tick;
             _timer.Interval = new TimeSpan(0, 0, 3);
 
-            //datagrid.Visibility = Visibility.Collapsed;
-            //datagrid1.Visibility = Visibility.Collapsed;
-            //datagrid2.Visibility = Visibility.Collapsed;
+            datagrid.Visibility = Visibility.Collapsed;
+            datagrid1.Visibility = Visibility.Collapsed;
+            datagrid2.Visibility = Visibility.Collapsed;
 
-            listview1.Visibility = Visibility.Collapsed;
-            listview2.Visibility = Visibility.Collapsed;
-            listview3.Visibility = Visibility.Collapsed;
+            //listview1.Visibility = Visibility.Collapsed;
+            //listview2.Visibility = Visibility.Collapsed;
+            //listview3.Visibility = Visibility.Collapsed;
         }
 
         bool istrue = false;
@@ -80,14 +80,14 @@ namespace UWP.DataGridSample.Views
             //    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
             //});
             _employees = new ObservableCollection<Employee>(TestData.GetEmployees().Take(30).ToList());
-            //listview1.ItemsSource = _employees;
-            //listview2.ItemsSource = _employees;
-            //listview3.ItemsSource = _employees;
+            listview1.ItemsSource = _employees;
+            listview2.ItemsSource = _employees;
+            listview3.ItemsSource = _employees;
 
             //_employees = TestData.GetEmployees();
-            datagrid.ItemsSource = _employees;
-            datagrid1.ItemsSource = _employees;
-            datagrid2.ItemsSource = _employees;
+            //datagrid.ItemsSource = _employees;
+            //datagrid1.ItemsSource = _employees;
+            //datagrid2.ItemsSource = _employees;
             //you can custom cell if you want 
             //datagrid.CellFactory = new MyCellFactory();
         }

@@ -13,11 +13,9 @@
         </Grid.RowDefinitions>
         <Button Content="click"  Click="Button_Click" Foreground="Blue" Background="Green"/>
 
-        <!--<Pivot Grid.Row="1" Background="Blue" x:Name="Pivot">
-            <PivotItem Header="MyDataGrid">-->
-        <!--<ScrollViewer>
-                    <StackPanel Orientation="Vertical">-->
-        <ScrollViewer x:Name="scrollViewer" Grid.Row="1" ManipulationDelta="ScrollViewer_ManipulationDelta" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible">
+        <Pivot Grid.Row="1" Background="Blue" x:Name="Pivot">
+            <PivotItem Header="MyDataGrid">
+        <ScrollViewer x:Name="scrollViewer" Grid.Row="1" ManipulationDelta="ScrollViewer_ManipulationDelta" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Disabled">
             <!--VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto"-->
             <StackPanel Orientation="Vertical">
                 <ListView x:Name="listview1" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -311,10 +309,10 @@
             </StackPanel>
         </ScrollViewer>
         
-        <!--</PivotItem>
+        </PivotItem>
             <PivotItem Header="test">
                 <Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Fill="Red"/>
             </PivotItem>
-        </Pivot>-->
+        </Pivot>
     </Grid>
 </Page>
