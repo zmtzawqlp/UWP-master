@@ -291,7 +291,7 @@ namespace UWP.DataGrid.Model.RowCol
         }
 
 
-        internal double GetTotalSize()
+        public double GetTotalSize()
         {
             var cnt = Count;
             return cnt > 0

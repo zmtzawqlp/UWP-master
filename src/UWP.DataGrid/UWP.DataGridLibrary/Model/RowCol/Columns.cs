@@ -124,9 +124,9 @@ namespace UWP.DataGrid.Model.RowCol
             }
         }
 
-        internal void UpdateStarSizes(double sz)
+        internal void UpdateStarSizes(double sz, bool forceUpdate = false)
         {
-            if (_starCount > 0 && sz != _availableSize)
+            if ((_starCount > 0 || forceUpdate) && sz != _availableSize)
             {
                 _availableSize = sz;
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));

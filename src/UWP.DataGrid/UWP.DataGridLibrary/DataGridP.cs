@@ -129,7 +129,7 @@ namespace UWP.DataGrid
                     var parent = VisualTreeHelper.GetParent(this) as FrameworkElement;
                     while (parent != null)
                     {
-                        if (parent is Page)
+                        if (parent is Page || parent is PivotItem)
                         {
                             break;
                         }
@@ -154,11 +154,14 @@ namespace UWP.DataGrid
                     }
                     _outerScrollViewer.ViewChanging -= _outerScrollViewer_ViewChanging;
                     _outerScrollViewer.ViewChanging += _outerScrollViewer_ViewChanging;
+                   
                 }
                 return _outerScrollViewer;
             }
 
         }
+
+
 
         internal bool OuterScrollViewerVerticalScrollEnable
         {

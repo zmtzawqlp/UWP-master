@@ -1107,12 +1107,12 @@ namespace UWP.DataGrid
             return _ci;
         }
 
-        internal void UpdateStarSizes()
+        public void UpdateStarSizes(bool forceUpdate = false)
         {
             if (_contentGrid != null && Columns != null && Columns.Grid == this)
             {
                 var width = _contentGrid.ActualWidth;
-                Columns.UpdateStarSizes(width);
+                Columns.UpdateStarSizes(width, forceUpdate);
             }
         }
 
@@ -1307,8 +1307,11 @@ namespace UWP.DataGrid
             if (_cellPanel != null && _view != null)
             {
                 var viewRange = _cellPanel.ViewRange;
+                var start = viewRange.Row > -1 ? viewRange.Row : 0;
 
-                for (int i = viewRange.Row; i <= viewRange.Row2; i++)
+                var end = viewRange.Row2 < _view.Count ? viewRange.Row2 : _view.Count - 1;
+
+                for (int i = start; i <= end; i++)
                 {
                     yield return _view[i];
                 }

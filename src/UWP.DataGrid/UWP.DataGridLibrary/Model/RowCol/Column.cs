@@ -101,6 +101,15 @@ namespace UWP.DataGrid
             }
         }
 
+        /// <summary>
+        /// this method will not auto refresh UI
+        /// you can call DataGrid.UpdateStarSizes(true) to refresh UI
+        /// </summary>
+        public void SetWidth(GridLength width)
+        {
+            _width = width;
+        }
+
         [DefaultValue(typeof(GridLength), "Auto")]
         public GridLength Width
         {
