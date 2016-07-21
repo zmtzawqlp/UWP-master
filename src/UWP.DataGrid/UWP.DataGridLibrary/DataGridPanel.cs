@@ -495,7 +495,7 @@ namespace UWP.DataGrid
                         r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - scrollPosition.Y), Rows.Count - 1);
                     }
                 }
-               
+
 
                 if (_grid.OuterScrollViewerHorizontalScrollEnable)
                 {
@@ -538,7 +538,22 @@ namespace UWP.DataGrid
                     r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - scrollPosition.X), Columns.Count - 1);
                 }
             }
-
+            if (r.Row < 0)
+            {
+                r.Row = 0;
+            }
+            if (r.Row2 < 0)
+            {
+                r.Row2 = 0;
+            }
+            if (r.Column < 0)
+            {
+                r.Column = 0;
+            }
+            if (r.Column2 < 0)
+            {
+                r.Column2 = 0;
+            }
             // done
             return r;
         }

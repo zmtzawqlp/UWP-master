@@ -40,6 +40,14 @@ namespace UWP.DataGridSample.Views
             _timer = new DispatcherTimer();
             _timer.Tick += _timer_Tick;
             _timer.Interval = new TimeSpan(0, 0, 3);
+
+            //datagrid.Visibility = Visibility.Collapsed;
+            //datagrid1.Visibility = Visibility.Collapsed;
+            //datagrid2.Visibility = Visibility.Collapsed;
+
+            listview1.Visibility = Visibility.Collapsed;
+            listview2.Visibility = Visibility.Collapsed;
+            listview3.Visibility = Visibility.Collapsed;
         }
 
         bool istrue = false;

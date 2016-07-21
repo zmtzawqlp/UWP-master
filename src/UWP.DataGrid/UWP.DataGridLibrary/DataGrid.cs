@@ -23,8 +23,6 @@ namespace UWP.DataGrid
 {
     /// <summary>
     /// DataGrid
-    /// Known issue:
-    /// 1.if DataGrid is in ScrollViewer, UI virtual will not work(can't support large data).
     /// </summary>
     [TemplatePart(Name = "ContentGrid", Type = typeof(Grid))]
     [TemplatePart(Name = "VerticalScrollBar", Type = typeof(ScrollBar))]
@@ -158,6 +156,14 @@ namespace UWP.DataGrid
                                 break;
                         }
 
+                        if (OuterScrollViewer != null)
+                        {
+                            if (OuterScrollViewer.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled)
+                            {
+                                _verticalScrollBar.Visibility = Visibility.Collapsed;
+                            }
+                        }
+
                     }
                     if (_horizontalScrollBar != null)
                     {
@@ -177,6 +183,14 @@ namespace UWP.DataGrid
                                 break;
                         }
 
+                        if (OuterScrollViewer != null)
+                        {
+                            if (OuterScrollViewer.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled)
+                            {
+                                _horizontalScrollBar.Visibility = Visibility.Collapsed;
+                            }
+                        }
+
                     }
 
                     // make sure current scroll position is valid
@@ -192,6 +206,10 @@ namespace UWP.DataGrid
         {
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
 
+            //1.if outerScrollViewer OuterScrollViewerVerticalScrollEnable is true
+            //
+
+            //2.if outerScrollViewer OuterScrollViewerHorizontalScrollEnable is true
             if (OuterScrollViewer != null && (OuterScrollViewerVerticalScrollEnable || OuterScrollViewerHorizontalScrollEnable))
             {
 
@@ -1237,6 +1255,40 @@ namespace UWP.DataGrid
             return FooterActualHeight != 0;
         }
 
+        void OnScrollModeChanged()
+        {
+            if (_verticalScrollBar != null)
+            {
+                switch (HorizontalScrollMode)
+                {
+                    case ScrollMode.Disabled:
+                        _verticalScrollBar.IsHitTestVisible = false;
+                        break;
+                    case ScrollMode.Enabled:
+                    case ScrollMode.Auto:
+                        _verticalScrollBar.IsHitTestVisible = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (_horizontalScrollBar != null)
+            {
+                switch (VerticalScrollMode)
+                {
+                    case ScrollMode.Disabled:
+                        _horizontalScrollBar.IsHitTestVisible = false;
+                        break;
+                    case ScrollMode.Enabled:
+                    case ScrollMode.Auto:
+                        _horizontalScrollBar.IsHitTestVisible = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         #endregion
 
         #endregion

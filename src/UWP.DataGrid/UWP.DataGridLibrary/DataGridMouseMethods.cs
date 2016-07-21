@@ -147,9 +147,21 @@ namespace UWP.DataGrid
                 PointerPoint mousePosition = e.GetCurrentPoint(sender as Grid);
                 var delta = mousePosition.Properties.MouseWheelDelta;
 
-                var verticalOffset = ScrollPosition.Y + delta;
-                ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
-                VisualStateManager.GoToState(this, "MouseIndicator", true);
+
+                if (OuterScrollViewer != null)
+                {
+                    if (VerticalScrollMode != ScrollMode.Disabled)
+                    {
+                        var verticalOffset = OuterScrollViewer.VerticalOffset - delta;
+                        OuterScrollViewer.ChangeView(OuterScrollViewer.HorizontalOffset, verticalOffset, null);
+                    }
+                }
+                else
+                {
+                    var verticalOffset = ScrollPosition.Y + delta;
+                    ScrollPosition = new Point(ScrollPosition.X, verticalOffset);
+                    VisualStateManager.GoToState(this, "MouseIndicator", true);
+                }
             }
         }
 

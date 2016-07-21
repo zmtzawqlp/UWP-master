@@ -26,8 +26,8 @@ namespace UWP.DataGrid
         #region fields
         //ScrollViewer _scrollViewer;
         Grid _contentGrid;
-        ScrollBar _horizontalScrollBar;
-        ScrollBar _verticalScrollBar;
+        internal ScrollBar _horizontalScrollBar;
+        internal ScrollBar _verticalScrollBar;
         DataGridPanel _columnHeaderPanel;
         DataGridPanel _cellPanel;
         ContentControl _pullToRefreshHeader;
@@ -166,9 +166,17 @@ namespace UWP.DataGrid
             {
                 if (OuterScrollViewer != null)
                 {
-                    return (OuterScrollViewer.VerticalScrollMode != ScrollMode.Disabled 
-                        //|| OuterScrollViewer.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled
-                        );
+                    if (OuterScrollViewer.VerticalScrollBarVisibility == ScrollBarVisibility.Disabled || OuterScrollViewer.VerticalScrollMode == ScrollMode.Disabled)
+                    {
+                        return false;
+                    }
+                    return true;
+
+                    //return !(OuterScrollViewer.VerticalScrollMode == ScrollMode.Disabled && OuterScrollViewer.VerticalScrollBarVisibility == ScrollBarVisibility.Disabled);
+
+                    ////return (OuterScrollViewer.VerticalScrollMode != ScrollMode.Disabled 
+                    ////    //|| OuterScrollViewer.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled
+                    ////    );
                 }
                 return false;
             }
@@ -180,9 +188,16 @@ namespace UWP.DataGrid
             {
                 if (OuterScrollViewer != null)
                 {
-                    return (OuterScrollViewer.HorizontalScrollMode != ScrollMode.Disabled 
-                        //|| OuterScrollViewer.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled
-                        );
+                    if (OuterScrollViewer.HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled || OuterScrollViewer.HorizontalScrollMode == ScrollMode.Disabled)
+                    {
+                        return false;
+                    }
+                    return true;
+                    //return !(OuterScrollViewer.HorizontalScrollMode == ScrollMode.Disabled && OuterScrollViewer.HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled);
+
+                    //return (OuterScrollViewer.HorizontalScrollMode != ScrollMode.Disabled 
+                    //    //|| OuterScrollViewer.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled
+                    //    );
                 }
                 return false;
             }
@@ -212,6 +227,10 @@ namespace UWP.DataGrid
         {
             get
             {
+                if (_contentGrid == null)
+                {
+                    return 0;
+                }
                 return _contentGrid.RowDefinitions[1].ActualHeight;
             }
         }
@@ -220,6 +239,10 @@ namespace UWP.DataGrid
         {
             get
             {
+                if (_contentGrid == null)
+                {
+                    return 0;
+                }
                 return _contentGrid.RowDefinitions[5].ActualHeight;
             }
         }
@@ -229,11 +252,18 @@ namespace UWP.DataGrid
         {
             get
             {
+                if (_contentGrid == null)
+                {
+                    return GridLength.Auto;
+                }
                 return _contentGrid.RowDefinitions[1].Height;
             }
             set
             {
-                _contentGrid.RowDefinitions[1].Height = value;
+                if (_contentGrid != null)
+                {
+                    _contentGrid.RowDefinitions[1].Height = value;
+                }
             }
         }
 
@@ -241,11 +271,18 @@ namespace UWP.DataGrid
         {
             get
             {
+                if (_contentGrid == null)
+                {
+                    return GridLength.Auto;
+                }
                 return _contentGrid.RowDefinitions[5].Height;
             }
             set
             {
-                _contentGrid.RowDefinitions[5].Height = value;
+                if (_contentGrid != null)
+                {
+                    _contentGrid.RowDefinitions[5].Height = value;
+                }
             }
         }
         #endregion
@@ -322,6 +359,16 @@ namespace UWP.DataGrid
                     var hei = _contentGrid.ActualHeight;
                     if (!double.IsPositiveInfinity(wid) && !double.IsPositiveInfinity(hei))
                     {
+                        if (VerticalScrollMode == ScrollMode.Disabled || (OuterScrollViewer != null && OuterScrollViewer.VerticalScrollMode == ScrollMode.Disabled))
+                        {
+                            value.Y = 0;
+                        }
+
+                        if (HorizontalScrollMode == ScrollMode.Disabled || (OuterScrollViewer != null && OuterScrollViewer.HorizontalScrollMode == ScrollMode.Disabled))
+                        {
+                            value.X = 0;
+                        }
+
                         //viewPort
                         //var sz = _contentGrid.DesiredSize;
                         var sz = new Size(wid, hei);
@@ -735,6 +782,33 @@ namespace UWP.DataGrid
             DependencyProperty.Register("LastRefreshTime", typeof(DateTime), typeof(DataGrid), new PropertyMetadata(DateTime.Now));
 
         #endregion
+
+
+
+        public ScrollMode HorizontalScrollMode
+        {
+            get { return (ScrollMode)GetValue(HorizontalScrollModeProperty); }
+            set { SetValue(HorizontalScrollModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HorizontalScrollMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HorizontalScrollModeProperty =
+            DependencyProperty.Register("HorizontalScrollMode", typeof(ScrollMode), typeof(DataGrid), new PropertyMetadata(ScrollMode.Auto, new PropertyChangedCallback(OnScrollModeChanged)));
+
+        private static void OnScrollModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as DataGrid).OnScrollModeChanged();
+        }
+
+        public ScrollMode VerticalScrollMode
+        {
+            get { return (ScrollMode)GetValue(VerticalScrollModeProperty); }
+            set { SetValue(VerticalScrollModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for VerticalScrollMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VerticalScrollModeProperty =
+            DependencyProperty.Register("VerticalScrollMode", typeof(ScrollMode), typeof(DataGrid), new PropertyMetadata(ScrollMode.Auto, new PropertyChangedCallback(OnScrollModeChanged)));
 
         public ScrollBarVisibility VerticalScrollBarVisibility
         {
