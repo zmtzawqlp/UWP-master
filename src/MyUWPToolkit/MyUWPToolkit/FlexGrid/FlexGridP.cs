@@ -21,6 +21,9 @@ namespace MyUWPToolkit.FlexGrid
         ScrollViewer _scrollViewer;
         ContentControl _header;
         Grid _scrollContent;
+        ListView _columnHeader;
+        ListView _frozenColumnsHeader;
+        ListView _frozenColumns;
 
         CompositionPropertySet _scrollerViewerManipulation;
         ExpressionAnimation _offsetAnimation;
@@ -38,11 +41,6 @@ namespace MyUWPToolkit.FlexGrid
         /// fire when tap in column header
         /// </summary>
         public new event EventHandler<ItemClickEventArgs> ItemClick;
-
-        /// <summary>
-        /// occur when reach threshold.
-        /// </summary>
-        public event EventHandler PullToRefresh;
 
         /// <summary>
         /// fire when tap in column header

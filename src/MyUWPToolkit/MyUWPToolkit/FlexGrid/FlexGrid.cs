@@ -20,6 +20,9 @@ using Windows.UI.Xaml.Hosting;
 namespace MyUWPToolkit.FlexGrid
 {
 
+    [TemplatePart(Name = "ColumnHeader", Type = typeof(ListView))]
+    [TemplatePart(Name = "FrozenColumnsHeader", Type = typeof(ListView))]
+    [TemplatePart(Name = "FrozenColumns", Type = typeof(ListView))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
     public partial class FlexGrid : ListView
     {
@@ -27,6 +30,7 @@ namespace MyUWPToolkit.FlexGrid
         public FlexGrid()
         {
             this.DefaultStyleKey = typeof(FlexGrid);
+            base.ItemClick += (s, e) => { OnItemClick(s, e); };
         }
         #endregion
 
@@ -34,7 +38,24 @@ namespace MyUWPToolkit.FlexGrid
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            Initialize();
             InitializeScrollViewer();
+
+        }
+
+        private void Initialize()
+        {
+            _columnHeader = GetTemplateChild("ColumnHeader") as ListView;
+            _frozenColumnsHeader = GetTemplateChild("FrozenColumnsHeader") as ListView;
+            _frozenColumns = GetTemplateChild("FrozenColumns") as ListView;
+            _columnHeader.ItemClick += _columnHeader_ItemClick;
+            _frozenColumnsHeader.ItemClick += _columnHeader_ItemClick;
+            _frozenColumns.ItemClick += (s, e) => { OnItemClick(s, e); };
+        }
+
+        private void _columnHeader_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OnColumnSorting(this, e);
         }
 
 

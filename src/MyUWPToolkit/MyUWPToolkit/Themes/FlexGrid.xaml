@@ -221,7 +221,7 @@
                     <Border x:Name="RootBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
                         <ScrollViewer x:Name="ScrollViewer" Style="{StaticResource FlexGridScrollViewerStyle}" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
                             <ScrollViewer.TopHeader>
-                                <ListView x:Name="ColumnHeader" SelectionMode="None" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding ColumnsHeaderItemTemplate}">
+                                <ListView x:Name="ColumnHeader" SelectionMode="None" IsItemClickEnabled="True" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding ColumnsHeaderItemTemplate}">
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <ItemsStackPanel Orientation="Horizontal"/>
@@ -230,7 +230,7 @@
                                 </ListView>
                             </ScrollViewer.TopHeader>
                             <ScrollViewer.TopLeftHeader>
-                                <ListView x:Name="FrozenColumnsHeader" SelectionMode="None" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding FrozenColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsHeaderItemTemplate}">
+                                <ListView x:Name="FrozenColumnsHeader" SelectionMode="None" IsItemClickEnabled="True" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding FrozenColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsHeaderItemTemplate}">
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <ItemsStackPanel Orientation="Horizontal"/>
@@ -239,7 +239,7 @@
                                 </ListView>
                             </ScrollViewer.TopLeftHeader>
                             <ScrollViewer.LeftHeader>
-                                <ListView x:Name="FrozenColumns" SelectionMode="{TemplateBinding SelectionMode}" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsItemTemplate}"/>
+                                <ListView x:Name="FrozenColumns" SelectionMode="{TemplateBinding SelectionMode}" IsItemClickEnabled="{TemplateBinding IsItemClickEnabled}" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsItemTemplate}"/>
                             </ScrollViewer.LeftHeader>
                             <ItemsPresenter HorizontalAlignment="Left" VerticalAlignment="Top" FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}"  Padding="{TemplateBinding Padding}"/>
                             <!--HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}"-->
