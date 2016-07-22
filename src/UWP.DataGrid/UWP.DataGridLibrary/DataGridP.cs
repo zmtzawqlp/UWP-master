@@ -96,7 +96,7 @@ namespace UWP.DataGrid
                 if (_pivotItem == null && firstTimeTrytoFindPivotItem)
                 {
                     firstTimeTrytoFindPivotItem = false;
-                    var parent = VisualTreeHelper.GetParent(this) as FrameworkElement;
+                    var parent = this.Parent as FrameworkElement;
                     while (parent != null)
                     {
                         if (parent is Page)
@@ -108,7 +108,7 @@ namespace UWP.DataGrid
                         {
                             break;
                         }
-                        parent = VisualTreeHelper.GetParent(parent) as FrameworkElement;
+                        parent = parent.Parent as FrameworkElement;
                     }
 
                 }
@@ -126,10 +126,10 @@ namespace UWP.DataGrid
             {
                 if (_outerScrollViewer == null)
                 {
-                    var parent = VisualTreeHelper.GetParent(this) as FrameworkElement;
+                    var parent =this.Parent as FrameworkElement;
                     while (parent != null)
                     {
-                        if (parent is Page || parent is PivotItem)
+                        if (parent is Page)
                         {
                             break;
                         }
@@ -138,7 +138,7 @@ namespace UWP.DataGrid
                         {
                             break;
                         }
-                        parent = VisualTreeHelper.GetParent(parent) as FrameworkElement;
+                        parent = parent.Parent as FrameworkElement;
                     }
 
                 }
