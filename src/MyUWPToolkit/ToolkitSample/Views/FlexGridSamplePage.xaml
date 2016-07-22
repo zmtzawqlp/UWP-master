@@ -19,7 +19,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="adada">
-                <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick"  SortingColumn="flexgrid_SortingColumn" >
+                <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick" SelectionMode="None" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
                     <flexgrid:FlexGrid.Header>
                         <Rectangle Height="200" Fill="Red"/>
                     </flexgrid:FlexGrid.Header>
