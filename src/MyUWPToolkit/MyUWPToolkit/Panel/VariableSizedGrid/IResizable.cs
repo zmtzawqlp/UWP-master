@@ -51,7 +51,7 @@ namespace MyUWPToolkit
             {
                 return this.FirstOrDefault(x => x.Min == min);
             }
-            var max = this.Min(x => x.Max);
+            var max = this.Max(x => x.Max);
             if (width > max)
             {
                 return this.FirstOrDefault(x => x.Max == max);

@@ -13,6 +13,9 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Background" Value="Blue"/>
         </Style>
     </Page.Resources>
 
@@ -25,7 +28,7 @@
                     </flexgrid:FlexGrid.Header>
                     <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                         <DataTemplate>
-                            <Grid Background="Blue">
+                            <Grid Background="White">
                                 <TextBlock Text="{Binding ColumnName}" Width="100"/>
                             </Grid>
                         </DataTemplate>
@@ -39,22 +42,22 @@
                     </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                     <flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                         <DataTemplate>
-                            <Grid Background="Blue">
+                            <Grid Background="White">
                                 <TextBlock Text="{Binding Name}" Width="100"/>
                             </Grid>
                         </DataTemplate>
                     </flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                     <flexgrid:FlexGrid.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="*" MinWidth="100"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Age}" Grid.Column="0"/>
                                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>

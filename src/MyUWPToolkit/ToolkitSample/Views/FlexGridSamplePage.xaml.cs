@@ -31,7 +31,16 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             Loaded += FlexGridSamplePage_Loaded;
+            flexgrid.SizeChanged += Flexgrid_SizeChanged;
+        }
 
+        private void Flexgrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Width > 800)
+            {
+
+                flexgrid.SetValue(ScrollViewer.HorizontalScrollModeProperty, ScrollMode.Disabled);
+            }
         }
 
         private void FlexGridSamplePage_Loaded(object sender, RoutedEventArgs e)

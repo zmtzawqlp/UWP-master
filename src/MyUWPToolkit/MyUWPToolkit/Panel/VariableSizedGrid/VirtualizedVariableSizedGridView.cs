@@ -189,6 +189,20 @@ namespace MyUWPToolkit
         public static readonly DependencyProperty VirtualizedVariableSizedGridViewItemContainerStyleProperty =
             DependencyProperty.Register("VirtualizedVariableSizedGridViewItemContainerStyle", typeof(Style), typeof(VirtualizedVariableSizedGridView), new PropertyMetadata(null));
 
+        /// <summary>
+        /// GridViewItem
+        /// </summary>
+        public Style VirtualizedVariableSizedInternalGridViewContainerStyle
+        {
+            get { return (Style)GetValue(VirtualizedVariableSizedInternalGridViewContainerStyleProperty); }
+            set { SetValue(VirtualizedVariableSizedInternalGridViewContainerStyleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for VirtualizedVariableSizedInternalGridViewContainerStyle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VirtualizedVariableSizedInternalGridViewContainerStyleProperty =
+            DependencyProperty.Register("VirtualizedVariableSizedInternalGridViewContainerStyle", typeof(Style), typeof(VirtualizedVariableSizedGridView), new PropertyMetadata(null));
+
+
 
         #endregion
 
@@ -371,6 +385,16 @@ namespace MyUWPToolkit
                         gridview.ItemClick += Gridview_ItemClick;
                     }
 
+                    if (gridview.ItemContainerStyle == null)
+                    {
+                        Binding binding1 = new Binding();
+                        binding1.Source = this;
+                        binding1.Mode = BindingMode.OneWay;
+                        binding1.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                        binding1.Path = new PropertyPath("VirtualizedVariableSizedInternalGridViewContainerStyle");
+                        gridview.SetBinding(GridView.ItemContainerStyleProperty, binding1);
+                    }
+
                 }
                 else
                 {
@@ -414,6 +438,12 @@ namespace MyUWPToolkit
             binding.Path = new PropertyPath("VirtualizedVariableSizedGridViewItemTemplate");
             gridview.SetBinding(GridView.ItemTemplateProperty, binding);
 
+            Binding binding1 = new Binding();
+            binding1.Source = this;
+            binding1.Mode = BindingMode.OneWay;
+            binding1.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            binding1.Path = new PropertyPath("VirtualizedVariableSizedInternalGridViewContainerStyle");
+            gridview.SetBinding(GridView.ItemContainerStyleProperty, binding1);
             (sender as ListViewItem).Loaded -= GridviewItem_Loaded;
         }
 
