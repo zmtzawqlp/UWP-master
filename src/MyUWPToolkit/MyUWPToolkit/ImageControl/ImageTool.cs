@@ -312,7 +312,7 @@ namespace MyUWPToolkit
         {
             if (_isTemplateLoaded && SourceImageFile != null && TempImageFile != null)
             {
-                scrollViewer.ZoomToFactor(1);
+                scrollViewer.ChangeView(null, null, 1);
                 // Ensure the stream is disposed once the image is loaded
                 using (IRandomAccessStream fileStream = await TempImageFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
@@ -631,7 +631,7 @@ namespace MyUWPToolkit
             else
             {
                 await SaveCropBitmap(TempImageFile);
-                scrollViewer.ZoomToFactor(1);
+                scrollViewer.ChangeView(null, null, 1);
                 OnTempImageFileChanged();
                 if (CropSelection != null)
                 {
@@ -644,7 +644,7 @@ namespace MyUWPToolkit
 
         public void CancelEditCrop()
         {
-            scrollViewer.ZoomToFactor(1);
+            scrollViewer.ChangeView(null, null, 1);
             if (CropSelection != null)
             {
                 CropSelection.CropSelectionVisibility = Visibility.Collapsed;
@@ -758,7 +758,7 @@ namespace MyUWPToolkit
         public void CancelEdit()
         {
             OnSourceImageFileChanged();
-            scrollViewer.ZoomToFactor(1);
+            scrollViewer.ChangeView(null, null, 1);
             if (CropSelection != null)
             {
                 CropSelection.CropSelectionVisibility = Visibility.Collapsed;
