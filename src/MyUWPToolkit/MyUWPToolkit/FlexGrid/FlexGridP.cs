@@ -23,12 +23,13 @@ namespace MyUWPToolkit.FlexGrid
         Grid _scrollContent;
         ListView _columnHeader;
         ListView _frozenColumnsHeader;
-        ListView _frozenColumns;
+        internal FlexGridFrozenColumns _frozenColumns;
 
         CompositionPropertySet _scrollerViewerManipulation;
         ExpressionAnimation _offsetAnimation;
         Compositor _compositor;
         Visual _scrollContentVisual;
+        CurrentVisualState currentVisualState = new CurrentVisualState();
         #endregion
 
 
@@ -116,12 +117,36 @@ namespace MyUWPToolkit.FlexGrid
         #endregion
     }
 
-    public class SortingColumnEventArgs:EventArgs
+    public class SortingColumnEventArgs : EventArgs
     {
         public object Column { get; private set; }
         public SortingColumnEventArgs(object column)
         {
             Column = column;
+        }
+    }
+
+    internal class CurrentVisualState
+    {
+        public int Index { get; set; }
+        //
+        // Summary:
+        //     Gets the state the Control is changing to or has changed to.
+        //
+        // Returns:
+        //     The state the Control is changing to or has changed to.
+        public VisualState NewState { get; set; }
+        //
+        // Summary:
+        //     Gets the state the Control is changing from or has changed from.
+        //
+        // Returns:
+        //     The state the Control is changing from or has changed from.
+        public VisualState OldState { get; set; }
+
+        public CurrentVisualState()
+        {
+            Index = -1;
         }
     }
 }

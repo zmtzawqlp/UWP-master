@@ -135,6 +135,7 @@ namespace UWP.DataGrid
             //pen,mouse
             if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch)
                 VisualStateManager.GoToState(this, "MouseIndicator", true);
+            this.Focus(FocusState.Programmatic);
         }
 
         private void _contentGrid_PointerWheelChanged(object sender, PointerRoutedEventArgs e)

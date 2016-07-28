@@ -42,7 +42,7 @@
                     </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                     <flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                         <DataTemplate>
-                            <Grid Background="White">
+                            <Grid>
                                 <TextBlock Text="{Binding Name}" Width="100"/>
                             </Grid>
                         </DataTemplate>

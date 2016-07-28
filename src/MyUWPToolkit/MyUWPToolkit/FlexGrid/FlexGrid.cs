@@ -22,15 +22,26 @@ namespace MyUWPToolkit.FlexGrid
 
     [TemplatePart(Name = "ColumnHeader", Type = typeof(ListView))]
     [TemplatePart(Name = "FrozenColumnsHeader", Type = typeof(ListView))]
-    [TemplatePart(Name = "FrozenColumns", Type = typeof(ListView))]
+    [TemplatePart(Name = "FrozenColumns", Type = typeof(FlexGridFrozenColumns))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
     public partial class FlexGrid : ListView
     {
+
         #region ctor
         public FlexGrid()
         {
             this.DefaultStyleKey = typeof(FlexGrid);
             base.ItemClick += (s, e) => { OnItemClick(s, e); };
+            PointerMoved += FlexGrid_PointerMoved;
+        }
+
+        private void FlexGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (_frozenColumns != null)
+            {
+                var point = e.GetCurrentPoint(_frozenColumns).Position;
+                var rect = new Rect(0, 0, _frozenColumns.ActualWidth, _frozenColumns.ActualWidth);
+            }
         }
         #endregion
 
@@ -40,24 +51,88 @@ namespace MyUWPToolkit.FlexGrid
             base.OnApplyTemplate();
             Initialize();
             InitializeScrollViewer();
-
         }
 
-        private void Initialize()
+        protected override bool IsItemItsOwnContainerOverride(object item)
         {
-            _columnHeader = GetTemplateChild("ColumnHeader") as ListView;
-            _frozenColumnsHeader = GetTemplateChild("FrozenColumnsHeader") as ListView;
-            _frozenColumns = GetTemplateChild("FrozenColumns") as ListView;
-            _columnHeader.ItemClick += _columnHeader_ItemClick;
-            _frozenColumnsHeader.ItemClick += _columnHeader_ItemClick;
-            _frozenColumns.ItemClick += (s, e) => { OnItemClick(s, e); };
+            return item is FlexGridItem;
+            return base.IsItemItsOwnContainerOverride(item);
         }
 
-        private void _columnHeader_ItemClick(object sender, ItemClickEventArgs e)
+        protected override DependencyObject GetContainerForItemOverride()
         {
-            OnColumnSorting(this, e);
+            return new FlexGridItem();
+            return base.GetContainerForItemOverride();
         }
 
+        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
+        {
+            (element as FlexGridItem).CurrentStateChanging += FlexGrid_CurrentStateChanging;
+            base.PrepareContainerForItemOverride(element, item);
+        }
+
+
+        private void FlexGrid_CurrentStateChanging(object sender, VisualStateChangedEventArgs e)
+        {
+            if (_frozenColumns != null && _frozenColumns.ItemsPanelRoot != null)
+            {
+                var index = this.IndexFromContainer((e.Control as FlexGridItem));
+
+
+                //if (currentVisualState.Index != -1)
+                //{
+                //    if (currentVisualState.Index != index)
+                //    {
+                //        if (currentVisualState.NewState != null)
+                //        {
+                //            (this.ContainerFromIndex(currentVisualState.Index) as FlexGridItem)?.GoToState(currentVisualState.NewState.Name);
+                //            (_frozenColumns.ContainerFromIndex(currentVisualState.Index) as FlexGridItem)?.GoToState(currentVisualState.NewState.Name);
+                //        }
+
+                //        var item = _frozenColumns.ContainerFromIndex(index) as FlexGridItem;
+                //        if (item != null)
+                //        {
+                //            item.GoToState(e.NewState.Name);
+                //        }
+                //        currentVisualState.Index = index;
+                //        currentVisualState.OldState = e.OldState;
+                //        currentVisualState.NewState = e.NewState;
+                //    }
+                //    else
+                //    {
+                //        if (currentVisualState.NewState.Name != e.NewState.Name)
+                //        {
+                //            (e.Control as FlexGridItem).GoToState(currentVisualState.NewState.Name);
+                //        }
+                //        else
+                //        {
+                //            (e.Control as FlexGridItem).GoToState(e.NewState.Name);
+                //        }
+                        
+                //    }
+
+                //}
+                //else
+                {
+                    var item = _frozenColumns.ContainerFromIndex(index) as FlexGridItem;
+                    if (item != null)
+                    {
+                        item.GoToState(e.NewState.Name);
+                    }
+                    currentVisualState.Index = index;
+                    currentVisualState.OldState = e.OldState;
+                    currentVisualState.NewState = e.NewState;
+                }
+
+
+            }
+        }
+
+        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
+        {
+            (element as FlexGridItem).CurrentStateChanging -= FlexGrid_CurrentStateChanging;
+            base.ClearContainerForItemOverride(element, item);
+        }
 
         #endregion
         #region ScrollViewer
@@ -112,8 +187,83 @@ namespace MyUWPToolkit.FlexGrid
         #endregion
 
         #region private method
+        private void Initialize()
+        {
+            _columnHeader = GetTemplateChild("ColumnHeader") as ListView;
+            _frozenColumnsHeader = GetTemplateChild("FrozenColumnsHeader") as ListView;
+            _frozenColumns = GetTemplateChild("FrozenColumns") as FlexGridFrozenColumns;
+            _frozenColumns.CurrentStateChanging += _frozenColumns_CurrentStateChanging;
+            _columnHeader.ItemClick += _columnHeader_ItemClick;
+            _frozenColumnsHeader.ItemClick += _columnHeader_ItemClick;
+            _frozenColumns.ItemClick += (s, e) => { OnItemClick(s, e); };
+        }
 
-        #region Common
+        private void _frozenColumns_CurrentStateChanging(object sender, VisualStateChangedEventArgs e)
+        {
+
+            if (this.ItemsPanelRoot != null)
+            {
+                var index = _frozenColumns.IndexFromContainer((e.Control as FlexGridItem));
+                Debug.WriteLine("_frozenColumns_CurrentStateChanging : " + e.NewState.Name + " index: " + index);
+
+                //if (currentVisualState.Index != -1)
+                //{
+                //    if (currentVisualState.Index != index)
+                //    {
+                //        if (currentVisualState.NewState != null)
+                //        {
+                //            (this.ContainerFromIndex(currentVisualState.Index) as FlexGridItem)?.GoToState(currentVisualState.NewState.Name);
+                //            (_frozenColumns.ContainerFromIndex(currentVisualState.Index) as FlexGridItem)?.GoToState(currentVisualState.NewState.Name);
+                //        }
+
+                //        var item = this.ContainerFromIndex(index) as FlexGridItem;
+                //        if (item != null)
+                //        {
+                //            item.GoToState(e.NewState.Name);
+                //        }
+                //        currentVisualState.Index = index;
+                //        currentVisualState.OldState = e.OldState;
+                //        currentVisualState.NewState = e.NewState;
+                //    }
+                //    else
+                //    {
+                //        if (currentVisualState.NewState.Name != e.NewState.Name)
+                //        {
+                //            (e.Control as FlexGridItem).GoToState(currentVisualState.NewState.Name);
+                //        }
+                //        else
+                //        {
+                //            (e.Control as FlexGridItem).GoToState(e.NewState.Name);
+                //        }
+                //    }
+
+                //}
+                //else
+                {
+                    var item = this.ContainerFromIndex(index) as FlexGridItem;
+                    if (item != null)
+                    {
+                        item.GoToState(e.NewState.Name);
+                    }
+                    currentVisualState.Index = index;
+                    currentVisualState.OldState = e.OldState;
+                    currentVisualState.NewState = e.NewState;
+                }
+
+
+                //else if (currentVisualState != e.NewState && currentVisualState != null && currentVisualState.Name != e.NewState.Name)
+                //{
+                //    (e.Control as FlexGridItem).GoToState(currentVisualState.Name);
+                //}
+            }
+        }
+
+        private void _columnHeader_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            OnColumnSorting(this, e);
+        }
+
+
         private void OnItemClick(object sender, ItemClickEventArgs e)
         {
             if (this.ItemClick != null)
@@ -130,16 +280,15 @@ namespace MyUWPToolkit.FlexGrid
         }
         private void OnItemsSourceChanged()
         {
-            //reset scrollviewer
 
         }
 
+
+
+        #endregion
         public IEnumerable<object> GetVisibleItems()
         {
             return Util.Util.GetVisibleItems(this);
         }
-        #endregion
-        #endregion
-
     }
 }

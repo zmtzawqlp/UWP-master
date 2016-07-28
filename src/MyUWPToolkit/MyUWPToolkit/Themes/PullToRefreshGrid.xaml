@@ -6,6 +6,8 @@
     <converters:VisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:VisibilityConverter x:Key="InversedBooleanToVisibilityConverter" IsInversed="True"/>
     <converters:DateTimeConverter x:Key="dateTimeConverter"/>
+
+
     <Style TargetType="local:PullToRefreshGrid">
         <Setter Property="HeaderTemplate">
             <Setter.Value>
@@ -57,7 +59,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <Style TargetType="local:PullToRefreshGrid1">
         <Setter Property="HeaderTemplate">
