@@ -117,6 +117,7 @@
     <Compile Include="FlexGrid\Column.cs" />
     <Compile Include="FlexGrid\FlexGrid.cs" />
     <Compile Include="FlexGrid\FlexGridFrozenColumns.cs" />
+    <Compile Include="FlexGrid\FlexGridFrozenColumnsPanel.cs" />
     <Compile Include="FlexGrid\FlexGridItem.cs" />
     <Compile Include="FlexGrid\FlexGridP.cs" />
     <Compile Include="ImageControl\AspectRatio.cs" />

@@ -30,7 +30,6 @@ namespace MyUWPToolkit.FlexGrid
         }
 
 
-
         internal ItemsControl AnotherListViewer { get; set; }
 
         protected override bool IsItemItsOwnContainerOverride(object item)
@@ -60,7 +59,6 @@ namespace MyUWPToolkit.FlexGrid
 
         protected override void ClearContainerForItemOverride(DependencyObject element, object item)
         {
-            
             //Style style = (element as FlexGridItem).Style;
             (element as FlexGridItem).AnotherListViewer = null;
             (element as FlexGridItem).ParentListViewer = null;
