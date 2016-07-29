@@ -25,6 +25,7 @@ namespace ToolkitSample.Views
         public BlankPage1()
         {
             this.InitializeComponent();
+            list.ItemsSource = new List<string>() { "dada","dadasd", "dada", "dadasd", "dada", "dadasd", "dada", "dadasd" };
 
         }
 

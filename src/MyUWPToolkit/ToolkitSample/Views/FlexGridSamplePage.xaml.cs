@@ -34,6 +34,8 @@ namespace ToolkitSample
             flexgrid.SizeChanged += Flexgrid_SizeChanged;
         }
 
+
+
         private void Flexgrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.NewSize.Width > 800)
@@ -63,11 +65,7 @@ namespace ToolkitSample
             flexgrid.ItemsSource = _employees;
         }
 
-        private void flexgrid_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-        }
-
+ 
         private void flexgrid_PullToRefresh(object sender, EventArgs e)
         {
             flexgrid.ItemsSource = null;
@@ -76,8 +74,33 @@ namespace ToolkitSample
 
         private void flexgrid_SortingColumn(object sender, MyUWPToolkit.FlexGrid.SortingColumnEventArgs e)
         {
-            //flexgrid.ItemsSource = null;
+            flexgrid.ItemsSource = null;
+            //foreach (var item in _employees.)
+            //{
+
+            //}
+            //_employees[0].Name = "order";
+            flexgrid.ItemsSource = _employees;
+            //_employees.Insert(0,new Employee() { Name = "djkajdla" });
+            //_employees.Clear();
+            //flexgrid.ItemsSource = _employees.OrderBy(x=>x.Age);
+
             //flexgrid.ItemsSource = _employees;
+            //flexgrid.ItemContainerGenerator.ItemsChanged += ItemContainerGenerator_ItemsChanged;
+        }
+
+        private void ItemContainerGenerator_ItemsChanged(object sender, ItemsChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                default:
+                    break;
+            }
+        }
+
+        private void flexgrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+          
         }
     }
 

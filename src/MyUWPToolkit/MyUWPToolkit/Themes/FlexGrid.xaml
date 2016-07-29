@@ -368,25 +368,11 @@
                             </Border>
                             <Border x:Name="ContentContainer">
                                 <Grid x:Name="InnerDragContent">
-                                    <Rectangle x:Name="PointerOverBorder"
-                                           IsHitTestVisible="False"
-                                           Opacity="0"
-                                           Fill="{ThemeResource ListViewItemPointerOverBackgroundThemeBrush}" 
-                                           Margin="0" />
-                                    <Rectangle x:Name="FocusVisual"
-                                           IsHitTestVisible="False"
-                                           Opacity="0"
-                                           StrokeThickness="2"
-                                           Stroke="{ThemeResource ListViewItemFocusBorderThemeBrush}" />
-                                    <Rectangle x:Name="SelectionBackground"
-                                           Margin="4"
-                                           Fill="{ThemeResource ListViewItemSelectedBackgroundThemeBrush}"
-                                           Opacity="0" />
                                     <Border x:Name="ContentBorder"
                                         Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}"
-                                        Margin="4">
+                                        Margin="0">
                                         <Grid>
                                             <ContentPresenter x:Name="contentPresenter"
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
@@ -414,12 +400,26 @@
                                                    Fill="{ThemeResource ListViewItemDragBackgroundThemeBrush}" />
                                         </Grid>
                                     </Border>
+                                    <Rectangle x:Name="PointerOverBorder"
+                                           IsHitTestVisible="False"
+                                           Opacity="0"
+                                           Fill="{ThemeResource ListViewItemPointerOverBackgroundThemeBrush}" 
+                                           Margin="0" />
+                                    <Rectangle x:Name="FocusVisual"
+                                           IsHitTestVisible="False"
+                                           Opacity="0" 
+                                           StrokeThickness="0"
+                                           Stroke="{ThemeResource ListViewItemFocusBorderThemeBrush}" />
+                                    <Rectangle x:Name="SelectionBackground"
+                                           Margin="0"
+                                           Fill="{ThemeResource ListViewItemSelectedBackgroundThemeBrush}"
+                                           Opacity="0" />
                                     <Rectangle x:Name="SelectedBorder"
                                            IsHitTestVisible="False"
                                            Opacity="0"
                                            Stroke="{ThemeResource ListViewItemSelectedBackgroundThemeBrush}"
                                            StrokeThickness="{ThemeResource ListViewItemSelectedBorderThemeThickness}"
-                                           Margin="4" />
+                                           Margin="0" />
                                     <Border x:Name="SelectedCheckMarkOuter"
                                         IsHitTestVisible="False"
                                         HorizontalAlignment="Right"
@@ -572,7 +572,7 @@
                                 <ScrollContentPresenter x:Name="ScrollContentPresenter" Grid.Row="1" Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" Grid.RowSpan="2"/>
                                 <ContentControl x:Name="Header" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                             </Grid>
-                         
+                            <!--<ScrollContentPresenter x:Name="ScrollContentPresenter"  Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" Grid.RowSpan="2"/>-->
                             <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False" Maximum="{TemplateBinding ScrollableHeight}" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{TemplateBinding VerticalOffset}" ViewportSize="{TemplateBinding ViewportHeight}"/>
                             <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{TemplateBinding HorizontalOffset}" ViewportSize="{TemplateBinding ViewportWidth}"/>
                             <Border x:Name="ScrollBarSeparator" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Grid.Column="1" Grid.Row="1"/>
@@ -583,16 +583,15 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="NoScrollViewerListViewStyle" TargetType="ListView">
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="TabNavigation" Value="Once"/>
         <Setter Property="IsSwipeEnabled" Value="True"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
-        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Enabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="True"/>
         <Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
@@ -681,7 +680,13 @@
                                 </ListView>
                             </ScrollViewer.TopLeftHeader>
                             <ScrollViewer.LeftHeader>
-                                <local:FlexGridFrozenColumns x:Name="FrozenColumns" Margin="0,0,0,0" ShowsScrollingPlaceholders="{TemplateBinding ShowsScrollingPlaceholders}"  SelectionMode="{TemplateBinding SelectionMode}" IsItemClickEnabled="{TemplateBinding IsItemClickEnabled}" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsItemTemplate}"/>
+                                <local:FlexGridFrozenColumns x:Name="FrozenColumns" Style="{StaticResource NoScrollViewerListViewStyle}" Background="Green"  ShowsScrollingPlaceholders="{TemplateBinding ShowsScrollingPlaceholders}"  SelectionMode="{TemplateBinding SelectionMode}" IsItemClickEnabled="{TemplateBinding IsItemClickEnabled}"  ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsItemTemplate}">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsStackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                </local:FlexGridFrozenColumns>
                             </ScrollViewer.LeftHeader>
                             <ItemsPresenter HorizontalAlignment="Left" VerticalAlignment="Top" FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}"  Padding="{TemplateBinding Padding}"/>
                             <!--HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}"-->

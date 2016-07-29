@@ -80,6 +80,9 @@ namespace ToolkitSample
                 case "GroupListView":
                     Frame.Navigate(typeof(GroupListViewPage));
                     break;
+                case "Test":
+                    Frame.Navigate(typeof(BlankPage1));
+                    break;
                 default:
                     break;
             }

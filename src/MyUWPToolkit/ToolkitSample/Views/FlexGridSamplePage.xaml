@@ -15,14 +15,20 @@
             <Setter Property="Padding" Value="0"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="Background" Value="Blue"/>
+        </Style>
+        <Style  TargetType="flexgrid:FlexGridItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
         </Style>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="adada">
-                <flexgrid:FlexGrid x:Name="flexgrid" ItemClick="flexgrid_ItemClick" SelectionMode="None" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
+                <flexgrid:FlexGrid x:Name="flexgrid" SelectionMode="None" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
                     <flexgrid:FlexGrid.Header>
                         <Rectangle Height="200" Fill="Red"/>
                     </flexgrid:FlexGrid.Header>
@@ -36,13 +42,13 @@
                     <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                         <DataTemplate>
                             <Grid Background="Yellow" >
-                                <TextBlock Text="{Binding ColumnName}" Width="100"/>
+                                <TextBlock Text="{Binding ColumnName}" HorizontalAlignment="Left" Width="100"/>
                             </Grid>
                         </DataTemplate>
                     </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
                     <flexgrid:FlexGrid.FrozenColumnsItemTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid >
                                 <TextBlock Text="{Binding Name}" Width="100"/>
                             </Grid>
                         </DataTemplate>
