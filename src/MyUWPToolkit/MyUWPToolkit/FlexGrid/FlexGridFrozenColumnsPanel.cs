@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace MyUWPToolkit.FlexGrid
     {
         protected override Size ArrangeOverride(Size finalSize)
         {
+            Debug.WriteLine("FlexGridFrozenColumnsPanel");
             return base.ArrangeOverride(finalSize);
         }
     }

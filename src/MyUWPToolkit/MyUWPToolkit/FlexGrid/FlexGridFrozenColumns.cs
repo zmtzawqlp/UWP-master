@@ -26,7 +26,7 @@ namespace MyUWPToolkit.FlexGrid
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-           
+
         }
 
 
@@ -48,13 +48,12 @@ namespace MyUWPToolkit.FlexGrid
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
-           
             (element as FlexGridItem).AnotherListViewer = AnotherListViewer;
             (element as FlexGridItem).ParentListViewer = this;
             (element as FlexGridItem).DataItem = item;
             base.PrepareContainerForItemOverride(element, item);
             //(element as FlexGridItem).Style = this.ItemContainerStyle;
-            //Debug.WriteLine("PrepareContainerForItemOverride : " + IndexFromContainer(element) + "," + ItemsPanelRoot?.Children.Count);
+            Debug.WriteLine("PrepareContainerForItemOverride : " + IndexFromContainer(element) + "," + ItemsPanelRoot?.Children.Count);
         }
 
         protected override void ClearContainerForItemOverride(DependencyObject element, object item)

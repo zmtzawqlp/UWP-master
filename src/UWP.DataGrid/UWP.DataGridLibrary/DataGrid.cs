@@ -630,23 +630,28 @@ namespace UWP.DataGrid
 
         internal void OnViewChanged(IObservableVector<object> sender, IVectorChangedEventArgs e)
         {
-            Debug.WriteLine("OnViewChanged------------");
+            //Debug.WriteLine("OnViewChanged------------");
             // handle action
             var rows = Rows;
             var index = (int)e.Index;
             var rowIndex = GetRowIndex(index);
 
             var topRow = -1;
-            if (_cellPanel != null
-                && addRemoveItemHanlder.CurrentTopRow == -1)
+
+            if (ItemsUpdatingScrollMode == ItemsUpdatingScrollMode.KeepItemsInView)
             {
-                _cellPanel.UpdateViewRange();
-                var viewRange = _cellPanel.ViewRange;
-                //topRow = viewRange.Row;
-                addRemoveItemHanlder.CurrentTopRow = viewRange.Row;
+                if (_cellPanel != null
+               && addRemoveItemHanlder.CurrentTopRow == -1)
+                {
+                    //_cellPanel.UpdateViewRange();
+                    var viewRange = _cellPanel.ViewRange;
+                    topRow = viewRange.Row;
+                    addRemoveItemHanlder.CurrentTopRow = viewRange.Row;
+                }
+                topRow = addRemoveItemHanlder.CurrentTopRow;
             }
-            topRow = addRemoveItemHanlder.CurrentTopRow;
-            Debug.WriteLine("topRow : " + topRow);
+
+            //Debug.WriteLine("topRow : " + topRow);
             switch (e.CollectionChange)
             {
                 case CollectionChange.ItemInserted:
@@ -667,15 +672,18 @@ namespace UWP.DataGrid
                     {
                         LoadRows();
                     }
-                    addRemoveItemHanlder.AddTotalCount++;
-                    if (index <= topRow)
+                    if (ItemsUpdatingScrollMode == ItemsUpdatingScrollMode.KeepItemsInView)
                     {
-                        if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                        addRemoveItemHanlder.AddTotalCount++;
+                        if (index <= topRow)
                         {
-                            Debug.WriteLine("Add : " + Rows.Count);
-                            addRemoveItemHanlder.AddItemLessThanTopCount++;
-                            addRemoveItemHanlder.CurrentTopRow++;
-                            //ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
+                            if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                            {
+                                //Debug.WriteLine("Add : " + Rows.Count);
+                                addRemoveItemHanlder.AddItemLessThanTopCount++;
+                                addRemoveItemHanlder.CurrentTopRow++;
+                                //ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y - _cellPanel.Rows.DefaultSize);
+                            }
                         }
                     }
                     break;
@@ -690,15 +698,19 @@ namespace UWP.DataGrid
                     {
                         LoadRows();
                     }
-                    addRemoveItemHanlder.RemoveTotalCount++;
-                    if (index <= topRow)
+
+                    if (ItemsUpdatingScrollMode == ItemsUpdatingScrollMode.KeepItemsInView)
                     {
-                        if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                        addRemoveItemHanlder.RemoveTotalCount++;
+                        if (index <= topRow)
                         {
-                            Debug.WriteLine("Remove : " + Rows.Count);
-                            addRemoveItemHanlder.RemoveItemLessThanTopCount++;
-                            addRemoveItemHanlder.CurrentTopRow--;
-                            //ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                            if (Math.Abs(ScrollPosition.Y) >= HeaderMeasureHeight)
+                            {
+                                //Debug.WriteLine("Remove : " + Rows.Count);
+                                addRemoveItemHanlder.RemoveItemLessThanTopCount++;
+                                addRemoveItemHanlder.CurrentTopRow--;
+                                //ScrollPosition = new Point(ScrollPosition.X, ScrollPosition.Y + _cellPanel.Rows.DefaultSize);
+                            }
                         }
                     }
                     break;

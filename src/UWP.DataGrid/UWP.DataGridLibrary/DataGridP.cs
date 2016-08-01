@@ -126,7 +126,7 @@ namespace UWP.DataGrid
             {
                 if (_outerScrollViewer == null)
                 {
-                    var parent =this.Parent as FrameworkElement;
+                    var parent = this.Parent as FrameworkElement;
                     while (parent != null)
                     {
                         if (parent is Page)
@@ -154,14 +154,11 @@ namespace UWP.DataGrid
                     }
                     _outerScrollViewer.ViewChanging -= _outerScrollViewer_ViewChanging;
                     _outerScrollViewer.ViewChanging += _outerScrollViewer_ViewChanging;
-                   
                 }
                 return _outerScrollViewer;
             }
 
         }
-
-
 
         internal bool OuterScrollViewerVerticalScrollEnable
         {
@@ -292,15 +289,6 @@ namespace UWP.DataGrid
 
         #region Public Properties
 
-        /// <summary>
-        /// Refresh ScrollPosition when view changed.
-        /// default value true
-        /// Sometime if you don't want refresh scrollPosition 
-        /// when you add or remove items
-        /// you can set it to false before your changes.
-        /// </summary>
-        public bool RefreshScrollPosition { get; set; }
-
         public SortMode SortMode { get; set; }
 
         public Rows Rows
@@ -379,11 +367,11 @@ namespace UWP.DataGrid
                         var totalRowsSize = Rows.GetTotalSize();
                         //Debug.WriteLine("addRemoveCount : " + addRemoveItemHanlder.Count);
                         //Debug.WriteLine("addCount : " + addRemoveItemHanlder.AddTotalCount + ", removeCount : " + addRemoveItemHanlder.RemoveTotalCount);
-                        if (RefreshScrollPosition)
+                        if (ItemsUpdatingScrollMode == ItemsUpdatingScrollMode.KeepItemsInView)
                         {
                             value.Y -= (addRemoveItemHanlder.Count) * _cellPanel.Rows.DefaultSize;
+                            addRemoveItemHanlder.Reset();
                         }
-                        addRemoveItemHanlder.Reset();
 
                         var totalColumnsSize = Columns.GetTotalSize();
                         var totalHeight = totalRowsSize + HeaderMeasureHeight + _columnHeaderPanel.DesiredSize.Height + FooterMeasureHeight;
@@ -912,6 +900,20 @@ namespace UWP.DataGrid
             DependencyProperty.Register("FooterTemplate", typeof(DataTemplate), typeof(DataGrid), new PropertyMetadata(null));
 
         #endregion
+
+
+        /// <summary>
+        /// default value is ItemsUpdatingScrollMode.KeepScrollOffset
+        /// </summary>
+        public ItemsUpdatingScrollMode ItemsUpdatingScrollMode
+        {
+            get { return (ItemsUpdatingScrollMode)GetValue(ItemsUpdatingScrollModeProperty); }
+            set { SetValue(ItemsUpdatingScrollModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemsUpdatingScrollMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemsUpdatingScrollModeProperty =
+            DependencyProperty.Register("ItemsUpdatingScrollMode", typeof(ItemsUpdatingScrollMode), typeof(DataGrid), new PropertyMetadata(ItemsUpdatingScrollMode.KeepScrollOffset));
 
         #endregion
 

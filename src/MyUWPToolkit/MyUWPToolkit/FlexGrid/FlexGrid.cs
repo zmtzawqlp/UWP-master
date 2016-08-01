@@ -86,8 +86,9 @@ namespace MyUWPToolkit.FlexGrid
             
             (element as FlexGridItem).AnotherListViewer = _frozenColumns;
             (element as FlexGridItem).ParentListViewer = this;
+            (element as FlexGridItem).DataItem = item;
             base.PrepareContainerForItemOverride(element, item);
-
+            
             //Debug.WriteLine("FlexGrid_PrepareContainerForItemOverride : " + IndexFromContainer(element) + "," + ItemsPanelRoot?.Children.Count);
         }
 
@@ -203,6 +204,7 @@ namespace MyUWPToolkit.FlexGrid
             //Debug.WriteLine("FlexGrid_ClearContainerForItemOverride : " + IndexFromContainer(element) + "," + ItemsPanelRoot?.Children.Count);
             (element as FlexGridItem).AnotherListViewer = null;
             (element as FlexGridItem).ParentListViewer = null;
+            (element as FlexGridItem).DataItem = null;
             base.ClearContainerForItemOverride(element, item);
         }
 
