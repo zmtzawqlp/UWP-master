@@ -172,12 +172,12 @@
 
                             <local:DataGridContentPresenter x:Name="Footer"  Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              Content="{TemplateBinding Footer}" ContentTemplate="{TemplateBinding FooterTemplate}"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
-                            <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False"  Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Row="4" Visibility="Collapsed" />
                         </Grid>
 
                         <!--<ScrollContentPresenter x:Name="ScrollContentPresenter" Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" Grid.RowSpan="2"/>-->
                         <!--<ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False" IndicatorMode="MouseIndicator" Maximum="{TemplateBinding ScrollableHeight}" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{TemplateBinding VerticalOffset}" ViewportSize="{TemplateBinding ViewportHeight}"/>
                             <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{TemplateBinding HorizontalOffset}" ViewportSize="{TemplateBinding ViewportWidth}"/>-->
+                        <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False"  Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Visibility="Collapsed" />
                         <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False"  Orientation="Vertical" Visibility="Collapsed" />
                         <Border x:Name="ScrollBarSeparator" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Grid.Column="1" Grid.Row="1"/>
                     </Grid>
