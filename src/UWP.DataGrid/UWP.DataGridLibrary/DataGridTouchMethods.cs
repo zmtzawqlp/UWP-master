@@ -338,16 +338,55 @@ namespace UWP.DataGrid
                     switch (scollingDirection)
                     {
                         case ScollingDirection.None:
-                            if (Math.Abs(x) <= Math.Abs(y))
+
+                            if (_horizontalScrollBar.Maximum > 0 && _verticalScrollBar.Maximum > 0)
                             {
-                                point = new Point() { X = ScrollPosition.X, Y = ScrollPosition.Y + y };
-                                scollingDirection = ScollingDirection.Vertical;
+                                point = new Point();
+                                bool noHorizontalScroll = false;
+                                bool noVerticalScroll = false;
+                                //can not scroll to left or  can not scroll to right
+                                if ((_horizontalScrollBar.Value == 0 && x >= 0) || (_horizontalScrollBar.Value == _horizontalScrollBar.Maximum && x <= 0))
+                                {
+                                    noHorizontalScroll = true;
+                                    point.Y = ScrollPosition.Y + y;
+                                }
+
+                                //can not scroll to top or can not scroll to bottom
+                                if ((_verticalScrollBar.Value == 0 && y >= 0) || (_verticalScrollBar.Value == _verticalScrollBar.Maximum && y <= 0))
+                                {
+                                    noVerticalScroll = true;
+                                    point.X = ScrollPosition.X + x;
+                                }
+
+                                if (!noHorizontalScroll && !noVerticalScroll)
+                                {
+                                    if (Math.Abs(x) <= Math.Abs(y))
+                                    {
+                                        point = new Point() { X = ScrollPosition.X, Y = ScrollPosition.Y + y };
+                                        scollingDirection = ScollingDirection.Vertical;
+                                    }
+                                    else
+                                    {
+                                        point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
+                                        scollingDirection = ScollingDirection.Horizontal;
+                                    }
+                                }
+                                else if (noHorizontalScroll && !noVerticalScroll)
+                                {
+                                    point.X = ScrollPosition.X;
+                                }
+                                else if (noVerticalScroll && !noHorizontalScroll)
+                                {
+                                    point.Y = ScrollPosition.Y;
+                                }
+
                             }
+                            //only has horizontal can scroll or vertical can scroll
                             else
                             {
-                                point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
-                                scollingDirection = ScollingDirection.Horizontal;
+                                point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y + y };
                             }
+
                             break;
                         case ScollingDirection.Horizontal:
                             point = new Point() { X = ScrollPosition.X + x, Y = ScrollPosition.Y };
