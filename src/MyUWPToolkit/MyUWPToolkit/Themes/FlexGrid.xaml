@@ -683,8 +683,8 @@
                                 <local:FlexGridFrozenColumns x:Name="FrozenColumns" Style="{StaticResource NoScrollViewerListViewStyle}" Background="Green"  ShowsScrollingPlaceholders="{TemplateBinding ShowsScrollingPlaceholders}"  SelectionMode="{TemplateBinding SelectionMode}" IsItemClickEnabled="{TemplateBinding IsItemClickEnabled}"  ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsItemTemplate}">
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <local:FlexGridFrozenColumnsPanel/>
-                                            <!--<ItemsStackPanel Orientation="Vertical" Width="100"/>-->
+                                            <!--<local:FlexGridFrozenColumnsPanel/>-->
+                                            <ItemsStackPanel Orientation="Vertical"/>
                                         </ItemsPanelTemplate>
                                     </ListView.ItemsPanel>
                                 </local:FlexGridFrozenColumns>
