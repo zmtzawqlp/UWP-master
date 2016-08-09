@@ -48,8 +48,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:PullToRefreshGrid">
-                    <Grid>
-                        <ContentControl x:Name="Header" Opacity="0" VerticalAlignment="Top" ContentTemplate="{TemplateBinding HeaderTemplate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ContentControl x:Name="Header" Opacity="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ContentTemplate="{TemplateBinding HeaderTemplate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
                         <ScrollViewer x:Name="ScrollViewer" VerticalSnapPointsType="MandatorySingle"  VerticalSnapPointsAlignment="Near"
                           VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch">
                             <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
@@ -100,8 +100,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:PullToRefreshGrid1">
-                    <Grid>
-                        <ContentControl x:Name="Header" Opacity="0" VerticalAlignment="Top" ContentTemplate="{TemplateBinding HeaderTemplate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ContentControl x:Name="Header" Opacity="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" ContentTemplate="{TemplateBinding HeaderTemplate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" />
                         <ContentPresenter x:Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Grid>
                 </ControlTemplate>

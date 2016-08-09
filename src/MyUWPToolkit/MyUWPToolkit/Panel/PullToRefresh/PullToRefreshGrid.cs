@@ -52,14 +52,13 @@ namespace MyUWPToolkit
         string NoUseCompositionAPIControlTemplateString = @"
       <ControlTemplate   xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
                          xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-                         xmlns:local='using:MyUWPToolkit' TargetType='local:PullToRefreshGrid'>
+                         xmlns:local='using:EastMoney.Controls' TargetType='local:PullToRefreshGrid'>
         <local:PullToRefreshBorder x:Name='OuterCustomPanel' HorizontalAlignment='Stretch' VerticalAlignment='Stretch'>
             <ScrollViewer x:Name='ScrollViewer' VerticalSnapPointsType='MandatorySingle'  VerticalSnapPointsAlignment='Near'
                           VerticalScrollMode='Enabled' VerticalScrollBarVisibility='Hidden' VerticalContentAlignment='Stretch' VerticalAlignment='Stretch'>
                 <local:ScrollPanel x:Name='InnerCustomPanel'>
                     <ContentControl x:Name='PanelHeader' Opacity='0' ContentTemplate='{TemplateBinding HeaderTemplate}' 
-                                                HorizontalContentAlignment='Center' VerticalContentAlignment='Bottom' 
-                                          Width='{Binding ActualWidth,ElementName=PanelContent}'      />
+                                          HorizontalContentAlignment='Center' VerticalContentAlignment='Bottom'/>
                     <ContentPresenter x:Name='PanelContent'  ContentTemplate='{TemplateBinding ContentTemplate}' ContentTransitions='{TemplateBinding ContentTransitions}' Content='{TemplateBinding Content}' HorizontalAlignment='{TemplateBinding HorizontalContentAlignment}' Margin='{TemplateBinding Padding}' VerticalAlignment='{TemplateBinding VerticalContentAlignment}'/>
                 </local:ScrollPanel>
             </ScrollViewer>
@@ -161,7 +160,6 @@ namespace MyUWPToolkit
             }
         }
 
-
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -188,9 +186,7 @@ namespace MyUWPToolkit
                 _scrollViewer.SizeChanged += _scrollViewer_SizeChanged;
                 _scrollViewer.DirectManipulationStarted += _scrollViewer_DirectManipulationStarted;
             }
-
         }
-
 
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -210,6 +206,11 @@ namespace MyUWPToolkit
                 {
                     RefreshThreshold = finalSize.Height * 2 / 5.0;
                 }
+            }
+
+            if (_header != null)
+            {
+                _header.Width = finalSize.Width;
             }
             return base.ArrangeOverride(finalSize);
         }
@@ -447,14 +448,14 @@ namespace MyUWPToolkit
         string NoUseCompositionAPIControlTemplateString = @"
       <ControlTemplate   xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
                          xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-                         xmlns:local='using:MyUWPToolkit' TargetType='local:PullToRefreshGrid1'>
+                         xmlns:local='using:EastMoney.Controls' TargetType='local:PullToRefreshGrid1'>
         <local:PullToRefreshBorder x:Name='OuterCustomPanel' HorizontalAlignment='Stretch' VerticalAlignment='Stretch'>
             <ScrollViewer x:Name='ScrollViewer' VerticalSnapPointsType='MandatorySingle'  VerticalSnapPointsAlignment='Near'
                           VerticalScrollMode='Enabled' VerticalScrollBarVisibility='Hidden' VerticalContentAlignment='Stretch' VerticalAlignment='Stretch'>
                 <local:ScrollPanel x:Name='InnerCustomPanel'>
                     <ContentControl x:Name='PanelHeader' Opacity='0' ContentTemplate='{TemplateBinding HeaderTemplate}' 
                                                 HorizontalContentAlignment='Center' VerticalContentAlignment='Bottom' 
-                                          Width='{Binding ActualWidth,ElementName=PanelContent}'      />
+                                          />
                     <ContentPresenter x:Name='PanelContent'  ContentTemplate='{TemplateBinding ContentTemplate}' ContentTransitions='{TemplateBinding ContentTransitions}' Content='{TemplateBinding Content}' HorizontalAlignment='{TemplateBinding HorizontalContentAlignment}' Margin='{TemplateBinding Padding}' VerticalAlignment='{TemplateBinding VerticalContentAlignment}'/>
                 </local:ScrollPanel>
             </ScrollViewer>
@@ -619,6 +620,10 @@ namespace MyUWPToolkit
             if (!UseCompositionAPI && RefreshThreshold == 0.0)
             {
                 RefreshThreshold = finalSize.Height * 2 / 5.0;
+            }
+            if (_header != null)
+            {
+                _header.Width = finalSize.Width;
             }
             return base.ArrangeOverride(finalSize);
         }
