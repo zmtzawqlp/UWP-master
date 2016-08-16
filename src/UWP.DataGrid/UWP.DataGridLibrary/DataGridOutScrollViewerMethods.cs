@@ -14,6 +14,17 @@ namespace UWP.DataGrid
             GeneralTransform gt = this.TransformToVisual(sender as UIElement);
             var point = gt.TransformPoint(new Point(0, 0));
             topToOuterScrollViewer = point.Y;
+
+            //sometime we need update viewrange when scrollViewer size changed(from split screen to full screen)
+            if (_columnHeaderPanel != null)
+            {
+                _columnHeaderPanel.UpdateViewRange();
+            }
+
+            if (_cellPanel != null)
+            {
+                _cellPanel.UpdateViewRange();
+            }
         }
 
         private void _outerScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
