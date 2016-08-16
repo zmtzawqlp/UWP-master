@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.Chart.View
+namespace UWP.Chart.Layer
 {
-    public class ViewLayer
+    class MarkerLayer
     {
-
     }
 }

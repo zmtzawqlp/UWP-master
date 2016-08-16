@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.Chart.Marker
+namespace UWP.Chart.Layer
 {
-    class MarkerLayer
+    class SeriesLayer
     {
     }
 }
