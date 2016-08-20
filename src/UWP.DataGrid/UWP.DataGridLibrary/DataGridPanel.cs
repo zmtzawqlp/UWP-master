@@ -593,6 +593,22 @@ namespace UWP.DataGrid
             return false;
         }
 
+        public bool UpdateViewRange(bool force = false)
+        {
+            if (force)
+            {
+                foreach (var item in _cells)
+                {  
+                    Children.Remove(item.Value);
+                    _grid.DisposeCell(this, item.Value);
+                }
+
+                _cells.Clear();
+            }
+
+            return UpdateViewRange();
+        }
+
         internal Point ScrollPosition
         {
             get { return _scrollPos; }
