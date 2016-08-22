@@ -172,6 +172,21 @@ namespace UWP.DataGrid
             Invalidate(CellRange.Empty);
         }
 
+        public void Invalidate(bool force = false)
+        {
+            if (force)
+            {
+                foreach (var item in _cells)
+                {
+                    Children.Remove(item.Value);
+                    _grid.DisposeCell(this, item.Value);
+                }
+
+                _cells.Clear();
+            }
+            Invalidate(CellRange.Empty);
+        }
+
         internal void Invalidate(CellRange rng)
         {
             // negative parameters mean 'whole row' or 'whole column'
@@ -591,22 +606,6 @@ namespace UWP.DataGrid
 
             // same range
             return false;
-        }
-
-        public bool UpdateViewRange(bool force = false)
-        {
-            if (force)
-            {
-                foreach (var item in _cells)
-                {  
-                    Children.Remove(item.Value);
-                    _grid.DisposeCell(this, item.Value);
-                }
-
-                _cells.Clear();
-            }
-
-            return UpdateViewRange();
         }
 
         internal Point ScrollPosition

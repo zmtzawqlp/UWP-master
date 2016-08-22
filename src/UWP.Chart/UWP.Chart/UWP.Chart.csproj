@@ -110,6 +110,8 @@
     <Compile Include="Chart.cs" />
     <Compile Include="ChartP.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Layer\AxisLayer.cs" />
+    <Compile Include="Layer\LegendLayer.cs" />
     <Compile Include="Layer\MarkerLayer.cs" />
     <Compile Include="Layer\SeriesLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
