@@ -52,6 +52,11 @@ namespace UWP.DataGrid.Model.RowCol
             _size = size;
         }
 
+        public void SetIsVisible(bool isVisible)
+        {
+            _isVisible = isVisible;
+        }
+
         abstract protected void OnPropertyChanged(string name);
 
         public abstract DataGrid Grid { get; }
