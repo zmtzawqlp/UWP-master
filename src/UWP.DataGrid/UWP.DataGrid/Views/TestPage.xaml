@@ -256,10 +256,141 @@
                 </ListView>
             </StackPanel>
         </ScrollViewer>-->
-        <ListView x:Name="listView" Grid.Row="1"  Grid.Column="0" VerticalAlignment="Stretch" Style="{StaticResource ListViewStyle1}">
+        <ListView x:Name="listView" Grid.Row="1" ShowsScrollingPlaceholders="False" Grid.Column="0" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                    </StackPanel>
+                    <!--<Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                        <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+                    </Grid>-->
                 </DataTemplate>
             </ListView.ItemTemplate>
             
@@ -277,7 +408,7 @@
             </ListView.Footer>
         
         </ListView>
-        <ListView x:Name="listView1"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch">
+        <!--<ListView x:Name="listView1"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
@@ -297,6 +428,6 @@
 
             </ListView.Footer>
 
-        </ListView>
+        </ListView>-->
     </Grid>
 </Page>

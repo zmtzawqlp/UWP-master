@@ -274,15 +274,17 @@ namespace UWP.DataGrid
                 if (!showCells.ContainsKey(rng))
                     removeCells.Add(rng);
             }
-            for (int i = 0; i < removeCells.Count; i++)
-            {
-                RemoveCell(removeCells[i]);
-            }
+
 
             // create cells that should be shown but aren't
             foreach (var rng in showCells.Keys)
             {
-                CreateCell(rng);
+                CreateCell(rng, removeCells);
+            }
+
+            for (int i = 0; i < removeCells.Count; i++)
+            {
+                RemoveCell(removeCells[i]);
             }
 
             foreach (KeyValuePair<CellRange, FrameworkElement> kvp in _cells)
@@ -391,10 +393,29 @@ namespace UWP.DataGrid
             return new Size(_cols.GetTotalSize(), _rows.GetTotalSize());
         }
 
-        void CreateCell(CellRange rng)
+        void CreateCell(CellRange rng, List<CellRange> removeCells = null)
         {
             if (!_cells.ContainsKey(rng))
             {
+                if (removeCells != null && removeCells.Count > 0)
+                {
+                    var cell1 = removeCells.FirstOrDefault(x => x.Column == rng.Column);
+                    if (cell1 != rng && cell1.Column == rng.Column && _cells.ContainsKey(cell1))
+                    {
+                        var frame = _cells[cell1];
+
+                        frame.SetValue(Windows.UI.Xaml.Controls.Grid.RowProperty, rng.TopRow);
+                        frame.SetValue(Windows.UI.Xaml.Controls.Grid.ColumnProperty, rng.LeftColumn);
+                        frame.SetValue(Windows.UI.Xaml.Controls.Grid.RowSpanProperty, Math.Abs(rng.RowSpan));
+                        frame.SetValue(Windows.UI.Xaml.Controls.Grid.ColumnSpanProperty, Math.Abs(rng.ColumnSpan));
+                        frame.DataContext = Rows[rng.Row].DataItem;
+                        _cells[rng] = frame;
+                        _cells.Remove(cell1);
+                        removeCells.Remove(cell1);
+                        return;
+                    }
+                }
+
                 var cell = _grid.CreateCell(this, rng);
                 AddCell(cell, rng);
             }

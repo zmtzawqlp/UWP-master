@@ -37,8 +37,8 @@ namespace UWP.DataGridSample.Views
             _timer = new DispatcherTimer();
             _timer.Tick += _timer_Tick;
             _timer.Interval = new TimeSpan(0, 0, 3);
-            listView.Loaded += ListView_Loaded;
-            listView1.Loaded += ListView1_Loaded;
+            //listView.Loaded += ListView_Loaded;
+            //listView1.Loaded += ListView1_Loaded;
 
         }
 
@@ -52,7 +52,7 @@ namespace UWP.DataGridSample.Views
             ScrollViewer = GetFirstChildOfType<ScrollViewer>(listView);
             //ScrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, new DependencyPropertyChangedCallback(OnScrollViewerVerticalOffsetPropertyChanged));
             ScrollBar = GetFirstChildOfType<ScrollBar>(ScrollViewer);
-            ScrollViewer1 = GetFirstChildOfType<ScrollViewer>(listView1);
+           // ScrollViewer1 = GetFirstChildOfType<ScrollViewer>(listView1);
             var ScrollBar1 = GetFirstChildOfType<ScrollBar>(ScrollViewer1);
      
             Binding b = new Binding();
@@ -122,7 +122,7 @@ namespace UWP.DataGridSample.Views
             //_employees = TestData.GetEmployees();
             listView.ItemsSource = _employees;
 
-            listView1.ItemsSource = _employees;
+            //listView1.ItemsSource = _employees;
             //listView2.ItemsSource = _employees;
         }
 
