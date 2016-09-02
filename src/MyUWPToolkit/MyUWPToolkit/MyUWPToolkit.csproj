@@ -116,8 +116,6 @@
     <Compile Include="Converters\Converter.cs" />
     <Compile Include="FlexGrid\Column.cs" />
     <Compile Include="FlexGrid\FlexGrid.cs" />
-    <Compile Include="FlexGrid\FlexGridFrozenColumns.cs" />
-    <Compile Include="FlexGrid\FlexGridFrozenColumnsPanel.cs" />
     <Compile Include="FlexGrid\FlexGridItem.cs" />
     <Compile Include="FlexGrid\FlexGridP.cs" />
     <Compile Include="ImageControl\AspectRatio.cs" />
@@ -169,6 +167,11 @@
     <Page Include="Themes\CropImageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\DeviceFamily-Mobile\FlexGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\DeviceFamily-Mobile\VirtualizedVariableSizedGridView.xaml">

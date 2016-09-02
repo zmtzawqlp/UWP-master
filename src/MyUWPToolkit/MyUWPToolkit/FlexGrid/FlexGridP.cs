@@ -19,29 +19,47 @@ namespace MyUWPToolkit.FlexGrid
     {
         #region Filed
         ScrollViewer _scrollViewer;
-        ContentControl _header;
-        Grid _scrollContent;
         ListView _columnHeader;
         ListView _frozenColumnsHeader;
-        internal FlexGridFrozenColumns _frozenColumns;
 
         CompositionPropertySet _scrollerViewerManipulation;
         ExpressionAnimation _offsetAnimation;
         Compositor _compositor;
         Visual _scrollContentVisual;
-        CurrentVisualState currentVisualState = new CurrentVisualState();
         #endregion
 
-
         #region Internal property
+        ScrollViewer _outerScrollViewer;
 
+        internal ScrollViewer OuterScrollViewer
+        {
+            get
+            {
+                if (_outerScrollViewer == null)
+                {
+                    var parent = this.Parent as FrameworkElement;
+                    while (parent != null)
+                    {
+                        if (parent is Page)
+                        {
+                            break;
+                        }
+                        _outerScrollViewer = parent as ScrollViewer;
+                        if (_outerScrollViewer != null)
+                        {
+                            break;
+                        }
+                        parent = parent.Parent as FrameworkElement;
+                    }
+
+                }
+                return _outerScrollViewer;
+            }
+
+        }
         #endregion
 
         #region Public property
-        /// <summary>
-        /// fire when tap in column header
-        /// </summary>
-        public new event EventHandler<ItemClickEventArgs> ItemClick;
 
         /// <summary>
         /// fire when tap in column header
@@ -51,26 +69,26 @@ namespace MyUWPToolkit.FlexGrid
 
         #region DependencyProperty
 
-        public ObservableCollection<Column> FrozenColumnsHeaderItemsSource
+        public object FrozenColumnsHeaderItemsSource
         {
-            get { return (ObservableCollection<Column>)GetValue(FrozenColumnsHeaderItemsSourceProperty); }
+            get { return (object)GetValue(FrozenColumnsHeaderItemsSourceProperty); }
             set { SetValue(FrozenColumnsHeaderItemsSourceProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for FrozenColumnsHeaderItemsSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FrozenColumnsHeaderItemsSourceProperty =
-            DependencyProperty.Register("FrozenColumnsHeaderItemsSource", typeof(ObservableCollection<Column>), typeof(FlexGrid), new PropertyMetadata(null));
+            DependencyProperty.Register("FrozenColumnsHeaderItemsSource", typeof(object), typeof(FlexGrid), new PropertyMetadata(null));
 
 
-        public ObservableCollection<Column> ColumnsHeaderItemsSource
+        public object ColumnsHeaderItemsSource
         {
-            get { return (ObservableCollection<Column>)GetValue(ColumnsHeaderItemsSourceProperty); }
+            get { return (object)GetValue(ColumnsHeaderItemsSourceProperty); }
             set { SetValue(ColumnsHeaderItemsSourceProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ColumnsHeaderItemsSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColumnsHeaderItemsSourceProperty =
-            DependencyProperty.Register("ColumnsHeaderItemsSource", typeof(ObservableCollection<Column>), typeof(FlexGrid), new PropertyMetadata(null));
+            DependencyProperty.Register("ColumnsHeaderItemsSource", typeof(object), typeof(FlexGrid), new PropertyMetadata(null));
 
 
         public DataTemplate FrozenColumnsHeaderItemTemplate
@@ -105,48 +123,41 @@ namespace MyUWPToolkit.FlexGrid
             DependencyProperty.Register("FrozenColumnsItemTemplate", typeof(DataTemplate), typeof(FlexGrid), new PropertyMetadata(null));
 
 
-        //public DataTemplate CellItemTemplate
-        //{
-        //    get { return (DataTemplate)GetValue(CellItemTemplateProperty); }
-        //    set { SetValue(CellItemTemplateProperty, value); }
-        //}
 
-        //// Using a DependencyProperty as the backing store for CellItemTemplate.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty CellItemTemplateProperty =
-        //    DependencyProperty.Register("CellItemTemplate", typeof(DataTemplate), typeof(FlexGrid), new PropertyMetadata(null));
+        public bool KeepHorizontalOffsetWhenItemsSourceChanged
+        {
+            get { return (bool)GetValue(KeepHorizontalOffsetWhenItemsSourceChangedProperty); }
+            set { SetValue(KeepHorizontalOffsetWhenItemsSourceChangedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for KeepHorizontalOffsetWhenItemsSourceChanged.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty KeepHorizontalOffsetWhenItemsSourceChangedProperty =
+            DependencyProperty.Register("KeepHorizontalOffsetWhenItemsSourceChanged", typeof(bool), typeof(FlexGrid), new PropertyMetadata(true));
+
+
+
+        public Visibility FrozenColumnsVisibility
+        {
+            get { return (Visibility)GetValue(FrozenColumnsVisibilityProperty); }
+            set { SetValue(FrozenColumnsVisibilityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FrozenColumnsVisibility.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FrozenColumnsVisibilityProperty =
+            DependencyProperty.Register("FrozenColumnsVisibility", typeof(Visibility), typeof(FlexGrid), new PropertyMetadata(Visibility.Visible));
+
+
         #endregion
     }
 
     public class SortingColumnEventArgs : EventArgs
     {
-        public object Column { get; private set; }
-        public SortingColumnEventArgs(object column)
+        public object Data { get; private set; }
+        public SortingColumnEventArgs(object data)
         {
-            Column = column;
+            Data = data;
         }
     }
 
-    internal class CurrentVisualState
-    {
-        public int Index { get; set; }
-        //
-        // Summary:
-        //     Gets the state the Control is changing to or has changed to.
-        //
-        // Returns:
-        //     The state the Control is changing to or has changed to.
-        public VisualState NewState { get; set; }
-        //
-        // Summary:
-        //     Gets the state the Control is changing from or has changed from.
-        //
-        // Returns:
-        //     The state the Control is changing from or has changed from.
-        public VisualState OldState { get; set; }
-
-        public CurrentVisualState()
-        {
-            Index = -1;
-        }
-    }
+    
 }

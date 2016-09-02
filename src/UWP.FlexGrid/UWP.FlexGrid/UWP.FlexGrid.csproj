@@ -112,6 +112,21 @@
     <Compile Include="Container\RowContainer.cs" />
     <Compile Include="FlexGrid.cs" />
     <Compile Include="FlexGridP.cs" />
+    <Compile Include="Model\Cell\CellFactory.cs" />
+    <Compile Include="Model\Cell\CellRange.cs" />
+    <Compile Include="Model\Cell\CellType.cs" />
+    <Compile Include="Model\Cell\ICellFactory.cs" />
+    <Compile Include="Model\RowCol\BoundRow.cs" />
+    <Compile Include="Model\RowCol\Column.cs" />
+    <Compile Include="Model\RowCol\Columns.cs" />
+    <Compile Include="Model\RowCol\Row.cs" />
+    <Compile Include="Model\RowCol\RowCol.cs" />
+    <Compile Include="Model\RowCol\RowCols.cs" />
+    <Compile Include="Model\RowCol\Rows.cs" />
+    <Compile Include="Model\RowCol\UnboundRowStorage.cs" />
+    <Compile Include="Panel\CellPanel.cs" />
+    <Compile Include="Panel\ColumnHeaderPanel.cs" />
+    <Compile Include="Panel\FlexGridPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\CryptographyHelper.cs" />
     <Compile Include="Util\DeviceInfo.cs" />
@@ -131,10 +146,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Cell\" />
-    <Folder Include="Model\RowCol\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

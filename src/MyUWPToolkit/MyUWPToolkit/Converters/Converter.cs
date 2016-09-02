@@ -132,4 +132,17 @@ namespace MyUWPToolkit.Converters
             throw new NotImplementedException();
         }
     }
+
+    public sealed class HorizontalOffsetToMarginConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return new Thickness((double)value, 0, 0, 0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

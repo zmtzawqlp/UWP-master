@@ -369,7 +369,7 @@
                                         BorderThickness="{TemplateBinding BorderThickness}"
                                         Margin="0">
                                         <Grid>
-                                            <ContentPresenter x:Name="contentPresenter"
+                                            <ContentPresenter x:Name="contentPresenter" 
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                                           Content="{TemplateBinding Content}"
@@ -385,17 +385,17 @@
                                                           ContentTemplate="{TemplateBinding FrozenColumnsItemTemplate}"
                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                           />
-                                            <TextBlock x:Name="PlaceholderTextBlock"
+                                            <TextBlock x:Name="PlaceholderTextBlock" 
                                                    Opacity="0"
                                                    Text="Xg"
                                                    Foreground="{x:Null}"
                                                    Margin="{TemplateBinding Padding}"
                                                    IsHitTestVisible="False"
                                                    AutomationProperties.AccessibilityView="Raw"/>
-                                            <Rectangle x:Name="PlaceholderRect"
+                                            <Rectangle x:Name="PlaceholderRect" 
                                                    Visibility="Collapsed"
                                                    Fill="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"/>
-                                            <Rectangle x:Name="MultiArrangeOverlayBackground"
+                                            <Rectangle x:Name="MultiArrangeOverlayBackground" 
                                                    IsHitTestVisible="False"
                                                    Opacity="0"
                                                    Fill="{ThemeResource ListViewItemDragBackgroundThemeBrush}" />
@@ -573,7 +573,7 @@
                                 <ScrollContentPresenter x:Name="ScrollContentPresenter" Grid.Row="1" Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" Grid.RowSpan="2"/>
                                 <ContentControl x:Name="Header" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                             </Grid>-->
-                            <ScrollContentPresenter x:Name="ScrollContentPresenter"  ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}"/>
+                            <ScrollContentPresenter x:Name="ScrollContentPresenter"  ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
                             <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False" Maximum="{TemplateBinding ScrollableHeight}" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{TemplateBinding VerticalOffset}" ViewportSize="{TemplateBinding ViewportHeight}"/>
                             <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{TemplateBinding HorizontalOffset}" ViewportSize="{TemplateBinding ViewportWidth}"/>
                             <Border x:Name="ScrollBarSeparator" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" Grid.Column="1" Grid.Row="1"/>

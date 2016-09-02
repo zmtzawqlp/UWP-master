@@ -57,7 +57,7 @@
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
+                                    <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*" MinWidth="100"/>
                                     <ColumnDefinition Width="*" MinWidth="100"/>
                                     <ColumnDefinition Width="*" MinWidth="100"/>
@@ -65,7 +65,7 @@
                                     <ColumnDefinition Width="*" MinWidth="100"/>
                                     <ColumnDefinition Width="*" MinWidth="100"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                                <!--<TextBlock Text="{Binding Age}" Grid.Column="0"/>-->
                                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>
                                 <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
                                 <TextBlock Text="{Binding Age}" Grid.Column="3"/>
