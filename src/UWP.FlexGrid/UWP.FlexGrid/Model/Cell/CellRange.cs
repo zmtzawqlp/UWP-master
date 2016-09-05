@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
-namespace UWP.FlexGrid.Model.Cell
+namespace UWP.FlexGrid
 {
     public struct CellRange
     {

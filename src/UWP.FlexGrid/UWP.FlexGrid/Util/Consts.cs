@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace UWP.FlexGrid
 {
-    public class BoundRow:Row
+    class Consts
     {
-
-        public BoundRow(object dataItem)
-        {
-            this.DataItem = dataItem;
-        }
+        internal const int ROWHEIGHT = 30;
+        internal const int COLUMNWIDTH = 100;
+        internal const int CROSSSLIDEDELTA = 20;
     }
 }

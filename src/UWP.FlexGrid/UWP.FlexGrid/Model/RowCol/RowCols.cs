@@ -1,5 +1,4 @@
 ﻿using UWP.FlexGrid;
-using UWP.FlexGrid.Model.Cell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.FlexGrid.Model.RowCol
+namespace UWP.FlexGrid
 {
     public abstract class RowCols<T>
        : ObservableCollection<T> where T : RowCol
@@ -377,8 +376,8 @@ namespace UWP.FlexGrid.Model.RowCol
                     {
                         _dirty = true;
                         Grid.InvalidateMeasure();
-                        Grid.ColumnHeaders.InvalidateMeasure();
-                        Grid.Cells.InvalidateMeasure();
+                        //Grid.ColumnHeaders.InvalidateMeasure();
+                        //Grid.Cells.InvalidateMeasure();
                         return;
                     }
                     break;

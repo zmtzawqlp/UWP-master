@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.FlexGrid.Model.RowCol
+namespace UWP.FlexGrid
 {
     public class Columns : RowCols<Column>
     {

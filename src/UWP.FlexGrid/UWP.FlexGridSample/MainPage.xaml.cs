@@ -25,6 +25,7 @@ namespace UWP.FlexGridSample
         public MainPage()
         {
             this.InitializeComponent();
+
         }
     }
 }

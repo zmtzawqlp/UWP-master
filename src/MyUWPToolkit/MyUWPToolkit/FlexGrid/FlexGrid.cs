@@ -40,7 +40,7 @@ namespace MyUWPToolkit.FlexGrid
                 _scrollViewer.ChangeView(_scrollViewer.HorizontalOffset, _scrollViewer.VerticalOffset - delta, null);
             }
 
-            if (OuterScrollViewer!=null && OuterScrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible)
+            if (OuterScrollViewer != null && OuterScrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible)
             {
                 PointerPoint mousePosition = e.GetCurrentPoint(sender as UIElement);
                 var delta = mousePosition.Properties.MouseWheelDelta;
@@ -109,15 +109,13 @@ namespace MyUWPToolkit.FlexGrid
                     itemsCleared = false;
                     _scrollViewer.ChangeView(offset, 0, null);
                 }
-
-                preCount = this.Items.Count;
             }
             else
             {
-                preCount = 0;
                 offset = 0;
             }
 
+            preCount = this.Items.Count;
             base.OnItemsChanged(e);
         }
 
@@ -139,6 +137,12 @@ namespace MyUWPToolkit.FlexGrid
             _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
 
             _scrollViewer.Loaded += _scrollViewer_Loaded;
+            _scrollViewer.ViewChanging += _scrollViewer_ViewChanging;
+        }
+
+        private void _scrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+
         }
 
         ItemsPresenter _itemsPresenter;
@@ -213,3 +217,4 @@ namespace MyUWPToolkit.FlexGrid
         }
     }
 }
+

@@ -1,12 +1,11 @@
-﻿using UWP.FlexGrid.Model.Cell;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.FlexGrid.Model.RowCol
+namespace UWP.FlexGrid
 {
     public abstract class RowCol
     {

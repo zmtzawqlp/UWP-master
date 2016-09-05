@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.FlexGrid.Model.Cell
+namespace UWP.FlexGrid
 {
     public enum CellType
     {

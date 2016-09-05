@@ -4,8 +4,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UWP.FlexGrid.Model.Cell;
-using UWP.FlexGrid.Model.RowCol;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -106,43 +104,7 @@ namespace UWP.FlexGrid
             get { return _grid; }
         }
 
-        public object this[int row, Column col]
-        {
-            get { return Rows[row][col]; }
-            set
-            {
-                // this setter invalidates the Cells panel
-                Rows[row][col] = value;
-
-                // if this is not the Cells panel, then invalidate ourselves
-                if (this.CellType != CellType.Cell)
-                {
-                    Invalidate(new CellRange(row, col.Index));
-                }
-            }
-        }
-        /// <summary>
-        /// Gets or sets the value of a specific cell.
-        /// </summary>
-        /// <param name="row">Index of the row that contains the cell.</param>
-        /// <param name="col">Index of the column that contains the cell.</param>
-        /// <returns>The value of the cell.</returns>
-        public object this[int row, int col]
-        {
-            get { return this[row, Columns[col]]; }
-            set { this[row, Columns[col]] = value; }
-        }
-        /// <summary>
-        /// Gets or sets the value of a specific cell.
-        /// </summary>
-        /// <param name="row">Index of the row that contains the cell.</param>
-        /// <param name="colName"><see cref="Column.ColumnName"/> of the column that contains the cell.</param>
-        /// <returns>The value of the cell.</returns>
-        public object this[int row, string colName]
-        {
-            get { return this[row, Columns[colName]]; }
-            set { this[row, Columns[colName]] = value; }
-        }
+       
         #endregion
 
         #region Method
@@ -321,7 +283,7 @@ namespace UWP.FlexGrid
                             //if Cell has dirty data, we should also update Column
                             if (CellType == CellType.Cell)
                             {
-                                Grid.ColumnHeaders.Invalidate();
+                                //Grid.ColumnHeaders.Invalidate();
                             }
                             //Column always render before cell, so we don't need invalidate cell right now.
                             ////if column has dirty data, we should also update cell
@@ -508,47 +470,47 @@ namespace UWP.FlexGrid
             var fx = Columns.GetFrozenSize();
             var fy = Rows.GetFrozenSize();
             var r = new CellRange(Rows.Frozen, Columns.Frozen);
-            var sv = _grid.OuterScrollViewer;
-            if (sv != null && (_grid.OuterScrollViewerVerticalScrollEnable || _grid.OuterScrollViewerHorizontalScrollEnable))
-            {
-                if (_grid.OuterScrollViewerVerticalScrollEnable)
-                {
-                    sz.Height = sv.ActualHeight * 1.5;
-                    var y = _grid.HeaderActualHeight - sv.VerticalOffset;
-                    y += _grid.topToOuterScrollViewer;
-                    r.Row = Rows.GetItemAt(-y - sv.ActualHeight);
-                    r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - y), Rows.Count - 1);
-                }
-                else
-                {
-                    if (fy < sz.Height)
-                    {
-                        sz.Height = sv.ActualHeight;
-                        r.Row = Rows.GetItemAt(fy - scrollPosition.Y);
-                        r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - scrollPosition.Y), Rows.Count - 1);
-                    }
-                }
+            //var sv = _grid.OuterScrollViewer;
+            //if (sv != null && (_grid.OuterScrollViewerVerticalScrollEnable || _grid.OuterScrollViewerHorizontalScrollEnable))
+            //{
+            //    if (_grid.OuterScrollViewerVerticalScrollEnable)
+            //    {
+            //        sz.Height = sv.ActualHeight * 1.5;
+            //        var y = _grid.HeaderActualHeight - sv.VerticalOffset;
+            //        y += _grid.topToOuterScrollViewer;
+            //        r.Row = Rows.GetItemAt(-y - sv.ActualHeight);
+            //        r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - y), Rows.Count - 1);
+            //    }
+            //    else
+            //    {
+            //        if (fy < sz.Height)
+            //        {
+            //            sz.Height = sv.ActualHeight;
+            //            r.Row = Rows.GetItemAt(fy - scrollPosition.Y);
+            //            r.Row2 = Math.Min(Rows.GetItemAt(sz.Height - scrollPosition.Y), Rows.Count - 1);
+            //        }
+            //    }
 
 
-                if (_grid.OuterScrollViewerHorizontalScrollEnable)
-                {
-                    // find left/right columns
-                    sz.Width = sv.ActualWidth * 1.5;
-                    var x = -sv.HorizontalOffset;
-                    r.Column = Columns.GetItemAt(-x - sv.ActualWidth);
-                    r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - x), Columns.Count - 1);
-                }
-                else
-                {
-                    if (fx < sz.Width)
-                    {
-                        sz.Width = sv.ActualWidth;
-                        r.Column = Columns.GetItemAt(fx - scrollPosition.X);
-                        r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - scrollPosition.X), Columns.Count - 1);
-                    }
-                }
-            }
-            else
+            //    if (_grid.OuterScrollViewerHorizontalScrollEnable)
+            //    {
+            //        // find left/right columns
+            //        sz.Width = sv.ActualWidth * 1.5;
+            //        var x = -sv.HorizontalOffset;
+            //        r.Column = Columns.GetItemAt(-x - sv.ActualWidth);
+            //        r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - x), Columns.Count - 1);
+            //    }
+            //    else
+            //    {
+            //        if (fx < sz.Width)
+            //        {
+            //            sz.Width = sv.ActualWidth;
+            //            r.Column = Columns.GetItemAt(fx - scrollPosition.X);
+            //            r.Column2 = Math.Min(Columns.GetItemAt(sz.Width - scrollPosition.X), Columns.Count - 1);
+            //        }
+            //    }
+            //}
+            //else
             {
                 //if we has footerHeight 
                 //for example, footerHeight is 30, and row height is 30.
@@ -649,120 +611,120 @@ namespace UWP.FlexGrid
         internal int currentPressedRow = -1;
         internal void HandlePointerPressed(int row)
         {
-            _pressedCells.Clear();
-            if (row > -1)
-            {
-                currentPressedRow = row;
-                foreach (var item in _cells)
-                {
-                    if (item.Key.Row == row)
-                    {
-                        var cell = (item.Value as Border);
+            //_pressedCells.Clear();
+            //if (row > -1)
+            //{
+            //    currentPressedRow = row;
+            //    foreach (var item in _cells)
+            //    {
+            //        if (item.Key.Row == row)
+            //        {
+            //            var cell = (item.Value as Border);
 
-                        FrameworkElement element = null;
-                        if (cell.Child != null)
-                        {
-                            element = cell.Child as FrameworkElement;
-                        }
-                        else
-                        {
-                            element = cell;
-                        }
+            //            FrameworkElement element = null;
+            //            if (cell.Child != null)
+            //            {
+            //                element = cell.Child as FrameworkElement;
+            //            }
+            //            else
+            //            {
+            //                element = cell;
+            //            }
 
-                        if (item.Key.Column == 0)
-                        {
-                            element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = element.ActualWidth, CenterY = element.ActualHeight / 2 };
-                        }
-                        else if (item.Key.Column == this.Columns.Count - 1)
-                        {
-                            element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
-                        }
-                        else
-                        {
-                            element.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
-                        }
-                        cell.Background = Grid.PressedBackground;
-                        _pressedCells.Add(item.Key, item.Value);
-                    }
-                }
-            }
+            //            if (item.Key.Column == 0)
+            //            {
+            //                element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = element.ActualWidth, CenterY = element.ActualHeight / 2 };
+            //            }
+            //            else if (item.Key.Column == this.Columns.Count - 1)
+            //            {
+            //                element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
+            //            }
+            //            else
+            //            {
+            //                element.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
+            //            }
+            //            cell.Background = Grid.PressedBackground;
+            //            _pressedCells.Add(item.Key, item.Value);
+            //        }
+            //    }
+            //}
 
         }
 
         internal void ClearPointerPressedAnimation()
         {
-            currentPressedRow = -1;
-            foreach (var item in _pressedCells)
-            {
-                var cell = (item.Value as Border);
+            //currentPressedRow = -1;
+            //foreach (var item in _pressedCells)
+            //{
+            //    var cell = (item.Value as Border);
 
-                FrameworkElement element = null;
-                if (cell.Child != null)
-                {
-                    element = cell.Child as FrameworkElement;
-                }
-                else
-                {
-                    element = cell;
-                }
+            //    FrameworkElement element = null;
+            //    if (cell.Child != null)
+            //    {
+            //        element = cell.Child as FrameworkElement;
+            //    }
+            //    else
+            //    {
+            //        element = cell;
+            //    }
 
-                element.RenderTransform = null;
+            //    element.RenderTransform = null;
 
-                var even = true;
-                if (Grid.Rows.Count > item.Key.Row)
-                {
-                    even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
-                }
-                cell.Background = even || Grid.AlternatingRowBackground == null
-                       ? Grid.RowBackground
-                       : Grid.AlternatingRowBackground;
+            //    var even = true;
+            //    if (Grid.Rows.Count > item.Key.Row)
+            //    {
+            //        even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
+            //    }
+            //    cell.Background = even || Grid.AlternatingRowBackground == null
+            //           ? Grid.RowBackground
+            //           : Grid.AlternatingRowBackground;
 
 
-            }
-            _pressedCells.Clear();
+            //}
+            //_pressedCells.Clear();
         }
 
         CellRangeDictionary _pointerOverCells = new CellRangeDictionary();
         internal int currentpointerOverRow = -1;
         internal void HandlePointerOver(int row)
         {
-            if (Grid.Rows.Count <= row)
-            {
-                _pointerOverCells.Clear();
-                return;
-            }
-            //clear all
-            {
-                currentpointerOverRow = -1;
-                foreach (var item in _pointerOverCells)
-                {
-                    var element = item.Value as Border;
-                    var even = true;
-                    if (Grid.Rows.Count > item.Key.Row)
-                    {
-                        even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
-                    }
-                    element.Background = even || Grid.AlternatingRowBackground == null
-                           ? Grid.RowBackground
-                           : Grid.AlternatingRowBackground;
-                }
-                _pointerOverCells.Clear();
-            }
+            //if (Grid.Rows.Count <= row)
+            //{
+            //    _pointerOverCells.Clear();
+            //    return;
+            //}
+            ////clear all
+            //{
+            //    currentpointerOverRow = -1;
+            //    foreach (var item in _pointerOverCells)
+            //    {
+            //        var element = item.Value as Border;
+            //        var even = true;
+            //        if (Grid.Rows.Count > item.Key.Row)
+            //        {
+            //            even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
+            //        }
+            //        element.Background = even || Grid.AlternatingRowBackground == null
+            //               ? Grid.RowBackground
+            //               : Grid.AlternatingRowBackground;
+            //    }
+            //    _pointerOverCells.Clear();
+            //}
 
-            if (row > -1)
-            {
-                currentpointerOverRow = row;
-                foreach (var item in _cells)
-                {
-                    var element = item.Value as Border;
-                    if (item.Key.Row == row)
-                    {
-                        element.Background = Grid.PointerOverBackground;
-                        _pointerOverCells.Add(item.Key, item.Value);
-                    }
+            //if (row > -1)
+            //{
+            //    currentpointerOverRow = row;
+            //    foreach (var item in _cells)
+            //    {
+            //        var element = item.Value as Border;
+            //        if (item.Key.Row == row)
+            //        {
+            //            element.Background = Grid.PointerOverBackground;
+            //            _pointerOverCells.Add(item.Key, item.Value);
+            //        }
 
-                }
-            }
+            //    }
+            //}
 
 
         }

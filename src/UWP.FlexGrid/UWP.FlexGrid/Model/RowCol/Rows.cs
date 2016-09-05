@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UWP.FlexGrid.Model.Cell;
 
-namespace UWP.FlexGrid.Model.RowCol
+namespace UWP.FlexGrid
 {
     public class Rows : RowCols<Row>
     {

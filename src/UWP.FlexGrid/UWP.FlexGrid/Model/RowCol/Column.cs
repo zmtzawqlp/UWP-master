@@ -1,5 +1,4 @@
-﻿using UWP.FlexGrid.Model.RowCol;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -260,11 +259,6 @@ namespace UWP.FlexGrid
                 }
                 return -1;
             }
-        }
-
-        internal bool TryChangeType(ref object value)
-        {
-            return Grid.TryChangeType(ref value, this.DataType);
         }
 
         internal string GetHeader()
