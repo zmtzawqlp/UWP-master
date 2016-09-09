@@ -43,6 +43,18 @@
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="pressedHider"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     Duration="0"
+                                                     To="1" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="frozenContent"
+                                                                   Storyboard.TargetProperty="Margin">
+                                            <DiscreteObjectKeyFrame KeyTime="0" >
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Thickness>3,0,0,0</Thickness>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
                                         <PointerDownThemeAnimation TargetName="ContentContainer" />
                                     </Storyboard>
                                 </VisualState>
@@ -369,7 +381,7 @@
                                         BorderThickness="{TemplateBinding BorderThickness}"
                                         Margin="0">
                                         <Grid>
-                                            <ContentPresenter x:Name="contentPresenter" 
+                                            <ContentPresenter x:Name="contentPresenter"
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                                           Content="{TemplateBinding Content}"
@@ -379,23 +391,24 @@
                                             <!-- The 'Xg' text simulates the amount of space one line of text will occupy.
                                              In the DataPlaceholder state, the Content is not loaded yet so we
                                              approximate the size of the item using placeholder text. -->
+                                            <Rectangle x:Name="pressedHider" Width="15" Opacity="0" Visibility="{TemplateBinding FrozenColumnsVisibility}" Margin="-10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Stretch" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
                                             <ContentPresenter x:Name="frozenContent" Visibility="{TemplateBinding FrozenColumnsVisibility}"
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                                           HorizontalAlignment="Left"
                                                           ContentTemplate="{TemplateBinding FrozenColumnsItemTemplate}"
                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                           />
-                                            <TextBlock x:Name="PlaceholderTextBlock" 
+                                            <TextBlock x:Name="PlaceholderTextBlock"
                                                    Opacity="0"
                                                    Text="Xg"
                                                    Foreground="{x:Null}"
                                                    Margin="{TemplateBinding Padding}"
                                                    IsHitTestVisible="False"
                                                    AutomationProperties.AccessibilityView="Raw"/>
-                                            <Rectangle x:Name="PlaceholderRect" 
+                                            <Rectangle x:Name="PlaceholderRect"
                                                    Visibility="Collapsed"
                                                    Fill="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"/>
-                                            <Rectangle x:Name="MultiArrangeOverlayBackground" 
+                                            <Rectangle x:Name="MultiArrangeOverlayBackground"
                                                    IsHitTestVisible="False"
                                                    Opacity="0"
                                                    Fill="{ThemeResource ListViewItemDragBackgroundThemeBrush}" />
@@ -605,6 +618,7 @@
                     <Setter Property="Margin" Value="0"/>
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="MinWidth" Value="0"/>
+                    <Setter Property="MinHeight" Value="0"/>
                 </Style>
             </Setter.Value>
         </Setter>
@@ -683,7 +697,7 @@
                                             </ItemsPanelTemplate>
                                         </ListView.ItemsPanel>
                                     </ListView>
-                                    <ListView x:Name="FrozenColumnsHeader" Visibility="{TemplateBinding FrozenColumnsVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding FrozenColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsHeaderItemTemplate}">
+                                    <ListView x:Name="FrozenColumnsHeader" Visibility="{TemplateBinding FrozenColumnsVisibility}" HorizontalAlignment="Left" VerticalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding FrozenColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding FrozenColumnsHeaderItemTemplate}">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Horizontal"/>

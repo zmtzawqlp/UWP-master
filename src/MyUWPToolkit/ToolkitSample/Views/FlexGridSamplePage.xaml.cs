@@ -15,6 +15,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using XamlDemo.Model;
+using MyUWPToolkit.Util;
+using System.ComponentModel;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,22 +28,21 @@ namespace ToolkitSample
     public sealed partial class FlexGridSamplePage : Page
     {
         private ObservableCollection<Employee> _employees;
-
+        System.Collections.ObjectModel.ObservableCollection<MyColumn> columns;
         public FlexGridSamplePage()
         {
             this.InitializeComponent();
             Loaded += FlexGridSamplePage_Loaded;
-            flexgrid.SizeChanged += Flexgrid_SizeChanged;
+            
         }
 
 
 
         private void Flexgrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (e.NewSize.Width > 800)
+            if (e.NewSize.Width!=e.PreviousSize.Width)
             {
-
-                flexgrid.SetValue(ScrollViewer.HorizontalScrollModeProperty, ScrollMode.Disabled);
+                UpdateColumns(e.NewSize.Width);
             }
         }
 
@@ -53,24 +54,122 @@ namespace ToolkitSample
             });
 
             //_employees.CollectionChanged += _employees_CollectionChanged;
-            flexgrid.FrozenColumnsHeaderItemsSource = new System.Collections.ObjectModel.ObservableCollection<Column>() { new Column() { ColumnName = "test1" } };
-
-            var columns = new System.Collections.ObjectModel.ObservableCollection<Column>();
+            
+            columns = new System.Collections.ObjectModel.ObservableCollection<MyColumn>();
             for (int i = 1; i < 8; i++)
             {
-                columns.Add(new Column() { ColumnName = "Name" + i });
+                columns.Add(new MyColumn() { ColumnName = "Name" + i });
             }
-
+            flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
             flexgrid.ColumnsHeaderItemsSource = columns;
             flexgrid.ItemsSource = _employees;
+            UpdateColumns(flexgrid.ActualWidth);
+            flexgrid.SizeChanged += Flexgrid_SizeChanged;
         }
 
- 
-        private void flexgrid_PullToRefresh(object sender, EventArgs e)
+
+        private void UpdateColumns(double width)
         {
-            flexgrid.ItemsSource = null;
-            flexgrid.ItemsSource = _employees;
+            if (width == 0)
+            {
+                return;
+            }
+            var columnsCount = columns.Count;
+            //aleady start columns
+            if (columnsCount == 0)
+            {
+                return;
+            }
+
+            double wideViewMinWidth = 520.0;
+
+            bool isWideScreen = Window.Current.Bounds.Width >= wideViewMinWidth;
+
+
+            var currentColumnsCount = (flexgrid.ColumnsHeaderItemsSource as ObservableCollection<MyColumn>)?.Count;
+            var verticalScrollBarWidth = PlatformIndependent.IsWindowsPhoneDevice ? 0 : 12;
+           
+
+            if (!isWideScreen)
+            {
+                var narrowScreenItemTemplate = this.Resources["NarrowScreenItemTemplate"] as DataTemplate;
+
+                if (flexgrid.ItemTemplate != narrowScreenItemTemplate)
+                {
+                    flexgrid.ItemTemplate = narrowScreenItemTemplate;
+                }
+
+
+                var newcolumns = columns.Take(4).ToObservableCollection<MyColumn>();
+                if (currentColumnsCount != 4)
+                {
+                    flexgrid.ColumnsHeaderItemsSource = newcolumns;
+                }
+                flexgrid.FrozenColumnsHeaderItemsSource = null;
+                flexgrid.FrozenColumnsItemTemplate = null;
+                flexgrid.FrozenColumnsVisibility = Visibility.Collapsed;
+                var w = (width - 100 - verticalScrollBarWidth) / (newcolumns.Count - 1);
+                foreach (var item in newcolumns)
+                {
+                    item.ColumnWidth = w;
+                }
+                columns[0].ColumnWidth = 100;
+                flexgrid.UpdateWidth(width - verticalScrollBarWidth);
+            }
+            else
+            {
+                double columnsSize = 100 + 110 * (columns.Count - 1);
+
+                var wideScreenItemTemplate = this.Resources["WideScreenItemTemplate"] as DataTemplate;
+
+                if (flexgrid.ItemTemplate != wideScreenItemTemplate)
+                {
+                    flexgrid.ItemTemplate = wideScreenItemTemplate;
+                }
+
+                //update column
+                if (currentColumnsCount != columns.Count)
+                {
+                    flexgrid.ColumnsHeaderItemsSource = columns;
+                }
+
+                //update list
+                if (columnsSize < width - verticalScrollBarWidth)
+                {
+                    flexgrid.FrozenColumnsHeaderItemsSource = null;
+                    flexgrid.FrozenColumnsItemTemplate = null;
+                    flexgrid.FrozenColumnsVisibility = Visibility.Collapsed;
+                    var w = (width - 100 - verticalScrollBarWidth) / (columns.Count - 1);
+                    foreach (var item in columns)
+                    {
+                        item.ColumnWidth = w;
+                    }
+                    columns[0].ColumnWidth = 100;
+                    flexgrid.UpdateWidth(width - verticalScrollBarWidth);
+                }
+                else
+                {
+                    if (flexgrid.FrozenColumnsHeaderItemsSource == null)
+                    {
+                        flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
+                    }
+                    if (flexgrid.FrozenColumnsItemTemplate == null)
+                    {
+                        flexgrid.FrozenColumnsItemTemplate = this.Resources["FrozenColumnsItemTemplate"] as DataTemplate;
+                    }
+                    flexgrid.FrozenColumnsVisibility = Visibility.Visible;
+                    foreach (var item in columns)
+                    {
+                        item.ColumnWidth = 110;
+                    }
+                    columns[0].ColumnWidth = 100;
+                    flexgrid.UpdateWidth(double.NaN);
+                }
+
+            }
         }
+
+
 
         private void flexgrid_SortingColumn(object sender, MyUWPToolkit.FlexGrid.SortingColumnEventArgs e)
         {
@@ -89,19 +188,59 @@ namespace ToolkitSample
             //flexgrid.ItemContainerGenerator.ItemsChanged += ItemContainerGenerator_ItemsChanged;
         }
 
-        private void ItemContainerGenerator_ItemsChanged(object sender, ItemsChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                default:
-                    break;
-            }
-        }
 
         private void flexgrid_ItemClick(object sender, ItemClickEventArgs e)
         {
           
         }
+
+        private void PullToRefreshGrid_PullToRefresh(object sender, EventArgs e)
+        {
+            _employees.Clear();
+        }
     }
 
+
+    public class MyColumn:Column,INotifyPropertyChanged
+    {
+        private double columnWidth = 110;
+
+        public double ColumnWidth
+        {
+            get { return columnWidth; }
+            set
+            {
+                if (columnWidth != value)
+                {
+                    columnWidth = value;
+                    OnPropertyChanged("ColumnWidth");
+                }
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        //private double _frozenColumnWidth = 100;
+
+      
+        //public double FrozenColumnWidth
+        //{
+        //    get { return _frozenColumnWidth; }
+        //    set
+        //    {
+        //        if (_frozenColumnWidth != value)
+        //        {
+        //            _frozenColumnWidth = value;
+        //            OnPropertyChanged("FrozenColumnWidth");
+        //        }
+        //    }
+        //}
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged!=null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
 }

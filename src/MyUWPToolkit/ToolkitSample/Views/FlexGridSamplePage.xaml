@@ -9,73 +9,74 @@
     xmlns:flexgrid="using:MyUWPToolkit.FlexGrid"
     mc:Ignorable="d">
     <Page.Resources>
-        <Style  TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-        </Style>
-        <Style  TargetType="flexgrid:FlexGridItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-        </Style>
+        <DataTemplate x:Key="WideScreenItemTemplate">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*" MinWidth="110"/>
+                    <ColumnDefinition Width="*" MinWidth="110"/>
+                    <ColumnDefinition Width="*" MinWidth="110"/>
+                    <ColumnDefinition Width="*" MinWidth="110"/>
+                    <ColumnDefinition Width="*" MinWidth="110"/>
+                    <ColumnDefinition Width="*" MinWidth="110"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="4"/>
+                <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="6"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="NarrowScreenItemTemplate">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
+                <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
+                <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FrozenColumnsItemTemplate">
+            <Grid Background="Green" Width="100">
+                <TextBlock Text="{Binding Age}" />
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot>
             <PivotItem Header="adada">
-                <flexgrid:FlexGrid x:Name="flexgrid" SelectionMode="None" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
-                    <flexgrid:FlexGrid.Header>
-                        <Rectangle Height="200" Fill="Red"/>
-                    </flexgrid:FlexGrid.Header>
-                    <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
-                        <DataTemplate>
-                            <Grid Background="White">
-                                <TextBlock Text="{Binding ColumnName}" Width="100"/>
-                            </Grid>
-                        </DataTemplate>
-                    </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
-                    <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
-                        <DataTemplate>
-                            <Grid Background="Yellow" >
-                                <TextBlock Text="{Binding ColumnName}" HorizontalAlignment="Left" Width="100"/>
-                            </Grid>
-                        </DataTemplate>
-                    </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
-                    <flexgrid:FlexGrid.FrozenColumnsItemTemplate>
-                        <DataTemplate>
-                            <Grid >
-                                <TextBlock Text="{Binding Name}" Width="100"/>
-                            </Grid>
-                        </DataTemplate>
-                    </flexgrid:FlexGrid.FrozenColumnsItemTemplate>
-                    <flexgrid:FlexGrid.ItemTemplate>
-                        <DataTemplate>
-                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                    <ColumnDefinition Width="*" MinWidth="100"/>
-                                </Grid.ColumnDefinitions>
-                                <!--<TextBlock Text="{Binding Age}" Grid.Column="0"/>-->
-                                <TextBlock Text="{Binding Name}" Grid.Column="1"/>
-                                <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
-                                <TextBlock Text="{Binding Age}" Grid.Column="3"/>
-                                <TextBlock Text="{Binding Name}" Grid.Column="4"/>
-                                <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
-                                <TextBlock Text="{Binding Name}" Grid.Column="6"/>
-                            </Grid>
-                        </DataTemplate>
-                    </flexgrid:FlexGrid.ItemTemplate>
-                </flexgrid:FlexGrid>
+                <control:PullToRefreshGrid PullToRefresh="PullToRefreshGrid_PullToRefresh">
+                    <flexgrid:FlexGrid x:Name="flexgrid" SelectionMode="None" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
+                        <flexgrid:FlexGrid.Header>
+                            <Rectangle Height="200" Fill="Red"/>
+                        </flexgrid:FlexGrid.Header>
+                        <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
+                            <DataTemplate>
+                                <Grid Background="Yellow" Width="100">
+                                    <TextBlock Text="{Binding ColumnName}" />
+                                </Grid>
+                            </DataTemplate>
+                        </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
+                        <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
+                            <DataTemplate>
+                                <Grid Background="Yellow" Width="{Binding ColumnWidth,Mode=OneWay}">
+                                    <TextBlock Text="{Binding ColumnName}" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </DataTemplate>
+                        </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
+                    </flexgrid:FlexGrid>
+                </control:PullToRefreshGrid>
+               
             </PivotItem>
             <PivotItem Header="dada">
                 <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Fill="Red"/>

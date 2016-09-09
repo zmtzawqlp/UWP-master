@@ -52,7 +52,7 @@ namespace MyUWPToolkit
         string NoUseCompositionAPIControlTemplateString = @"
       <ControlTemplate   xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
                          xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-                         xmlns:local='using:EastMoney.Controls' TargetType='local:PullToRefreshGrid'>
+                         xmlns:local='using:MyUWPToolkit' TargetType='local:PullToRefreshGrid'>
         <local:PullToRefreshBorder x:Name='OuterCustomPanel' HorizontalAlignment='Stretch' VerticalAlignment='Stretch'>
             <ScrollViewer x:Name='ScrollViewer' VerticalSnapPointsType='MandatorySingle'  VerticalSnapPointsAlignment='Near'
                           VerticalScrollMode='Enabled' VerticalScrollBarVisibility='Hidden' VerticalContentAlignment='Stretch' VerticalAlignment='Stretch'>
@@ -448,7 +448,7 @@ namespace MyUWPToolkit
         string NoUseCompositionAPIControlTemplateString = @"
       <ControlTemplate   xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
                          xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-                         xmlns:local='using:EastMoney.Controls' TargetType='local:PullToRefreshGrid1'>
+                         xmlns:local='using:MyUWPToolkit' TargetType='local:PullToRefreshGrid1'>
         <local:PullToRefreshBorder x:Name='OuterCustomPanel' HorizontalAlignment='Stretch' VerticalAlignment='Stretch'>
             <ScrollViewer x:Name='ScrollViewer' VerticalSnapPointsType='MandatorySingle'  VerticalSnapPointsAlignment='Near'
                           VerticalScrollMode='Enabled' VerticalScrollBarVisibility='Hidden' VerticalContentAlignment='Stretch' VerticalAlignment='Stretch'>

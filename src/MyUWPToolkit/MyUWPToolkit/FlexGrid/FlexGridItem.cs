@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace MyUWPToolkit.FlexGrid
 {
@@ -20,8 +21,10 @@ namespace MyUWPToolkit.FlexGrid
         ExpressionAnimation _offsetAnimation;
         Compositor _compositor;
         Visual _frozenContentVisual;
+        Visual _pressedHiderVisual;
         ContentPresenter _frozenContent;
         ScrollViewer _sv;
+        Rectangle _pressedHider;
 
         public DataTemplate FrozenColumnsItemTemplate
         {
@@ -49,18 +52,18 @@ namespace MyUWPToolkit.FlexGrid
             this.DefaultStyleKey = typeof(FlexGridItem);
         }
 
-
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             _frozenContent = this.GetTemplateChild("frozenContent") as ContentPresenter;
+            _pressedHider = this.GetTemplateChild("pressedHider") as Rectangle;
             StartAnimation(_sv);
         }
 
         internal void StartAnimation(ScrollViewer sv)
         {
             _sv = sv;
-            if (_frozenContent == null || _sv == null || _frozenContentVisual != null)
+            if (_frozenContent == null || _sv == null || _pressedHider == null || _frozenContentVisual != null)
             {
                 return;
             }
@@ -70,9 +73,12 @@ namespace MyUWPToolkit.FlexGrid
             _offsetAnimation.SetReferenceParameter("ScrollManipulation", _scrollerViewerManipulation);
 
             _frozenContentVisual = ElementCompositionPreview.GetElementVisual(_frozenContent);
+            _pressedHiderVisual = ElementCompositionPreview.GetElementVisual(_pressedHider);
             _frozenContentVisual.StartAnimation("Offset.X", _offsetAnimation);
+            _pressedHiderVisual.StartAnimation("Offset.X", _offsetAnimation);
         }
 
+        //warning
         internal void StopAnimation()
         {
             if (_frozenContentVisual != null)
@@ -80,6 +86,11 @@ namespace MyUWPToolkit.FlexGrid
                 _frozenContentVisual.StopAnimation("Offset.X");
                 _frozenContentVisual.Dispose();
                 _frozenContentVisual = null;
+
+                _pressedHiderVisual.StopAnimation("Offset.X");
+                _pressedHiderVisual.Dispose();
+                _pressedHiderVisual = null;
+
                 _compositor.Dispose();
                 _compositor = null;
                 _offsetAnimation.Dispose();

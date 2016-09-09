@@ -65,6 +65,14 @@ namespace MyUWPToolkit.FlexGrid
         /// fire when tap in column header
         /// </summary>
         public event EventHandler<SortingColumnEventArgs> SortingColumn;
+
+        public ScrollViewer ScrollViewer
+        {
+            get
+            {
+                return _scrollViewer;
+            }
+        }
         #endregion
 
         #region DependencyProperty
@@ -159,5 +167,5 @@ namespace MyUWPToolkit.FlexGrid
         }
     }
 
-    
+
 }

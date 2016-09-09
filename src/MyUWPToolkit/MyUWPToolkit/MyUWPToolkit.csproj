@@ -150,6 +150,7 @@
     <Compile Include="Util\CryptographyHelper.cs" />
     <Compile Include="Util\DeviceInfo.cs" />
     <Compile Include="Util\FrameworkElementExtensions.cs" />
+    <Compile Include="Util\IEnumerableExtensions.cs" />
     <Compile Include="Util\ItemsControlExtensions.cs" />
     <Compile Include="Util\NetworkInfo.cs" />
     <Compile Include="Util\NotifyTaskCompletion.cs" />

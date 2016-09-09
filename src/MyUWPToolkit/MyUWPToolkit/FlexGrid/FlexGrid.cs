@@ -93,7 +93,7 @@ namespace MyUWPToolkit.FlexGrid
 
         int preCount;
         bool itemsCleared;
-        double offset = 0;
+        double offset = -1;
         protected override void OnItemsChanged(object e)
         {
             //don't set itemsource null,please clear and add immediately
@@ -102,23 +102,27 @@ namespace MyUWPToolkit.FlexGrid
                 if (preCount != 0 && this.Items.Count == 0)
                 {
                     itemsCleared = true;
-                    offset = _scrollViewer.HorizontalOffset;
+                    //make it to int to prevent double 
+                    offset = (int)_scrollViewer.HorizontalOffset;
                 }
-                if (itemsCleared && this.Items.Count != 0)
+                else if (itemsCleared && this.Items.Count != 0)
                 {
                     itemsCleared = false;
                     _scrollViewer.ChangeView(offset, 0, null);
                 }
+                else
+                {
+                    offset = -1;
+                }
             }
             else
             {
-                offset = 0;
+                offset = -1;
             }
 
             preCount = this.Items.Count;
             base.OnItemsChanged(e);
         }
-
 
         protected override void ClearContainerForItemOverride(DependencyObject element, object item)
         {
@@ -137,12 +141,6 @@ namespace MyUWPToolkit.FlexGrid
             _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
 
             _scrollViewer.Loaded += _scrollViewer_Loaded;
-            _scrollViewer.ViewChanging += _scrollViewer_ViewChanging;
-        }
-
-        private void _scrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
-        {
-
         }
 
         ItemsPresenter _itemsPresenter;
@@ -217,4 +215,3 @@ namespace MyUWPToolkit.FlexGrid
         }
     }
 }
-
