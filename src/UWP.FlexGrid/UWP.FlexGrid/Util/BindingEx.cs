@@ -7,13 +7,13 @@ using Windows.UI.Xaml.Data;
 
 namespace UWP.FlexGrid
 {
-    internal static class BindingEx
-    {
-        public static object Execute<T>(this Binding binding, object source)
-        {
+    //internal static class BindingEx
+    //{
+    //    public static object Execute<T>(this Binding binding, object source)
+    //    {
 
-            return source.GetPropertyValue<T>(binding.Path.Path, binding.Converter, binding.ConverterParameter, binding.ConverterLanguage);
+    //        return source.GetPropertyValue<T>(binding.Path.Path, binding.Converter, binding.ConverterParameter, binding.ConverterLanguage);
 
-        }
-    }
+    //    }
+    //}
 }

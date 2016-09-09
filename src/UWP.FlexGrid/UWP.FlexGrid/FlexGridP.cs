@@ -219,21 +219,21 @@ namespace UWP.FlexGrid
             (d as FlexGrid).OnItemsSourceChanged();
         }
 
-        public bool AutoGenerateColumns
-        {
-            get { return (bool)GetValue(AutoGenerateColumnsProperty); }
-            set { SetValue(AutoGenerateColumnsProperty, value); }
-        }
+        //public bool AutoGenerateColumns
+        //{
+        //    get { return (bool)GetValue(AutoGenerateColumnsProperty); }
+        //    set { SetValue(AutoGenerateColumnsProperty, value); }
+        //}
 
-        // Using a DependencyProperty as the backing store for AutoGenerateColumns.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AutoGenerateColumnsProperty =
-            DependencyProperty.Register("AutoGenerateColumns", typeof(bool), typeof(FlexGrid), new PropertyMetadata(false, OnAutoGenerateColumnsChanged));
+        //// Using a DependencyProperty as the backing store for AutoGenerateColumns.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty AutoGenerateColumnsProperty =
+        //    DependencyProperty.Register("AutoGenerateColumns", typeof(bool), typeof(FlexGrid), new PropertyMetadata(false, OnAutoGenerateColumnsChanged));
 
 
-        private static void OnAutoGenerateColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            (d as FlexGrid).OnItemsSourceChanged();
-        }
+        //private static void OnAutoGenerateColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    (d as FlexGrid).OnItemsSourceChanged();
+        //}
 
         /// <summary>
         /// default value is ItemsUpdatingScrollMode.KeepScrollOffset

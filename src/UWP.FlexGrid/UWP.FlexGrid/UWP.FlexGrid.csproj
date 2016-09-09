@@ -124,8 +124,8 @@
     <Compile Include="Model\RowCol\RowCol.cs" />
     <Compile Include="Model\RowCol\RowCols.cs" />
     <Compile Include="Model\RowCol\Rows.cs" />
-    <Compile Include="Panel\CellPanel.cs" />
-    <Compile Include="Panel\ColumnHeaderPanel.cs" />
+    <Compile Include="Panel\RowsPanel.cs" />
+    <Compile Include="Panel\ColumnHeadersPanel.cs" />
     <Compile Include="Panel\FlexGridPanel.cs" />
     <Compile Include="Panel\RowPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

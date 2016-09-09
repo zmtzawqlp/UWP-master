@@ -13,7 +13,7 @@ namespace UWP.FlexGrid
 {
     public class FlexGridPanel : Panel
     {
-        #region ** fields
+        #region fields
 
         FlexGrid _grid;
         Rows _rows;
@@ -22,6 +22,7 @@ namespace UWP.FlexGrid
         CellType _cellType;
         Point _scrollPos;
         CellRangeDictionary _cells;
+        RowsDictionary _rowsDict;
         #endregion
 
 
@@ -31,6 +32,7 @@ namespace UWP.FlexGrid
             _grid = grid;
             _cellType = cellType;
             _cells = new CellRangeDictionary();
+            _rowsDict = new RowsDictionary();
             _viewRange = CellRange.Empty;
 
             Rows = new Rows(this, rowHeight);
@@ -61,6 +63,7 @@ namespace UWP.FlexGrid
                     _rows.CollectionChanged += rowsCols_CollectionChanged;
                 }
                 _cells.Clear();
+                _rowsDict.Clear();
                 Children.Clear();
             }
         }
@@ -83,6 +86,7 @@ namespace UWP.FlexGrid
                 {
                     _cols.CollectionChanged += rowsCols_CollectionChanged;
                 }
+                _rowsDict.Clear();
                 _cells.Clear();
                 Children.Clear();
             }
@@ -261,15 +265,6 @@ namespace UWP.FlexGrid
                 {
                     // get rectangle to arrange cell
                     var rc = GetCellRect(rng);
-                    //if we has footerHeight 
-                    //for example, footerHeight is 30, and row height is 30.
-                    //at the begining, show rows are 38-61,
-                    //after we has footerHeight, we should get 39-61
-                    //and rect is not right at this time, we should rc.Y -= footerHeight;
-                    if (!Rows.IsFrozen(rng.Row))
-                    {
-                        rc.Y -= footerHeight;
-                    }
 
                     //fix auto  column,if Width is Auto and AdaptUISize is true, the width will the adapt to UI width.
                     if (Columns[rng.Column].AdaptUISize)
@@ -338,14 +333,6 @@ namespace UWP.FlexGrid
                     cell.Measure(new Size(rc.Width, rc.Height));
                     cell.Arrange(rc);
                 }
-            }
-            if (currentPressedRow > -1)
-            {
-                HandlePointerPressed(currentPressedRow);
-            }
-            else
-            {
-                HandlePointerOver(currentpointerOverRow);
             }
 
             // measure content
@@ -460,8 +447,6 @@ namespace UWP.FlexGrid
             return rc;
         }
 
-        //handle footerHeight
-        internal double footerHeight;
         internal CellRange GetViewRange(Point scrollPosition)
         {
             // get size, position, range
@@ -512,12 +497,6 @@ namespace UWP.FlexGrid
             //}
             //else
             {
-                //if we has footerHeight 
-                //for example, footerHeight is 30, and row height is 30.
-                //at the begining, show rows are 38-61,
-                //after we has footerHeight, we should get 39-61
-                //so why we scrollPosition.Y -= footerHeight;
-                scrollPosition.Y -= footerHeight;
 
                 // find top/bottom rows
                 if (fy < sz.Height)
@@ -605,128 +584,6 @@ namespace UWP.FlexGrid
                     UpdateViewRange();
                 }
             }
-        }
-
-        CellRangeDictionary _pressedCells = new CellRangeDictionary();
-        internal int currentPressedRow = -1;
-        internal void HandlePointerPressed(int row)
-        {
-            //_pressedCells.Clear();
-            //if (row > -1)
-            //{
-            //    currentPressedRow = row;
-            //    foreach (var item in _cells)
-            //    {
-            //        if (item.Key.Row == row)
-            //        {
-            //            var cell = (item.Value as Border);
-
-            //            FrameworkElement element = null;
-            //            if (cell.Child != null)
-            //            {
-            //                element = cell.Child as FrameworkElement;
-            //            }
-            //            else
-            //            {
-            //                element = cell;
-            //            }
-
-            //            if (item.Key.Column == 0)
-            //            {
-            //                element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = element.ActualWidth, CenterY = element.ActualHeight / 2 };
-            //            }
-            //            else if (item.Key.Column == this.Columns.Count - 1)
-            //            {
-            //                element.RenderTransform = new ScaleTransform() { ScaleX = 0.9, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
-            //            }
-            //            else
-            //            {
-            //                element.RenderTransform = new ScaleTransform() { ScaleX = 1, ScaleY = 0.9, CenterX = 0, CenterY = element.ActualHeight / 2 };
-            //            }
-            //            cell.Background = Grid.PressedBackground;
-            //            _pressedCells.Add(item.Key, item.Value);
-            //        }
-            //    }
-            //}
-
-        }
-
-        internal void ClearPointerPressedAnimation()
-        {
-            //currentPressedRow = -1;
-            //foreach (var item in _pressedCells)
-            //{
-            //    var cell = (item.Value as Border);
-
-            //    FrameworkElement element = null;
-            //    if (cell.Child != null)
-            //    {
-            //        element = cell.Child as FrameworkElement;
-            //    }
-            //    else
-            //    {
-            //        element = cell;
-            //    }
-
-            //    element.RenderTransform = null;
-
-            //    var even = true;
-            //    if (Grid.Rows.Count > item.Key.Row)
-            //    {
-            //        even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
-            //    }
-            //    cell.Background = even || Grid.AlternatingRowBackground == null
-            //           ? Grid.RowBackground
-            //           : Grid.AlternatingRowBackground;
-
-
-            //}
-            //_pressedCells.Clear();
-        }
-
-        CellRangeDictionary _pointerOverCells = new CellRangeDictionary();
-        internal int currentpointerOverRow = -1;
-        internal void HandlePointerOver(int row)
-        {
-            //if (Grid.Rows.Count <= row)
-            //{
-            //    _pointerOverCells.Clear();
-            //    return;
-            //}
-            ////clear all
-            //{
-            //    currentpointerOverRow = -1;
-            //    foreach (var item in _pointerOverCells)
-            //    {
-            //        var element = item.Value as Border;
-            //        var even = true;
-            //        if (Grid.Rows.Count > item.Key.Row)
-            //        {
-            //            even = Grid.Rows[item.Key.Row].VisibleIndex % 2 == 0;
-            //        }
-            //        element.Background = even || Grid.AlternatingRowBackground == null
-            //               ? Grid.RowBackground
-            //               : Grid.AlternatingRowBackground;
-            //    }
-            //    _pointerOverCells.Clear();
-            //}
-
-            //if (row > -1)
-            //{
-            //    currentpointerOverRow = row;
-            //    foreach (var item in _cells)
-            //    {
-            //        var element = item.Value as Border;
-            //        if (item.Key.Row == row)
-            //        {
-            //            element.Background = Grid.PointerOverBackground;
-            //            _pointerOverCells.Add(item.Key, item.Value);
-            //        }
-
-            //    }
-            //}
-
-
         }
         #endregion
 

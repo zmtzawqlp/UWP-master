@@ -196,4 +196,8 @@ namespace UWP.FlexGrid
     internal class CellRangeDictionary : Dictionary<CellRange, FrameworkElement>
     {
     }
+
+    internal class RowsDictionary : Dictionary<Row, FlexGridRow>
+    {
+    }
 }
