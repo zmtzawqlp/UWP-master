@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UWP.Chart", "UWP.Chart\UWP.Chart.csproj", "{CE80DAD9-1D35-41AD-BE2B-6FB813ABDACB}"
 EndProject
@@ -36,6 +36,8 @@ Global
 		{CE80DAD9-1D35-41AD-BE2B-6FB813ABDACB}.Release|x86.ActiveCfg = Release|x86
 		{CE80DAD9-1D35-41AD-BE2B-6FB813ABDACB}.Release|x86.Build.0 = Release|x86
 		{0180CDA1-7B15-4797-A0F2-4FAABF97F53E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0180CDA1-7B15-4797-A0F2-4FAABF97F53E}.Debug|Any CPU.Build.0 = Debug|x86
+		{0180CDA1-7B15-4797-A0F2-4FAABF97F53E}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{0180CDA1-7B15-4797-A0F2-4FAABF97F53E}.Debug|ARM.ActiveCfg = Debug|ARM
 		{0180CDA1-7B15-4797-A0F2-4FAABF97F53E}.Debug|ARM.Build.0 = Debug|ARM
 		{0180CDA1-7B15-4797-A0F2-4FAABF97F53E}.Debug|ARM.Deploy.0 = Debug|ARM

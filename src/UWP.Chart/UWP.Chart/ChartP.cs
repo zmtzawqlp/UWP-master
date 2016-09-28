@@ -65,7 +65,19 @@ namespace UWP.Chart
         public Marker Marker
         {
             get { return _marker; }
-            set { _marker = value; }
+            set
+            {
+                if (value != null)
+                {
+                   
+                }
+                else
+                {
+
+                }
+                _marker = value;
+
+            }
         }
 
         public SeriesCollection Series
@@ -92,6 +104,30 @@ namespace UWP.Chart
         #endregion
 
         #region DP
+
+
+        /// <summary>
+        /// set it true if datas are changing frequently, so that don't need to call Chart's Invalidate method whenever datas are changed.
+        /// </summary>
+        public bool ForceRedrawn
+        {
+            get { return (bool)GetValue(ForceRedrawnProperty); }
+            set { SetValue(ForceRedrawnProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ForceRedrawn.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ForceRedrawnProperty =
+            DependencyProperty.Register("ForceRedrawn", typeof(bool), typeof(Chart), new PropertyMetadata(false, new PropertyChangedCallback(OnForceRedrawnChanged)));
+
+        private static void OnForceRedrawnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var chart = (d as Chart);
+            if (chart.ForceRedrawn)
+            {
+                (d as Chart).Invalidate();
+            }
+        }
+
 
         #endregion
     }

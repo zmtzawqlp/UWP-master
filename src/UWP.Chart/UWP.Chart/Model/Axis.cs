@@ -7,7 +7,10 @@ using UWP.Chart.Common;
 
 namespace UWP.Chart
 {
-    public class Axis: BindableBase
+    /// <summary>
+    /// Axis style properties
+    /// </summary>
+    public class Axis
     {
 
     }

@@ -11,6 +11,7 @@ namespace UWP.Chart
 {
     public class SeriesCollection : ObservableCollection<Series>
     {
+      
         //public IEnumerable ItemsSource { get; set; }
 
         //public IEnumerable ItemNames { get; set; }

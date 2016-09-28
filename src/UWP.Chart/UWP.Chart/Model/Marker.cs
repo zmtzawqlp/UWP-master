@@ -7,7 +7,10 @@ using UWP.Chart.Common;
 
 namespace UWP.Chart
 {
-    public class Marker: BindableBase
+    /// <summary>
+    /// Marker style properties
+    /// </summary>
+    public class Marker
     {
     }
 }
