@@ -5,9 +5,19 @@
     xmlns:local="using:UWP.ChartSample.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:chart="using:UWP.Chart"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <chart:Chart x:Name="chart">
+            <chart:Chart.Marker>
+                <chart:Marker/>
+            </chart:Chart.Marker>
+            <chart:Chart.Series>
+                <chart:Series/>
+                <chart:Series/>
+                <chart:Series/>
+            </chart:Chart.Series>
+        </chart:Chart>
     </Grid>
 </Page>

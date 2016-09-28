@@ -133,6 +133,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UWP.Chart\UWP.Chart.csproj">
+      <Project>{ce80dad9-1d35-41ad-be2b-6fb813abdacb}</Project>
+      <Name>UWP.Chart</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

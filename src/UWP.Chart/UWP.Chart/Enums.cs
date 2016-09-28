@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.Chart.Layer
+namespace UWP.Chart
 {
-    class LegendLayer
+    public enum ChartType
     {
+        Bar,
+        Column,
+        Pie,
     }
+
 }

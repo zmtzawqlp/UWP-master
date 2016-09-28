@@ -9,7 +9,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace UWP.Chart.Series
+namespace UWP.Chart
 {
     public class Series : BindableBase
     {

@@ -25,6 +25,7 @@ namespace UWP.ChartSample.Views
         public BasicsSamplePage()
         {
             this.InitializeComponent();
+           
         }
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWP.Chart.Layer
+namespace UWP.Chart.Render
 {
-    class AxisLayer
+    public interface IChartRender
     {
+       void OnDrawAxis();
+
     }
 }
