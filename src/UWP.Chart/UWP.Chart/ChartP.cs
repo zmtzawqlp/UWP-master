@@ -7,9 +7,12 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Windows.UI.Xaml;
 using UWP.Chart.Render;
+using Windows.UI.Xaml.Markup;
+using System.Collections;
 
 namespace UWP.Chart
 {
+    [ContentProperty(Name = nameof(Series))]
     public partial class Chart
     {
         #region Fields
@@ -53,13 +56,28 @@ namespace UWP.Chart
         {
             get { return _axis; }
 
-            set { _axis = value; }
+            set
+            {
+                if (value != null)
+                {
+                    value.Chart = this;
+                }
+                _axis = value;
+            }
         }
 
         public Legend Legend
         {
             get { return _legend; }
-            set { _legend = value; }
+            set
+            {
+                if (value != null)
+                {
+                    value.Chart = this;
+                }
+                _legend = value;
+
+            }
         }
 
         public Marker Marker
@@ -69,11 +87,7 @@ namespace UWP.Chart
             {
                 if (value != null)
                 {
-                   
-                }
-                else
-                {
-
+                    value.Chart = this;
                 }
                 _marker = value;
 
@@ -127,6 +141,41 @@ namespace UWP.Chart
                 (d as Chart).Invalidate();
             }
         }
+
+        public ChartType ChartType
+        {
+            get { return (ChartType)GetValue(ChartTypeProperty); }
+            set { SetValue(ChartTypeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ChartType.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ChartTypeProperty =
+            DependencyProperty.Register("ChartType", typeof(ChartType), typeof(Chart), new PropertyMetadata(ChartType.Column));
+
+
+        public IEnumerable ItemsSource
+        {
+            get { return (IEnumerable)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null));
+
+
+
+        public IEnumerable ItemNames
+        {
+            get { return (IEnumerable)GetValue(ItemNamesProperty); }
+            set { SetValue(ItemNamesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemNames.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemNamesProperty =
+            DependencyProperty.Register("ItemNames", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null));
+
+
 
 
         #endregion

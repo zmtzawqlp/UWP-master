@@ -9,9 +9,9 @@ namespace UWP.Chart.Render
 {
     public interface IChartRender
     {
-        void OnDrawAxis(Chart chart, CanvasDrawingSession clds);
-        void OnDrawSeries(Chart chart, CanvasDrawingSession clds);
-        void OnDrawMarker(Chart chart, CanvasDrawingSession clds);
-        void OnDrawLegend(Chart chart, CanvasDrawingSession clds);
+        void OnDrawAxis(Chart chart, CanvasDrawingSession cds);
+        void OnDrawSeries(Chart chart, CanvasDrawingSession cds);
+        void OnDrawMarker(Chart chart, CanvasDrawingSession cds);
+        void OnDrawLegend(Chart chart, CanvasDrawingSession cds);
     }
 }

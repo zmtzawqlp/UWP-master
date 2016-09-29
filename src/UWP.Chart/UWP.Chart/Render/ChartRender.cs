@@ -9,31 +9,34 @@ using Windows.UI;
 namespace UWP.Chart.Render
 {
     /// <summary>
-    /// default render for chart,you can override this class to 
-    /// override the template or style of axis/legend/marker/series
+    /// default render for chart,you can 
+    /// override the template or style of axis/legend/marker/series by override this
     /// </summary>
     public class ChartRender : IChartRender
     {
-        public virtual void OnDrawAxis(Chart chart, CanvasDrawingSession clds)
+        public virtual void OnDrawAxis(Chart chart, CanvasDrawingSession cds)
         {
 
         }
 
-        public virtual void OnDrawLegend(Chart chart, CanvasDrawingSession clds)
+        public virtual void OnDrawLegend(Chart chart, CanvasDrawingSession cds)
         {
 
         }
 
-        public virtual void OnDrawMarker(Chart chart, CanvasDrawingSession clds)
+        public virtual void OnDrawMarker(Chart chart, CanvasDrawingSession cds)
         {
 
         }
 
-        public virtual void OnDrawSeries(Chart chart, CanvasDrawingSession clds)
+        public virtual void OnDrawSeries(Chart chart, CanvasDrawingSession cds)
         {
-            foreach (var item in chart.Series)
+            foreach (var series in chart.Series)
             {
+                if (series.CanDraw)
+                {
 
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Media;
 
 namespace UWP.Chart
 {
-    public class BubbleSeries : PointSeries
+    public class BubbleSeries : XYSeries
     {
         #region Public Property
         /// <summary>

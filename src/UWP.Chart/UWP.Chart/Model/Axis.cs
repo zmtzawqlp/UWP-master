@@ -10,7 +10,7 @@ namespace UWP.Chart
     /// <summary>
     /// Axis style properties
     /// </summary>
-    public class Axis
+    public class Axis: ModelBase
     {
 
     }

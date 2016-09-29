@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Data;
 
 namespace UWP.Chart
 {
-    public class PointSeries : Series
+    public class XYSeries : Series
     {
         #region Public Property
         /// <summary>

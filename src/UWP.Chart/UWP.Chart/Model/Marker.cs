@@ -10,7 +10,7 @@ namespace UWP.Chart
     /// <summary>
     /// Marker style properties
     /// </summary>
-    public class Marker
+    public class Marker: ModelBase
     {
     }
 }

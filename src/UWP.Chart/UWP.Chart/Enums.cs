@@ -13,4 +13,23 @@ namespace UWP.Chart
         Pie,
     }
 
+    /// <summary>
+    /// Specifies which coordinate corresponds to the data values.
+    /// </summary>
+    public enum ValueCoordinate
+    {
+        /// <summary>
+        /// None or default.
+        /// </summary>
+        None,
+        /// <summary>
+        /// X-coordinate.
+        /// </summary>
+        X,
+        /// <summary>
+        /// Y-coordinate.
+        /// </summary>
+        Y
+    }
+
 }

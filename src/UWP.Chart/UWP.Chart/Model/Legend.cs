@@ -11,7 +11,7 @@ namespace UWP.Chart
     /// <summary>
     /// Legend style properties
     /// </summary>
-    public class Legend
+    public class Legend: ModelBase
     {
         public GridLength Width { get; set; }
 

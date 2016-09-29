@@ -10,12 +10,14 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
         <chart:Chart x:Name="chart">
-            <chart:Series/>
-            <chart:Series/>
-            <chart:BubbleSeries/>
-            
+            <chart:Chart.Series>
+                <chart:Series/>
+                <chart:Series/>
+                <chart:BubbleSeries/>
+            </chart:Chart.Series>
+
             <chart:Chart.Marker>
-                <chart:Marker/>
+                <chart:Marker  />
             </chart:Chart.Marker>
           
         </chart:Chart>

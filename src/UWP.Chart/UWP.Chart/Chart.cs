@@ -14,7 +14,7 @@ namespace UWP.Chart
     /// <summary>
     /// 
     /// </summary>
-    [ContentProperty(Name = nameof(Series))]
+   
     public partial class Chart : Control, IDisposable
     {
         public Chart()
@@ -39,11 +39,19 @@ namespace UWP.Chart
         {
             _defaultRender = new ChartRender();
             _series = new SeriesCollection();
+            _series.CollectionChanged += _series_CollectionChanged;
             //_axis = new Axis();
             //_legend = new Legend();
             //_marker = new Marker();
         }
 
+        private void _series_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var series in _series)
+            {
+                series.Chart = this;
+            }
+        }
 
         private void Chart_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
@@ -61,9 +69,9 @@ namespace UWP.Chart
         {
             using (CanvasCommandList cl = new CanvasCommandList(sender))
             {
-                using (CanvasDrawingSession clds = cl.CreateDrawingSession())
+                using (CanvasDrawingSession cds = cl.CreateDrawingSession())
                 {
-                    OnDraw(clds);
+                    OnDraw(cds);
                 }
                 args.DrawingSession.DrawImage(cl);
             }
@@ -73,27 +81,28 @@ namespace UWP.Chart
             }
         }
 
-        private void OnDraw(CanvasDrawingSession clds)
+        private void OnDraw(CanvasDrawingSession cds)
         {
-            if (Axis != null)
+            if (Axis != null && Axis.CanDraw)
             {
-                Render.OnDrawAxis(this, clds);
+                Render.OnDrawAxis(this, cds);
             }
 
-            if (Series.Count != 0)
+            if (Series != null)
             {
-                Render.OnDrawSeries(this, clds);
+                Render.OnDrawSeries(this, cds);
             }
 
-            if (Marker != null)
+            if (Marker != null && Marker.CanDraw)
             {
-                Render.OnDrawMarker(this, clds);
+                Render.OnDrawMarker(this, cds);
             }
 
-            if (Legend != null)
+            if (Legend != null && Legend.CanDraw)
             {
-                Render.OnDrawLegend(this, clds);
+                Render.OnDrawLegend(this, cds);
             }
+
         }
 
         private void _view_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)

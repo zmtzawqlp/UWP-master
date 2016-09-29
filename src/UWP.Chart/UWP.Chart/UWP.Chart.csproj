@@ -110,16 +110,18 @@
     <Compile Include="Chart.cs" />
     <Compile Include="ChartP.cs" />
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Model\Axis.cs" />
     <Compile Include="Model\Legend.cs" />
     <Compile Include="Model\Marker.cs" />
+    <Compile Include="Model\Series\ISeries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\IChartRender.cs" />
     <Compile Include="Render\ChartRender.cs" />
     <Compile Include="Model\Series\BubbleSeries.cs" />
     <Compile Include="Model\Series\SeriesCollection.cs" />
-    <Compile Include="Model\Series\PointSeries.cs" />
+    <Compile Include="Model\Series\XYSeries.cs" />
     <Compile Include="Model\Series\Series.cs" />
     <EmbeddedResource Include="Properties\UWP.Chart.rd.xml" />
   </ItemGroup>

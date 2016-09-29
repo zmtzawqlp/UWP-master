@@ -11,48 +11,48 @@ using Windows.UI.Xaml.Media;
 
 namespace UWP.Chart
 {
-    public class Series : BindableBase
+    public class Series : ModelBase, ISeries
     {
 
         #region Public Property
-        private Binding _dependentValueBinding;
+        private Binding _valueBinding;
         /// <summary>
-        /// The binding used to identify the dependent value binding.
+        /// The binding used to identify the value binding.
         /// </summary>
-        public Binding DependentValueBinding
+        public Binding ValueBinding
         {
             get
             {
-                return _dependentValueBinding;
+                return _valueBinding;
             }
             set
             {
-                if (_dependentValueBinding != value)
+                if (_valueBinding != value)
                 {
-                    _dependentValueBinding = value;
-                    OnPropertyChanged("DependentValueBinding");
+                    _valueBinding = value;
+                    OnPropertyChanged();
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the Binding Path to use for identifying the dependent value.
+        /// Gets or sets the Binding Path to use for identifying the value.
         /// </summary>
-        public string DependentValuePath
+        public string ValuePath
         {
             get
             {
-                return (null != DependentValueBinding) ? DependentValueBinding.Path.Path : null;
+                return (null != ValueBinding) ? ValueBinding.Path.Path : null;
             }
             set
             {
                 if (null == value)
                 {
-                    DependentValueBinding = null;
+                    ValueBinding = null;
                 }
                 else
                 {
-                    DependentValueBinding = new Binding() { Path = new PropertyPath(value) };
+                    ValueBinding = new Binding() { Path = new PropertyPath(value) };
                 }
             }
         }
@@ -62,44 +62,75 @@ namespace UWP.Chart
 
         #region DependencyProperty
         /// <summary>
-        /// Gets or sets the values(Y) collection.
+        /// Gets or sets the values collection. 
         /// </summary>
-        public DoubleCollection DependentValues
+        public DoubleCollection Values
         {
-            get { return (DoubleCollection)GetValue(DependentValuesProperty); }
-            set { SetValue(DependentValuesProperty, value); }
+            get { return (DoubleCollection)GetValue(ValuesProperty); }
+            set { SetValue(ValuesProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for DependentValues.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DependentValuesProperty =
-            DependencyProperty.Register("DependentValues", typeof(DoubleCollection), typeof(Series), new PropertyMetadata(null, OnDependentValuesChanged));
-
-        private static void OnDependentValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
+        // Using a DependencyProperty as the backing store for Values.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ValuesProperty =
+            DependencyProperty.Register("Values", typeof(DoubleCollection), typeof(Series), new PropertyMetadata(null, OnDependencyPropertyChangedToInvalidate));
 
 
         /// <summary>
-        /// Gets or sets the dependent values(Y) source.
+        /// Gets or sets the dependent values source. use with DependentValueBinding
         /// </summary>
-        public IEnumerable DependentValuesSource
+        public IEnumerable ValuesSource
         {
-            get { return (IEnumerable)GetValue(DependentValuesSourceProperty); }
-            set { SetValue(DependentValuesSourceProperty, value); }
+            get { return (IEnumerable)GetValue(ValuesSourceProperty); }
+            set { SetValue(ValuesSourceProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for DependentValuesSource.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DependentValuesSourceProperty =
-            DependencyProperty.Register("DependentValuesSource", typeof(IEnumerable), typeof(Series), new PropertyMetadata(null, OnDependentValuesSourceChanged));
+        // Using a DependencyProperty as the backing store for ValuesSource.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ValuesSourceProperty =
+            DependencyProperty.Register("ValuesSource", typeof(IEnumerable), typeof(Series), new PropertyMetadata(null, OnDependencyPropertyChangedToInvalidate));
 
-        private static void OnDependentValuesSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+
+
+        public ChartType? ChartType
         {
-
+            get { return (ChartType?)GetValue(ChartTypeProperty); }
+            set { SetValue(ChartTypeProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for ChartType.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ChartTypeProperty =
+            DependencyProperty.Register("ChartType", typeof(ChartType?), typeof(Series), new PropertyMetadata(null));
+
+
+
 
         #endregion
 
+
+        #region ISeries
+
+        public string Label { get; set; }
+
+        string[] ISeries.GetItemNames()
+        {
+            return GetItemNames();
+        }
+
+        double[,] ISeries.GetValues()
+        {
+            return GetValues();
+        }
+
+        virtual internal string[] GetItemNames()
+        {
+            throw new NotImplementedException();
+        }
+
+        virtual internal double[,] GetValues()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
 }

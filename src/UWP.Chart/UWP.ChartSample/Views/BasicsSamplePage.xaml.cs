@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UWP.Chart;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,7 +26,6 @@ namespace UWP.ChartSample.Views
         public BasicsSamplePage()
         {
             this.InitializeComponent();
-           
         }
     }
 }
