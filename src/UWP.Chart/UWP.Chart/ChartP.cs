@@ -142,17 +142,6 @@ namespace UWP.Chart
             }
         }
 
-        public ChartType ChartType
-        {
-            get { return (ChartType)GetValue(ChartTypeProperty); }
-            set { SetValue(ChartTypeProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for ChartType.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ChartTypeProperty =
-            DependencyProperty.Register("ChartType", typeof(ChartType), typeof(Chart), new PropertyMetadata(ChartType.Column));
-
-
         public IEnumerable ItemsSource
         {
             get { return (IEnumerable)GetValue(ItemsSourceProperty); }

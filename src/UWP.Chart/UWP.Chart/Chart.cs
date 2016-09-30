@@ -47,9 +47,27 @@ namespace UWP.Chart
 
         private void _series_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            foreach (var series in _series)
+            switch (e.Action)
             {
-                series.Chart = this;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (Series item in e.NewItems)
+                    {
+                        item.Chart = this;
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    foreach (Series item in e.OldItems)
+                    {
+                        item.Chart = null;
+                        //todo
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                    break;
+                default:
+                    break;
             }
         }
 

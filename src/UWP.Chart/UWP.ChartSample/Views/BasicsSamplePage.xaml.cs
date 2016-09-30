@@ -27,5 +27,17 @@ namespace UWP.ChartSample.Views
         {
             this.InitializeComponent();
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            chart.CreateCanvas();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            chart.Dispose();
+        }
     }
 }

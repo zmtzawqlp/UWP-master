@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UWP.ChartSample.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +26,19 @@ namespace UWP.ChartSample
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            switch (e.ClickedItem.ToString())
+            {
+
+                case "BasicsChart":
+                    Frame.Navigate(typeof(BasicsSamplePage));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
