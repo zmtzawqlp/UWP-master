@@ -9,16 +9,16 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
-        <chart:Chart x:Name="chart">
-            <chart:Chart.Series>
-                <chart:Series/>
-                <chart:Series/>
-                <chart:BubbleSeries/>
-            </chart:Chart.Series>
+        <chart:Chart x:Name="chart" ItemsSource="{Binding Data}">
+            <!--<chart:Chart.Data>-->
+                <chart:SeriesData>
+                    <chart:DataPointSeries DependentValueBinding="{Binding Price}" IndependentValueBinding="{Binding Name}"/>
+                </chart:SeriesData>
+            <!--</chart:Chart.Data>-->
 
-            <chart:Chart.Marker>
+            <!--<chart:Chart.Marker>
                 <chart:Marker  />
-            </chart:Chart.Marker>
+            </chart:Chart.Marker>-->
           
         </chart:Chart>
     </Grid>

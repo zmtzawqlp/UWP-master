@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UWP.Chart;
+using UWP.ChartSample.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -23,9 +24,14 @@ namespace UWP.ChartSample.Views
     /// </summary>
     public sealed partial class BasicsSamplePage : Page
     {
+        public BasicsSamplePageViewModel VM;
+
+
         public BasicsSamplePage()
         {
             this.InitializeComponent();
+            VM = new BasicsSamplePageViewModel();
+            DataContext = VM;      
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

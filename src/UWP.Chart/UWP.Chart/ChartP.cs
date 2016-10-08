@@ -12,7 +12,7 @@ using System.Collections;
 
 namespace UWP.Chart
 {
-    [ContentProperty(Name = nameof(Series))]
+    [ContentProperty(Name = nameof(Data))]
     public partial class Chart
     {
         #region Fields
@@ -23,7 +23,7 @@ namespace UWP.Chart
         private Axis _axis;
         private Legend _legend;
         private Marker _marker;
-        private SeriesCollection _series;
+
         #endregion
 
         #region Render
@@ -47,6 +47,8 @@ namespace UWP.Chart
                 return _view;
             }
         }
+
+        internal bool forceReCreateResources;
 
         #endregion
 
@@ -94,11 +96,6 @@ namespace UWP.Chart
             }
         }
 
-        public SeriesCollection Series
-        {
-            get { return _series; }
-        }
-
         public IChartRender Render
         {
             get
@@ -114,6 +111,15 @@ namespace UWP.Chart
                 _render = value;
             }
         }
+
+        private bool _autoGenerateSeries;
+
+        public bool AutoGenerateSeries
+        {
+            get { return _autoGenerateSeries; }
+            set { _autoGenerateSeries = value; }
+        }
+
 
         #endregion
 
@@ -164,6 +170,48 @@ namespace UWP.Chart
         public static readonly DependencyProperty ItemNamesProperty =
             DependencyProperty.Register("ItemNames", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null));
 
+
+
+        /// <summary>
+        /// It works when AutoItemSize is false.
+        /// every series item size(for example,ColumnSeries item default width is 20.)
+        /// </summary>
+        public double ItemSize
+        {
+            get { return (double)GetValue(ItemSizeProperty); }
+            set { SetValue(ItemSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ItemSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ItemSizeProperty =
+            DependencyProperty.Register("ItemSize", typeof(double), typeof(Chart), new PropertyMetadata(20.0));
+
+
+
+        /// <summary>
+        /// default value is true.
+        /// ItemSize = Actual Chart Size(Series area)(width/height) / Series data count
+        /// </summary>
+        public bool AutoItemSize
+        {
+            get { return (bool)GetValue(AutoItemSizeProperty); }
+            set { SetValue(AutoItemSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AutoItemSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AutoItemSizeProperty =
+            DependencyProperty.Register("AutoItemSize", typeof(bool), typeof(Chart), new PropertyMetadata(true));
+
+
+        public SeriesData Data
+        {
+            get { return (SeriesData)GetValue(DataProperty); }
+            set { SetValue(DataProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Data.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DataProperty =
+            DependencyProperty.Register("Data", typeof(SeriesData), typeof(Chart), new PropertyMetadata(null));
 
 
 

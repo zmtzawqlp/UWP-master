@@ -21,5 +21,10 @@ namespace UWP.Chart
         double[,] GetValues();
 
 
+        /// <summary>
+        /// Create data resource for draw
+        /// </summary>
+        void CreateDataResources();
+
     }
 }

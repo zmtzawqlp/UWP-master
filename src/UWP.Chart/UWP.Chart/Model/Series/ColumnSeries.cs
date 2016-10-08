@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UWP.Chart
 {
-    public class ColumnSeries: PointSeries
+    public class ColumnSeries: DataPointSeries
     {
     }
 }

@@ -120,12 +120,14 @@
     <Compile Include="Model\Series\ColumnSeries.cs" />
     <Compile Include="Model\Series\ISeries.cs" />
     <Compile Include="Model\Series\PieSeries.cs" />
+    <Compile Include="Model\Series\PointSeries.cs" />
+    <Compile Include="Model\Series\SeriesData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\IChartRender.cs" />
     <Compile Include="Render\ChartRender.cs" />
     <Compile Include="Model\Series\BubbleSeries.cs" />
     <Compile Include="Model\Series\SeriesCollection.cs" />
-    <Compile Include="Model\Series\PointSeries.cs" />
+    <Compile Include="Model\Series\DataPointSeries.cs" />
     <Compile Include="Model\Series\Series.cs" />
     <Compile Include="Util\DataUtils.cs" />
     <Compile Include="Util\Extensions.cs" />

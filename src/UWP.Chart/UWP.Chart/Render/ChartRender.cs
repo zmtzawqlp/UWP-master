@@ -31,7 +31,7 @@ namespace UWP.Chart.Render
 
         public virtual void OnDrawSeries(Chart chart, CanvasDrawingSession cds)
         {
-            foreach (var series in chart.Series)
+            foreach (var series in chart.Data.Children)
             {
                 if (series.CanDraw)
                 {
