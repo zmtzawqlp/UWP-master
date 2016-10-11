@@ -14,8 +14,35 @@ namespace UWP.Chart
         #region Fields
         private SeriesCollection _children;
         #endregion
-        #region Public Properties
 
+        #region internal Properties
+        public override bool CanDraw
+        {
+            get
+            {
+                return base.CanDraw && Children.Count > 0;
+            }
+        }
+
+        internal override Chart Chart
+        {
+            get
+            {
+                return base.Chart;
+            }
+
+            set
+            {
+                base.Chart = value;
+                foreach (var item in Children)
+                {
+                    item.Chart = base.Chart;
+                }
+            }
+        }
+        #endregion
+
+        #region Public Properties
         public SeriesCollection Children
         {
             get
@@ -23,11 +50,43 @@ namespace UWP.Chart
                 if (_children == null)
                 {
                     _children = new SeriesCollection();
+                    _children.CollectionChanged += _children_CollectionChanged;
                 }
                 return _children;
             }
         }
+
+        private void _children_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    foreach (Series item in e.NewItems)
+                    {
+                        item.Chart = Chart;
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    foreach (Series item in e.OldItems)
+                    {
+                        item.Chart = null;
+                        //todo
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                    break;
+                default:
+                    break;
+            }
+        }
         #endregion
+
+        //internal SeriesData(Chart chart)
+        //{
+        //    _chart = chart;
+        //}
 
     }
 }

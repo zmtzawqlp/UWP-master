@@ -26,6 +26,7 @@ namespace UWP.Chart
 
         #region Internal Property
         internal static double NullValue = double.NaN;
+
         #endregion
 
         #region Public Property

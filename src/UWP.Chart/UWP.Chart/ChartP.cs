@@ -125,29 +125,6 @@ namespace UWP.Chart
 
         #region DP
 
-
-        /// <summary>
-        /// set it true if datas are changing frequently, so that don't need to call Chart's Invalidate method whenever datas are changed.
-        /// </summary>
-        public bool ForceRedrawn
-        {
-            get { return (bool)GetValue(ForceRedrawnProperty); }
-            set { SetValue(ForceRedrawnProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for ForceRedrawn.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ForceRedrawnProperty =
-            DependencyProperty.Register("ForceRedrawn", typeof(bool), typeof(Chart), new PropertyMetadata(false, new PropertyChangedCallback(OnForceRedrawnChanged)));
-
-        private static void OnForceRedrawnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var chart = (d as Chart);
-            if (chart.ForceRedrawn)
-            {
-                (d as Chart).Invalidate();
-            }
-        }
-
         public IEnumerable ItemsSource
         {
             get { return (IEnumerable)GetValue(ItemsSourceProperty); }
@@ -211,7 +188,16 @@ namespace UWP.Chart
 
         // Using a DependencyProperty as the backing store for Data.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DataProperty =
-            DependencyProperty.Register("Data", typeof(SeriesData), typeof(Chart), new PropertyMetadata(null));
+            DependencyProperty.Register("Data", typeof(SeriesData), typeof(Chart), new PropertyMetadata(null, new PropertyChangedCallback(OnDataChanged)));
+
+        private static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var chart = d as Chart;
+            if (chart.Data != null)
+            {
+                chart.Data.Chart = chart;
+            }
+        }
 
 
 

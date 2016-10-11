@@ -4,13 +4,32 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 
 namespace UWP.Chart.Common
 {
     public abstract class ModelBase : BindableBase
     {
-        public bool CanDraw
+
+        #region Fields
+        private Chart _chart;
+        #endregion
+
+
+        #region Properties
+
+        internal virtual Chart Chart
+        {
+            get { return _chart; }
+            set
+            {
+                _chart = value;
+                OnPropertyChanged("CropRect");
+            }
+        }
+
+        public virtual bool CanDraw
         {
             get
             {
@@ -18,6 +37,21 @@ namespace UWP.Chart.Common
             }
         }
 
+        private Rect _cropRect;
+
+        /// <summary>
+        /// Gets the crop rectangle that defines model.
+        /// </summary>
+        public virtual Rect CropRect
+        {
+            get { return _cropRect; }
+        }
+
+
+        public double Size { get; set; }
+        #endregion
+
+        #region DP
         public Visibility Visibility
         {
             get { return (Visibility)GetValue(VisibilityProperty); }
@@ -27,19 +61,8 @@ namespace UWP.Chart.Common
         // Using a DependencyProperty as the backing store for Visibility.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty VisibilityProperty =
             DependencyProperty.Register("Visibility", typeof(Visibility), typeof(ModelBase), new PropertyMetadata(Visibility.Visible, new PropertyChangedCallback(OnDependencyPropertyChangedToInvalidate)));
+        #endregion
 
-
-        private Chart _chart;
-
-        internal Chart Chart
-        {
-            get { return _chart; }
-            set
-            {
-                _chart = value;
-                //OnPropertyChanged();
-            }
-        }
 
         #region OnPropertyChangedToInvalidate
 

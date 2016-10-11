@@ -48,32 +48,6 @@ namespace UWP.Chart
             //_marker = new Marker();
         }
 
-        private void _series_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    foreach (Series item in e.NewItems)
-                    {
-                        item.Chart = this;
-                    }
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    foreach (Series item in e.OldItems)
-                    {
-                        item.Chart = null;
-                        //todo
-                    }
-                    break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                    break;
-                default:
-                    break;
-            }
-        }
-
         private void Chart_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             //Dispose();
@@ -88,6 +62,7 @@ namespace UWP.Chart
         {
 
         }
+
         #endregion
 
         #region View
@@ -100,10 +75,6 @@ namespace UWP.Chart
                     OnDraw(cds);
                 }
                 args.DrawingSession.DrawImage(cl);
-            }
-            if (ForceRedrawn)
-            {
-                _view.Invalidate();
             }
         }
 
@@ -133,133 +104,32 @@ namespace UWP.Chart
 
         private void _view_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            CreateResources();
+            CreateDataResources();
         }
 
 
-        private void CreateResources()
+        private void CreateDataResources()
         {
-            if (Data.Children.Count > 0)
+            if (Data!=null)
             {
                 foreach (ISeries item in Data.Children)
                 {
                     item.CreateDataResources();
                 }
             }
-            //else if (ItemsSource != null)
-            //{
-            //    IEnumerable list = ItemsSource as IEnumerable;
-
-            //    if (list == null)
-            //    {
-            //        list = DataContext as IEnumerable;
-            //    }
-
-            //    if (list != null)
-            //    {
-            //        DataBindingHelper.AutoCreateSeries(this, list);
-
-            //        List<object> names = null;
-            //        BindingBase bndName = Data.ItemNameBinding;
-
-            //        if (bndName == null && Bindings != null)
-            //            bndName = Bindings.ItemNameBinding;
-
-            //        if (bndName != null && Data.ItemNames == null)
-            //            names = new List<object>();
-
-            //        int nser = Data.Children.Count;
-            //        Dictionary<IDataSeriesInfo, BindingBase[]> dict =
-            //            new Dictionary<IDataSeriesInfo, BindingBase[]>();
-            //        int lcnt = 0;
-
-            //        for (int i = 0; i < nser; i++)
-            //        {
-            //            IDataSeriesInfo sinfo = Data.Children[i];
-            //            BindingBase[] paths = sinfo.MemberPaths;
-
-            //            if (paths != null)
-            //            {
-            //                if (Data.Children[i].ItemsSource == null)
-            //                {
-            //                    dict.Add(sinfo, paths);
-            //                    lcnt += paths.Length;
-            //                }
-            //            }
-            //        }
-
-            //        IEnumerator en = list.GetEnumerator();
-
-            //        DataUtils.TryReset(en);
-            //        List<object>[] als = new List<object>[lcnt];
-            //        int l = 0;
-            //        for (l = 0; l < als.Length; l++)
-            //            als[l] = new List<object>();
-
-            //        DataBindingProxy dbp = new DataBindingProxy();
-
-            //        // todo handle IList's
-            //        while (en.MoveNext())
-            //        {
-            //            object current = en.Current;
-            //            l = 0;
-
-            //            dbp.DataContext = current;
-
-            //            // item names
-            //            if (names != null)
-            //                names.Add(dbp.GetValue(bndName));
-
-            //            foreach (KeyValuePair<IDataSeriesInfo, BindingBase[]> pair in dict)
-            //            {
-            //                BindingBase[] bnds = pair.Value;
-
-            //                for (int ib = 0; ib < bnds.Length; ib++)
-            //                {
-            //                    if (bnds[ib] != null)
-            //                        als[l++].Add(dbp.GetValue(bnds[ib]));
-            //                }
-            //            }
-            //            // release data context
-            //            dbp.DataContext = null;
-
-            //            if (current is INotifyPropertyChanged)
-            //                AddINP((INotifyPropertyChanged)current);
-            //        }
-
-            //        l = 0;
-            //        foreach (KeyValuePair<IDataSeriesInfo, BindingBase[]> pair in dict)
-            //        {
-            //            BindingBase[] bnds = pair.Value;
-            //            for (int ib = 0; ib < bnds.Length; ib++)
-            //            {
-            //                if (bnds[ib] != null)
-            //                    pair.Key.SetResolvedValues(ib, als[l++].ToArray());
-            //            }
-            //        }
-
-            //        if (names != null && names.Count > 0)
-            //            Data.ItemNamesInternal = names.ToArray();
-            //    }
-
-            //    Data.Aggregate = Aggregate;
-            //    for (int i = 0; i < Data.Children.Count; i++)
-            //    {
-            //        DataSeries ds = Data.Children[i];
-            //        if (ds.ItemsSource != null)
-            //            ds.PerformBinding(AddINP);
-            //        renderer.AddSeries(ds);
-            //    }
-            //}
-
         }
+        #endregion
+
+        #region Internal Methods
+
+      
         #endregion
 
         #region Public Methods
         //Indicates that the contents of the Chart need to be redrawn. 
         public void Invalidate()
         {
-            CreateResources();
+            CreateDataResources();
             if (_view != null)
             {
                 _view.Invalidate();
