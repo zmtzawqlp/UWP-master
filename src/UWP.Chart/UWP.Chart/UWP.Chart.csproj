@@ -111,9 +111,13 @@
     <Compile Include="ChartP.cs" />
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BindingFE.cs" />
+    <Compile Include="Common\FrameworkElementBase.cs" />
+    <Compile Include="Common\IFrameworkElement.cs" />
     <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Model\Axis.cs" />
+    <Compile Include="Model\Axes\Axes.cs" />
+    <Compile Include="Model\Axes\Axis.cs" />
+    <Compile Include="Model\Axes\AxisCollection.cs" />
     <Compile Include="Model\Legend.cs" />
     <Compile Include="Model\Marker.cs" />
     <Compile Include="Model\Series\BarSeries.cs" />

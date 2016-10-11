@@ -9,22 +9,18 @@ using Windows.UI.Xaml.Markup;
 
 namespace UWP.Chart
 {
+    /// <summary>
+    /// Axes style properties
+    /// contains Axis x/y etc 
+    /// </summary>
     [ContentProperty(Name = nameof(Children))]
-    public class SeriesData : FrameworkElementBase, IFrameworkElement
+    public class Axes : ModelBase
     {
         #region Fields
-        private SeriesCollection _children;
+        private AxisCollection _children;
         #endregion
 
         #region Internal Property
-        public override bool CanDraw
-        {
-            get
-            {
-                return base.CanDraw && Children.Count > 0;
-            }
-        }
-
         internal override Chart Chart
         {
             get
@@ -41,41 +37,50 @@ namespace UWP.Chart
                 }
             }
         }
-        #endregion
 
-        public SeriesData()
+        internal List<Axis> AxisX
         {
-            Width = new GridLength(1, GridUnitType.Star);
-            Height = new GridLength(1, GridUnitType.Star);
+            get
+            {
+                return Children.Where(x => x.AxisType == AxisType.X).ToList();
+            }
         }
 
-        #region Public Properties
-        public SeriesCollection Children
+        internal List<Axis> AxisY
+        {
+            get
+            {
+                return Children.Where(x => x.AxisType == AxisType.Y).ToList();
+            }
+        }
+        #endregion
+
+        #region Public Property
+        public AxisCollection Children
         {
             get
             {
                 if (_children == null)
                 {
-                    _children = new SeriesCollection();
+                    _children = new AxisCollection();
+                    _children.CollectionChanged -= _children_CollectionChanged;
                     _children.CollectionChanged += _children_CollectionChanged;
                 }
                 return _children;
             }
         }
-
         #endregion
 
-        //internal SeriesData(Chart chart)
-        //{
-        //    _chart = chart;
-        //}
+        #region Dependency Property
+
+        #endregion
 
         private void _children_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    foreach (Series item in e.NewItems)
+                    foreach (Axis item in e.NewItems)
                     {
                         item.Chart = Chart;
                     }
@@ -83,7 +88,7 @@ namespace UWP.Chart
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-                    foreach (Series item in e.OldItems)
+                    foreach (Axis item in e.OldItems)
                     {
                         item.Chart = null;
                         //todo

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UWP.Chart.Common;
 
 namespace UWP.Chart
 {
-    /// <summary>
-    /// Axis style properties
-    /// </summary>
-    public class Axis: ModelBase
+    public class AxisCollection: ObservableCollection<Axis>
     {
-
     }
 }

@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UWP.Chart.Common;
 using UWP.Chart.Render;
+using Windows.Foundation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 
@@ -33,7 +36,131 @@ namespace UWP.Chart
             _rootGrid = GetTemplateChild("RootGrid") as Grid;
             base.OnApplyTemplate();
             CreateCanvas();
+
         }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return base.MeasureOverride(availableSize);
+        }
+
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            ArrangeChilden(finalSize);
+            return base.ArrangeOverride(finalSize);
+        }
+
+        void ArrangeChilden(Size finalSize)
+        {
+            Rect axesRectX = Rect.Empty;
+            Rect axesRectY = Rect.Empty;
+            Rect seriesRect = Rect.Empty;
+            Rect legendRect = Rect.Empty;
+
+            List<FrameworkElementBase> listX = new List<FrameworkElementBase>();
+            List<FrameworkElementBase> listY = new List<FrameworkElementBase>();
+
+            if (Legend != null && Legend.CanDraw)
+            {
+                switch (Legend.Position)
+                {
+                    case LegendPosition.Left:
+                    case LegendPosition.Right:
+                        listX.Add(Legend);
+                        break;
+                    case LegendPosition.Top:
+                    case LegendPosition.Bottom:
+                        listY.Add(Legend);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (Axes != null && Axes.CanDraw)
+            {
+                if (Axes.AxisX.Count > 0)
+                {
+                    listX.AddRange(Axes.AxisX);
+                }
+
+                if (Axes.AxisY.Count > 0)
+                {
+                    listY.AddRange(Axes.AxisY);
+                }
+            }
+
+            if (Data != null)
+            {
+                listX.Add(Data);
+                listY.Add(Data);
+            }
+
+            double startCount = 0;
+
+            double requiredSize = 0;
+
+            foreach (var item in listX)
+            {
+                if (item.Width.IsStar)
+                {
+                    startCount += item.Width.Value;
+                }
+                else
+                {
+                    requiredSize += item.Width.Value;
+                    item._actualWidth = item.Width.Value;
+                }
+            }
+
+            if (startCount > 0)
+            {
+                var totalSize = finalSize.Width - requiredSize;
+                var starValue = totalSize > 0 ? totalSize / startCount : 0;
+
+                foreach (var item in listX)
+                {
+                    if (item.Width.IsStar)
+                    {
+                        item._actualWidth = starValue * item.Width.Value;
+                    }
+                }
+            }
+
+            startCount = 0;
+
+            requiredSize = 0;
+
+            foreach (var item in listY)
+            {
+                if (item.Height.IsStar)
+                {
+                    startCount += item.Height.Value;
+                }
+                else
+                {
+                    requiredSize += item.Height.Value;
+                    item._actualHeight = item.Height.Value;
+                }
+            }
+
+            if (startCount > 0)
+            {
+                var totalSize = finalSize.Height - requiredSize;
+                var starValue = totalSize > 0 ? totalSize / startCount : 0;
+
+                foreach (var item in listY)
+                {
+                    if (item.Height.IsStar)
+                    {
+                        item._actualHeight = starValue * item.Height.Value;
+                    }
+                }
+            }
+
+        }
+
         #endregion
 
         #region Private Method
@@ -80,7 +207,7 @@ namespace UWP.Chart
 
         private void OnDraw(CanvasDrawingSession cds)
         {
-            if (Axis != null && Axis.CanDraw)
+            if (Axes != null && Axes.CanDraw)
             {
                 Render.OnDrawAxis(this, cds);
             }
@@ -108,21 +235,25 @@ namespace UWP.Chart
         }
 
 
+        /// <summary>
+        /// Create data mode for render
+        /// </summary>
         private void CreateDataResources()
         {
-            if (Data!=null)
+            if (Data != null)
             {
                 foreach (ISeries item in Data.Children)
                 {
                     item.CreateDataResources();
                 }
             }
+
         }
         #endregion
 
         #region Internal Methods
 
-      
+
         #endregion
 
         #region Public Methods
@@ -161,6 +292,28 @@ namespace UWP.Chart
                 _view.RemoveFromVisualTree();
                 _view = null;
             }
+        }
+        #endregion
+
+        #region PropertyChanged
+        internal static void OnDependencyPropertyChangedToInvalidate(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            //if (e.Property.ToString() == "VisibilityProperty")
+            {
+
+                var chart = d as Chart;
+                if (e.Property == DataProperty)
+                {
+                    chart.Data.Chart = chart;
+                }
+
+                chart.Invalidate();
+            }
+        }
+
+        internal void OnPropertyChangedToInvalidate()
+        {
+            Invalidate();
         }
         #endregion
 

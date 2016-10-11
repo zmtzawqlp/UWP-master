@@ -15,20 +15,20 @@ namespace UWP.Chart
     {
         #region Public Property
         /// <summary>
-        /// Gets or sets the Binding to use for identifying the independent value.
+        /// Gets or sets the Binding to use for identifying the independent(x) value.
         /// </summary>
-        public Binding IndependentValueBinding
+        public Binding XValueBinding
         {
             get
             {
-                return _independentValueBinding;
+                return _xValueBinding;
             }
             set
             {
-                if (_independentValueBinding != value)
+                if (_xValueBinding != value)
                 {
-                    _independentValueBinding = value;
-                    OnPropertyChanged("IndependentValueBinding");
+                    _xValueBinding = value;
+                    OnPropertyChanged("XValueBinding");
                 }
             }
         }
@@ -36,26 +36,26 @@ namespace UWP.Chart
         /// <summary>
         /// The binding used to identify the independent value binding.
         /// </summary>
-        private Binding _independentValueBinding;
+        private Binding _xValueBinding;
 
         /// <summary>
-        /// Gets or sets the Binding Path to use for identifying the independent value.
+        /// Gets or sets the Binding Path to use for identifying the independent(x) value.
         /// </summary>
-        public string IndependentValuePath
+        public string XValuePath
         {
             get
             {
-                return (null != IndependentValueBinding) ? IndependentValueBinding.Path.Path : null;
+                return (null != XValueBinding) ? XValueBinding.Path.Path : null;
             }
             set
             {
                 if (null == value)
                 {
-                    IndependentValueBinding = null;
+                    XValueBinding = null;
                 }
                 else
                 {
-                    IndependentValueBinding = new Binding() { Path = new PropertyPath(value) };
+                    XValueBinding = new Binding() { Path = new PropertyPath(value) };
                 }
             }
         }

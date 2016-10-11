@@ -20,7 +20,7 @@ namespace UWP.Chart
         private Grid _rootGrid;
 
         #region Model
-        private Axis _axis;
+        private Axes _axes;
         private Legend _legend;
         private Marker _marker;
 
@@ -33,7 +33,7 @@ namespace UWP.Chart
 
         #endregion
 
-        #region Internal properties
+        #region Internal Property
         internal CanvasControl View
         {
             get
@@ -49,14 +49,13 @@ namespace UWP.Chart
         }
 
         internal bool forceReCreateResources;
-
         #endregion
 
-        #region Public properties
+        #region Public Property
 
-        public Axis Axis
+        public Axes Axes
         {
-            get { return _axis; }
+            get { return _axes; }
 
             set
             {
@@ -64,7 +63,7 @@ namespace UWP.Chart
                 {
                     value.Chart = this;
                 }
-                _axis = value;
+                _axes = value;
             }
         }
 
@@ -78,7 +77,6 @@ namespace UWP.Chart
                     value.Chart = this;
                 }
                 _legend = value;
-
             }
         }
 
@@ -123,7 +121,7 @@ namespace UWP.Chart
 
         #endregion
 
-        #region DP
+        #region Dependency Property
 
         public IEnumerable ItemsSource
         {
@@ -133,7 +131,7 @@ namespace UWP.Chart
 
         // Using a DependencyProperty as the backing store for ItemsSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null));
+            DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChangedToInvalidate));
 
 
 
@@ -145,13 +143,14 @@ namespace UWP.Chart
 
         // Using a DependencyProperty as the backing store for ItemNames.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemNamesProperty =
-            DependencyProperty.Register("ItemNames", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null));
+            DependencyProperty.Register("ItemNames", typeof(IEnumerable), typeof(Chart), new PropertyMetadata(null, OnDependencyPropertyChangedToInvalidate));
 
 
 
         /// <summary>
-        /// It works when AutoItemSize is false.
-        /// every series item size(for example,ColumnSeries item default width is 20.)
+        /// It works when it is not double.NaN or more than zero.
+        /// every series item size(for example,ColumnSeries item default width is double.NaN.)
+        /// when It is not a available value, ItemSize = Actual Chart Size(Series area)(width/height) / Series data count
         /// </summary>
         public double ItemSize
         {
@@ -161,23 +160,8 @@ namespace UWP.Chart
 
         // Using a DependencyProperty as the backing store for ItemSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemSizeProperty =
-            DependencyProperty.Register("ItemSize", typeof(double), typeof(Chart), new PropertyMetadata(20.0));
+            DependencyProperty.Register("ItemSize", typeof(double), typeof(Chart), new PropertyMetadata(double.NaN, OnDependencyPropertyChangedToInvalidate));
 
-
-
-        /// <summary>
-        /// default value is true.
-        /// ItemSize = Actual Chart Size(Series area)(width/height) / Series data count
-        /// </summary>
-        public bool AutoItemSize
-        {
-            get { return (bool)GetValue(AutoItemSizeProperty); }
-            set { SetValue(AutoItemSizeProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for AutoItemSize.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty AutoItemSizeProperty =
-            DependencyProperty.Register("AutoItemSize", typeof(bool), typeof(Chart), new PropertyMetadata(true));
 
 
         public SeriesData Data
@@ -188,18 +172,7 @@ namespace UWP.Chart
 
         // Using a DependencyProperty as the backing store for Data.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DataProperty =
-            DependencyProperty.Register("Data", typeof(SeriesData), typeof(Chart), new PropertyMetadata(null, new PropertyChangedCallback(OnDataChanged)));
-
-        private static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var chart = d as Chart;
-            if (chart.Data != null)
-            {
-                chart.Data.Chart = chart;
-            }
-        }
-
-
+            DependencyProperty.Register("Data", typeof(SeriesData), typeof(Chart), new PropertyMetadata(null, new PropertyChangedCallback(OnDependencyPropertyChangedToInvalidate)));
 
         #endregion
     }

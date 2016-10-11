@@ -11,15 +11,24 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
         <chart:Chart x:Name="chart" ItemsSource="{Binding Data}">
             <!--<chart:Chart.Data>-->
-                <chart:SeriesData>
-                    <chart:DataPointSeries DependentValueBinding="{Binding Price}" IndependentValueBinding="{Binding Name}"/>
-                </chart:SeriesData>
+            <chart:SeriesData>
+                <chart:DataPointSeries ValueBinding="{Binding Price}" XValueBinding="{Binding Name}"/>
+            </chart:SeriesData>
             <!--</chart:Chart.Data>-->
-
+            <chart:Chart.Axes>
+                <chart:Axes>
+                    <!--<chart:Axis AxisType="X" Title="I'm X."/>-->
+                    <chart:Axis AxisType="Y" Title="I'm Y."/>
+                </chart:Axes>
+            </chart:Chart.Axes>
+            <chart:Chart.Legend>
+                <chart:Legend Position="Right">
+                </chart:Legend>
+            </chart:Chart.Legend>
             <!--<chart:Chart.Marker>
                 <chart:Marker  />
             </chart:Chart.Marker>-->
-          
+
         </chart:Chart>
     </Grid>
 </Page>

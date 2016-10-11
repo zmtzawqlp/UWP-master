@@ -32,4 +32,27 @@ namespace UWP.Chart
         Y
     }
 
+    /// <summary>
+    /// Specifies legend position relative to Series.
+    /// </summary>
+    public enum LegendPosition
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
+
+    public enum AxisType
+    {
+        /// <summary>
+        /// X
+        /// </summary>
+        X,
+        /// <summary>
+        /// Y
+        /// </summary>
+        Y
+    }
+
 }

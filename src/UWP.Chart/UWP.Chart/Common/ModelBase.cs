@@ -16,7 +16,6 @@ namespace UWP.Chart.Common
         private Chart _chart;
         #endregion
 
-
         #region Properties
 
         internal virtual Chart Chart
@@ -37,18 +36,7 @@ namespace UWP.Chart.Common
             }
         }
 
-        private Rect _cropRect;
-
-        /// <summary>
-        /// Gets the crop rectangle that defines model.
-        /// </summary>
-        public virtual Rect CropRect
-        {
-            get { return _cropRect; }
-        }
-
-
-        public double Size { get; set; }
+      
         #endregion
 
         #region DP
@@ -62,7 +50,6 @@ namespace UWP.Chart.Common
         public static readonly DependencyProperty VisibilityProperty =
             DependencyProperty.Register("Visibility", typeof(Visibility), typeof(ModelBase), new PropertyMetadata(Visibility.Visible, new PropertyChangedCallback(OnDependencyPropertyChangedToInvalidate)));
         #endregion
-
 
         #region OnPropertyChangedToInvalidate
 

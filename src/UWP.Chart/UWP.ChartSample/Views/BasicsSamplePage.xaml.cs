@@ -32,6 +32,7 @@ namespace UWP.ChartSample.Views
             this.InitializeComponent();
             VM = new BasicsSamplePageViewModel();
             DataContext = VM;      
+            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
