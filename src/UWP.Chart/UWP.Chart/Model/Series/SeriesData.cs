@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Markup;
 namespace UWP.Chart
 {
     [ContentProperty(Name = nameof(Children))]
-    public class SeriesData : FrameworkElementBase, IFrameworkElement
+    public class SeriesData : FrameworkElementBase
     {
         #region Fields
         private SeriesCollection _children;

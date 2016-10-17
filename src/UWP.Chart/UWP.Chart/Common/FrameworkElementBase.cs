@@ -49,7 +49,7 @@ namespace UWP.Chart.Common
 
         // Using a DependencyProperty as the backing store for Width.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty WidthProperty =
-            DependencyProperty.Register("Width", typeof(GridLength), typeof(FrameworkElementBase), new PropertyMetadata(new GridLength(20), OnDependencyPropertyChangedToInvalidate));
+            DependencyProperty.Register("Width", typeof(GridLength), typeof(FrameworkElementBase), new PropertyMetadata(new GridLength(50), OnDependencyPropertyChangedToInvalidate));
 
         public GridLength Height
         {
@@ -59,7 +59,7 @@ namespace UWP.Chart.Common
 
         // Using a DependencyProperty as the backing store for Height.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeightProperty =
-            DependencyProperty.Register("Height", typeof(GridLength), typeof(FrameworkElementBase), new PropertyMetadata(new GridLength(20), OnDependencyPropertyChangedToInvalidate));
+            DependencyProperty.Register("Height", typeof(GridLength), typeof(FrameworkElementBase), new PropertyMetadata(new GridLength(50), OnDependencyPropertyChangedToInvalidate));
 
         #endregion
 

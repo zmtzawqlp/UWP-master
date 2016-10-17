@@ -42,7 +42,7 @@ namespace UWP.Chart
         {
             get
             {
-                return Children.Where(x => x.AxisType == AxisType.X).ToList();
+                return Children.Where(x => x.AxisType == AxisType.X && x.CanDraw).ToList();
             }
         }
 
@@ -50,7 +50,51 @@ namespace UWP.Chart
         {
             get
             {
-                return Children.Where(x => x.AxisType == AxisType.Y).ToList();
+                return Children.Where(x => x.AxisType == AxisType.Y && x.CanDraw).ToList();
+            }
+        }
+
+        internal Axis PrimaryAxisX
+        {
+            get
+            {
+                if (AxisX.Count == 0)
+                {
+                    return null;
+                }
+
+                var primary = AxisX.FirstOrDefault(x => x.Primary);
+                if (primary == null)
+                {
+                    primary = AxisX.FirstOrDefault(x => x.CanDraw);
+                }
+                if (primary != null)
+                {
+                    primary.Primary = true;
+                }
+                return primary;
+            }
+        }
+
+        internal Axis PrimaryAxisY
+        {
+            get
+            {
+                if (AxisY.Count == 0)
+                {
+                    return null;
+                }
+
+                var primary = AxisY.FirstOrDefault(x => x.Primary);
+                if (primary == null)
+                {
+                    primary = AxisY.FirstOrDefault(x => x.CanDraw);
+                }
+                if (primary != null)
+                {
+                    primary.Primary = true;
+                }
+                return primary;
             }
         }
         #endregion

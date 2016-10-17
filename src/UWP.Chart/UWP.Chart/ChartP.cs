@@ -9,6 +9,7 @@ using Windows.UI.Xaml;
 using UWP.Chart.Render;
 using Windows.UI.Xaml.Markup;
 using System.Collections;
+using Windows.Foundation;
 
 namespace UWP.Chart
 {
@@ -18,7 +19,8 @@ namespace UWP.Chart
         #region Fields
         private CanvasControl _view;
         private Grid _rootGrid;
-
+        private Size preViewSize = Size.Empty;
+       
         #region Model
         private Axes _axes;
         private Legend _legend;
@@ -48,7 +50,61 @@ namespace UWP.Chart
             }
         }
 
+        internal bool LegendCanDraw
+        {
+            get
+            {
+                if (Legend == null)
+                {
+                    return false;
+                }
+                return Legend.CanDraw;
+            }
+        }
+
+        internal bool DataCanDraw
+        {
+            get
+            {
+                if (Data == null)
+                {
+                    return false;
+                }
+
+                var canDraw = Data.Children.FirstOrDefault(x => x.CanDraw);
+
+                return (Data.CanDraw && canDraw != null);
+            }
+        }
+
+        internal bool AxesCanDraw
+        {
+            get
+            {
+                if (Axes == null)
+                {
+                    return false;
+                }
+                var canDraw = Axes.Children.FirstOrDefault(x => x.CanDraw);
+
+                return (Axes.CanDraw && canDraw != null);
+            }
+        }
+
+        internal bool MarkerCanDraw
+        {
+            get
+            {
+                if (Marker == null)
+                {
+                    return false;
+                }
+                return Marker.CanDraw;
+            }
+        }
+
         internal bool forceReCreateResources;
+
         #endregion
 
         #region Public Property

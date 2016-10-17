@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 
 namespace UWP.Chart
 {
-    public class Axis : FrameworkElementBase, IFrameworkElement
+    public class Axis : FrameworkElementBase
     {
 
         #region Internal Property
@@ -62,6 +62,20 @@ namespace UWP.Chart
         // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(Axis), new PropertyMetadata(null, OnDependencyPropertyChangedToInvalidate));
+
+
+
+
+        public bool Primary
+        {
+            get { return (bool)GetValue(PrimaryProperty); }
+            set { SetValue(PrimaryProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Primary.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PrimaryProperty =
+            DependencyProperty.Register("Primary", typeof(bool), typeof(Axis), new PropertyMetadata(false, OnDependencyPropertyChangedToInvalidate));
+
 
         #endregion
 

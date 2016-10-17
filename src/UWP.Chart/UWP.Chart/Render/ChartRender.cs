@@ -14,23 +14,40 @@ namespace UWP.Chart.Render
     /// </summary>
     public class ChartRender : IChartRender
     {
+
+        #region Axis
         public virtual void OnDrawAxis(Chart chart, CanvasDrawingSession cds)
         {
+            foreach (var item in chart.Axes.Children)
+            {
+                cds.FillRectangle(item.CropRect, Colors.Blue);
 
+            }
         }
+        #endregion
 
+
+        #region Legend
         public virtual void OnDrawLegend(Chart chart, CanvasDrawingSession cds)
         {
-
+            cds.FillRectangle(chart.Legend.CropRect, Colors.Yellow);
         }
 
+        #endregion
+
+        #region Marker
         public virtual void OnDrawMarker(Chart chart, CanvasDrawingSession cds)
         {
 
         }
+        #endregion
 
+
+        #region Series
         public virtual void OnDrawSeries(Chart chart, CanvasDrawingSession cds)
         {
+            cds.FillRectangle(chart.Data.CropRect, Colors.Red);
+
             foreach (var series in chart.Data.Children)
             {
                 if (series.CanDraw)
@@ -39,5 +56,8 @@ namespace UWP.Chart.Render
                 }
             }
         }
+        #endregion
+
+
     }
 }

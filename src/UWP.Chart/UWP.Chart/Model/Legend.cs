@@ -12,7 +12,7 @@ namespace UWP.Chart
     /// <summary>
     /// Legend style properties
     /// </summary>
-    public class Legend : FrameworkElementBase, IFrameworkElement
+    public class Legend : FrameworkElementBase
     {
 
         #region Internal Property
@@ -64,7 +64,8 @@ namespace UWP.Chart
 
         public Legend()
         {
-
+            Width = new GridLength(100);
+            Height = new GridLength(100);
         }
     }
 }
