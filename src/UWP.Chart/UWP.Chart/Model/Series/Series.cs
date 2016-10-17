@@ -22,11 +22,54 @@ namespace UWP.Chart
         protected double[,] values = null, previousValues = null;
         protected List<object> dependentValues = new List<object>();
         protected bool[] isTimeValues;
+        private Axis _axisX;
+        private Axis _axisY;
+        private List<SeriesItem> _items;
         #endregion
 
         #region Internal Property
         internal static double NullValue = double.NaN;
 
+        internal Axis AxisX
+        {
+            get
+            {
+                //if no axisX,use default
+                if (_axisX == null)
+                {
+                    _axisX = new Axis() { AxisType = AxisType.X };
+                }
+
+                return _axisX;
+            }
+            set { _axisX = value; }
+        }
+
+        internal Axis AxisY
+        {
+            get
+            {
+                //if no axisY,use default
+                if (_axisY == null)
+                {
+                    _axisY = new Axis() { AxisType = AxisType.Y };
+                }
+                return _axisY;
+            }
+            set { _axisY = value; }
+        }
+
+        internal List<SeriesItem> Items
+        {
+            get
+            {
+                if (_items == null)
+                {
+                    _items = new List<SeriesItem>();
+                }
+                return _items;
+            }
+        }
         #endregion
 
         #region Public Property
@@ -139,7 +182,6 @@ namespace UWP.Chart
 
         #endregion
 
-
         #region ISeries
 
         string[] ISeries.GetItemNames()
@@ -154,6 +196,7 @@ namespace UWP.Chart
 
         void ISeries.CreateDataResources()
         {
+            Items.Clear();
             CreateDataResources();
         }
 

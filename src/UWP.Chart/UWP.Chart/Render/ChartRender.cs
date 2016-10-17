@@ -42,7 +42,6 @@ namespace UWP.Chart.Render
         }
         #endregion
 
-
         #region Series
         public virtual void OnDrawSeries(Chart chart, CanvasDrawingSession cds)
         {

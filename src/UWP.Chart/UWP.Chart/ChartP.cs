@@ -103,8 +103,8 @@ namespace UWP.Chart
             }
         }
 
-        internal bool forceReCreateResources;
-
+        internal bool forceCreateDataResources;
+        internal bool forceArrangeChildren;
         #endregion
 
         #region Public Property

@@ -57,7 +57,7 @@ namespace UWP.Chart
         #region Private Method
         private void InitializeComponent()
         {
-            forceReCreateResources = true;
+            forceCreateDataResources = true;
             _defaultRender = new ChartRender();
             Data = new SeriesData();
             //_data.CollectionChanged += _series_CollectionChanged;
@@ -77,17 +77,14 @@ namespace UWP.Chart
         }
 
 
-        internal void ArrangeChilden()
+        private void ArrangeChildenLayout(bool forceArrangeChildenLayout = false)
         {
-            if (_view != null)
+            if (_view == null)
             {
-                ArrangeChilden(_view.Size, true);
+                return;
             }
-        }
-
-        private void ArrangeChilden(Size finalSize, bool forceArrangeChilden = false)
-        {
-            if (finalSize == preViewSize && !forceArrangeChilden)
+            var finalSize = _view.Size;
+            if (finalSize == preViewSize && !forceArrangeChildenLayout)
             {
                 return;
             }
@@ -545,7 +542,7 @@ namespace UWP.Chart
         private void _view_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
         {
 
-            ArrangeChilden(_view.Size);
+            ArrangeChildenLayout(false);
 
             using (CanvasCommandList cl = new CanvasCommandList(sender))
             {
@@ -605,18 +602,22 @@ namespace UWP.Chart
         #region Internal Methods
 
 
+
         #endregion
 
         #region Public Methods
-        //Indicates that the contents of the Chart need to be redrawn. 
-        public void Invalidate()
+        /// <summary>
+        /// if arrangeChildenLayout =false, may be Chart Size is not changed, so we don't need to arrange children layout
+        /// if arrangeChildenLayout =true, Chart Size is changing, we need to re-arrange children layout.
+        /// Indicates that the contents of the Chart need to be redrawn. 
+        /// </summary>
+        public void Invalidate(bool arrangeChildenLayout = false)
         {
+            ArrangeChildenLayout(arrangeChildenLayout);
             CreateDataResources();
-            if (_view != null)
-            {
-                _view.Invalidate();
-            }
+            _view?.Invalidate();
         }
+
         #endregion
 
         #region Canvas
@@ -668,6 +669,7 @@ namespace UWP.Chart
             Invalidate();
         }
         #endregion
+
 
     }
 }

@@ -125,6 +125,7 @@
     <Compile Include="Model\Series\PieSeries.cs" />
     <Compile Include="Model\Series\PointSeries.cs" />
     <Compile Include="Model\Series\SeriesData.cs" />
+    <Compile Include="Model\Series\SeriesItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\IChartRender.cs" />
     <Compile Include="Render\ChartRender.cs" />
