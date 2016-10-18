@@ -15,16 +15,16 @@ namespace UWP.Chart
         string[] GetItemNames();
 
         /// <summary>
-        /// Gets 2D array containing values.
+        /// Gets array containing values.
         /// </summary>
         /// <returns></returns>
         double[,] GetValues();
 
 
         /// <summary>
-        /// Create data resource for draw
+        /// Build data resource for draw
         /// </summary>
-        void CreateDataResources();
+        void BuildDataResources(bool clearValues = false);
 
     }
 }

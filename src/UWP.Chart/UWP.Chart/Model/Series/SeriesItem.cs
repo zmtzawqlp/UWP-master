@@ -49,8 +49,6 @@ namespace UWP.Chart
             }
         }
 
-
-
         public Rect CropRect { get; private set; }
 
         public Brush Fill { get; set; }

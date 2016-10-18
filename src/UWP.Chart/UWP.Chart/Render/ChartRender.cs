@@ -45,7 +45,7 @@ namespace UWP.Chart.Render
         #region Series
         public virtual void OnDrawSeries(Chart chart, CanvasDrawingSession cds)
         {
-            cds.FillRectangle(chart.Data.CropRect, Colors.Red);
+            //cds.FillRectangle(chart.Data.CropRect, Colors.Red);
 
             foreach (var series in chart.Data.Children)
             {

@@ -36,7 +36,7 @@ namespace UWP.Chart.Common
             }
         }
 
-      
+
         #endregion
 
         #region DP
@@ -55,13 +55,15 @@ namespace UWP.Chart.Common
 
         internal static void OnDependencyPropertyChangedToInvalidate(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //if (e.Property.ToString() == "VisibilityProperty")
+            var modelBase = d as ModelBase;
+            modelBase.OnDependencyPropertyChangedToInvalidateInternal(e);
+        }
+
+        internal virtual void OnDependencyPropertyChangedToInvalidateInternal(DependencyPropertyChangedEventArgs e)
+        {
+            if (this.Chart != null)
             {
-                var modelBase = d as ModelBase;
-                if (modelBase.Chart != null)
-                {
-                    modelBase.Chart.Invalidate();
-                }
+                this.Chart.Invalidate();
             }
         }
 

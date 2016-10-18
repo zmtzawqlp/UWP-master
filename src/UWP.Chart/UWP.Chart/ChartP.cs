@@ -20,7 +20,8 @@ namespace UWP.Chart
         private CanvasControl _view;
         private Grid _rootGrid;
         private Size preViewSize = Size.Empty;
-       
+        private SeriesData _defaultData;
+
         #region Model
         private Axes _axes;
         private Legend _legend;
@@ -103,8 +104,18 @@ namespace UWP.Chart
             }
         }
 
-        internal bool forceCreateDataResources;
-        internal bool forceArrangeChildren;
+        internal SeriesData ActualData
+        {
+            get
+            {
+                if (Data != null && Data.CanDraw)
+                {
+                    return Data;
+                }
+                //placeholder
+                return _defaultData;
+            }
+        }
         #endregion
 
         #region Public Property

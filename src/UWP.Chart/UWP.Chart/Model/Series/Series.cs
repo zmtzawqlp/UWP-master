@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UWP.Chart.Common;
 using UWP.Chart.Util;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
@@ -18,10 +19,11 @@ namespace UWP.Chart
     /// </summary>
     public class Series : ModelBase, ISeries
     {
-        #region Private Property
-        protected double[,] values = null, previousValues = null;
-        protected List<object> dependentValues = new List<object>();
+        #region Fields
+        protected List<object> values = null;
+        protected double[,] dValues = null;
         protected bool[] isTimeValues;
+
         private Axis _axisX;
         private Axis _axisY;
         private List<SeriesItem> _items;
@@ -70,6 +72,7 @@ namespace UWP.Chart
                 return _items;
             }
         }
+
         #endregion
 
         #region Public Property
@@ -194,45 +197,98 @@ namespace UWP.Chart
             return GetValues();
         }
 
-        void ISeries.CreateDataResources()
+        void ISeries.BuildDataResources(bool clearValues)
         {
             Items.Clear();
-            CreateDataResources();
+            BuildDataResources(clearValues);
         }
 
-        virtual internal void CreateDataResources()
+        virtual internal void BuildDataResources(bool clearValues = false)
         {
-
+            var a = GetValues(clearValues);
         }
 
         virtual internal string[] GetItemNames()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        virtual internal double[,] GetValues()
+        virtual internal double[,] GetValues(bool clearValues = false)
         {
-            if (values != null)
+            if (clearValues)
             {
-                return values;
+                dValues = null;
+                values = null;
             }
 
-            if (ValueBinding == null)
-                InitList(dependentValues, ValuesSource, Values);
+            if (dValues != null)
+            {
+                return dValues;
+            }
 
+            values= GetValues(ValueBinding, ValuesSource, Values);
 
-            values = CreateValues(new IList[] { dependentValues });
+            dValues = CreateValues(new IList[] { values });
 
             if (isTimeValues == null)
                 isTimeValues = new bool[1];
-            isTimeValues[0] = IsTimeData(dependentValues);
+            isTimeValues[0] = IsTimeData(values);
 
-            return values;
+            return dValues;
         }
+
+
 
         #endregion
 
         #region Common
+        public List<object> GetValues(Binding binding, IEnumerable source, DoubleCollection dc)
+        {
+            List<object> listObject = null;
+            if (binding == null)
+            {
+                listObject = InitList(source, dc);
+            }
+
+            if (listObject == null && binding != null)
+            {
+                IEnumerable list = source as IEnumerable;
+
+                if (list == null)
+                {
+                    list = this.Chart.ItemsSource as IEnumerable;
+                }
+
+                if (list == null)
+                {
+                    list = this.Chart.DataContext as IEnumerable;
+                }
+
+                if (list != null)
+                {
+                    listObject = new List<object>();
+
+                    IEnumerator en = list.GetEnumerator();
+
+                    DataUtils.TryReset(en);
+
+                    BindingFE bfe = new BindingFE();
+
+                    // todo handle IList's
+                    while (en.MoveNext())
+                    {
+                        object current = en.Current;
+
+                        bfe.DataContext = current;
+
+                        listObject.Add(bfe.GetValue(binding));
+                    }
+                }
+            }
+
+            return listObject;
+        }
+
 
         protected bool IsTimeData(List<object> list)
         {
@@ -307,13 +363,13 @@ namespace UWP.Chart
         }
 
 
-        internal static void InitList(List<object> list, IEnumerable vals, IList<double> coll)
+        internal static List<object> InitList(IEnumerable vals, IList<double> coll)
         {
-            list.Clear();
+            List<object> list = null;
             if (vals != null)
             {
                 var ilist = vals as IList;
-
+                list = new List<object>();
                 if (ilist != null)
                 {
                     var cnt = ilist.Count;
@@ -334,10 +390,13 @@ namespace UWP.Chart
             }
             else if (coll != null)
             {
+                list = new List<object>();
                 int cnt = coll.Count;
                 for (int i = 0; i < cnt; i++)
                     list.Add(coll[i]);
             }
+
+            return list;
         }
 
         internal static double ConvertDouble(object obj, double index)
@@ -382,6 +441,17 @@ namespace UWP.Chart
             return val;
         }
 
+        #endregion
+
+        #region OnPropertyChanged
+        internal override void OnDependencyPropertyChangedToInvalidateInternal(DependencyPropertyChangedEventArgs e)
+        {
+            if (e.Property == ValuesSourceProperty || e.Property == ValuesProperty)
+            {
+
+            }
+            base.OnDependencyPropertyChangedToInvalidateInternal(e);
+        }
         #endregion
 
     }

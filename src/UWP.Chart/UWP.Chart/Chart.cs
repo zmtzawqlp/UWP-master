@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UWP.Chart.Common;
 using UWP.Chart.Render;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -57,9 +58,11 @@ namespace UWP.Chart
         #region Private Method
         private void InitializeComponent()
         {
-            forceCreateDataResources = true;
             _defaultRender = new ChartRender();
             Data = new SeriesData();
+            _defaultData = new SeriesData();
+            _defaultData.Width = new GridLength(1, GridUnitType.Star);
+            _defaultData.Height = new GridLength(1, GridUnitType.Star);
             //_data.CollectionChanged += _series_CollectionChanged;
             //_axis = new Axis();
             //_legend = new Legend();
@@ -77,16 +80,16 @@ namespace UWP.Chart
         }
 
 
-        private void ArrangeChildenLayout(bool forceArrangeChildenLayout = false)
+        private bool ArrangeChildenLayout(bool forceArrangeChildenLayout = false)
         {
             if (_view == null)
             {
-                return;
+                return false;
             }
             var finalSize = _view.Size;
             if (finalSize == preViewSize && !forceArrangeChildenLayout)
             {
-                return;
+                return false;
             }
 
             preViewSize = finalSize;
@@ -96,14 +99,11 @@ namespace UWP.Chart
 
             if (height == 0 || width == 0 || double.IsInfinity(height) || double.IsInfinity(width))
             {
-                return;
+                return false;
             }
-            FrameworkElementBase defaultData = new FrameworkElementBase();
-            defaultData.Width = new GridLength(1, GridUnitType.Star);
-            defaultData.Height = new GridLength(1, GridUnitType.Star);
-            var data = DataCanDraw ? Data : defaultData;
-            ArrangeChildenSize(height, width, data);
-            ArrangeChildenCorpRect(data);
+            ArrangeChildenSize(height, width, ActualData);
+            ArrangeChildenCorpRect(ActualData);
+            return true;
         }
 
         private void ArrangeChildenCorpRect(FrameworkElementBase data)
@@ -541,9 +541,11 @@ namespace UWP.Chart
 
         private void _view_Draw(Microsoft.Graphics.Canvas.UI.Xaml.CanvasControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasDrawEventArgs args)
         {
-
-            ArrangeChildenLayout(false);
-
+            var layoutChange = ArrangeChildenLayout(false);
+            if (layoutChange)
+            {
+                ReRebulidDataResources();
+            }
             using (CanvasCommandList cl = new CanvasCommandList(sender))
             {
                 using (CanvasDrawingSession cds = cl.CreateDrawingSession())
@@ -579,23 +581,24 @@ namespace UWP.Chart
 
         private void _view_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            CreateDataResources();
+            //CreateDataResources();
         }
 
 
         /// <summary>
         /// Create data mode for render
         /// </summary>
-        private void CreateDataResources()
+        private bool ReRebulidDataResources()
         {
-            if (Data != null)
+            if (_view != null && Data != null && Data.CanDraw)
             {
                 foreach (ISeries item in Data.Children)
                 {
-                    item.CreateDataResources();
+                    item.BuildDataResources();
                 }
+                return true;
             }
-
+            return false;
         }
         #endregion
 
@@ -609,13 +612,23 @@ namespace UWP.Chart
         /// <summary>
         /// if arrangeChildenLayout =false, may be Chart Size is not changed, so we don't need to arrange children layout
         /// if arrangeChildenLayout =true, Chart Size is changing, we need to re-arrange children layout.
-        /// Indicates that the contents of the Chart need to be redrawn. 
+        /// if layoutChange or dataChanged,we should re-bulid data resource 
+        /// 
         /// </summary>
-        public void Invalidate(bool arrangeChildenLayout = false)
+        public void Invalidate(bool arrangeChildenLayout = false, bool dataChanged = false)
         {
-            ArrangeChildenLayout(arrangeChildenLayout);
-            CreateDataResources();
-            _view?.Invalidate();
+            var change = false;
+            var layoutChange = ArrangeChildenLayout(arrangeChildenLayout);
+            change |= layoutChange;
+            if (layoutChange || dataChanged)
+            {
+                var rebulid= ReRebulidDataResources();
+                change |= rebulid;
+            }
+            if (change)
+            {
+                _view?.Invalidate();
+            }
         }
 
         #endregion

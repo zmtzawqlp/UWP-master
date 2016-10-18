@@ -8,15 +8,24 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="listView" ItemClick="ListView_ItemClick" IsItemClickEnabled="True" >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="5" Background="#fff" BorderThickness="1" BorderBrush="#d6d6d6">
-                        <TextBlock Text="{Binding}" />
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <x:String>BasicsChart</x:String>
-        </ListView>
+
+        <Pivot>
+            <PivotItem Header="Sample">
+                <ListView x:Name="listView" ItemClick="ListView_ItemClick" IsItemClickEnabled="True" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="5" Background="#fff" BorderThickness="1" BorderBrush="#d6d6d6">
+                                <TextBlock Text="{Binding}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <x:String>BasicsChart</x:String>
+                </ListView>
+            </PivotItem>
+            <PivotItem Header="About">
+
+            </PivotItem>
+        </Pivot>
+       
     </Grid>
 </Page>
