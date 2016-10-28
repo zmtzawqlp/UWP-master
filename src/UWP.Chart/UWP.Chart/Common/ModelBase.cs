@@ -61,18 +61,12 @@ namespace UWP.Chart.Common
 
         internal virtual void OnDependencyPropertyChangedToInvalidateInternal(DependencyPropertyChangedEventArgs e)
         {
-            if (this.Chart != null)
-            {
-                this.Chart.Invalidate();
-            }
+            Chart?.Invalidate();
         }
 
         protected void OnPropertyChangedToInvalidate()
         {
-            if (Chart != null)
-            {
-                Chart.Invalidate();
-            }
+            Chart?.Invalidate();
         }
         #endregion
 
