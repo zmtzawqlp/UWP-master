@@ -110,9 +110,15 @@
     <Compile Include="Chart\ColumnChart.cs" />
     <Compile Include="CollectionView\ICollectionViewEx.cs" />
     <Compile Include="CollectionView\UWPCollectionView.cs" />
+    <Compile Include="ColorPicker\ColorButton.cs" />
+    <Compile Include="ColorPicker\ColorPickerColorHelper.cs" />
+    <Compile Include="ColorPicker\ColorPicker.cs" />
+    <Compile Include="ColorPicker\ColorPickerP.cs" />
+    <Compile Include="Common\ApplicationDataContainerExtensions.cs" />
     <Compile Include="Common\BindingEvaluator.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
+    <Compile Include="Common\StorageHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
     <Compile Include="FlexGrid\Column.cs" />
     <Compile Include="FlexGrid\FlexGrid.cs" />
@@ -198,6 +204,11 @@
     <Page Include="Themes\Generic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\ColorPicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\PullToRefreshControl.xaml">

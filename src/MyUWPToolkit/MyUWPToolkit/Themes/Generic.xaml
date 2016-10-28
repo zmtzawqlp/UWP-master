@@ -13,5 +13,6 @@
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/FlexGrid.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/GroupListView.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshGrid.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/ColorPicker.Xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

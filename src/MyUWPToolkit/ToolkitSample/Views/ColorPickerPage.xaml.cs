@@ -20,30 +20,11 @@ namespace ToolkitSample.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class BlankPage1 : Page
+    public sealed partial class ColorPickerPage : Page
     {
-        public BlankPage1()
+        public ColorPickerPage()
         {
             this.InitializeComponent();
-           // list.ItemsSource = new List<string>() { "dada","dadasd", "dada", "dadasd", "dada", "dadasd", "dada", "dadasd" };
-
-        }
-
-    }
-
-    public class Grid1 : ContentPresenter
-    {
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            var a= base.ArrangeOverride(finalSize);
-            return a;
-        }
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-
-            var b= base.MeasureOverride(availableSize);
-            return b;
         }
     }
 }

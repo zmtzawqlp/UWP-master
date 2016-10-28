@@ -83,6 +83,11 @@ namespace ToolkitSample
                 case "Test":
                     Frame.Navigate(typeof(BlankPage1));
                     break;
+                case "ColorPicker":
+                    Frame.Navigate(typeof(ColorPickerPage));
+                    break;
+
+                    
                 default:
                     break;
             }

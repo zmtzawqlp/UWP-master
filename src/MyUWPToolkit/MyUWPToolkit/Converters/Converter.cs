@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -138,6 +139,19 @@ namespace MyUWPToolkit.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return new Thickness((double)value, 0, 0, 0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class ColorToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return ((Color)value).ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
