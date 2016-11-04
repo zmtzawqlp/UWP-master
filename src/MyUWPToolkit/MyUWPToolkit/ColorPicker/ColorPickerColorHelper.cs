@@ -9,75 +9,80 @@ using Windows.UI;
 using MyUWPToolkit.Common;
 using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace MyUWPToolkit
 {
     internal static class ColorPickerColorHelper
     {
-        const string ColorPickerCustomColorsKey = "ColorPickerCustomColors.json";
-        private static List<Color> customColors;
-        private static List<Color> systemColors;
-        private static List<Color> basicColors;
-        private static bool hasLoadedCustomColors;
+        const string ColorPickerRecentColorsKey = "ColorPickerRecentColors.json";
+        private static ObservableCollection<Color> RecentColors;
+        //private static List<Color> systemColors;
+        //private static List<Color> basicColors;
+        private static bool hasLoadedRecentColors;
 
-        public static List<Color> BasicColors
-        {
-            get
-            {
-                return basicColors;
-            }
-        }
+        //public static List<Color> BasicColors
+        //{
+        //    get
+        //    {
+        //        return basicColors;
+        //    }
+        //}
 
         static ColorPickerColorHelper()
         {
-            basicColors = new List<Color>();
-            customColors = new List<Color>();
-            systemColors = new List<Color>();
-            foreach (var color in typeof(Colors).GetRuntimeProperties())
-            {
-                basicColors.Add((Color)color.GetValue(null));
-            }
-          
+            //basicColors = new List<Color>();
+            RecentColors = new ObservableCollection<Color>();
+            //systemColors = new List<Color>();
+            //foreach (var color in typeof(Colors).GetRuntimeProperties())
+            //{
+            //    basicColors.Add((Color)color.GetValue(null));
+            //}
+
         }
 
-        public static async Task<List<Color>> GetCustomColorsAsync()
+        public static async Task<ObservableCollection<Color>> GetRecentColorsAsync()
         {
-            if (!hasLoadedCustomColors)
+            if (!hasLoadedRecentColors)
             {
-                hasLoadedCustomColors = true;
-                customColors = await GetCustomColorsAsyncInternal();
+                hasLoadedRecentColors = true;
+                RecentColors = await GetRecentColorsAsyncInternal();
             }
-            return customColors;
+            return RecentColors;
         }
 
-        public async static Task SetCustomColorsAsync(Color color)
+        public async static Task SetRecentColorsAsync(Color color)
         {
-            if (customColors != null)
+            if (RecentColors != null)
             {
-                customColors.Add(color);
-                if (customColors.Count > 20)
+                if (RecentColors.LastOrDefault() == color)
                 {
-                    customColors.RemoveAt(0);
+                    return;
                 }
-                await SaveCustomColorsAsync();
+                RecentColors.Add(color);
+                if (RecentColors.Count > 8)
+                {
+                    RecentColors.RemoveAt(0);
+                }
+                await SaveRecentColorsAsync();
             }
         }
 
-        private static async Task<List<Color>> GetCustomColorsAsyncInternal()
+        private static async Task<ObservableCollection<Color>> GetRecentColorsAsyncInternal()
         {
-            var jsonText = await StorageHelper.ReadFileAsync(ColorPickerCustomColorsKey);
-            return JsonConvert.DeserializeObject<List<Color>>(jsonText);
+            var jsonText = await StorageHelper.ReadFileAsync(ColorPickerRecentColorsKey);
+            return JsonConvert.DeserializeObject<ObservableCollection<Color>>(jsonText);
         }
 
-        private static async Task SaveCustomColorsAsync()
+        private static async Task SaveRecentColorsAsync()
         {
             string jsonText = "";
 
-            if (customColors.Count > 0)
+            if (RecentColors.Count > 0)
             {
-                jsonText = JsonConvert.SerializeObject(customColors);
+                jsonText = JsonConvert.SerializeObject(RecentColors);
             }
-            await StorageHelper.WriteFileAsync(ColorPickerCustomColorsKey, jsonText);
+            await StorageHelper.WriteFileAsync(ColorPickerRecentColorsKey, jsonText);
         }
     }
 }

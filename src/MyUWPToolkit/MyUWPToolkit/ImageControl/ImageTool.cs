@@ -1,4 +1,5 @@
-﻿using MyUWPToolkit.Util;
+﻿using MyUWPToolkit.Common;
+using MyUWPToolkit.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

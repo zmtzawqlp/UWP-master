@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,6 +26,24 @@ namespace ToolkitSample.Views
         public ColorPickerPage()
         {
             this.InitializeComponent();
+        }
+
+        private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            colorPicker.Placement = FlyoutPlacementMode.Right;
+            colorPicker.PlacementTarget = (sender as FrameworkElement);
+            colorPicker.Owner = sender;
+            colorPicker.Show();
+            
+        }
+
+        private void colorPicker_SelectedColorChanged(object sender, EventArgs e)
+        {
+            if (colorPicker.Owner!=null)
+            {
+                (colorPicker.Owner as Rectangle).Fill = new SolidColorBrush(colorPicker.SelectedColor);
+                colorPicker.Owner = null;
+            }
         }
     }
 }

@@ -111,12 +111,19 @@
     <Compile Include="CollectionView\ICollectionViewEx.cs" />
     <Compile Include="CollectionView\UWPCollectionView.cs" />
     <Compile Include="ColorPicker\ColorButton.cs" />
+    <Compile Include="ColorPicker\ColorChangedEventHandler.cs" />
     <Compile Include="ColorPicker\ColorPickerColorHelper.cs" />
     <Compile Include="ColorPicker\ColorPicker.cs" />
+    <Compile Include="ColorPicker\ColorPickerItemsControl.cs" />
     <Compile Include="ColorPicker\ColorPickerP.cs" />
+    <Compile Include="ColorPicker\TransparentBackground.cs" />
     <Compile Include="Common\ApplicationDataContainerExtensions.cs" />
     <Compile Include="Common\BindingEvaluator.cs" />
+    <Compile Include="Common\Calculator.cs" />
+    <Compile Include="Common\ColorConverter.cs" />
     <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\FrameworkElementExtensions.cs" />
+    <Compile Include="Common\PropertyChangeEventSource.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Common\StorageHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
@@ -152,10 +159,10 @@
     <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedGridView.cs" />
     <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedWrapGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Text\NumericTextBox.cs" />
     <Compile Include="Util\AudioCapturePermissions.cs" />
     <Compile Include="Util\CryptographyHelper.cs" />
     <Compile Include="Util\DeviceInfo.cs" />
-    <Compile Include="Util\FrameworkElementExtensions.cs" />
     <Compile Include="Util\IEnumerableExtensions.cs" />
     <Compile Include="Util\ItemsControlExtensions.cs" />
     <Compile Include="Util\NetworkInfo.cs" />
@@ -235,9 +242,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Input\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
       <Name>Windows Mobile Extensions for the UWP</Name>

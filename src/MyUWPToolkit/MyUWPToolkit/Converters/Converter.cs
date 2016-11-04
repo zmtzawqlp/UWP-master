@@ -159,4 +159,35 @@ namespace MyUWPToolkit.Converters
             throw new NotImplementedException();
         }
     }
+
+    public sealed class ArgbColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var color = (Color)value;
+            if (parameter.ToString() == "A")
+            {
+                return (double)color.A;
+            }
+            else if (parameter.ToString() == "R")
+            {
+                return (double)color.R;
+            }
+            else if (parameter.ToString() == "G")
+            {
+                return (double)color.G;
+            }
+            else if (parameter.ToString() == "B")
+            {
+                return (double)color.B;
+            }
+            return 0.0;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+
+            return null;
+        }
+    }
 }

@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media;
 
 namespace MyUWPToolkit
 {
-    public class ColorButton : Control
+    public class ColorButton : ContentControl
     {
         public Color Color
         {
@@ -41,7 +41,7 @@ namespace MyUWPToolkit
             var cb = (d as ColorButton);
             if (cb.IsSelected)
             {
-                cb.GoToState("PointerOver");
+                cb.GoToState("IsSelected");
             }
             else
             {
@@ -49,61 +49,51 @@ namespace MyUWPToolkit
             }
         }
 
-        public bool IsPointerOver
-        {
-            get { return (bool)GetValue(IsPointerOverProperty); }
-            set { SetValue(IsPointerOverProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for IsPointerOver.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsPointerOverProperty =
-            DependencyProperty.Register("IsPointerOver", typeof(bool), typeof(ColorButton), new PropertyMetadata(false, new PropertyChangedCallback(OnIsPointerOverChanged)));
-
-        private static void OnIsPointerOverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var cb = (d as ColorButton);
-            if (cb.IsPointerOver)
-            {
-                cb.GoToState("PointerOver");
-            }
-            else
-            {
-                cb.GoToState("Normal");
-            }
-        }
 
         public ColorButton()
         {
             this.DefaultStyleKey = typeof(ColorButton);
+            IsTabStop = true;
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            IsSelected = true;
+            base.OnGotFocus(e);
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            IsSelected = false;
+            base.OnLostFocus(e);
         }
 
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
-            IsPointerOver = true;
+            IsSelected = true;
             base.OnPointerEntered(e);
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)
         {
-            IsPointerOver = false;
+            IsSelected = false;
             base.OnPointerExited(e);
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
-            GoToState("Pressed");
+      
             base.OnPointerPressed(e);
         }
 
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
-            GoToState("Normal");
             base.OnPointerReleased(e);
         }
 
         internal void GoToState(string stateName)
         {
-            VisualStateManager.GoToState(this, stateName, true);
+            VisualStateManager.GoToState(this, stateName, false);
             //switch (stateName)
             //{
             //    case "PointerOver":
