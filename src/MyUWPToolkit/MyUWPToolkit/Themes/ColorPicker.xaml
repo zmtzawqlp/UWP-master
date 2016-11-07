@@ -9,7 +9,6 @@
     <converters:ArgbColorConverter x:Key="ArgbColorConverter"/>
     <Style x:Key="ColorPickerPivot" TargetType="Pivot">
         <Setter Property="Padding" Value="0" />
-        <Setter Property="Background" Value="#FFD1DCE8" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="RequestedTheme" Value="Light"/>
         <Setter Property="Width" Value="312"/>
@@ -243,7 +242,7 @@
                                         <ContentControl Grid.Row="1"
                   x:Name="HeaderClipper"
                   Grid.Column="1"
-                  UseSystemFocusVisuals="True"
+                  UseSystemFocusVisuals="False"
                   HorizontalContentAlignment="Stretch">
                                             <ContentControl.Clip>
                                                 <RectangleGeometry x:Name="HeaderClipperGeometry" />
@@ -808,126 +807,128 @@
                                         <Setter Property="Height" Value="410"/>
                                     </Style>
                                 </Flyout.FlyoutPresenterStyle>
-                                <Pivot Style="{StaticResource ColorPickerPivot}">
-                                    <Pivot.Resources>
-                                        <!--<Style TargetType="TextBlock">
+                                <Grid Background="#FFD1DCE8">
+                                    <Pivot x:Name="Pivot" Style="{StaticResource ColorPickerPivot}">
+                                        <Pivot.Resources>
+                                            <!--<Style TargetType="TextBlock">
                                             <Setter Property="Foreground" Value="Black"/>
                                         </Style>-->
-                                        <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource ColorPickerPivotHeaderItem}"/>
-                                        <Style TargetType="PivotItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="Margin" Value="0"/>
-                                            <Setter Property="Padding" Value="0"/>
-                                            <Setter Property="MinWidth" Value="0"/>
-                                        </Style>
-                                    </Pivot.Resources>
-                                    <PivotItem>
-                                        <PivotItem.Header>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="17"/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-                                                <Border Width="13" Height="13" Background="#FF97AEBF">
-                                                    <Grid>
-                                                        <Rectangle Height="10" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FFFF0000" Margin="1 1 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FFFFC000" Margin="5 1 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FFFFFF00" Margin="9 1 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF92D050" Margin="1 5 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF00B050" Margin="5 5 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF0C8242" Margin="9 5 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF0070C0" Margin="1 9 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF002060" Margin="5 9 0 0"/>
-                                                        <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF7030A0" Margin="9 9 0 0"/>
-                                                    </Grid>
+                                            <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource ColorPickerPivotHeaderItem}"/>
+                                            <Style TargetType="PivotItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                <Setter Property="Margin" Value="0"/>
+                                                <Setter Property="Padding" Value="0"/>
+                                                <Setter Property="MinWidth" Value="0"/>
+                                            </Style>
+                                        </Pivot.Resources>
+                                        <PivotItem>
+                                            <PivotItem.Header>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="17"/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Width="13" Height="13" Background="#FF97AEBF">
+                                                        <Grid>
+                                                            <Rectangle Height="10" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FFFF0000" Margin="1 1 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FFFFC000" Margin="5 1 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FFFFFF00" Margin="9 1 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF92D050" Margin="1 5 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF00B050" Margin="5 5 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF0C8242" Margin="9 5 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF0070C0" Margin="1 9 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF002060" Margin="5 9 0 0"/>
+                                                            <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF7030A0" Margin="9 9 0 0"/>
+                                                        </Grid>
+                                                    </Border>
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="基本颜色" TextWrapping="Wrap" Grid.Column="1"/>
+                                                </Grid>
+                                            </PivotItem.Header>
+                                            <StackPanel Orientation="Vertical">
+                                                <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
+                                                    <TextBlock Margin="5,0" Text="基本颜色" VerticalAlignment="Center"/>
                                                 </Border>
-                                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="基本颜色" TextWrapping="Wrap" Grid.Column="1"/>
-                                            </Grid>
-                                        </PivotItem.Header>
-                                        <StackPanel Orientation="Vertical">
-                                            <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
-                                                <TextBlock Margin="5,0" Text="基本颜色" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <local:ColorPickerItemsControl x:Name="BasicColorItems"/>
-                                            <Border Margin="0,5,0,0" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" Height="30">
-                                                <TextBlock Margin="5,0"  Text="最近使用颜色" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <local:ColorPickerItemsControl x:Name="RecentColorItems"/>
-                                        </StackPanel>
-                                    </PivotItem>
-                                    <PivotItem>
-                                        <PivotItem.Header>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="17"/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-                                                <Ellipse Height="14" Margin="0.5,-1,3,-1" Fill="#FFFFFFFF" Width="14"/>
-                                                <Ellipse Width="14" Height="14" Margin="0.5,-1,3,-1">
-                                                    <Ellipse.Fill>
-                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                            <GradientStop Color="#FFFF0000" Offset="0.1"/>
-                                                            <GradientStop Color="#00FF0000" Offset="0.5"/>
-                                                        </LinearGradientBrush>
-                                                    </Ellipse.Fill>
-                                                </Ellipse>
-                                                <Ellipse Height="14" HorizontalAlignment="Stretch" Margin="0.5,-1,3,-1" VerticalAlignment="Stretch" Width="14">
-                                                    <Ellipse.Fill>
-                                                        <LinearGradientBrush EndPoint="0.982999980449677,0.179000005125999" StartPoint="0.0879999995231628,0.753000020980835">
-                                                            <GradientStop Color="#FF079BF0"  Offset="0.1"/>
-                                                            <GradientStop Color="#00079BF0" Offset="0.5"/>
-                                                        </LinearGradientBrush>
-                                                    </Ellipse.Fill>
-                                                </Ellipse>
-                                                <Ellipse Height="14" HorizontalAlignment="Stretch" Margin="0.5,-1,3,-1" VerticalAlignment="Stretch" Width="14">
-                                                    <Ellipse.Fill>
-                                                        <LinearGradientBrush EndPoint="0.136000007390976,0.174999997019768" StartPoint="0.843999981880188,0.822000026702881">
-                                                            <GradientStop Color="#FFF2F413"  Offset="0.1"/>
-                                                            <GradientStop Color="#00F2F413" Offset="0.5"/>
-                                                        </LinearGradientBrush>
-                                                    </Ellipse.Fill>
-                                                </Ellipse>
-                                                <Ellipse Height="14" HorizontalAlignment="Stretch" Margin="0.5,-1,3,-1" VerticalAlignment="Stretch" Width="14" Visibility="Visible">
-                                                    <Ellipse.Fill>
-                                                        <LinearGradientBrush>
-                                                            <GradientStop Color="#00000000" Offset="0.772"/>
-                                                            <GradientStop Color="#4C000000" Offset="1"/>
-                                                        </LinearGradientBrush>
-                                                    </Ellipse.Fill>
-                                                </Ellipse>
-                                                <Ellipse Height="15" HorizontalAlignment="Stretch" Margin="-0.5,-1.5,2.5,-1.5" VerticalAlignment="Stretch" Width="15" Stroke="#FF8AA3B5"/>
-                                                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1"/>
-                                            </Grid>
-                                        </PivotItem.Header>
-                                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="auto"/>
-                                                <RowDefinition Height="*"/>
-                                                <RowDefinition Height="auto"/>
-                                                <RowDefinition Height="auto"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.Resources>
-                                                <Style TargetType="local:NumericTextBox">
-                                                    <Setter Property="InputScope" Value="Number"/>
-                                                    <Setter Property="ValueFormat" Value="F0"/>
-                                                    <Setter Property="Minimum" Value="0"/>
-                                                    <Setter Property="Maximum" Value="255"/>
-                                                    <Setter Property="MinWidth" Value="0"/>
-                                                    <Setter Property="Margin" Value="5,0,0,0"/>
-                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                                                </Style>
-                                            </Grid.Resources>
-                                            <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
-                                                <TextBlock Margin="5,0" Text="自定义颜色" VerticalAlignment="Center"/>
-                                            </Border>
-                                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <Grid x:Name="ChoiceGrid" HorizontalAlignment="Stretch" Margin="5,5,0,5" VerticalAlignment="Stretch" Grid.Column="0">
-                                                    <!--<Grid.Background>
+                                                <local:ColorPickerItemsControl x:Name="BasicColorItems"/>
+                                                <Border Margin="0,5,0,0" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" Height="30">
+                                                    <TextBlock Margin="5,0"  Text="最近使用颜色" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <local:ColorPickerItemsControl x:Name="RecentColorItems"/>
+                                            </StackPanel>
+                                        </PivotItem>
+                                        <PivotItem>
+                                            <PivotItem.Header>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="17"/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Height="14" Margin="0.5,-1,3,-1" Fill="#FFFFFFFF" Width="14"/>
+                                                    <Ellipse Width="14" Height="14" Margin="0.5,-1,3,-1">
+                                                        <Ellipse.Fill>
+                                                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                <GradientStop Color="#FFFF0000" Offset="0.1"/>
+                                                                <GradientStop Color="#00FF0000" Offset="0.5"/>
+                                                            </LinearGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Height="14" HorizontalAlignment="Stretch" Margin="0.5,-1,3,-1" VerticalAlignment="Stretch" Width="14">
+                                                        <Ellipse.Fill>
+                                                            <LinearGradientBrush EndPoint="0.982999980449677,0.179000005125999" StartPoint="0.0879999995231628,0.753000020980835">
+                                                                <GradientStop Color="#FF079BF0"  Offset="0.1"/>
+                                                                <GradientStop Color="#00079BF0" Offset="0.5"/>
+                                                            </LinearGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Height="14" HorizontalAlignment="Stretch" Margin="0.5,-1,3,-1" VerticalAlignment="Stretch" Width="14">
+                                                        <Ellipse.Fill>
+                                                            <LinearGradientBrush EndPoint="0.136000007390976,0.174999997019768" StartPoint="0.843999981880188,0.822000026702881">
+                                                                <GradientStop Color="#FFF2F413"  Offset="0.1"/>
+                                                                <GradientStop Color="#00F2F413" Offset="0.5"/>
+                                                            </LinearGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Height="14" HorizontalAlignment="Stretch" Margin="0.5,-1,3,-1" VerticalAlignment="Stretch" Width="14" Visibility="Visible">
+                                                        <Ellipse.Fill>
+                                                            <LinearGradientBrush>
+                                                                <GradientStop Color="#00000000" Offset="0.772"/>
+                                                                <GradientStop Color="#4C000000" Offset="1"/>
+                                                            </LinearGradientBrush>
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <Ellipse Height="15" HorizontalAlignment="Stretch" Margin="-0.5,-1.5,2.5,-1.5" VerticalAlignment="Stretch" Width="15" Stroke="#FF8AA3B5"/>
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1"/>
+                                                </Grid>
+                                            </PivotItem.Header>
+                                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.Resources>
+                                                    <Style TargetType="local:NumericTextBox">
+                                                        <Setter Property="InputScope" Value="Number"/>
+                                                        <Setter Property="ValueFormat" Value="F0"/>
+                                                        <Setter Property="Minimum" Value="0"/>
+                                                        <Setter Property="Maximum" Value="255"/>
+                                                        <Setter Property="MinWidth" Value="0"/>
+                                                        <Setter Property="Margin" Value="5,0,0,0"/>
+                                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    </Style>
+                                                </Grid.Resources>
+                                                <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
+                                                    <TextBlock Margin="5,0" Text="自定义颜色" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ContentControl x:Name="ChoiceGridParent" Grid.Column="0"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                                                        <Grid x:Name="ChoiceGrid" HorizontalAlignment="Stretch" Margin="5,5,0,5" VerticalAlignment="Stretch" >
+                                                            <!--<Grid.Background>
                                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                                             <LinearGradientBrush.GradientStops>
                                                                 <GradientStop Offset="0.0" Color="White"/>
@@ -935,96 +936,109 @@
                                                             </LinearGradientBrush.GradientStops>
                                                         </LinearGradientBrush>
                                                     </Grid.Background>-->
-                                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                                        <Rectangle.Fill>
-                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                                <LinearGradientBrush.GradientStops>
-                                                                    <GradientStop Offset="0.0" Color="White"/>
-                                                                    <GradientStop Offset="1" Color="#00FFFFFF"/>
-                                                                </LinearGradientBrush.GradientStops>
+                                                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                                <Rectangle.Fill>
+                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                        <LinearGradientBrush.GradientStops>
+                                                                            <GradientStop Offset="0.0" Color="White"/>
+                                                                            <GradientStop Offset="1" Color="#00FFFFFF"/>
+                                                                        </LinearGradientBrush.GradientStops>
+                                                                    </LinearGradientBrush>
+                                                                </Rectangle.Fill>
+                                                            </Rectangle>
+                                                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                                <Rectangle.Fill>
+                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                        <LinearGradientBrush.GradientStops>
+                                                                            <GradientStop Offset="0.0" Color="#00000000"/>
+                                                                            <GradientStop Offset="1" Color="Black"/>
+                                                                        </LinearGradientBrush.GradientStops>
+                                                                    </LinearGradientBrush>
+                                                                </Rectangle.Fill>
+                                                            </Rectangle>
+                                                            <Canvas x:Name="PadCanvas">
+                                                                <Canvas x:Name="Indicator">
+                                                                    <Ellipse Height="6" Width="6" Fill="Transparent" Stroke="#FFFFFFFF" StrokeThickness="1" Margin="-3 -3 0 0" />
+                                                                    <Ellipse Height="12" Width="12" Fill="Transparent" Stroke="#FF737373" Margin="-6 -6 0 0" />
+                                                                </Canvas>
+                                                            </Canvas>
+                                                        </Grid>
+                                                    </ContentControl>
+                                                    <Slider x:Name="Hue" Style="{StaticResource ColorPickerHueSlider}" Margin="5,5,0,5" Grid.Column="1">
+                                                        <Slider.Background>
+                                                            <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                                                                <GradientStop Offset="0.0" Color="#FFFF0000"/>
+                                                                <GradientStop Offset="0.2" Color="#FFFFFF00"/>
+                                                                <GradientStop Offset="0.4" Color="#FF00FF00"/>
+                                                                <GradientStop Offset="0.6" Color="#FF0000FF"/>
+                                                                <GradientStop Offset="0.8" Color="#FFFF00FF"/>
+                                                                <GradientStop Offset="1.0" Color="#FFFF0000"/>
                                                             </LinearGradientBrush>
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
-                                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                                        <Rectangle.Fill>
+                                                        </Slider.Background>
+                                                    </Slider>
+                                                    <Slider x:Name="Alpha" Style="{StaticResource ColorPickerAlphaSlider}" Margin="5" Grid.Column="2">
+                                                        <Slider.Background>
                                                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                                <LinearGradientBrush.GradientStops>
-                                                                    <GradientStop Offset="0.0" Color="#00000000"/>
-                                                                    <GradientStop Offset="1" Color="Black"/>
-                                                                </LinearGradientBrush.GradientStops>
+                                                                <GradientStop Color="Black" Offset="0"/>
+                                                                <GradientStop Color="Transparent" Offset="1"/>
                                                             </LinearGradientBrush>
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
+                                                        </Slider.Background>
+                                                    </Slider>
                                                 </Grid>
-                                                <Slider x:Name="Hue" Style="{StaticResource ColorPickerHueSlider}" Margin="5,5,0,5" Grid.Column="1">
-                                                    <Slider.Background>
-                                                        <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
-                                                            <GradientStop Offset="0.0" Color="#FFFF0000"/>
-                                                            <GradientStop Offset="0.2" Color="#FFFFFF00"/>
-                                                            <GradientStop Offset="0.4" Color="#FF00FF00"/>
-                                                            <GradientStop Offset="0.6" Color="#FF0000FF"/>
-                                                            <GradientStop Offset="0.8" Color="#FFFF00FF"/>
-                                                            <GradientStop Offset="1.0" Color="#FFFF0000"/>
-                                                        </LinearGradientBrush>
-                                                    </Slider.Background>
-                                                </Slider>
-                                                <Slider x:Name="Alpha" Style="{StaticResource ColorPickerAlphaSlider}" Margin="5" Grid.Column="2">
-                                                    <Slider.Background>
-                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                            <GradientStop Color="Black" Offset="0"/>
-                                                            <GradientStop Color="Transparent" Offset="1"/>
-                                                        </LinearGradientBrush>
-                                                    </Slider.Background>
-                                                </Slider>
-                                            </Grid>
 
-                                            <Grid Margin="0,0,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <local:NumericTextBox x:Name="AColor" Grid.Column="0">
-                                                    <local:NumericTextBox.Header>
-                                                        <TextBlock Text="透明度(A)" HorizontalAlignment="Center"/>
-                                                    </local:NumericTextBox.Header>
-                                                </local:NumericTextBox>
-                                                <local:NumericTextBox x:Name="RColor"  Grid.Column="1" >
-                                                    <local:NumericTextBox.Header>
-                                                        <TextBlock Text="红(R)" HorizontalAlignment="Center"/>
-                                                    </local:NumericTextBox.Header>
-                                                </local:NumericTextBox>
-                                                <local:NumericTextBox x:Name="GColor" Grid.Column="2" >
-                                                    <local:NumericTextBox.Header>
-                                                        <TextBlock Text="绿(G)" HorizontalAlignment="Center"/>
-                                                    </local:NumericTextBox.Header>
-                                                </local:NumericTextBox>
-                                                <local:NumericTextBox x:Name="BColor" Grid.Column="3" >
-                                                    <local:NumericTextBox.Header>
-                                                        <TextBlock Text="蓝(B)" HorizontalAlignment="Center"/>
-                                                    </local:NumericTextBox.Header>
-                                                </local:NumericTextBox>
-                                            </Grid>
-                                            <Grid  Grid.Row="3">
-                                                <Grid Width="60" HorizontalAlignment="Left">
-                                                    <local:TransparentBackground/>
-                                                    <Rectangle x:Name="CustomColorRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                                        <Rectangle.Fill>
-                                                            <SolidColorBrush Color="{Binding CurrentCustomColor,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                        </Rectangle.Fill>
-                                                        <ToolTipService.ToolTip>
-                                                            <ToolTip>
-                                                                <Binding Converter="{StaticResource ColorToStringConverter}" Path="CurrentCustomColor" RelativeSource="{RelativeSource TemplatedParent}"/>
-                                                            </ToolTip>
-                                                        </ToolTipService.ToolTip>
-                                                    </Rectangle>
+                                                <Grid Margin="0,0,5,0" Padding="0,0,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <local:NumericTextBox x:Name="AColor" Grid.Column="0">
+                                                        <local:NumericTextBox.Header>
+                                                            <TextBlock Text="透明度(A)" HorizontalAlignment="Center"/>
+                                                        </local:NumericTextBox.Header>
+                                                    </local:NumericTextBox>
+                                                    <local:NumericTextBox x:Name="RColor"  Grid.Column="1" >
+                                                        <local:NumericTextBox.Header>
+                                                            <TextBlock Text="红(R)" HorizontalAlignment="Center"/>
+                                                        </local:NumericTextBox.Header>
+                                                    </local:NumericTextBox>
+                                                    <local:NumericTextBox x:Name="GColor" Grid.Column="2" >
+                                                        <local:NumericTextBox.Header>
+                                                            <TextBlock Text="绿(G)" HorizontalAlignment="Center"/>
+                                                        </local:NumericTextBox.Header>
+                                                    </local:NumericTextBox>
+                                                    <local:NumericTextBox x:Name="BColor" Grid.Column="3" >
+                                                        <local:NumericTextBox.Header>
+                                                            <TextBlock Text="蓝(B)" HorizontalAlignment="Center"/>
+                                                        </local:NumericTextBox.Header>
+                                                    </local:NumericTextBox>
                                                 </Grid>
-                                                <Button Content="确定" HorizontalAlignment="Right" Grid.Column="5"/>
+                                                <Grid Grid.Row="3" Margin="5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid HorizontalAlignment="Stretch" Margin="0,0,10,0">
+                                                        <local:TransparentBackground/>
+                                                        <Rectangle x:Name="CustomColorRectangle" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                                            <Rectangle.Fill>
+                                                                <SolidColorBrush Color="{Binding CurrentCustomColor,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                            </Rectangle.Fill>
+                                                            <ToolTipService.ToolTip>
+                                                                <ToolTip>
+                                                                    <Binding Converter="{StaticResource ColorToStringConverter}" Path="CurrentCustomColor" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                                                </ToolTip>
+                                                            </ToolTipService.ToolTip>
+                                                        </Rectangle>
+                                                    </Grid>
+                                                    <Button x:Name="CustomColorOkButton" Grid.Column="1" Content="确定" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    </PivotItem>
-                                </Pivot>
+                                        </PivotItem>
+                                    </Pivot>
+                                    <Button x:Name="CloseButton" Content="关闭" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5"/>
+                                </Grid>
                             </Flyout>
                         </FlyoutBase.AttachedFlyout>
                         <ToolTipService.ToolTip>
@@ -1082,7 +1096,7 @@
     </Style>
 
     <Style TargetType="local:ColorButton">
-        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="UseSystemFocusVisuals" Value="False" />
         <Setter Property="MinWidth" Value="30"/>
         <Setter Property="MinHeight" Value="30"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>

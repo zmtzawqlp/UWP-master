@@ -21,7 +21,6 @@ namespace MyUWPToolkit
         ColorPickerItemsControl _recentColorItemsControl;
         private List<Color> _defaultBasicColors;
         private Color _actSpectre;
-        private Color _customColor;
         private Slider _hue;
         private Slider _alpha;
         private Grid _choiceGrid;
@@ -30,7 +29,13 @@ namespace MyUWPToolkit
         private NumericTextBox _rColor;
         private NumericTextBox _gColor;
         private NumericTextBox _bColor;
-
+        private Canvas _indicator;
+        private Pivot _pivot;
+        private ContentControl _choiceGridParent;
+        private Button _customColorOkButton;
+        private Button _closeButton;
+        //private double _x;
+        //private double _y;
         #endregion
 
         #region Property

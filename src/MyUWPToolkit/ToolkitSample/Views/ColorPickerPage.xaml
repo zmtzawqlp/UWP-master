@@ -195,6 +195,14 @@
 
             <Rectangle Width="100" Height="30" Margin="100" Fill="Yellow" Tapped="Rectangle_Tapped"/>
 
+
+            <Canvas Height="300" Width="300" Background="Red">
+                <Canvas x:Name="Indicator" Canvas.Left="300">
+                    <Ellipse Height="6" Width="6" Fill="Transparent" Stroke="#FFFFFFFF" StrokeThickness="1" Margin="-3 -3 0 0" />
+                    <Ellipse Height="12" Width="12" Fill="Transparent" Stroke="#FF737373" StrokeThickness="1" Margin="-6 -6 0 0" />
+                </Canvas>
+            </Canvas>
+           
             <!--<Slider Width="100" Height="30" Orientation="Vertical"  Style="{StaticResource SliderStyle1}" Maximum="1.0" SmallChange="0.1" StepFrequency="0.1" LargeChange="1" />
             <Thumb Width="100" Height="100" Style="{StaticResource ThumbStyle1}"/>-->
         </StackPanel>

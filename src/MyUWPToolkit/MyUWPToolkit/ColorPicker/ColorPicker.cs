@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -33,7 +34,12 @@ namespace MyUWPToolkit
     [TemplatePart(Name = "RColor", Type = typeof(NumericTextBox))]
     [TemplatePart(Name = "GColor", Type = typeof(NumericTextBox))]
     [TemplatePart(Name = "BColor", Type = typeof(NumericTextBox))]
-
+    [TemplatePart(Name = "Indicator", Type = typeof(Canvas))]
+    [TemplatePart(Name = "Pivot", Type = typeof(Pivot))]
+    [TemplatePart(Name = "ChoiceGridParent", Type = typeof(ContentControl))]
+    [TemplatePart(Name = "CustomColorOkButton", Type = typeof(Button))]
+    [TemplatePart(Name = "CloseButton", Type = typeof(Button))]
+    
     public partial class ColorPicker : Control
     {
 
@@ -45,6 +51,8 @@ namespace MyUWPToolkit
 
         protected override void OnApplyTemplate()
         {
+            _pivot = GetTemplateChild("Pivot") as Pivot;
+
             _toggleButton = GetTemplateChild("ToggleButton") as Button;
             _toggleButton.Click += _toggleButton_Click;
             _flyout = GetTemplateChild("Flyout") as Flyout;
@@ -58,11 +66,15 @@ namespace MyUWPToolkit
             _basicColorItemsControl.ItemsSource = _defaultBasicColors;
 
             _hue = GetTemplateChild("Hue") as Slider;
-            _hue.ValueChanged += _hue_ValueChanged;
+            AttachEventForHue();
             _alpha = GetTemplateChild("Alpha") as Slider;
-            _alpha.ValueChanged += _alpha_ValueChanged;
+            AttachEventForAlpha();
 
             _choiceGrid = GetTemplateChild("ChoiceGrid") as Grid;
+            _choiceGridParent = GetTemplateChild("ChoiceGridParent") as ContentControl;
+            _choiceGrid.Loaded += _choiceGrid_Loaded;
+            _choiceGrid.SizeChanged += _choiceGrid_SizeChanged;
+            _choiceGrid.PointerPressed += _choiceGrid_PointerPressed;
 
             _customColorRectangle = GetTemplateChild("CustomColorRectangle") as Rectangle;
 
@@ -70,43 +82,218 @@ namespace MyUWPToolkit
             _rColor = GetTemplateChild("RColor") as NumericTextBox;
             _gColor = GetTemplateChild("GColor") as NumericTextBox;
             _bColor = GetTemplateChild("BColor") as NumericTextBox;
+            AttachEventForColor();
+
+            _indicator = GetTemplateChild("Indicator") as Canvas;
+            _indicator.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+            _indicator.ManipulationDelta += _indicator_ManipulationDelta;
+            _indicator.ManipulationStarted += _indicator_ManipulationStarted;
+            _indicator.ManipulationCompleted += _indicator_ManipulationCompleted;
+
+            _closeButton = GetTemplateChild("CloseButton") as Button;
+            _closeButton.Click += _closeButton_Click;
+            _customColorOkButton = GetTemplateChild("CustomColorOkButton") as Button;
+            _customColorOkButton.Click += _customColorOkButton_Click;
+
+            base.OnApplyTemplate();
+        }
+
+        private void _customColorOkButton_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedColor = CurrentCustomColor;
+            Hide();
+        }
+
+        private void _closeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
+
+        private void _choiceGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _choiceGridParent.Focus(FocusState.Programmatic);
+            hueValueChanging = true;
+            var pointer = e.GetCurrentPoint(_choiceGrid);
+            UpdateIndicator(pointer.Position.X, pointer.Position.Y);
+            hueValueChanging = false;
+        }
+
+
+        private void AttachEventForColor()
+        {
             _aColor.ValueChanged += ValueChanged;
             _rColor.ValueChanged += ValueChanged;
             _gColor.ValueChanged += ValueChanged;
             _bColor.ValueChanged += ValueChanged;
-            base.OnApplyTemplate();
+        }
+
+        private void RemoveEventForColor()
+        {
+            _aColor.ValueChanged -= ValueChanged;
+            _rColor.ValueChanged -= ValueChanged;
+            _gColor.ValueChanged -= ValueChanged;
+            _bColor.ValueChanged -= ValueChanged;
+        }
+
+        private void AttachEventForHue()
+        {
+            _hue.ValueChanged += _hue_ValueChanged;
+        }
+
+        private void RemoveEventForHue()
+        {
+            _hue.ValueChanged -= _hue_ValueChanged;
+        }
+
+        private void AttachEventForAlpha()
+        {
+            _alpha.ValueChanged += _alpha_ValueChanged;
+        }
+
+        private void RemoveEventForAlpha()
+        {
+            _alpha.ValueChanged -= _alpha_ValueChanged;
+        }
+
+        private void _indicator_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            hueValueChanging = false;
+            _choiceGridParent.Focus(FocusState.Programmatic);
+        }
+
+        private void _indicator_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            hueValueChanging = true;
+        }
+
+        private void _indicator_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            hueValueChanging = true;
+            var x = Canvas.GetLeft(_indicator) + e.Delta.Translation.X;
+            var y = Canvas.GetTop(_indicator) + e.Delta.Translation.Y;
+
+            UpdateIndicator(x, y);
+        }
+
+        private void UpdateIndicator(double x, double y)
+        {
+            var eheight = _choiceGrid.ActualHeight;
+            var ewidth = _choiceGrid.ActualWidth;
+
+            var width = Math.Max(x, 0);
+            var height = Math.Max(y, 0);
+            height = height < eheight ? height : eheight;
+            width = width < ewidth ? width : ewidth;
+            Canvas.SetLeft(_indicator, width);
+            Canvas.SetTop(_indicator, height);
+            UpdateActSpectre();
+        }
+
+        private void _choiceGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.PreviousSize != e.NewSize)
+            {
+                _choiceGrid.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
+            }
+        }
+
+        private void _choiceGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdatePosition(0, _choiceGrid.ActualWidth);
+            UpdateActSpectre();
         }
 
         private void OnCurrentCustomColorChanged()
         {
-            _aColor.Value = CurrentCustomColor.A;
-            _rColor.Value = CurrentCustomColor.R;
-            _gColor.Value = CurrentCustomColor.G;
-            _bColor.Value = CurrentCustomColor.B;
-            _alpha.Value = CurrentCustomColor.A / 255.0;
 
         }
 
+        private bool valueChanging = false;
         private void ValueChanged(object sender, EventArgs e)
         {
+            //Debug.WriteLine("ValueChanged");
+            if (alphaValueChanging || hueValueChanging)
+            {
+                return;
+            }
+            valueChanging = true;
+
             CurrentCustomColor = Color.FromArgb((byte)(_aColor.Value), (byte)(_rColor.Value), (byte)(_gColor.Value), (byte)(_bColor.Value));
+
+            double[] hsl = RgbToHsl(CurrentCustomColor);
+            var h = _choiceGrid.ActualHeight * (1 - 2 * hsl[2]);
+            h = h >= 0 ? h : 0;
+            h = h <= _choiceGrid.ActualHeight ? h : _choiceGrid.ActualHeight;
+            var w = _choiceGrid.ActualWidth * hsl[1];
+            w = w >= 0 ? w : 0;
+            w = w <= _choiceGrid.ActualWidth ? w : _choiceGrid.ActualWidth;
+            //Debug.WriteLine("H" + hsl[0]);
+            _hue.Value = hsl[0] / 360f * _hue.Maximum;
+            _alpha.Value = CurrentCustomColor.A;
+            _actSpectre = HslToRgb(_hue.Value / _hue.Maximum * 360f, 1, 0.5);
+            _choiceGrid.Background = new SolidColorBrush(_actSpectre);
+            UpdatePosition(h, w);
+
+            valueChanging = false;
+            //UpdateActSpectre();
         }
 
+        bool alphaValueChanging = false;
         private void _alpha_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            UpdateActSpectre();
+            //Debug.WriteLine("_alpha_ValueChanged");
+            if (valueChanging || hueValueChanging)
+            {
+                return;
+            }
+            alphaValueChanging = true;
+
+
+            CurrentCustomColor = Color.FromArgb((byte)(_alpha.Value * 255), (byte)(CurrentCustomColor.R), (byte)(CurrentCustomColor.G), (byte)(CurrentCustomColor.B));
+            _aColor.Value = CurrentCustomColor.A;
+
+            alphaValueChanging = false;
         }
 
+        bool hueValueChanging = false;
         private void _hue_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            //Debug.WriteLine("_hue_ValueChanged");
+            if (valueChanging || alphaValueChanging)
+            {
+                return;
+            }
+
+            hueValueChanging = true;
             UpdateActSpectre();
+
+            hueValueChanging = false;
         }
 
         private void UpdateActSpectre()
         {
             _actSpectre = HslToRgb(_hue.Value / _hue.Maximum * 360f, 1, 0.5);
             _choiceGrid.Background = new SolidColorBrush(_actSpectre);
-            CurrentCustomColor = Color.FromArgb((byte)(255 * _alpha.Value), _actSpectre.R, _actSpectre.G, _actSpectre.B);
+
+            var eheight = _choiceGrid.ActualHeight;
+            var ewidth = _choiceGrid.ActualWidth;
+            var x = Canvas.GetLeft(_indicator);
+            var y = Canvas.GetTop(_indicator);
+            var width = Math.Max(x, 0);
+            var height = Math.Max(y, 0);
+            height = height < eheight ? height : eheight;
+            width = width < ewidth ? width : ewidth;
+            //UpdatePosition(height, width);
+            var ratiox = 1 - width / ewidth;
+            var ratioy = 1 - height / eheight;
+            var newr = (byte)((_actSpectre.R + (255 - _actSpectre.R) * ratiox) * ratioy);
+            var newb = (byte)((_actSpectre.B + (255 - _actSpectre.B) * ratiox) * ratioy);
+            var newg = (byte)((_actSpectre.G + (255 - _actSpectre.G) * ratiox) * ratioy);
+
+            CurrentCustomColor = Color.FromArgb((byte)(CurrentCustomColor.A), newr, newg, newb);
+            _rColor.Value = CurrentCustomColor.R;
+            _gColor.Value = CurrentCustomColor.G;
+            _bColor.Value = CurrentCustomColor.B;
         }
 
         private void InitializeDefaultBasicColor()
@@ -176,7 +363,9 @@ namespace MyUWPToolkit
 
         private void _flyout_Opened(object sender, object e)
         {
-
+            _pivot.SelectedIndex = 0;
+            SetDefaultCustomColor();
+            _choiceGridParent.Focus(FocusState.Programmatic);
         }
 
         private async void _flyout_Opening(object sender, object e)
@@ -186,30 +375,81 @@ namespace MyUWPToolkit
                 _recentColorItemsControl.ItemsSource = await ColorPickerColorHelper.GetRecentColorsAsync();
             }
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+        }
+
+        private void SetDefaultCustomColor()
+        {
+            valueChanging = false;
+            hueValueChanging = false;
+            alphaValueChanging = false;
+            Canvas.SetLeft(_indicator, _choiceGrid.ActualWidth);
+            Canvas.SetTop(_indicator, 0);
             _hue.Value = 0;
             _alpha.Value = 1;
+            _aColor.Value = 255;
             UpdateActSpectre();
         }
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            switch (args.VirtualKey)
+            if (_pivot.SelectedIndex != 1)
             {
-                case VirtualKey.Left:
-                    //(_basicColorItemsControl.ContainerFromIndex(0) as ContentPresenter).
-                    var focusedElement = FocusManager.GetFocusedElement();
-                    break;
-                case VirtualKey.Right:
-                    break;
-                case VirtualKey.Up:
-                    break;
-                case VirtualKey.Down:
-                    break;
-                case VirtualKey.Tab:
-                    break;
-                default:
-                    break;
+                return;
             }
+
+            if (args.VirtualKey == VirtualKey.Enter)
+            {
+                _customColorOkButton_Click(null, null);
+                return;
+            }
+
+            var focusedElement = FocusManager.GetFocusedElement();
+
+            if (focusedElement is TextBox || focusedElement is Slider)
+            {
+                return;
+            }
+            //if (focusedElement is ContentControl && (focusedElement as ContentControl).Content == _choiceGrid)
+            {
+                var x = Canvas.GetLeft(_indicator);
+                var y = Canvas.GetTop(_indicator);
+                switch (args.VirtualKey)
+                {
+                    case VirtualKey.Left:
+                        //(_basicColorItemsControl.ContainerFromIndex(0) as ContentPresenter).
+                        hueValueChanging = true;
+                        x -= 1;
+                        UpdateIndicator(x, y);
+                        hueValueChanging = false;
+                        break;
+                    case VirtualKey.Right:
+                        hueValueChanging = true;
+                        x += 1;
+                        UpdateIndicator(x, y);
+                        hueValueChanging = false;
+                        break;
+                    case VirtualKey.Up:
+                        hueValueChanging = true;
+                        y -= 1;
+                        UpdateIndicator(x, y);
+                        hueValueChanging = false;
+                        break;
+                    case VirtualKey.Down:
+                        hueValueChanging = true;
+                        y += 1;
+                        UpdateIndicator(x, y);
+                        hueValueChanging = false;
+                        break;
+                    case VirtualKey.Tab:
+                        break;
+                    case VirtualKey.Enter:
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
 
         private void _flyout_Closed(object sender, object e)
@@ -298,6 +538,58 @@ namespace MyUWPToolkit
                 b = x;
             }
             return Color.FromArgb(255, (byte)((r + m) * 255), (byte)((g + m) * 255), (byte)((b + m) * 255));
+        }
+
+        /// <summary>
+        /// Convert an rgb color to hsl
+        /// </summary>
+        /// <param name="r">Red</param>
+        /// <param name="g">Green</param>
+        /// <param name="b">Blue</param>
+        /// <returns>0 : hue / 1 : saturation / 2 : lightness</returns>
+        public static double[] RgbToHsl(double r, double g, double b)
+        {
+            var m1 = Math.Max(Math.Max(r, g), b);
+            var m2 = Math.Min(Math.Min(r, g), b);
+            var c = m1 - m2;
+            double h2;
+            if (c == 0)
+            {
+                h2 = 0;
+            }
+            else if (m1 == r)
+            {
+                h2 = ((g - b) / c + 6) % 6;
+            }
+            else if (m1 == g)
+            {
+                h2 = (b - r) / c + 2;
+            }
+            else
+            {
+                h2 = (r - g) / c + 4;
+            }
+            var h = 60f * h2;
+            var l = 0.5f * (m1 + m2);
+            var s = l == 1 ? 0 : c / m1;
+            return new[] { h, s, l / 255f };
+
+        }
+
+        /// <summary>
+        /// Convert an rgb color to hsl
+        /// </summary>
+        /// <param name="value">Rgb Color <see cref="Color"/></param>
+        /// <returns>0 : hue / 1 : saturation / 2 : lightness</returns>
+        public static double[] RgbToHsl(Color value)
+        {
+            return RgbToHsl(value.R, value.G, value.B);
+        }
+
+        private void UpdatePosition(double h, double w)
+        {
+            Canvas.SetTop(_indicator, h);
+            Canvas.SetLeft(_indicator, w);
         }
     }
 }

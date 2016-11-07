@@ -32,6 +32,7 @@ namespace MyUWPToolkit
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             (d as NumericTextBox).UpdateValueText();
+            (d as NumericTextBox).OnValueChanged();
         }
 
         public string ValueFormat
@@ -106,8 +107,13 @@ namespace MyUWPToolkit
         {
             _isChangingTextWithCode = true;
             this.Text = this.Value.ToString(this.ValueFormat);
+            this.SelectionStart = this.Text.Length;
             _isChangingTextWithCode = false;
-            if (ValueChanged!= null)
+        }
+
+        private void OnValueChanged()
+        {
+            if (ValueChanged != null)
             {
                 ValueChanged(null, null);
             }
@@ -153,6 +159,7 @@ namespace MyUWPToolkit
                 else
                 {
                     this.Text = Value.ToString(ValueFormat);
+                    this.SelectionStart = this.Text.Length;
                 }
                
             }
