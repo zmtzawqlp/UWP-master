@@ -847,7 +847,7 @@
                                             <StackPanel Orientation="Vertical">
                                                 <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
                                                     <TextBlock Margin="5,0"  VerticalAlignment="Center">
-                                                         <Run Text="{TemplateBinding Title}"/>
+                                                         <Run Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"/>
                                                          <Run Text=" - "/>
                                                          <Run Text="基本颜色"/>
                                                     </TextBlock>
@@ -924,7 +924,7 @@
                                                 </Grid.Resources>
                                                 <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
                                                     <TextBlock Margin="5,0"  VerticalAlignment="Center">
-                                                         <Run Text="{TemplateBinding Title}"/>
+                                                         <Run Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"/>
                                                          <Run Text=" - "/>
                                                          <Run Text="自定义颜色"/>
                                                     </TextBlock>
