@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:MyUWPToolkit"
-    RequestedTheme="Light"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Page.Resources>
         <Style x:Key="SliderStyle1" TargetType="Slider">
@@ -185,6 +185,17 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="control:NumericUpDown">
+            <Setter Property="ValueBarVisibility" Value="Collapsed"/>
+            <Setter Property="ValueFormat" Value="F0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Minimum" Value="1"/>
+            <Setter Property="Maximum" Value="250"/>
+            <Setter Property="SmallChange" Value="1"/>
+            <Setter Property="LargeChange" Value="10"/>
+            <Setter Property="Width" Value="144"/>
+        </Style>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -202,7 +213,15 @@
                     <Ellipse Height="12" Width="12" Fill="Transparent" Stroke="#FF737373" StrokeThickness="1" Margin="-6 -6 0 0" />
                 </Canvas>
             </Canvas>
-           
+            <control:UpDownTextBox
+                                    x:Name="PART_ValueTextBox"
+     Width="40"
+                                    Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                    Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                    InputScope="Number"
+                                    HorizontalAlignment="Stretch"
+                                 />
+            <control:NumericUpDown />
             <!--<Slider Width="100" Height="30" Orientation="Vertical"  Style="{StaticResource SliderStyle1}" Maximum="1.0" SmallChange="0.1" StepFrequency="0.1" LargeChange="1" />
             <Thumb Width="100" Height="100" Style="{StaticResource ThumbStyle1}"/>-->
         </StackPanel>

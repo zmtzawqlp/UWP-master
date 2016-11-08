@@ -6,15 +6,11 @@
     <!--<converters:VisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:VisibilityConverter x:Key="InversedBooleanToVisibilityConverter" IsInversed="True"/>-->
     <converters:ColorToStringConverter x:Key="ColorToStringConverter"/>
-    <converters:ArgbColorConverter x:Key="ArgbColorConverter"/>
+    <!--<converters:ArgbColorConverter x:Key="ArgbColorConverter"/>-->
     <Style x:Key="ColorPickerPivot" TargetType="Pivot">
         <Setter Property="Padding" Value="0" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="RequestedTheme" Value="Light"/>
-        <Setter Property="Width" Value="312"/>
-        <Setter Property="MaxWidth" Value="312"/>
-        <Setter Property="MaxHeight" Value="410"/>
-        <Setter Property="Height" Value="410"/>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -767,6 +763,9 @@
         <Setter Property="BorderBrush" Value="{ThemeResource ApplicationForegroundThemeBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="5,5"/>
+        <Setter Property="FlyoutWidth" Value="312"/>
+        <Setter Property="FlyoutHeight" Value="410"/>
+        <Setter Property="Title" Value="颜色"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ColorPicker">
@@ -801,13 +800,12 @@
                                         <Setter Property="BorderThickness" Value="1"/>
                                         <Setter Property="Background" Value="White"/>
                                         <Setter Property="BorderBrush" Value="#A4AFBA"/>
-                                        <Setter Property="Width" Value="312"/>
-                                        <Setter Property="MaxWidth" Value="312"/>
-                                        <Setter Property="MaxHeight" Value="410"/>
-                                        <Setter Property="Height" Value="410"/>
+                                        <Setter Property="MaxWidth" Value="NaN"/>
+                                        <Setter Property="MaxHeight" Value="NaN"/>
+                                        <Setter Property="Background" Value="Transparent"/>
                                     </Style>
                                 </Flyout.FlyoutPresenterStyle>
-                                <Grid Background="#FFD1DCE8">
+                                <Grid Background="#FFD1DCE8" RequestedTheme="Light" Width="{TemplateBinding FlyoutWidth}" Height="{TemplateBinding FlyoutHeight}">
                                     <Pivot x:Name="Pivot" Style="{StaticResource ColorPickerPivot}">
                                         <Pivot.Resources>
                                             <!--<Style TargetType="TextBlock">
@@ -841,14 +839,20 @@
                                                             <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF7030A0" Margin="9 9 0 0"/>
                                                         </Grid>
                                                     </Border>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="基本颜色" TextWrapping="Wrap" Grid.Column="1"/>
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="基本颜色"  TextWrapping="Wrap" Grid.Column="1">
+                                                       
+                                                    </TextBlock>
                                                 </Grid>
                                             </PivotItem.Header>
                                             <StackPanel Orientation="Vertical">
                                                 <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
-                                                    <TextBlock Margin="5,0" Text="基本颜色" VerticalAlignment="Center"/>
+                                                    <TextBlock Margin="5,0"  VerticalAlignment="Center">
+                                                         <Run Text="{TemplateBinding Title}"/>
+                                                         <Run Text=" - "/>
+                                                         <Run Text="基本颜色"/>
+                                                    </TextBlock>
                                                 </Border>
-                                                <local:ColorPickerItemsControl x:Name="BasicColorItems"/>
+                                                <local:ColorPickerItemsControl x:Name="BasicColorItems" MinHeight="43"/>
                                                 <Border Margin="0,5,0,0" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" Height="30">
                                                     <TextBlock Margin="5,0"  Text="最近使用颜色" VerticalAlignment="Center"/>
                                                 </Border>
@@ -896,7 +900,8 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                     <Ellipse Height="15" HorizontalAlignment="Stretch" Margin="-0.5,-1.5,2.5,-1.5" VerticalAlignment="Stretch" Width="15" Stroke="#FF8AA3B5"/>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1"/>
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1">
+                                                    </TextBlock>
                                                 </Grid>
                                             </PivotItem.Header>
                                             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -918,7 +923,11 @@
                                                     </Style>
                                                 </Grid.Resources>
                                                 <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
-                                                    <TextBlock Margin="5,0" Text="自定义颜色" VerticalAlignment="Center"/>
+                                                    <TextBlock Margin="5,0"  VerticalAlignment="Center">
+                                                         <Run Text="{TemplateBinding Title}"/>
+                                                         <Run Text=" - "/>
+                                                         <Run Text="自定义颜色"/>
+                                                    </TextBlock>
                                                 </Border>
                                                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
                                                     <Grid.ColumnDefinitions>

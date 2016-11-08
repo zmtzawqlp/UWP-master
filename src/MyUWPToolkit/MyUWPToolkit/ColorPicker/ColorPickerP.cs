@@ -122,6 +122,38 @@ namespace MyUWPToolkit
             (d as ColorPicker).OnCurrentCustomColorChanged();
         }
 
+        public double FlyoutWidth
+        {
+            get { return (double)GetValue(FlyoutWidthProperty); }
+            set { SetValue(FlyoutWidthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FlyoutWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FlyoutWidthProperty =
+            DependencyProperty.Register("FlyoutWidth", typeof(double), typeof(ColorPicker), new PropertyMetadata(double.NaN));
+
+
+
+        public double FlyoutHeight
+        {
+            get { return (double)GetValue(FlyoutHeightProperty); }
+            set { SetValue(FlyoutHeightProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FlyoutHeight.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FlyoutHeightProperty =
+            DependencyProperty.Register("FlyoutHeight", typeof(double), typeof(ColorPicker), new PropertyMetadata(double.NaN));
+
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register("Title", typeof(string), typeof(ColorPicker), new PropertyMetadata(""));
+
 
         #endregion
 

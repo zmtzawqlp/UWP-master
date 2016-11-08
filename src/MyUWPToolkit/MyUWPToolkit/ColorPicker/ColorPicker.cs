@@ -39,7 +39,7 @@ namespace MyUWPToolkit
     [TemplatePart(Name = "ChoiceGridParent", Type = typeof(ContentControl))]
     [TemplatePart(Name = "CustomColorOkButton", Type = typeof(Button))]
     [TemplatePart(Name = "CloseButton", Type = typeof(Button))]
-    
+
     public partial class ColorPicker : Control
     {
 
@@ -72,7 +72,6 @@ namespace MyUWPToolkit
 
             _choiceGrid = GetTemplateChild("ChoiceGrid") as Grid;
             _choiceGridParent = GetTemplateChild("ChoiceGridParent") as ContentControl;
-            _choiceGrid.Loaded += _choiceGrid_Loaded;
             _choiceGrid.SizeChanged += _choiceGrid_SizeChanged;
             _choiceGrid.PointerPressed += _choiceGrid_PointerPressed;
 
@@ -194,13 +193,11 @@ namespace MyUWPToolkit
             if (e.PreviousSize != e.NewSize)
             {
                 _choiceGrid.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
+                if (_pivot.SelectedIndex == 1)
+                {
+                    SetDefaultCustomColor();
+                }
             }
-        }
-
-        private void _choiceGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            UpdatePosition(0, _choiceGrid.ActualWidth);
-            UpdateActSpectre();
         }
 
         private void OnCurrentCustomColorChanged()
@@ -363,6 +360,9 @@ namespace MyUWPToolkit
 
         private void _flyout_Opened(object sender, object e)
         {
+            ((_flyout.Content as Grid).Parent as FlyoutPresenter).MaxHeight = FlyoutHeight;
+            ((_flyout.Content as Grid).Parent as FlyoutPresenter).MaxWidth = FlyoutWidth;
+
             _pivot.SelectedIndex = 0;
             SetDefaultCustomColor();
             _choiceGridParent.Focus(FocusState.Programmatic);
@@ -382,12 +382,15 @@ namespace MyUWPToolkit
             valueChanging = false;
             hueValueChanging = false;
             alphaValueChanging = false;
+
             Canvas.SetLeft(_indicator, _choiceGrid.ActualWidth);
             Canvas.SetTop(_indicator, 0);
             _hue.Value = 0;
             _alpha.Value = 1;
             _aColor.Value = 255;
+            hueValueChanging = true;
             UpdateActSpectre();
+            hueValueChanging = false;
         }
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
@@ -492,6 +495,7 @@ namespace MyUWPToolkit
             if (_flyout != null)
             {
                 _flyout.Hide();
+
             }
         }
 

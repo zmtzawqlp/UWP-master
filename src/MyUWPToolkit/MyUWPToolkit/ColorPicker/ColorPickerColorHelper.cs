@@ -47,6 +47,11 @@ namespace MyUWPToolkit
             {
                 hasLoadedRecentColors = true;
                 RecentColors = await GetRecentColorsAsyncInternal();
+                var temp = await GetRecentColorsAsyncInternal();
+                if (temp != null)
+                {
+                    RecentColors = temp;
+                }
             }
             return RecentColors;
         }

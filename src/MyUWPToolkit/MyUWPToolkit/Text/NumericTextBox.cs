@@ -151,17 +151,12 @@ namespace MyUWPToolkit
             }
             else
             {
-                if (this.Text=="")
+                if (this.Text == "")
                 {
-                    this.Value = 0;
-                    UpdateValueText();
+                    this.Value = Minimum;
                 }
-                else
-                {
-                    this.Text = Value.ToString(ValueFormat);
-                    this.SelectionStart = this.Text.Length;
-                }
-               
+                UpdateValueText();
+
             }
 
             return false;
