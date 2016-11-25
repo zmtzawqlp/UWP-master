@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace ToolkitSample.Views
 
         private void Rectangle_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            colorPicker.Placement = FlyoutPlacementMode.Right;
+            colorPicker.Placement = AdvancedFlyoutPlacementMode.RightCenter;
             colorPicker.PlacementTarget = (sender as FrameworkElement);
             colorPicker.Owner = sender;
             colorPicker.Show();

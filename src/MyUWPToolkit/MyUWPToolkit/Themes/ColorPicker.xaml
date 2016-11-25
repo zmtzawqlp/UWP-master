@@ -783,9 +783,9 @@
                             </Rectangle>
                             <TextBlock x:Name="ArrowPolygon" Foreground="{TemplateBinding Foreground}" Visibility="{TemplateBinding ArrowVisibility}" Grid.Column="1" Text="&#xE0E5;" FontSize="{TemplateBinding FontSize}" FontFamily="Segoe UI Symbol" FontWeight="Normal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,0,5,0"/>
                         </Grid>
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout x:Name="Flyout">
-                                <Flyout.FlyoutPresenterStyle>
+                        <local:AdvancedFlyoutBase.AttachedFlyout>
+                            <local:AdvancedFlyout x:Name="Flyout">
+                                <local:AdvancedFlyout.FlyoutPresenterStyle>
                                     <Style TargetType="FlyoutPresenter">
                                         <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
                                         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
@@ -797,15 +797,17 @@
                                         <Setter Property="MinWidth" Value="0"/>
                                         <Setter Property="Padding" Value="0,0,0,0"/>
                                         <Setter Property="Margin" Value="0,0,0,0"/>
-                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
                                         <Setter Property="Background" Value="White"/>
-                                        <Setter Property="BorderBrush" Value="#A4AFBA"/>
+                                        <!--<Setter Property="BorderBrush" Value="#A4AFBA"/>-->
                                         <Setter Property="MaxWidth" Value="NaN"/>
                                         <Setter Property="MaxHeight" Value="NaN"/>
                                         <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                     </Style>
-                                </Flyout.FlyoutPresenterStyle>
-                                <Grid Background="#FFD1DCE8" RequestedTheme="Light" Width="{TemplateBinding FlyoutWidth}" Height="{TemplateBinding FlyoutHeight}">
+                                </local:AdvancedFlyout.FlyoutPresenterStyle>
+                                <Grid Background="#FFD1DCE8" RequestedTheme="Light" BorderBrush="#A4AFBA" BorderThickness="1"  Width="{TemplateBinding FlyoutWidth}" Height="{TemplateBinding FlyoutHeight}">
                                     <Pivot x:Name="Pivot" Style="{StaticResource ColorPickerPivot}">
                                         <Pivot.Resources>
                                             <!--<Style TargetType="TextBlock">
@@ -856,7 +858,7 @@
                                                 <Border Margin="0,5,0,0" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" Height="30">
                                                     <TextBlock Margin="5,0"  Text="最近使用颜色" VerticalAlignment="Center"/>
                                                 </Border>
-                                                <local:ColorPickerItemsControl x:Name="RecentColorItems"/>
+                                                <local:ColorPickerItemsControl x:Name="RecentColorItems" MinHeight="43"/>
                                             </StackPanel>
                                         </PivotItem>
                                         <PivotItem>
@@ -1048,8 +1050,8 @@
                                     </Pivot>
                                     <Button x:Name="CloseButton" Content="关闭" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5"/>
                                 </Grid>
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
+                            </local:AdvancedFlyout>
+                        </local:AdvancedFlyoutBase.AttachedFlyout>
                         <ToolTipService.ToolTip>
                             <ToolTip>
                                 <Binding Path="SelectedColor" RelativeSource="{RelativeSource TemplatedParent}" Converter="{StaticResource ColorToStringConverter}"/>

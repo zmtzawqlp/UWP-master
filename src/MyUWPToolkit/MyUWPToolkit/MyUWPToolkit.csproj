@@ -158,6 +158,9 @@
     <Compile Include="Panel\VariableSizedGrid\VariableSizedWrapGridDataContext.cs" />
     <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedGridView.cs" />
     <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedWrapGrid.cs" />
+    <Compile Include="Popup\AdvancedFlyout.cs" />
+    <Compile Include="Popup\AdvancedFlyoutBase.cs" />
+    <Compile Include="Popup\AdvancedFlyoutPlacementMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\NumericTextBox.cs" />
     <Compile Include="Text\NumericUpDown.cs" />

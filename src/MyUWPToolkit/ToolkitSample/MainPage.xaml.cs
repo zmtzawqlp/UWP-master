@@ -1,4 +1,5 @@
-﻿using MyUWPToolkit.Util;
+﻿using MyUWPToolkit;
+using MyUWPToolkit.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,8 +87,10 @@ namespace ToolkitSample
                 case "ColorPicker":
                     Frame.Navigate(typeof(ColorPickerPage));
                     break;
+                case "AdvancedFlyout":
+                    Frame.Navigate(typeof(AdvancedFlyoutPage));
+                    break;
 
-                    
                 default:
                     break;
             }

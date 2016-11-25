@@ -23,7 +23,7 @@ namespace MyUWPToolkit
     /// 
     /// </summary>
     [TemplatePart(Name = "ToggleButton", Type = typeof(ToggleButton))]
-    [TemplatePart(Name = "Flyout", Type = typeof(Flyout))]
+    [TemplatePart(Name = "Flyout", Type = typeof(AdvancedFlyout))]
     [TemplatePart(Name = "BasicColorItems", Type = typeof(ItemsControl))]
     [TemplatePart(Name = "RecentColorItems", Type = typeof(ItemsControl))]
     [TemplatePart(Name = "Hue", Type = typeof(Slider))]
@@ -55,7 +55,7 @@ namespace MyUWPToolkit
 
             _toggleButton = GetTemplateChild("ToggleButton") as Button;
             _toggleButton.Click += _toggleButton_Click;
-            _flyout = GetTemplateChild("Flyout") as Flyout;
+            _flyout = GetTemplateChild("Flyout") as AdvancedFlyout;
             _flyout.Opening += _flyout_Opening;
             _flyout.Closed += _flyout_Closed;
             _flyout.Opened += _flyout_Opened;
@@ -360,9 +360,9 @@ namespace MyUWPToolkit
 
         private void _flyout_Opened(object sender, object e)
         {
-            ((_flyout.Content as Grid).Parent as FlyoutPresenter).MaxHeight = FlyoutHeight;
-            ((_flyout.Content as Grid).Parent as FlyoutPresenter).MaxWidth = FlyoutWidth;
-
+            //((_flyout.Content as Grid).Parent as FlyoutPresenter).MaxHeight = FlyoutHeight;
+            //((_flyout.Content as Grid).Parent as FlyoutPresenter).MaxWidth = FlyoutWidth;
+            IsOpen = true;
             _pivot.SelectedIndex = 0;
             SetDefaultCustomColor();
             _choiceGridParent.Focus(FocusState.Programmatic);
@@ -457,6 +457,7 @@ namespace MyUWPToolkit
 
         private void _flyout_Closed(object sender, object e)
         {
+            IsOpen = false;
             Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
         }
 

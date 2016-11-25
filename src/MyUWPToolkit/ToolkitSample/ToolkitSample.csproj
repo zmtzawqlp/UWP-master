@@ -123,6 +123,9 @@
     <Compile Include="Views\CropImageControlPage.xaml.cs">
       <DependentUpon>CropImageControlPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\AdvancedFlyoutPage.xaml.cs">
+      <DependentUpon>AdvancedFlyoutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomKeyboardPage.xaml.cs">
       <DependentUpon>CustomKeyboardPage.xaml</DependentUpon>
     </Compile>
@@ -197,6 +200,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CropImageControlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AdvancedFlyoutPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

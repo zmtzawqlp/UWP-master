@@ -200,11 +200,11 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" SelectedColorChanged="colorPicker_SelectedColorChanged" Placement="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Red" ArrowVisibility="Visible"/>
+            <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" SelectedColorChanged="colorPicker_SelectedColorChanged" Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Red" ArrowVisibility="Visible"/>
 
-            <Rectangle Width="100" Height="30" Margin="100" Fill="Green" Tapped="Rectangle_Tapped"/>
+            <Rectangle x:Name="rectangle1" Width="100" Height="30" Margin="100" Fill="Green" Tapped="Rectangle_Tapped"/>
 
-            <Rectangle Width="100" Height="30" Margin="100" Fill="Yellow" Tapped="Rectangle_Tapped"/>
+            <Rectangle x:Name="rectangle2" Width="100" Height="30" Margin="100" Fill="Yellow" Tapped="Rectangle_Tapped"/>
 
 
             <Canvas Height="300" Width="300" Background="Red">

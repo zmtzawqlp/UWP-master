@@ -16,7 +16,7 @@ namespace MyUWPToolkit
     {
         #region Fileds
         Button _toggleButton;
-        Flyout _flyout;
+        AdvancedFlyout _flyout;
         ColorPickerItemsControl _basicColorItemsControl;
         ColorPickerItemsControl _recentColorItemsControl;
         private List<Color> _defaultBasicColors;
@@ -40,6 +40,7 @@ namespace MyUWPToolkit
 
         #region Property
         public event ColorChangedEventHandler SelectedColorChanged;
+        public bool IsOpen { get; private set; }
 
         #endregion
 
@@ -71,15 +72,15 @@ namespace MyUWPToolkit
 
 
 
-        public FlyoutPlacementMode Placement
+        public AdvancedFlyoutPlacementMode Placement
         {
-            get { return (FlyoutPlacementMode)GetValue(PlacementProperty); }
+            get { return (AdvancedFlyoutPlacementMode)GetValue(PlacementProperty); }
             set { SetValue(PlacementProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Placement.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PlacementProperty =
-            DependencyProperty.Register("Placement", typeof(FlyoutPlacementMode), typeof(ColorPicker), new PropertyMetadata(FlyoutPlacementMode.Top));
+            DependencyProperty.Register("Placement", typeof(AdvancedFlyoutPlacementMode), typeof(ColorPicker), new PropertyMetadata(AdvancedFlyoutPlacementMode.TopCenter));
 
 
 
