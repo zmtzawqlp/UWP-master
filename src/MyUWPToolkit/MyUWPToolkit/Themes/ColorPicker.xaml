@@ -766,7 +766,7 @@
         <Setter Property="Padding" Value="5,5"/>
         <Setter Property="FlyoutWidth" Value="312"/>
         <Setter Property="FlyoutHeight" Value="410"/>
-        <Setter Property="Title" Value="颜色"/>
+        <!--<Setter Property="Title" Value="颜色"/>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ColorPicker">
@@ -842,7 +842,7 @@
                                                             <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF7030A0" Margin="9 9 0 0"/>
                                                         </Grid>
                                                     </Border>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="基本颜色"  TextWrapping="Wrap" Grid.Column="1">
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Basic Color"  TextWrapping="Wrap" Grid.Column="1">
                                                        
                                                     </TextBlock>
                                                 </Grid>
@@ -851,13 +851,12 @@
                                                 <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
                                                     <TextBlock Margin="5,0"  VerticalAlignment="Center">
                                                          <Run Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                         <Run Text=" - "/>
-                                                         <Run Text="基本颜色"/>
+                                                         <Run Text="Basic Color"/>
                                                     </TextBlock>
                                                 </Border>
                                                 <local:ColorPickerItemsControl x:Name="BasicColorItems" MinHeight="43"/>
                                                 <Border Margin="0,5,0,0" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" Height="30">
-                                                    <TextBlock Margin="5,0"  Text="最近使用颜色" VerticalAlignment="Center"/>
+                                                    <TextBlock Margin="5,0"  Text="Recent Color" VerticalAlignment="Center"/>
                                                 </Border>
                                                 <local:ColorPickerItemsControl x:Name="RecentColorItems" MinHeight="43"/>
                                             </StackPanel>
@@ -903,7 +902,7 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                     <Ellipse Height="15" HorizontalAlignment="Stretch" Margin="-0.5,-1.5,2.5,-1.5" VerticalAlignment="Stretch" Width="15" Stroke="#FF8AA3B5"/>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1">
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Custom Color" TextWrapping="Wrap" Grid.Column="1">
                                                     </TextBlock>
                                                 </Grid>
                                             </PivotItem.Header>
@@ -928,8 +927,7 @@
                                                 <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
                                                     <TextBlock Margin="5,0"  VerticalAlignment="Center">
                                                          <Run Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                         <Run Text=" - "/>
-                                                         <Run Text="自定义颜色"/>
+                                                         <Run Text="Custom Color"/>
                                                     </TextBlock>
                                                 </Border>
                                                 <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
@@ -1007,22 +1005,22 @@
                                                     </Grid.ColumnDefinitions>
                                                     <local:NumericTextBox x:Name="AColor" Grid.Column="0">
                                                         <local:NumericTextBox.Header>
-                                                            <TextBlock Text="透明度(A)" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="Alpha(A)" HorizontalAlignment="Center"/>
                                                         </local:NumericTextBox.Header>
                                                     </local:NumericTextBox>
                                                     <local:NumericTextBox x:Name="RColor"  Grid.Column="1" >
                                                         <local:NumericTextBox.Header>
-                                                            <TextBlock Text="红(R)" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="Red(R)" HorizontalAlignment="Center"/>
                                                         </local:NumericTextBox.Header>
                                                     </local:NumericTextBox>
                                                     <local:NumericTextBox x:Name="GColor" Grid.Column="2" >
                                                         <local:NumericTextBox.Header>
-                                                            <TextBlock Text="绿(G)" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="Green(G)" HorizontalAlignment="Center"/>
                                                         </local:NumericTextBox.Header>
                                                     </local:NumericTextBox>
                                                     <local:NumericTextBox x:Name="BColor" Grid.Column="3" >
                                                         <local:NumericTextBox.Header>
-                                                            <TextBlock Text="蓝(B)" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="Blue(B)" HorizontalAlignment="Center"/>
                                                         </local:NumericTextBox.Header>
                                                     </local:NumericTextBox>
                                                 </Grid>
@@ -1044,12 +1042,12 @@
                                                             </ToolTipService.ToolTip>
                                                         </Rectangle>
                                                     </Grid>
-                                                    <Button x:Name="CustomColorOkButton" Grid.Column="1" Content="确定" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                                    <Button x:Name="CustomColorOkButton" Grid.Column="1" Content="OK" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                                 </Grid>
                                             </Grid>
                                         </PivotItem>
                                     </Pivot>
-                                    <Button x:Name="CloseButton" Content="关闭" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5"/>
+                                    <Button x:Name="CloseButton" Content="Close" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5"/>
                                 </Grid>
                             </local:AdvancedFlyout>
                         </local:AdvancedFlyoutBase.AttachedFlyout>
