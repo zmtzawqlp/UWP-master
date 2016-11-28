@@ -73,7 +73,7 @@ namespace ToolkitSample.Views
             b.Background = new SolidColorBrush(Colors.Red);
             Button c = new Button();
             c.Click += C_Click;
-            c.Content = "Click me";
+            c.Content = "Show flyout";
             b.Child = c;
             flyout1.Content = b;
 
@@ -85,14 +85,5 @@ namespace ToolkitSample.Views
             flyout.Placement = (AdvancedFlyoutPlacementMode)combobox.SelectedIndex;
         }
 
-        private void HorizontalOffsetTB_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            flyout.HorizontalOffset = e.NewValue;
-        }
-
-        private void VerticalOffsetTB_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            flyout.VerticalOffset = e.NewValue;
-        }
     }
 }

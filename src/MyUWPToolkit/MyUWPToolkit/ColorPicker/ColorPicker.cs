@@ -366,6 +366,10 @@ namespace MyUWPToolkit
             _pivot.SelectedIndex = 0;
             SetDefaultCustomColor();
             _choiceGridParent.Focus(FocusState.Programmatic);
+            if (Opened != null)
+            {
+                Opened(sender, e);
+            }
         }
 
         private async void _flyout_Opening(object sender, object e)
@@ -459,6 +463,10 @@ namespace MyUWPToolkit
         {
             IsOpen = false;
             Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
+            if (Closed != null)
+            {
+                Closed(sender, e);
+            }
         }
 
 

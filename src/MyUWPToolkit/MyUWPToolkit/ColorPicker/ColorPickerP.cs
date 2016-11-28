@@ -40,6 +40,8 @@ namespace MyUWPToolkit
 
         #region Property
         public event ColorChangedEventHandler SelectedColorChanged;
+        public event EventHandler<System.Object> Closed;
+        public event EventHandler<System.Object> Opened;
         public bool IsOpen { get; private set; }
 
         #endregion

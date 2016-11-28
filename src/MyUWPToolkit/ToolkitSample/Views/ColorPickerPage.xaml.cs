@@ -46,5 +46,11 @@ namespace ToolkitSample.Views
                 colorPicker.Owner = null;
             }
         }
+
+        private void colorPicker_Closed(object sender, object e)
+        {
+            colorPicker.PlacementTarget = null;
+            colorPicker.Owner = null;
+        }
     }
 }

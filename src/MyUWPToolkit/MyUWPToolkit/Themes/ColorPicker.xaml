@@ -316,9 +316,10 @@
         <Setter Property="CharacterSpacing" Value="{ThemeResource PivotHeaderItemCharacterSpacing}" />
         <Setter Property="Background" Value="Transparent" />
         <!--<Setter Property="Foreground" Value="Black" />-->
-        <Setter Property="Padding" Value="5" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="Height" Value="48" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="BorderBrush" Value="#A4AFBA"/>
         <Setter Property="BorderThickness" Value="0,0,1,0"/>
@@ -823,7 +824,7 @@
                                         </Pivot.Resources>
                                         <PivotItem>
                                             <PivotItem.Header>
-                                                <Grid>
+                                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="17"/>
                                                         <ColumnDefinition/>
@@ -841,7 +842,7 @@
                                                             <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF7030A0" Margin="9 9 0 0"/>
                                                         </Grid>
                                                     </Border>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="基本颜色"  TextWrapping="Wrap" Grid.Column="1">
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="基本颜色"  TextWrapping="Wrap" Grid.Column="1">
                                                        
                                                     </TextBlock>
                                                 </Grid>
@@ -863,7 +864,7 @@
                                         </PivotItem>
                                         <PivotItem>
                                             <PivotItem.Header>
-                                                <Grid>
+                                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="17"/>
                                                         <ColumnDefinition/>
@@ -902,7 +903,7 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                     <Ellipse Height="15" HorizontalAlignment="Stretch" Margin="-0.5,-1.5,2.5,-1.5" VerticalAlignment="Stretch" Width="15" Stroke="#FF8AA3B5"/>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1">
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1">
                                                     </TextBlock>
                                                 </Grid>
                                             </PivotItem.Header>

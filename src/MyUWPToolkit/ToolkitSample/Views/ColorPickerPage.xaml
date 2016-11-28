@@ -200,28 +200,12 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" SelectedColorChanged="colorPicker_SelectedColorChanged" Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Red" ArrowVisibility="Visible"/>
+            <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="1" Closed="colorPicker_Closed" SelectedColorChanged="colorPicker_SelectedColorChanged" Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Red" ArrowVisibility="Visible"/>
 
             <Rectangle x:Name="rectangle1" Width="100" Height="30" Margin="100" Fill="Green" Tapped="Rectangle_Tapped"/>
 
             <Rectangle x:Name="rectangle2" Width="100" Height="30" Margin="100" Fill="Yellow" Tapped="Rectangle_Tapped"/>
 
-
-            <Canvas Height="300" Width="300" Background="Red">
-                <Canvas x:Name="Indicator" Canvas.Left="300">
-                    <Ellipse Height="6" Width="6" Fill="Transparent" Stroke="#FFFFFFFF" StrokeThickness="1" Margin="-3 -3 0 0" />
-                    <Ellipse Height="12" Width="12" Fill="Transparent" Stroke="#FF737373" StrokeThickness="1" Margin="-6 -6 0 0" />
-                </Canvas>
-            </Canvas>
-            <control:UpDownTextBox
-                                    x:Name="PART_ValueTextBox"
-     Width="40"
-                                    Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
-                                    Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
-                                    InputScope="Number"
-                                    HorizontalAlignment="Stretch"
-                                 />
-            <control:NumericUpDown />
             <!--<Slider Width="100" Height="30" Orientation="Vertical"  Style="{StaticResource SliderStyle1}" Maximum="1.0" SmallChange="0.1" StepFrequency="0.1" LargeChange="1" />
             <Thumb Width="100" Height="100" Style="{StaticResource ThumbStyle1}"/>-->
         </StackPanel>

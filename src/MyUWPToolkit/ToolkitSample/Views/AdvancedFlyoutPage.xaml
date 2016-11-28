@@ -59,16 +59,16 @@
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,10,10,0">
 
-        <control:NumericUpDown x:Name="HorizontalOffsetTB" Header="HorizontalOffset" HorizontalAlignment="Left" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F0" ValueChanged="HorizontalOffsetTB_ValueChanged"/>
+        <control:NumericUpDown x:Name="HorizontalOffsetTB" Header="HorizontalOffset" HorizontalAlignment="Left" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F2" />
 
-        <control:NumericUpDown x:Name="VerticalOffsetTB" Header="VerticalOffset" HorizontalAlignment="Center" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F0" ValueChanged="VerticalOffsetTB_ValueChanged"/>
+        <control:NumericUpDown x:Name="VerticalOffsetTB" Header="VerticalOffset" HorizontalAlignment="Center" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F2"/>
 
         <ComboBox x:Name="combobox" HorizontalAlignment="Right"  SelectionChanged="combobox_SelectionChanged"/>
 
         <Button VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Click" Content="Show flyout"/>
 
         <control:AdvancedFlyoutBase.AttachedFlyout>
-            <control:AdvancedFlyout x:Name="flyout" >
+            <control:AdvancedFlyout x:Name="flyout"  HorizontalOffset="{Binding Value,ElementName=HorizontalOffsetTB}" VerticalOffset="{Binding Value,ElementName=VerticalOffsetTB}">
                 <Border Background="Red" Width="300" Height="300">
                     <Button Content="Click me" Click="C_Click"/>
                 </Border>
