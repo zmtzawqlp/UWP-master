@@ -200,7 +200,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
-            <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="1" Closed="colorPicker_Closed" SelectedColorChanged="colorPicker_SelectedColorChanged" Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Red" ArrowVisibility="Visible"/>
+            <control:ColorPicker x:Name="colorPicker" Width="300" Height="40" Opacity="0" Closed="colorPicker_Closed" SelectedColorChanged="colorPicker_SelectedColorChanged" Placement="BottomCenter" HorizontalAlignment="Center" VerticalAlignment="Top" SelectedColor="Transparent" ArrowVisibility="Visible"/>
 
             <Rectangle x:Name="rectangle1" Width="100" Height="30" Margin="100" Fill="Green" Tapped="Rectangle_Tapped"/>
 
