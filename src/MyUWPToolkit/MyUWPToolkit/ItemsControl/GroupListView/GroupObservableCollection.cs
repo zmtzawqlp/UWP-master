@@ -24,6 +24,14 @@ namespace MyUWPToolkit
             this.groupHeaders = groupHeaders;
         }
 
+        public List<IList<T>> SouresList
+        {
+            get
+            {
+                return souresList;
+            }
+        }
+
         public bool HasMoreItems
         {
             get

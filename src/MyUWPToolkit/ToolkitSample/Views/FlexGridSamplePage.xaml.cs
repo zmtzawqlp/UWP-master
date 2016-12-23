@@ -81,16 +81,11 @@ namespace ToolkitSample
                 return;
             }
 
-            double wideViewMinWidth = 520.0;
-
-            bool isWideScreen = Window.Current.Bounds.Width >= wideViewMinWidth;
-
-
             var currentColumnsCount = (flexgrid.ColumnsHeaderItemsSource as ObservableCollection<MyColumn>)?.Count;
-            var verticalScrollBarWidth = PlatformIndependent.IsWindowsPhoneDevice ? 0 : 12;
-           
+            //var verticalScrollBarWidth = PlatformIndependent.IsWindowsPhoneDevice ? 0 : 12;
+            var verticalScrollBarWidth = 0;
 
-            if (!isWideScreen)
+            if (DeviceInfo.IsNarrowSrceen)
             {
                 var narrowScreenItemTemplate = this.Resources["NarrowScreenItemTemplate"] as DataTemplate;
 

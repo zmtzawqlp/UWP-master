@@ -9,6 +9,7 @@ using Windows.Graphics.Display;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 namespace MyUWPToolkit.Util
 {
@@ -48,14 +49,42 @@ namespace MyUWPToolkit.Util
         public static readonly string Language;
 
         /// <summary>
-        /// 设备类型
+        /// 设备家族
         /// </summary>
-        public static readonly string DeviceType;
+        public static readonly WindowsDeviceFamily DeviceFamily;
 
         /// <summary>
         /// 设备屏幕大小
         /// </summary>
         public static readonly Size DeviceScreenSize;
+
+        public static readonly double WideViewMinWidth;
+
+        public static UserInteractionMode InteractionMode
+        {
+            get
+            {
+                return UIViewSettings.GetForCurrentView().UserInteractionMode;
+            }
+        }
+
+
+        public static bool IsNarrowSrceen
+        {
+            get
+            {
+                //https://msdn.microsoft.com/zh-cn/library/windows/hardware/dn917883(v=vs.85).aspx
+                switch (UIViewSettings.GetForCurrentView().UserInteractionMode)
+                {
+                    case UserInteractionMode.Mouse:
+                        return false;
+                    case UserInteractionMode.Touch:
+                        return DeviceFamily == WindowsDeviceFamily.Mobile;
+                    default:
+                        return (Window.Current.Bounds.Width < WideViewMinWidth);
+                }
+            }
+        }
 
         static DeviceInfo()
         {
@@ -66,9 +95,19 @@ namespace MyUWPToolkit.Util
             DeviceResolution = GetDeviceResolution();
             Timezone = GetTimezone();
             Language = GetLanguage();
-            DeviceType = GetDeviceType();
+            DeviceFamily = GetDeviceFamily();
+            WideViewMinWidth = GetWideViewMinWidth();
         }
 
+        private static double GetWideViewMinWidth()
+        {
+            double wideViewMinWidth = 640;
+            if (Application.Current.Resources.ContainsKey("WideViewMinWidth"))
+            {
+                wideViewMinWidth = (double)Application.Current.Resources["WideViewMinWidth"];
+            }
+            return wideViewMinWidth;
+        }
 
         /// <summary>
         /// 获取设备屏幕大小
@@ -86,36 +125,19 @@ namespace MyUWPToolkit.Util
             return resolution;
         }
 
-        private static string GetDeviceType()
+        /// <summary>
+        /// 获取设备家族
+        /// </summary>
+        /// <returns>设备家族</returns>
+        private static WindowsDeviceFamily GetDeviceFamily()
         {
-            var deviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily;
-
-            if (deviceFamily == "Windows.Desktop")
+            switch (AnalyticsInfo.VersionInfo.DeviceFamily)
             {
-                if (UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Mouse)
-                {
-                    return "WINDESKTOP";
-                }
-                else
-                {
-                    return "WINPAD";
-                }
-            }
-            else if (deviceFamily == "Windows.Mobile")
-            {
-                return "WINPHONE";
-            }
-            else if (deviceFamily == "Windows.Xbox")
-            {
-                return "XBOX";
-            }
-            else if (deviceFamily == "Windows.IoT")
-            {
-                return "IOT";
-            }
-            else
-            {
-                return deviceFamily.ToUpper();
+                case "Windows.Desktop": return WindowsDeviceFamily.Desktop;
+                case "Windows.Mobile": return WindowsDeviceFamily.Mobile;
+                case "Windows.Xbox": return WindowsDeviceFamily.Xbox;
+                case "Windows.IoT": return WindowsDeviceFamily.IoT;
+                default: return WindowsDeviceFamily.Unknown;
             }
         }
 
@@ -184,7 +206,20 @@ namespace MyUWPToolkit.Util
             ulong version = Convert.ToUInt64(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
             return $"{version >> 48 & 0xFFFF}.{version >> 32 & 0xFFFF}.{version >> 16 & 0xFFFF}.{version & 0xFFFF}";
         }
-
     }
 
+    /// <summary>
+    /// Windows设备家族
+    /// </summary>
+    public enum WindowsDeviceFamily
+    {
+        Unknown,
+        Desktop,
+        Mobile,
+        Xbox,
+        IoT,
+        //IoTHeadless,
+        //HoloLens,
+        //Surface Hub
+    }
 }
