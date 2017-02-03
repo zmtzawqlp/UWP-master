@@ -10,20 +10,24 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="WideScreenItemTemplate">
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="*" MinWidth="110"/>
-                    <ColumnDefinition Width="*" MinWidth="110"/>
-                    <ColumnDefinition Width="*" MinWidth="110"/>
-                    <ColumnDefinition Width="*" MinWidth="110"/>
-                    <ColumnDefinition Width="*" MinWidth="110"/>
-                    <ColumnDefinition Width="*" MinWidth="110"/>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="110" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                <Grid Background="Green" Width="110"  flexgrid:FlexGridItemFrozenContent.IsFrozenContent="False">
+                    <TextBlock Text="{Binding Age}" />
+                </Grid>
                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>
                 <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
-                <TextBlock Text="{Binding Age}" Grid.Column="3"/>
+                <Grid Background="Yellow" Width="110"  Grid.Column="3" flexgrid:FlexGridItemFrozenContent.IsFrozenContent="True">
+                    <TextBlock Text="{Binding Age}" />
+                </Grid>
                 <TextBlock Text="{Binding Name}" Grid.Column="4"/>
                 <TextBlock Text="{Binding IsMale}" Grid.Column="5"/>
                 <TextBlock Text="{Binding Name}" Grid.Column="6"/>
@@ -38,7 +42,9 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Age}" Grid.Column="0"/>
+                <Grid Background="Green" Width="100" flexgrid:FlexGridItemFrozenContent.IsFrozenContent="True">
+                    <TextBlock Text="{Binding Age}" />
+                </Grid>
                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>
                 <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
                 <TextBlock Text="{Binding Age}" Grid.Column="3"/>
@@ -56,25 +62,26 @@
         <Pivot>
             <PivotItem Header="adada">
                 <control:PullToRefreshGrid PullToRefresh="PullToRefreshGrid_PullToRefresh">
-                    <flexgrid:FlexGrid x:Name="flexgrid" SelectionMode="None" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
-                        <flexgrid:FlexGrid.Header>
+                    <flexgrid:NewFlexGrid x:Name="flexgrid" SelectionMode="None" ItemTemplate="{StaticResource WideScreenItemTemplate}" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
+                        <!--<flexgrid:FlexGrid.Header>
                             <Rectangle Height="200" Fill="Red"/>
-                        </flexgrid:FlexGrid.Header>
-                        <flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
+                        </flexgrid:FlexGrid.Header>-->
+                        <!--<flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
                             <DataTemplate>
                                 <Grid Background="Yellow" Width="100">
                                     <TextBlock Text="{Binding ColumnName}" />
                                 </Grid>
                             </DataTemplate>
-                        </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>
-                        <flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
+                        </flexgrid:FlexGrid.FrozenColumnsHeaderItemTemplate>-->
+                        <flexgrid:NewFlexGrid.ColumnsHeaderItemTemplate>
                             <DataTemplate>
                                 <Grid Background="Yellow" Width="{Binding ColumnWidth,Mode=OneWay}">
                                     <TextBlock Text="{Binding ColumnName}" HorizontalAlignment="Left"/>
                                 </Grid>
                             </DataTemplate>
-                        </flexgrid:FlexGrid.ColumnsHeaderItemTemplate>
-                    </flexgrid:FlexGrid>
+                        </flexgrid:NewFlexGrid.ColumnsHeaderItemTemplate>
+                    </flexgrid:NewFlexGrid>
+                   
                 </control:PullToRefreshGrid>
                
             </PivotItem>

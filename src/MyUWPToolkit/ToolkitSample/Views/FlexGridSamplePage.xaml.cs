@@ -60,11 +60,11 @@ namespace ToolkitSample
             {
                 columns.Add(new MyColumn() { ColumnName = "Name" + i });
             }
-            flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
+            //flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
             flexgrid.ColumnsHeaderItemsSource = columns;
             flexgrid.ItemsSource = _employees;
-            UpdateColumns(flexgrid.ActualWidth);
-            flexgrid.SizeChanged += Flexgrid_SizeChanged;
+            //UpdateColumns(flexgrid.ActualWidth);
+            //flexgrid.SizeChanged += Flexgrid_SizeChanged;
         }
 
 
@@ -100,9 +100,9 @@ namespace ToolkitSample
                 {
                     flexgrid.ColumnsHeaderItemsSource = newcolumns;
                 }
-                flexgrid.FrozenColumnsHeaderItemsSource = null;
-                flexgrid.FrozenColumnsItemTemplate = null;
-                flexgrid.FrozenColumnsVisibility = Visibility.Collapsed;
+                //flexgrid.FrozenColumnsHeaderItemsSource = null;
+                //flexgrid.FrozenColumnsItemTemplate = null;
+                //flexgrid.FrozenColumnsVisibility = Visibility.Collapsed;
                 var w = (width - 100 - verticalScrollBarWidth) / (newcolumns.Count - 1);
                 foreach (var item in newcolumns)
                 {
@@ -131,9 +131,9 @@ namespace ToolkitSample
                 //update list
                 if (columnsSize < width - verticalScrollBarWidth)
                 {
-                    flexgrid.FrozenColumnsHeaderItemsSource = null;
-                    flexgrid.FrozenColumnsItemTemplate = null;
-                    flexgrid.FrozenColumnsVisibility = Visibility.Collapsed;
+                    //flexgrid.FrozenColumnsHeaderItemsSource = null;
+                    //flexgrid.FrozenColumnsItemTemplate = null;
+                    //flexgrid.FrozenColumnsVisibility = Visibility.Collapsed;
                     var w = (width - 100 - verticalScrollBarWidth) / (columns.Count - 1);
                     foreach (var item in columns)
                     {
@@ -144,15 +144,15 @@ namespace ToolkitSample
                 }
                 else
                 {
-                    if (flexgrid.FrozenColumnsHeaderItemsSource == null)
-                    {
-                        flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
-                    }
-                    if (flexgrid.FrozenColumnsItemTemplate == null)
-                    {
-                        flexgrid.FrozenColumnsItemTemplate = this.Resources["FrozenColumnsItemTemplate"] as DataTemplate;
-                    }
-                    flexgrid.FrozenColumnsVisibility = Visibility.Visible;
+                    //if (flexgrid.FrozenColumnsHeaderItemsSource == null)
+                    //{
+                    //    flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
+                    //}
+                    //if (flexgrid.FrozenColumnsItemTemplate == null)
+                    //{
+                    //    flexgrid.FrozenColumnsItemTemplate = this.Resources["FrozenColumnsItemTemplate"] as DataTemplate;
+                    //}
+                    //flexgrid.FrozenColumnsVisibility = Visibility.Visible;
                     foreach (var item in columns)
                     {
                         item.ColumnWidth = 110;

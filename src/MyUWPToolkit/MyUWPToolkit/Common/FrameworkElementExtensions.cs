@@ -17,6 +17,23 @@ namespace MyUWPToolkit
     /// </summary>
     public static class FrameworkElementExtensions
     {
+        public static List<UIElement> GetAllChildren(this DependencyObject parent)
+        {
+            List<UIElement> allChildren = new List<UIElement>();
+            for (int count = 0; count < VisualTreeHelper.GetChildrenCount(parent); count++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, count);
+                var ui = child as UIElement;
+                if (ui != null)
+                {
+                    allChildren.Add(ui);
+                }
+                allChildren.AddRange(child.GetAllChildren());
+            }
+
+            return allChildren;
+        }
+
         #region ClipToBounds
         /// <summary>
         /// ClipToBounds Attached Dependency Property
@@ -489,4 +506,7 @@ namespace MyUWPToolkit
         }
     }
     #endregion
+
+
+
 }
