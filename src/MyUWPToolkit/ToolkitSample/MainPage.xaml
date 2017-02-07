@@ -28,6 +28,7 @@
             <x:String>GroupListView</x:String>
             <x:String>ColorPicker</x:String>
             <x:String>AdvancedFlyout</x:String>
+            <x:String>HightLightedRadioButton</x:String>
             <x:String>Test</x:String>
             
         </ListView>

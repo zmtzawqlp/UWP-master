@@ -15,5 +15,6 @@
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/PullToRefreshGrid.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/ColorPicker.Xaml"/>
         <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/NumericUpDown.Xaml"/>
+        <ResourceDictionary Source="ms-appx:///MyUWPToolkit/themes/HightLightedRadioButton.Xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

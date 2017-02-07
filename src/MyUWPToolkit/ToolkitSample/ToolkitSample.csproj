@@ -135,6 +135,9 @@
     <Compile Include="Views\GroupListViewPage.xaml.cs">
       <DependentUpon>GroupListViewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\HightLightedRadioButtonSamplePage.xaml.cs">
+      <DependentUpon>HightLightedRadioButtonSamplePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImageToolPage.xaml.cs">
       <DependentUpon>ImageToolPage.xaml</DependentUpon>
     </Compile>
@@ -216,6 +219,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GroupListViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HightLightedRadioButtonSamplePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

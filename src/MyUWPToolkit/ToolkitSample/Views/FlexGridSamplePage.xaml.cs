@@ -65,6 +65,7 @@ namespace ToolkitSample
             flexgrid.ItemsSource = _employees;
             //UpdateColumns(flexgrid.ActualWidth);
             //flexgrid.SizeChanged += Flexgrid_SizeChanged;
+           
         }
 
 

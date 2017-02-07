@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Button\HightLightedRadioButton.cs" />
     <Compile Include="Chart\ColumnChart.cs" />
     <Compile Include="CollectionView\ICollectionViewEx.cs" />
     <Compile Include="CollectionView\UWPCollectionView.cs" />
@@ -207,6 +208,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\FlexGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\HightLightedRadioButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

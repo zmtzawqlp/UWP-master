@@ -90,7 +90,10 @@ namespace ToolkitSample
                 case "AdvancedFlyout":
                     Frame.Navigate(typeof(AdvancedFlyoutPage));
                     break;
-
+                case "HightLightedRadioButton":
+                    Frame.Navigate(typeof(HightLightedRadioButtonSamplePage));
+                    break;
+                    
                 default:
                     break;
             }
