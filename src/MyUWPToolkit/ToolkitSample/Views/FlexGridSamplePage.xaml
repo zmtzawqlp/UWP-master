@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:MyUWPToolkit"
     xmlns:flexgrid="using:MyUWPToolkit.FlexGrid"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="WideScreenItemTemplate">
@@ -20,12 +21,12 @@
                     <ColumnDefinition Width="110" />
                     <ColumnDefinition Width="110" />
                 </Grid.ColumnDefinitions>
-                <Grid Background="Green" Width="110"  flexgrid:FlexGridItemFrozenContent.IsFrozenContent="False">
+                <Grid Background="Green" Width="110"  flexgrid:FlexGridItemFrozenContent.IsFrozenContent="True">
                     <TextBlock Text="{Binding Age}" />
                 </Grid>
                 <TextBlock Text="{Binding Name}" Grid.Column="1"/>
                 <TextBlock Text="{Binding IsMale}" Grid.Column="2"/>
-                <Grid Background="Yellow" Width="110"  Grid.Column="3" flexgrid:FlexGridItemFrozenContent.IsFrozenContent="True">
+                <Grid Background="Yellow" Width="110"  Grid.Column="3" >
                     <TextBlock Text="{Binding Age}" />
                 </Grid>
                 <TextBlock Text="{Binding Name}" Grid.Column="4"/>
@@ -62,7 +63,7 @@
         <Pivot>
             <PivotItem Header="adada">
                 <control:PullToRefreshGrid PullToRefresh="PullToRefreshGrid_PullToRefresh">
-                    <flexgrid:NewFlexGrid x:Name="flexgrid" SelectionMode="None" ItemTemplate="{StaticResource WideScreenItemTemplate}" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
+                    <flexgrid:NewFlexGrid x:Name="flexgrid" SelectionMode="None" ColumnHeaderFrozenCount="1" ItemTemplate="{StaticResource WideScreenItemTemplate}" ItemClick="flexgrid_ItemClick" IsItemClickEnabled="True" SortingColumn="flexgrid_SortingColumn" >
                         <!--<flexgrid:FlexGrid.Header>
                             <Rectangle Height="200" Fill="Red"/>
                         </flexgrid:FlexGrid.Header>-->

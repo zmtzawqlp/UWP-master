@@ -765,13 +765,22 @@
                     <Border x:Name="RootBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
                         <ScrollViewer x:Name="ScrollViewer" Style="{StaticResource FlexGridScrollViewerStyle}" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
                             <ScrollViewer.TopHeader>
-                                <local:NewFlexGridColumnHeader x:Name="ColumnHeader" FrozenCount="{TemplateBinding ColumnHeaderFrozenCount}" SelectionMode="None" IsItemClickEnabled="True" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding ColumnsHeaderItemTemplate}">
-                                    <local:NewFlexGridColumnHeader.ItemsPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <local:NewFlexGridColumnHeader x:Name="ColumnHeader" FrozenCount="{TemplateBinding ColumnHeaderFrozenCount}" SelectionMode="None" IsItemClickEnabled="True" Style="{StaticResource NoScrollViewerListViewStyle}" ItemsSource="{TemplateBinding ColumnsHeaderItemsSource}" ItemTemplate="{TemplateBinding ColumnsHeaderItemTemplate}">
+                                        <local:NewFlexGridColumnHeader.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Horizontal"/>
                                             </ItemsPanelTemplate>
                                         </local:NewFlexGridColumnHeader.ItemsPanel>
                                     </local:NewFlexGridColumnHeader>
+                                    <local:NewFlexGridFrozenRows x:Name="FrozenRows" ItemTemplate="{TemplateBinding ItemTemplate}" ItemsSource="{TemplateBinding FrozenRowsItemsSource}" IsItemClickEnabled="True" SelectionMode="None" Style="{StaticResource NoScrollViewerListViewStyle}" ItemContainerStyle="{TemplateBinding ItemContainerStyle}">
+                                        <local:NewFlexGridFrozenRows.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical"/>
+                                            </ItemsPanelTemplate>
+                                        </local:NewFlexGridFrozenRows.ItemsPanel>
+                                    </local:NewFlexGridFrozenRows>
+                                </StackPanel>
                             </ScrollViewer.TopHeader>
 
                             <ItemsPresenter HorizontalAlignment="Left"  VerticalAlignment="Top" FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}"  Padding="{TemplateBinding Padding}"/>

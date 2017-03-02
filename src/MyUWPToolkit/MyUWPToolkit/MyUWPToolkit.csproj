@@ -134,6 +134,7 @@
     <Compile Include="FlexGrid\FlexGridItemFrozenContent.cs" />
     <Compile Include="FlexGrid\FlexGridP.cs" />
     <Compile Include="FlexGrid\NewFlexGrid.cs" />
+    <Compile Include="FlexGrid\NewFlexGridFrozenRows.cs" />
     <Compile Include="FlexGrid\NewFlexGridHeader.cs" />
     <Compile Include="ImageControl\AspectRatio.cs" />
     <Compile Include="ImageControl\BitmapHelper.cs" />

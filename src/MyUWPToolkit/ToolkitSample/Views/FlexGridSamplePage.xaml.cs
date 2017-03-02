@@ -33,14 +33,41 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             Loaded += FlexGridSamplePage_Loaded;
-            
+
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                _employees = new ObservableCollection<Employee>(1000, (startIndex, count) =>
+                {
+                    return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
+                });
 
+                //_employees.CollectionChanged += _employees_CollectionChanged;
+
+                columns = new System.Collections.ObjectModel.ObservableCollection<MyColumn>();
+                for (int i = 1; i < 8; i++)
+                {
+                    columns.Add(new MyColumn() { ColumnName = "Name" + i });
+                }
+                //flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
+                flexgrid.ColumnsHeaderItemsSource = columns;
+                flexgrid.FrozenRowsItemsSource = TestData.GetEmployees().Take(1).ToList();
+                flexgrid.ItemsSource = _employees;
+            }
+            base.OnNavigatedTo(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+        }
 
         private void Flexgrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (e.NewSize.Width!=e.PreviousSize.Width)
+            if (e.NewSize.Width != e.PreviousSize.Width)
             {
                 UpdateColumns(e.NewSize.Width);
             }
@@ -48,24 +75,10 @@ namespace ToolkitSample
 
         private void FlexGridSamplePage_Loaded(object sender, RoutedEventArgs e)
         {
-            _employees = new ObservableCollection<Employee>(1000, (startIndex, count) =>
-            {
-                return TestData.GetEmployees().Skip(startIndex).Take(count).ToList();
-            });
 
-            //_employees.CollectionChanged += _employees_CollectionChanged;
-            
-            columns = new System.Collections.ObjectModel.ObservableCollection<MyColumn>();
-            for (int i = 1; i < 8; i++)
-            {
-                columns.Add(new MyColumn() { ColumnName = "Name" + i });
-            }
-            //flexgrid.FrozenColumnsHeaderItemsSource = columns.Take(1).ToObservableCollection<MyColumn>();
-            flexgrid.ColumnsHeaderItemsSource = columns;
-            flexgrid.ItemsSource = _employees;
             //UpdateColumns(flexgrid.ActualWidth);
             //flexgrid.SizeChanged += Flexgrid_SizeChanged;
-           
+
         }
 
 
@@ -187,7 +200,7 @@ namespace ToolkitSample
 
         private void flexgrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-          
+            Frame.Navigate(typeof(ImageToolPage));
         }
 
         private void PullToRefreshGrid_PullToRefresh(object sender, EventArgs e)
@@ -197,7 +210,7 @@ namespace ToolkitSample
     }
 
 
-    public class MyColumn:Column,INotifyPropertyChanged
+    public class MyColumn : Column, INotifyPropertyChanged
     {
         private double columnWidth = 110;
 
@@ -217,7 +230,7 @@ namespace ToolkitSample
 
         //private double _frozenColumnWidth = 100;
 
-      
+
         //public double FrozenColumnWidth
         //{
         //    get { return _frozenColumnWidth; }
@@ -233,7 +246,7 @@ namespace ToolkitSample
 
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged!=null)
+            if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }

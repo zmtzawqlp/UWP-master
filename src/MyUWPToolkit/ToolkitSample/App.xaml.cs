@@ -73,8 +73,11 @@ namespace ToolkitSample
                 Window.Current.Content = rootFrame;
                 SystemNavigationManager.GetForCurrentView().BackRequested += (s, ea) =>
                 {
-                    while (rootFrame.CanGoBack)
-                    { rootFrame.GoBack(); ea.Handled = true; }
+                    if (rootFrame.CanGoBack)
+                    {
+                        rootFrame.GoBack(); ea.Handled = true;
+                    }
+
                 };
             }
 

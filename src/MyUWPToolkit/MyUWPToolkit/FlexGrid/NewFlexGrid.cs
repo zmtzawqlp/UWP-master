@@ -25,6 +25,7 @@ namespace MyUWPToolkit.FlexGrid
         ScrollViewer _scrollViewer;
         ItemsPresenter _itemsPresenter;
         NewFlexGridColumnHeader _columnsHeader;
+        NewFlexGridFrozenRows _frozenRows;
         #endregion
 
         #region Property
@@ -79,6 +80,19 @@ namespace MyUWPToolkit.FlexGrid
             DependencyProperty.Register("ColumnsHeaderItemsSource", typeof(object), typeof(NewFlexGrid), new PropertyMetadata(null));
 
 
+
+        public object FrozenRowsItemsSource
+        {
+            get { return (object)GetValue(FrozenRowsItemsSourceProperty); }
+            set { SetValue(FrozenRowsItemsSourceProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FrozenRowsItemsSource.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FrozenRowsItemsSourceProperty =
+            DependencyProperty.Register("FrozenRowsItemsSource", typeof(object), typeof(NewFlexGrid), new PropertyMetadata(null));
+
+
+
         public DataTemplate ColumnsHeaderItemTemplate
         {
             get { return (DataTemplate)GetValue(ColumnsHeaderItemTemplateProperty); }
@@ -100,7 +114,7 @@ namespace MyUWPToolkit.FlexGrid
         public static readonly DependencyProperty ColumnHeaderFrozenCountProperty =
             DependencyProperty.Register("ColumnHeaderFrozenCount", typeof(int), typeof(NewFlexGrid), new PropertyMetadata(0));
 
-
+        public new event ItemClickEventHandler ItemClick;
 
         public NewFlexGrid()
         {
@@ -109,9 +123,18 @@ namespace MyUWPToolkit.FlexGrid
             this.ContainerContentChanging += FlexGrid_ContainerContentChanging;
             this.Loaded += NewFlexGrid_Loaded;
             this.Unloaded += NewFlexGrid_Unloaded;
+            base.ItemClick += NewFlexGrid_ItemClick; ;
         }
+
+        private void NewFlexGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (ItemClick != null)
+            {
+                ItemClick(this, e);
+            }
+        }
+
         ExpressionAnimation _offsetXAnimation;
-        //ExpressionAnimation _offsetYAnimation;
         CompositionPropertySet _scrollerViewerManipulation;
 
         private void NewFlexGrid_Unloaded(object sender, RoutedEventArgs e)
@@ -122,17 +145,11 @@ namespace MyUWPToolkit.FlexGrid
                 _offsetXAnimation = null;
             }
 
-            //if (_offsetYAnimation != null)
+            //if (_scrollerViewerManipulation != null)
             //{
-            //    _offsetYAnimation.Dispose();
-            //    _offsetYAnimation = null;
+            //    _scrollerViewerManipulation.Dispose();
+            //    _scrollerViewerManipulation = null;
             //}
-
-            if (_scrollerViewerManipulation != null)
-            {
-                _scrollerViewerManipulation.Dispose();
-                _scrollerViewerManipulation = null;
-            }
         }
 
         private void NewFlexGrid_Loaded(object sender, RoutedEventArgs e)
@@ -169,36 +186,6 @@ namespace MyUWPToolkit.FlexGrid
 
         }
 
-        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
-        {
-            base.PrepareContainerForItemOverride(element, item);
-
-            //var index = this.IndexFromContainer(element);
-            //if (index < 2)
-            //{
-            //    var ui = element as UIElement;
-            //    if (ui != null)
-            //    {
-            //        (ui as Control).Background = new SolidColorBrush(Colors.Red);
-            //        Canvas.SetZIndex(ui, 10);
-            //        StartAnimation(ui);
-
-            //    }
-            //}
-        }
-
-        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-        {
-
-
-            //var index = this.IndexFromContainer(element);
-            //if (index < 1)
-            //{
-            //    return;
-            //}
-            base.ClearContainerForItemOverride(element, item);
-        }
-
         private void FlexGrid_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             if (_scrollViewer != null && _scrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible)
@@ -221,32 +208,35 @@ namespace MyUWPToolkit.FlexGrid
         private void Initialize()
         {
             _columnsHeader = GetTemplateChild("ColumnHeader") as NewFlexGridColumnHeader;
-
+            _frozenRows = GetTemplateChild("FrozenRows") as NewFlexGridFrozenRows;
+            if (_frozenRows != null)
+            {
+                _frozenRows.ItemClick += NewFlexGrid_ItemClick;
+            }
         }
 
         private void InitializeScrollViewer()
         {
-
             _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
-
-
         }
 
         private void PrepareCompositionAnimation()
         {
-            if (_scrollViewer != null && _scrollerViewerManipulation == null)
+            if (_scrollViewer != null)
             {
-                _scrollerViewerManipulation = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
-                //_offsetXAnimation = _scrollerViewerManipulation.Compositor.CreateExpressionAnimation("Vector3(-ScrollManipulation.Translation.X,50,1)");
-                _offsetXAnimation = _scrollerViewerManipulation.Compositor.CreateExpressionAnimation("-min(0,ScrollManipulation.Translation.X)");
-                //_offsetXAnimation = _scrollerViewerManipulation.Compositor.CreateExpressionAnimation("-ScrollManipulation.Translation.X");
-                _offsetXAnimation.SetReferenceParameter("ScrollManipulation", _scrollerViewerManipulation);
-                _columnsHeader._offsetXAnimation = _offsetXAnimation;
+                if (_scrollerViewerManipulation == null)
+                {
+                    _scrollerViewerManipulation = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
 
-                //_offsetYAnimation = _scrollerViewerManipulation.Compositor.CreateExpressionAnimation("-ScrollManipulation.Translation.Y");
-                //_offsetYAnimation.SetReferenceParameter("ScrollManipulation", _scrollerViewerManipulation);
+                }
+                if (_offsetXAnimation == null)
+                {
+                    _offsetXAnimation = _scrollerViewerManipulation.Compositor.CreateExpressionAnimation("-min(0,ScrollManipulation.Translation.X)");
+                    _offsetXAnimation.SetReferenceParameter("ScrollManipulation", _scrollerViewerManipulation);
+                    _columnsHeader._offsetXAnimation = _offsetXAnimation;
+                    _frozenRows._offsetXAnimation = _offsetXAnimation;
+                }
             }
-
         }
 
         private void _columnHeader_ItemClick(object sender, ItemClickEventArgs e)

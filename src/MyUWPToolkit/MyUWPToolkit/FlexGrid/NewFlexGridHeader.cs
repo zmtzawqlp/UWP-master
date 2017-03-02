@@ -12,7 +12,6 @@ namespace MyUWPToolkit.FlexGrid
 {
     public class NewFlexGridColumnHeader : ListView
     {
-
         public int FrozenCount
         {
             get { return (int)GetValue(FrozenCountProperty); }
