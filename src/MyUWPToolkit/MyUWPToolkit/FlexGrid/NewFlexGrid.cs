@@ -201,10 +201,8 @@ namespace MyUWPToolkit.FlexGrid
             flexGridItem.Holding -= FlexGridItem_Holding;
             flexGridItem.RightTapped += FlexGridItem_RightTapped;
             flexGridItem.Holding += FlexGridItem_Holding;
-            if (flexGridItem.Tag == null)
-            {
+            if (flexGridItem.ContentTemplateRoot == null)
                 flexGridItem.Loaded += FlexGridItem_Loaded;
-            }
         }
 
         private void FlexGridItem_Loaded(object sender, RoutedEventArgs e)
@@ -222,7 +220,6 @@ namespace MyUWPToolkit.FlexGrid
                     var _frozenContentVisual = ElementCompositionPreview.GetElementVisual(_frozenContent);
 
                     _frozenContentVisual.StartAnimation("Offset.X", _offsetXAnimation);
-                    (sender as ListViewItem).Tag = true;
                 }
             }
         }

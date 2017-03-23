@@ -26,7 +26,8 @@ namespace MyUWPToolkit.FlexGrid
             flexGridItem.Holding -= FlexGridItem_Holding;
             flexGridItem.RightTapped += FlexGridItem_RightTapped;
             flexGridItem.Holding += FlexGridItem_Holding;
-            flexGridItem.Loaded += NewFlexGridFrozenRows_Loaded;
+            if (flexGridItem.ContentTemplateRoot == null)
+                flexGridItem.Loaded += NewFlexGridFrozenRows_Loaded;
         }
 
         protected override void ClearContainerForItemOverride(DependencyObject element, object item)
@@ -66,15 +67,14 @@ namespace MyUWPToolkit.FlexGrid
             var templateRoot = (sender as ListViewItem).ContentTemplateRoot;
 
             var child = templateRoot.GetAllChildren();
-            var _frozenContent = child.Where(x => FlexGridItemFrozenContent.GetIsFrozenContent(x));
+            var _frozenContent = child.FirstOrDefault(x => FlexGridItemFrozenContent.GetIsFrozenContent(x));
             if (_frozenContent != null && _offsetXAnimation != null)
             {
-                foreach (var item in _frozenContent)
+                //foreach (var item in _frozenContent)
                 {
-                    var _frozenContentVisual = ElementCompositionPreview.GetElementVisual(item);
+                    var _frozenContentVisual = ElementCompositionPreview.GetElementVisual(_frozenContent);
 
                     _frozenContentVisual.StartAnimation("Offset.X", _offsetXAnimation);
-
                 }
             }
         }
