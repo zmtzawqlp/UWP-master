@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -18,8 +21,9 @@ namespace MyUWPToolkit.FlexGrid
     /// to fix bug in 14393, re-creat one new FlexGrid
     /// </summary>
     [TemplatePart(Name = "ColumnsHeader", Type = typeof(NewFlexGridColumnHeader))]
+    [TemplatePart(Name = "FrozenRows", Type = typeof(NewFlexGridFrozenRows))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
-    public class NewFlexGrid : ListView
+    public class NewFlexGrid : ListView, IDisposable
     {
         #region Filed
         ScrollViewer _scrollViewer;
@@ -59,6 +63,12 @@ namespace MyUWPToolkit.FlexGrid
         }
 
         public event EventHandler<SortingColumnEventArgs> SortingColumn;
+
+        public event FlexGridItemRightTappedEventHandler ItemRightTapped;
+
+        public event EventHandler<ScrollViewerViewChangingEventArgs> ViewChanging;
+
+        public bool IsScrolling { get; private set; }
 
         public ScrollViewer ScrollViewer
         {
@@ -120,7 +130,6 @@ namespace MyUWPToolkit.FlexGrid
         {
             this.DefaultStyleKey = typeof(NewFlexGrid);
             this.AddHandler(UIElement.PointerWheelChangedEvent, new PointerEventHandler(FlexGrid_PointerWheelChanged), true);
-            this.ContainerContentChanging += FlexGrid_ContainerContentChanging;
             this.Loaded += NewFlexGrid_Loaded;
             this.Unloaded += NewFlexGrid_Unloaded;
             base.ItemClick += NewFlexGrid_ItemClick; ;
@@ -145,6 +154,8 @@ namespace MyUWPToolkit.FlexGrid
                 _offsetXAnimation = null;
             }
 
+            //don't dispose at this moment,some page NavigationCacheMode is required
+            //you must dispose it at page back.
             //if (_scrollerViewerManipulation != null)
             //{
             //    _scrollerViewerManipulation.Dispose();
@@ -165,27 +176,6 @@ namespace MyUWPToolkit.FlexGrid
             Initialize();
             PrepareCompositionAnimation();
         }
-
-
-        private void FlexGrid_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            var templateRoot = args.ItemContainer.ContentTemplateRoot;
-
-            var child = templateRoot.GetAllChildren();
-            var _frozenContent = child.Where(x => FlexGridItemFrozenContent.GetIsFrozenContent(x));
-            if (_frozenContent != null && _offsetXAnimation != null)
-            {
-                foreach (var item in _frozenContent)
-                {
-                    var _frozenContentVisual = ElementCompositionPreview.GetElementVisual(item);
-
-                    _frozenContentVisual.StartAnimation("Offset.X", _offsetXAnimation);
-
-                }
-            }
-
-        }
-
         private void FlexGrid_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             if (_scrollViewer != null && _scrollViewer.ComputedVerticalScrollBarVisibility == Visibility.Visible)
@@ -203,14 +193,83 @@ namespace MyUWPToolkit.FlexGrid
             }
         }
 
+        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
+        {
+            base.PrepareContainerForItemOverride(element, item);
+            var flexGridItem = element as ListViewItem;
+            flexGridItem.RightTapped -= FlexGridItem_RightTapped;
+            flexGridItem.Holding -= FlexGridItem_Holding;
+            flexGridItem.RightTapped += FlexGridItem_RightTapped;
+            flexGridItem.Holding += FlexGridItem_Holding;
+            if (flexGridItem.Tag == null)
+            {
+                flexGridItem.Loaded += FlexGridItem_Loaded;
+            }
+        }
 
+        private void FlexGridItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            (sender as ListViewItem).Loaded -= FlexGridItem_Loaded;
+
+            var templateRoot = (sender as ListViewItem).ContentTemplateRoot;
+
+            var child = templateRoot.GetAllChildren();
+            var _frozenContent = child.FirstOrDefault(x => FlexGridItemFrozenContent.GetIsFrozenContent(x));
+            if (_frozenContent != null && _offsetXAnimation != null)
+            {
+                //foreach (var item in _frozenContent)
+                {
+                    var _frozenContentVisual = ElementCompositionPreview.GetElementVisual(_frozenContent);
+
+                    _frozenContentVisual.StartAnimation("Offset.X", _offsetXAnimation);
+                    (sender as ListViewItem).Tag = true;
+                }
+            }
+        }
+
+        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
+        {
+            base.ClearContainerForItemOverride(element, item);
+            var flexGridItem = element as ListViewItem;
+            flexGridItem.RightTapped -= FlexGridItem_RightTapped;
+            flexGridItem.Holding -= FlexGridItem_Holding;
+        }
+
+        internal void OnItemRightTapped(object sender, Point point)
+        {
+            if (ItemRightTapped != null)
+            {
+                ItemRightTapped(sender, new PointEventArgs(point));
+            }
+        }
+
+        private void FlexGridItem_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            if (e.HoldingState == HoldingState.Started)
+            {
+                OnItemRightTapped(sender, e.GetPosition(this as UIElement));
+            }
+        }
+
+        private void FlexGridItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            if (e.PointerDeviceType != PointerDeviceType.Touch)
+            {
+                OnItemRightTapped(sender, e.GetPosition(this as UIElement));
+            }
+        }
         #region private method
         private void Initialize()
         {
             _columnsHeader = GetTemplateChild("ColumnHeader") as NewFlexGridColumnHeader;
+            if (_columnsHeader != null)
+            {
+                _columnsHeader.ItemClick += _columnHeader_ItemClick;
+            }
             _frozenRows = GetTemplateChild("FrozenRows") as NewFlexGridFrozenRows;
             if (_frozenRows != null)
             {
+                _frozenRows.FlexGrid = this;
                 _frozenRows.ItemClick += NewFlexGrid_ItemClick;
             }
         }
@@ -218,8 +277,26 @@ namespace MyUWPToolkit.FlexGrid
         private void InitializeScrollViewer()
         {
             _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
+            _scrollViewer.ViewChanging += _scrollViewer_ViewChanging;
+            _scrollViewer.ViewChanged += _scrollViewer_ViewChanged;
         }
 
+        private void _scrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!e.IsIntermediate)
+            {
+                IsScrolling = false;
+            }
+        }
+
+        private void _scrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            IsScrolling = true;
+            if (ViewChanging != null)
+            {
+                ViewChanging(sender, e);
+            }
+        }
         private void PrepareCompositionAnimation()
         {
             if (_scrollViewer != null)
@@ -266,6 +343,42 @@ namespace MyUWPToolkit.FlexGrid
             {
                 _itemsPresenter.Width = columnsWidth;
             }
+        }
+
+        //you must dispose it at page back.
+        public void Dispose()
+        {
+            if (_offsetXAnimation != null)
+            {
+                _offsetXAnimation.Dispose();
+                _offsetXAnimation = null;
+            }
+
+            if (_scrollerViewerManipulation != null)
+            {
+                _scrollerViewerManipulation.Dispose();
+                _scrollerViewerManipulation = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender">Item</param>
+    /// <param name="e">the point correspond to NewFlexGrid</param>
+    public delegate void FlexGridItemRightTappedEventHandler(System.Object sender, PointEventArgs e);
+
+    public class PointEventArgs : EventArgs
+    {
+        /// <summary>
+        /// the point correspond to NewFlexGrid
+        /// </summary>
+        public Point Point { get; private set; }
+
+        public PointEventArgs(Point point)
+        {
+            Point = point;
         }
     }
 }

@@ -37,7 +37,5 @@ namespace MyUWPToolkit.FlexGrid
                 _frozenContentVisual.StartAnimation("Offset.X", _offsetXAnimation);
             }
         }
-
-
     }
 }
