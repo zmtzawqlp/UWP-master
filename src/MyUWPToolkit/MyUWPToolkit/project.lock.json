@@ -22160,14 +22160,14 @@
     "UAP,Version=v10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\zmtza\\.nuget\\packages\\": {}
+    "C:\\Users\\eastmoney\\.nuget\\packages\\": {}
   },
   "project": {
     "restore": {
-      "projectUniqueName": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
+      "projectUniqueName": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master2\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
       "projectName": "MyUWPToolkit",
-      "projectPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
-      "projectJsonPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\project.json",
+      "projectPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master2\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
+      "projectJsonPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master2\\src\\MyUWPToolkit\\MyUWPToolkit\\project.json",
       "projectStyle": "ProjectJson"
     },
     "dependencies": {
