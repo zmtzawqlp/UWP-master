@@ -26,6 +26,7 @@ namespace MyUWPToolkit
     public class PullToRefreshGrid : ContentControl
     {
         #region Common
+        private Border _headerBorder;
         private ContentControl _header;
         private ScrollViewer _scrollViewer;
         private ContentPresenter _content;
@@ -166,6 +167,7 @@ namespace MyUWPToolkit
             if (UseCompositionAPI)
             {
                 _header = GetTemplateChild("Header") as ContentControl;
+                _headerBorder = GetTemplateChild("HeaderBorder") as Border;
                 _header.DataContext = this;
                 _scrollViewer = GetTemplateChild("ScrollViewer") as ScrollViewer;
                 _scrollViewer.Loaded += ScrollViewer_Loaded;
@@ -285,9 +287,9 @@ namespace MyUWPToolkit
 
         private void PullToRefreshGrid_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (_header != null)
+            if (_headerBorder != null)
             {
-                _header.Opacity = 0;
+                _headerBorder.Opacity = 0;
             }
         }
 
@@ -320,9 +322,9 @@ namespace MyUWPToolkit
                     }
                 }
             }
-            if (_header != null)
+            if (_headerBorder != null)
             {
-                _header.Opacity = 0;
+                _headerBorder.Opacity = 0;
             }
         }
 
@@ -334,9 +336,9 @@ namespace MyUWPToolkit
             }
             Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
             _refresh = false;
-            if (_header != null)
+            if (_headerBorder != null)
             {
-                _header.Opacity = 1;
+                _headerBorder.Opacity = 1;
             }
         }
 
@@ -349,7 +351,13 @@ namespace MyUWPToolkit
             _scrollViewerBorder.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _content.Width, _content.Height - offsetY) };
             Debug.WriteLine(IsReachThreshold + "," + _headerVisual.Offset.Y + "," + RefreshThreshold);
             _headerVisual.StartAnimation("Offset.Y", _offsetAnimation);
-
+            if (offsetY > 0)
+            {
+                if (_headerBorder != null)
+                {
+                    _headerBorder.Opacity = 1;
+                }
+            }
             if (!_refresh)
             {
                 _refresh = IsReachThreshold;
@@ -422,6 +430,7 @@ namespace MyUWPToolkit
     public class PullToRefreshGrid1 : ContentControl
     {
         #region Common
+        private Border _headerBorder;
         private ContentControl _header;
         private ScrollViewer _scrollViewer;
         private ContentPresenter _content;
@@ -567,6 +576,7 @@ namespace MyUWPToolkit
             if (UseCompositionAPI)
             {
                 _header = GetTemplateChild("Header") as ContentControl;
+                _headerBorder = GetTemplateChild("HeaderBorder") as Border;
                 _header.DataContext = this;
                 _content = GetTemplateChild("Content") as ContentPresenter;
                 _content.Loaded += _content_Loaded;
@@ -698,9 +708,9 @@ namespace MyUWPToolkit
 
         private void PullToRefreshGrid1_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_header != null)
+            if (_headerBorder != null)
             {
-                _header.Opacity = 0;
+                _headerBorder.Opacity = 0;
             }
         }
 
@@ -733,9 +743,9 @@ namespace MyUWPToolkit
                     }
                 }
             }
-            if (_header != null)
+            if (_headerBorder != null)
             {
-                _header.Opacity = 0;
+                _headerBorder.Opacity = 0;
             }
         }
 
@@ -747,9 +757,9 @@ namespace MyUWPToolkit
             }
             Windows.UI.Xaml.Media.CompositionTarget.Rendering += OnCompositionTargetRendering;
             _refresh = false;
-            if (_header != null)
+            if (_headerBorder != null)
             {
-                _header.Opacity = 1;
+                _headerBorder.Opacity = 1;
             }
         }
 
@@ -762,7 +772,13 @@ namespace MyUWPToolkit
             _scrollViewerBorder.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, _content.Width, _content.Height - offsetY) };
             Debug.WriteLine(IsReachThreshold + "," + _headerVisual.Offset.Y + "," + RefreshThreshold);
             _headerVisual.StartAnimation("Offset.Y", _offsetAnimation);
-
+            if (offsetY > 0)
+            {
+                if (_headerBorder != null)
+                {
+                    _headerBorder.Opacity = 1;
+                }
+            }
             if (!_refresh)
             {
                 _refresh = IsReachThreshold;

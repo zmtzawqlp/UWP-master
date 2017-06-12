@@ -832,12 +832,10 @@ namespace MyUWPToolkit
                             if (int.TryParse(deString.LastOrDefault().ToString(), out i))
                             {
                                 dFnl = dFnl - (de / i * 5);
-                                sFnl = dFnl.ToString(sPtn);
-                                dFnl = decimal.Parse(sFnl);
+                                sFnl = dFnl.ToString(sPtn);      
                             };
-
                         }
-
+                        dFnl = decimal.Parse(sFnl);
 
                         int iTmp = sFnl.IndexOf(ci.NumberFormat.NumberDecimalSeparator); //override
                         if (iTmp == -1)

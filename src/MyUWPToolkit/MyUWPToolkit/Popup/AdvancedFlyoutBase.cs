@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -127,6 +128,10 @@ namespace MyUWPToolkit
             reCalculatePopupPosition = !CalculatePopupPosition(placementTarget);
             _popup.IsLightDismissEnabled = IsLightDismissEnabled;
             this.placementTarget = placementTarget;
+            if (placementTarget != null)
+            {
+                placementTarget.Unloaded += PlacementTarget_Unloaded;
+            }
             if (reCalculatePopupPosition || FlyoutPresenter.Style == null)
             {
                 _popup.Opacity = 0;
@@ -138,10 +143,33 @@ namespace MyUWPToolkit
             _popup.IsOpen = true;
         }
 
+        private void InputPane_Hiding(InputPane sender, InputPaneVisibilityEventArgs args)
+        {
+            CalculatePopupPosition(placementTarget);
+        }
+
+        private void InputPane_Showing(InputPane sender, InputPaneVisibilityEventArgs args)
+        {
+            CalculatePopupPosition(placementTarget);
+        }
+
+        private void PlacementTarget_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _popup.IsOpen = false;
+        }
+
         private void _popup_Closed(object sender, object e)
         {
-            placementTarget = null;
+            if (placementTarget != null)
+            {
+                placementTarget.Unloaded -= PlacementTarget_Unloaded;
+                placementTarget = null;
+            }
+            var inputPane = InputPane.GetForCurrentView();
+            inputPane.Showing -= InputPane_Showing;
+            inputPane.Hiding -= InputPane_Hiding;
             reCalculatePopupPosition = false;
+            ApplicationView.GetForCurrentView().VisibleBoundsChanged -= AdvancedFlyoutBase_VisibleBoundsChanged;
             if (Closed != null)
             {
                 Closed(this, e);
@@ -159,7 +187,10 @@ namespace MyUWPToolkit
                 _popup.VerticalOffset += VerticalOffset;
                 _popup.Opacity = 1;
             }
-
+            var inputPane = InputPane.GetForCurrentView();
+            inputPane.Showing += InputPane_Showing;
+            inputPane.Hiding += InputPane_Hiding;
+            ApplicationView.GetForCurrentView().VisibleBoundsChanged += AdvancedFlyoutBase_VisibleBoundsChanged;
             if (Opened != null)
             {
                 Opened(this, e);
@@ -167,11 +198,26 @@ namespace MyUWPToolkit
 
         }
 
+        private void AdvancedFlyoutBase_VisibleBoundsChanged(ApplicationView sender, object args)
+        {
+            CalculatePopupPosition(placementTarget);
+        }
+
         private bool CalculatePopupPosition(FrameworkElement placementTarget)
         {
             try
             {
-                var windowSize = new Size(Window.Current.Bounds.Width, Window.Current.Bounds.Height);
+
+                //var rect = StatusBarHelper.GetOccludedRect();
+                //double statusbarHeight = rect == Rect.Empty ? 0 : rect.Height;
+                var inputPane = InputPane.GetForCurrentView();
+                var visibleBounds = ApplicationView.GetForCurrentView().VisibleBounds;
+                double inputPaneHeight = inputPane.OccludedRect.Height;
+
+                var height = visibleBounds.Height - inputPaneHeight;
+                //-statusbarHeight;
+
+                var windowSize = new Size(visibleBounds.Width, height > 0 ? height : 0);
 
                 var fpSize = new Size(0, 0);
                 var fp = FlyoutPresenter;
