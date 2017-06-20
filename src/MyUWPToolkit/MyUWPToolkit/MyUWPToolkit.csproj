@@ -152,6 +152,7 @@
     <Compile Include="ItemsControl\GroupListView\GroupListViewItem.cs" />
     <Compile Include="ItemsControl\GroupListView\GroupObservableCollection.cs" />
     <Compile Include="ItemsControl\GroupListView\IGroupCollection.cs" />
+    <Compile Include="Panel\AvgPanel.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshBorder.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshControl.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshGrid.cs" />
