@@ -110,6 +110,7 @@ namespace MyUWPToolkit
 
         bool reCalculatePopupPosition = false;
         FrameworkElement placementTarget = null;
+        Frame frame = null;
         public void ShowAt(FrameworkElement placementTarget)
         {
             if (Opening != null)
@@ -124,7 +125,18 @@ namespace MyUWPToolkit
                 _popup.Opened += _popup_Opened;
                 _popup.Closed += _popup_Closed;
                 _popup.Child = CreatePresenter();
+                frame = Window.Current.Content as Frame;
             }
+
+            if (frame != null)
+            {
+                _popup.RequestedTheme = frame.RequestedTheme;
+            }
+            else if (placementTarget != null)
+            {
+                _popup.RequestedTheme = placementTarget.RequestedTheme;
+            }
+
             reCalculatePopupPosition = !CalculatePopupPosition(placementTarget);
             _popup.IsLightDismissEnabled = IsLightDismissEnabled;
             this.placementTarget = placementTarget;
