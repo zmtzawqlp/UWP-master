@@ -77,10 +77,10 @@ namespace MyUWPToolkit
 
             _customColorRectangle = GetTemplateChild("CustomColorRectangle") as Rectangle;
 
-            _aColor = GetTemplateChild("AColor") as NumericTextBox;
-            _rColor = GetTemplateChild("RColor") as NumericTextBox;
-            _gColor = GetTemplateChild("GColor") as NumericTextBox;
-            _bColor = GetTemplateChild("BColor") as NumericTextBox;
+            _aColor = GetTemplateChild("AColor") as ColorPickerNumericTextBox;
+            _rColor = GetTemplateChild("RColor") as ColorPickerNumericTextBox;
+            _gColor = GetTemplateChild("GColor") as ColorPickerNumericTextBox;
+            _bColor = GetTemplateChild("BColor") as ColorPickerNumericTextBox;
             AttachEventForColor();
 
             _indicator = GetTemplateChild("Indicator") as Canvas;

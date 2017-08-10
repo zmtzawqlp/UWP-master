@@ -34,7 +34,7 @@ namespace MyUWPToolkit
 
         // Using a DependencyProperty as the backing store for IsSelected.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsSelectedProperty =
-            DependencyProperty.Register("IsSelected", typeof(bool), typeof(ColorButton), new PropertyMetadata(false,new PropertyChangedCallback(OnIsSelectedChanged)));
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(ColorButton), new PropertyMetadata(false, new PropertyChangedCallback(OnIsSelectedChanged)));
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -80,15 +80,16 @@ namespace MyUWPToolkit
             base.OnPointerExited(e);
         }
 
-        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        protected override void OnPointerCanceled(PointerRoutedEventArgs e)
         {
-      
-            base.OnPointerPressed(e);
+            IsSelected = false;
+            base.OnPointerCanceled(e);
         }
 
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
         {
-            base.OnPointerReleased(e);
+            IsSelected = false;
+            base.OnPointerCaptureLost(e);
         }
 
         internal void GoToState(string stateName)

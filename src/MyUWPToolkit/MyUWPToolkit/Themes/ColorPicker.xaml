@@ -11,7 +11,7 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="RequestedTheme" Value="Light"/>
-        <Setter Property="ItemsPanel">
+        <!--<Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
                     <Grid />
@@ -305,7 +305,7 @@
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>
+        </Setter>-->
     </Style>
 
     <!-- Default style for Windows.UI.Xaml.Controls.Primitives.PivotHeaderItem -->
@@ -322,7 +322,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="BorderBrush" Value="#A4AFBA"/>
-        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PivotHeaderItem">
@@ -842,21 +842,21 @@
                                                             <Rectangle Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="3" Fill="#FF7030A0" Margin="9 9 0 0"/>
                                                         </Grid>
                                                     </Border>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Basic Color"  TextWrapping="Wrap" Grid.Column="1">
-                                                       
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="基本颜色"  TextWrapping="Wrap" Grid.Column="1">
+
                                                     </TextBlock>
                                                 </Grid>
                                             </PivotItem.Header>
                                             <StackPanel Orientation="Vertical">
-                                                <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
+                                                <!--<Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
                                                     <TextBlock Margin="5,0"  VerticalAlignment="Center">
                                                          <Run Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                         <Run Text="Basic Color"/>
+                                                         <Run Text="基本颜色"/>
                                                     </TextBlock>
-                                                </Border>
+                                                </Border>-->
                                                 <local:ColorPickerItemsControl x:Name="BasicColorItems" MinHeight="43"/>
                                                 <Border Margin="0,5,0,0" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" Height="30">
-                                                    <TextBlock Margin="5,0"  Text="Recent Color" VerticalAlignment="Center"/>
+                                                    <TextBlock Margin="5,0"  Text="最近使用颜色" VerticalAlignment="Center"/>
                                                 </Border>
                                                 <local:ColorPickerItemsControl x:Name="RecentColorItems" MinHeight="43"/>
                                             </StackPanel>
@@ -902,7 +902,7 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                     <Ellipse Height="15" HorizontalAlignment="Stretch" Margin="-0.5,-1.5,2.5,-1.5" VerticalAlignment="Stretch" Width="15" Stroke="#FF8AA3B5"/>
-                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Custom Color" TextWrapping="Wrap" Grid.Column="1">
+                                                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="自定义颜色" TextWrapping="Wrap" Grid.Column="1">
                                                     </TextBlock>
                                                 </Grid>
                                             </PivotItem.Header>
@@ -914,7 +914,7 @@
                                                     <RowDefinition Height="auto"/>
                                                 </Grid.RowDefinitions>
                                                 <Grid.Resources>
-                                                    <Style TargetType="local:NumericTextBox">
+                                                    <Style TargetType="local:ColorPickerNumericTextBox">
                                                         <Setter Property="InputScope" Value="Number"/>
                                                         <Setter Property="ValueFormat" Value="F0"/>
                                                         <Setter Property="Minimum" Value="0"/>
@@ -924,13 +924,13 @@
                                                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                                     </Style>
                                                 </Grid.Resources>
-                                                <Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
+                                                <!--<Border Margin="0,5,0,0" HorizontalAlignment="Stretch" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1" Height="30">
                                                     <TextBlock Margin="5,0"  VerticalAlignment="Center">
                                                          <Run Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                         <Run Text="Custom Color"/>
+                                                         <Run Text="自定义颜色"/>
                                                     </TextBlock>
-                                                </Border>
-                                                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
+                                                </Border>-->
+                                                <Grid HorizontalAlignment="Stretch" Background="White" VerticalAlignment="Stretch" Grid.Row="1" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="auto"/>
@@ -996,35 +996,35 @@
                                                     </Slider>
                                                 </Grid>
 
-                                                <Grid Margin="0,0,5,0" Padding="0,0,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
+                                                <Grid Margin="0,0,0,0" Padding="0,0,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" BorderBrush="#A4AFBA" BorderThickness="0,0,0,1">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <local:NumericTextBox x:Name="AColor" Grid.Column="0">
-                                                        <local:NumericTextBox.Header>
-                                                            <TextBlock Text="Alpha(A)" HorizontalAlignment="Center"/>
-                                                        </local:NumericTextBox.Header>
-                                                    </local:NumericTextBox>
-                                                    <local:NumericTextBox x:Name="RColor"  Grid.Column="1" >
-                                                        <local:NumericTextBox.Header>
-                                                            <TextBlock Text="Red(R)" HorizontalAlignment="Center"/>
-                                                        </local:NumericTextBox.Header>
-                                                    </local:NumericTextBox>
-                                                    <local:NumericTextBox x:Name="GColor" Grid.Column="2" >
-                                                        <local:NumericTextBox.Header>
-                                                            <TextBlock Text="Green(G)" HorizontalAlignment="Center"/>
-                                                        </local:NumericTextBox.Header>
-                                                    </local:NumericTextBox>
-                                                    <local:NumericTextBox x:Name="BColor" Grid.Column="3" >
-                                                        <local:NumericTextBox.Header>
-                                                            <TextBlock Text="Blue(B)" HorizontalAlignment="Center"/>
-                                                        </local:NumericTextBox.Header>
-                                                    </local:NumericTextBox>
+                                                    <local:ColorPickerNumericTextBox x:Name="AColor" Grid.Column="0">
+                                                        <local:ColorPickerNumericTextBox.Header>
+                                                            <TextBlock Text="透明度(A)" HorizontalAlignment="Center"/>
+                                                        </local:ColorPickerNumericTextBox.Header>
+                                                    </local:ColorPickerNumericTextBox>
+                                                    <local:ColorPickerNumericTextBox x:Name="RColor"  Grid.Column="1" >
+                                                        <local:ColorPickerNumericTextBox.Header>
+                                                            <TextBlock Text="红(R)" HorizontalAlignment="Center"/>
+                                                        </local:ColorPickerNumericTextBox.Header>
+                                                    </local:ColorPickerNumericTextBox>
+                                                    <local:ColorPickerNumericTextBox x:Name="GColor" Grid.Column="2" >
+                                                        <local:ColorPickerNumericTextBox.Header>
+                                                            <TextBlock Text="绿(G)" HorizontalAlignment="Center"/>
+                                                        </local:ColorPickerNumericTextBox.Header>
+                                                    </local:ColorPickerNumericTextBox>
+                                                    <local:ColorPickerNumericTextBox x:Name="BColor" Grid.Column="3">
+                                                        <local:ColorPickerNumericTextBox.Header>
+                                                            <TextBlock Text="蓝(B)" HorizontalAlignment="Center"/>
+                                                        </local:ColorPickerNumericTextBox.Header>
+                                                    </local:ColorPickerNumericTextBox>
                                                 </Grid>
-                                                <Grid Grid.Row="3" Margin="5">
+                                                <Grid Grid.Row="3" Margin="5,5,65,5">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="auto"/>
@@ -1042,12 +1042,14 @@
                                                             </ToolTipService.ToolTip>
                                                         </Rectangle>
                                                     </Grid>
-                                                    <Button x:Name="CustomColorOkButton" Grid.Column="1" Content="OK" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                                    <Button x:Name="CustomColorOkButton" Grid.Column="1" Content="确定" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                                 </Grid>
                                             </Grid>
                                         </PivotItem>
                                     </Pivot>
-                                    <Button x:Name="CloseButton" Content="Close" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5"/>
+
+                                    <TextBlock Margin="15" Text="{Binding Title,RelativeSource={RelativeSource TemplatedParent}}"  HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                                    <Button x:Name="CloseButton" Content="关闭" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
                                 </Grid>
                             </local:AdvancedFlyout>
                         </local:AdvancedFlyoutBase.AttachedFlyout>

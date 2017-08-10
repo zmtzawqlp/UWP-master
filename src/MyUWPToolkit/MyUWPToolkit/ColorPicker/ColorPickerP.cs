@@ -25,10 +25,10 @@ namespace MyUWPToolkit
         private Slider _alpha;
         private Grid _choiceGrid;
         private Rectangle _customColorRectangle;
-        private NumericTextBox _aColor;
-        private NumericTextBox _rColor;
-        private NumericTextBox _gColor;
-        private NumericTextBox _bColor;
+        private ColorPickerNumericTextBox _aColor;
+        private ColorPickerNumericTextBox _rColor;
+        private ColorPickerNumericTextBox _gColor;
+        private ColorPickerNumericTextBox _bColor;
         private Canvas _indicator;
         private Pivot _pivot;
         private ContentControl _choiceGridParent;

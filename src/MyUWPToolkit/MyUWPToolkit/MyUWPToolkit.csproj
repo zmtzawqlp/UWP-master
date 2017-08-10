@@ -116,6 +116,7 @@
     <Compile Include="ColorPicker\ColorPickerColorHelper.cs" />
     <Compile Include="ColorPicker\ColorPicker.cs" />
     <Compile Include="ColorPicker\ColorPickerItemsControl.cs" />
+    <Compile Include="ColorPicker\ColorPickerNumericTextBox.cs" />
     <Compile Include="ColorPicker\ColorPickerP.cs" />
     <Compile Include="ColorPicker\TransparentBackground.cs" />
     <Compile Include="Common\ApplicationDataContainerExtensions.cs" />
