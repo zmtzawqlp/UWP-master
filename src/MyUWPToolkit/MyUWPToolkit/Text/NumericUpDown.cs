@@ -68,33 +68,6 @@ namespace MyUWPToolkit
         private double _totalDeltaX;
         private double _totalDeltaY;
 
-
-
-        public object Header
-        {
-            get { return (object)GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Header.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HeaderProperty =
-            DependencyProperty.Register("Header", typeof(object), typeof(NumericUpDown), new PropertyMetadata(null));
-
-
-
-        public DataTemplate HeaderTemplate
-        {
-            get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
-            set { SetValue(HeaderTemplateProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for HeaderTemplate.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty HeaderTemplateProperty =
-            DependencyProperty.Register("HeaderTemplate", typeof(DataTemplate), typeof(NumericUpDown), new PropertyMetadata(null));
-
-
-
-
         #region ValueFormat
         /// <summary>
         /// ValueFormat Dependency Property
@@ -399,7 +372,7 @@ namespace MyUWPToolkit
 
         private void OnValueTextBoxTextChanged(object sender, TextChangedEventArgs textChangedEventArgs)
         {
-            this.UpdateValueFromText();
+            this.UpdateValueFromText(false);
         }
 
         private void OnValueTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
@@ -415,7 +388,7 @@ namespace MyUWPToolkit
             }
         }
 
-        private bool UpdateValueFromText()
+        private bool UpdateValueFromText(bool validoverRange = true)
         {
             if (_isChangingTextWithCode)
             {
@@ -440,7 +413,20 @@ namespace MyUWPToolkit
                     val = Maximum;
                     overRange = true;
                 }
-                if (overRange)
+                var temptext = val.ToString(ValueFormat);
+
+                var value = double.Parse(temptext);
+                if (temptext.Contains(".") != _valueTextBox.Text.Contains("."))
+                {
+                    this.Value = val;
+                    UpdateValueText();
+                }
+                //if (value != val || temptext != _valueTextBox.Text)
+                //{
+                //    this.Value = val;
+                //    UpdateValueText();
+                //}
+                else if (overRange && validoverRange)
                 {
                     this.Value = val;
                     UpdateValueText();
@@ -449,7 +435,6 @@ namespace MyUWPToolkit
                 {
                     this.SetValueAndUpdateValidDirections(val);
                 }
-
 
                 _isChangingValueWithCode = false;
 
@@ -524,6 +509,7 @@ namespace MyUWPToolkit
 
         private void OnValueTextBoxLostFocus(object sender, RoutedEventArgs routedEventArgs)
         {
+            UpdateValueFromText();
             if (_dragOverlay != null)
             {
                 _dragOverlay.IsHitTestVisible = true;
@@ -774,6 +760,7 @@ namespace MyUWPToolkit
             {
                 this.UpdateValueText();
             }
+            SetValidIncrementDirection();
         }
 
         private void UpdateValueBar()
@@ -826,12 +813,12 @@ namespace MyUWPToolkit
         {
             if (_decrementButton != null)
             {
-                _decrementButton.Visibility = this.IsReadOnly ? Visibility.Collapsed : Visibility.Visible;
+                _decrementButton.IsEnabled = !this.IsReadOnly;
             }
 
             if (_incrementButton != null)
             {
-                _incrementButton.Visibility = this.IsReadOnly ? Visibility.Collapsed : Visibility.Visible;
+                _incrementButton.IsEnabled = !this.IsReadOnly;
             }
         }
 
@@ -847,8 +834,24 @@ namespace MyUWPToolkit
 
         private void SetValidIncrementDirection()
         {
-            VisualStateManager.GoToState(this, this.Value < this.Maximum ? "IncrementEnabled" : "IncrementDisabled", true);
-            VisualStateManager.GoToState(this, this.Value > this.Minimum ? "DecrementEnabled" : "DecrementDisabled", true);
+
+            var value = double.Parse(this.Value.ToString(this.ValueFormat));
+            //Debug.WriteLine(this.Value + "," + value);
+            VisualStateManager.GoToState(this, value < this.Maximum ? "IncrementEnabled" : "IncrementDisabled", true);
+            VisualStateManager.GoToState(this, value > this.Minimum ? "DecrementEnabled" : "DecrementDisabled", true);
+        }
+
+
+        protected override void OnMaximumChanged(double oldMaximum, double newMaximum)
+        {
+            base.OnMaximumChanged(oldMaximum, newMaximum);
+            SetValidIncrementDirection();
+        }
+
+        protected override void OnMinimumChanged(double oldMinimum, double newMinimum)
+        {
+            base.OnMinimumChanged(oldMinimum, newMinimum);
+            SetValidIncrementDirection();
         }
     }
 
