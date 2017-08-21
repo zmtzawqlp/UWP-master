@@ -1116,12 +1116,15 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ColorButton">
-                    <Grid x:Name="RootGrid" BorderThickness="1,1,0.5,0.5" BorderBrush="#A4AFBA">
-                        <Grid.Background>
-                            <SolidColorBrush Color="{Binding Color,RelativeSource={RelativeSource TemplatedParent}}"/>
-                        </Grid.Background>
-                        <Rectangle x:Name="rectangle" Stroke="OrangeRed" StrokeThickness="1" RadiusX="1" Opacity="0"/>
-                        <Rectangle x:Name="rectangle1" Stroke="Yellow" StrokeThickness="1" Margin="1" Opacity="0"/>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <local:TransparentBackground/>
+                        <Grid x:Name="RootGrid" BorderThickness="1,1,0.5,0.5" BorderBrush="#A4AFBA">
+                            <Grid.Background>
+                                <SolidColorBrush Color="{Binding Color,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Grid.Background>
+                            <Rectangle x:Name="rectangle" Stroke="OrangeRed" StrokeThickness="1" RadiusX="1" Opacity="0"/>
+                            <Rectangle x:Name="rectangle1" Stroke="Yellow" StrokeThickness="1" Margin="1" Opacity="0"/>
+                        </Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <!--<VisualStateGroup.Transitions>

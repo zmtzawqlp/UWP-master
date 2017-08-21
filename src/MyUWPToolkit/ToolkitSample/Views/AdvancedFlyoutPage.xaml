@@ -59,9 +59,9 @@
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="10,10,10,0">
 
-        <control:NumericUpDown x:Name="HorizontalOffsetTB" Header="HorizontalOffset" HorizontalAlignment="Left" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F2" />
+        <control:NumericUpDown x:Name="HorizontalOffsetTB"  HorizontalAlignment="Left" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F2" />
 
-        <control:NumericUpDown x:Name="VerticalOffsetTB" Header="VerticalOffset" HorizontalAlignment="Center" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F2"/>
+        <control:NumericUpDown x:Name="VerticalOffsetTB" HorizontalAlignment="Center" Value="0" Maximum="1000" Minimum="0" SmallChange="1" LargeChange="10" ValueFormat="F2"/>
 
         <ComboBox x:Name="combobox" HorizontalAlignment="Right"  SelectionChanged="combobox_SelectionChanged"/>
 
