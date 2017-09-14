@@ -1,0 +1,203 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyUWPToolkit.RadialMenu"
+    xmlns:converters="using:MyUWPToolkit.Converters"
+    >
+    <converters:VisibilityConverter x:Key="VisibilityConverter"/>
+    <Style TargetType="local:RadialMenuItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RadialMenuItem">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="ExpandButtonPointerOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="PointerOverElement"  Storyboard.TargetProperty="StrokeThickness" Duration="0" To="{Binding Menu.PointerOverElementThickness,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <DoubleAnimation Storyboard.TargetName="ExpandIconTranslateTransform" Storyboard.TargetProperty="Y" Duration="0" To="0" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandButton" Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" >
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <SolidColorBrush Color="Blue"/>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter RenderTransformOrigin="0.5,0.5"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <ContentPresenter.RenderTransform>
+                                <RotateTransform Angle="{Binding ContentAngle, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
+
+                        <Path x:Name="CheckElement" Stroke="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"
+                              StrokeThickness="{Binding Menu.CheckElementThickness,RelativeSource={RelativeSource TemplatedParent}}"   
+                              >
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.CheckElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.CheckElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.CheckElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+
+                        <Grid x:Name="ExpandButtonArea" Visibility="{Binding HasItems,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource VisibilityConverter}}">
+                            <!--ExpandButtonArea-->
+                            <Path x:Name="PointerOverElement" StrokeThickness="0" Stroke="Blue">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.PointerOverElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                            <ArcSegment Point="{Binding ArcSegments.PointerOverElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.PointerOverElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <Path x:Name="ExpandButton" Stroke="Red" StrokeThickness="{Binding Menu.ExpandAreaThickness,RelativeSource={RelativeSource TemplatedParent}}" >
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.ExpandArea.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                            <ArcSegment Point="{Binding ArcSegments.ExpandArea.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.ExpandArea.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <FontIcon x:Name="ExpandIcon" Glyph="&#xE0A0;" IsHitTestVisible="False" VerticalAlignment="Top" FontSize="12" FontFamily="Segoe UI Symbol">
+                                <FontIcon.RenderTransform>
+                                    <TranslateTransform x:Name="ExpandIconTranslateTransform" Y="{Binding ArcSegments.ExpandArea.ExpandIconY,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <!--ExpandButtonArea-->
+                        </Grid>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigationButtonStyle" TargetType="Button">
+        <Setter Property="Content" Value="&#xE115;"/>
+        <!--<Setter Property="BorderBrush" Value="{ThemeResource TelerikRadialMenuButtonBorderBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource TelerikRadialMenuButtonBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{ThemeResource TelerikRadialMenuButtonForegroundBrush}"/>-->
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Width" Value="45"/>
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="RootGrid">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                   Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                   Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                   Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                   Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                   Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid"
+                                                   Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                   Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                   Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Ellipse x:Name="BackgroundElement" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <ContentPresenter x:Name="ContentPresenter"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Content="{TemplateBinding Content}"
+                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Padding="{TemplateBinding Padding}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          AutomationProperties.AccessibilityView="Raw"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:RadialMenu">
+        <Setter Property="Width" Value="220"/>
+        <Setter Property="Height" Value="220"/>
+        <Setter Property="BorderBrush" Value="Green"/>
+        <Setter Property="NavigationButtonStyle" Value="{StaticResource NavigationButtonStyle}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RadialMenu">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}"  Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
+                                                        ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
+                                                       >
+                            <!--ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                                                        ItemTemplate="{TemplateBinding ItemTemplate}"-->
+                            <local:RadialMenuItemsPresenter.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <local:RadialMenuPanel/>
+                                </ItemsPanelTemplate>
+                            </local:RadialMenuItemsPresenter.ItemsPanel>
+                        </local:RadialMenuItemsPresenter>
+                        <Button x:Name="NavigationButton" Style="{TemplateBinding NavigationButtonStyle}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

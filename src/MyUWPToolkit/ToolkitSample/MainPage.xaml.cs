@@ -93,7 +93,9 @@ namespace ToolkitSample
                 case "HightLightedRadioButton":
                     Frame.Navigate(typeof(HightLightedRadioButtonSamplePage));
                     break;
-                    
+                case "RadialMenu":
+                    Frame.Navigate(typeof(RadialMenuSample));
+                    break;
                 default:
                     break;
             }

@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -128,6 +128,7 @@
     <Compile Include="Common\PropertyChangeEventSource.cs" />
     <Compile Include="Common\SpeechHelper.cs" />
     <Compile Include="Common\StorageHelper.cs" />
+    <Compile Include="Common\VTreeHelper.cs" />
     <Compile Include="Converters\Converter.cs" />
     <Compile Include="FlexGrid\Column.cs" />
     <Compile Include="FlexGrid\FlexGrid.cs" />
@@ -169,6 +170,13 @@
     <Compile Include="Popup\AdvancedFlyoutBase.cs" />
     <Compile Include="Popup\AdvancedFlyoutPlacementMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RadialMenu\ArcSegments.cs" />
+    <Compile Include="RadialMenu\IRadialMenuItemsControl.cs" />
+    <Compile Include="RadialMenu\RadialMenu.cs" />
+    <Compile Include="RadialMenu\RadialMenuItem.cs" />
+    <Compile Include="RadialMenu\RadialMenuItemsPresenter.cs" />
+    <Compile Include="RadialMenu\RadialMenuP.cs" />
+    <Compile Include="RadialMenu\RadialMenuPanel.cs" />
     <Compile Include="Text\NumericTextBox.cs" />
     <Compile Include="Text\NumericUpDown.cs" />
     <Compile Include="Text\UpDownTextBox.cs" />
@@ -218,6 +226,11 @@
     <Page Include="Themes\HightLightedRadioButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\RadialMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Themes\ImageTool.xaml">
@@ -272,6 +285,7 @@
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
