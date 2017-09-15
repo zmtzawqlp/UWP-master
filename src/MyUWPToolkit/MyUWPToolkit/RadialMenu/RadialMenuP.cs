@@ -9,8 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace MyUWPToolkit.RadialMenu
 {
-    [TemplatePart(Name = "NavigationButton", Type = typeof(Button))]
-    [TemplatePart(Name = "CurrentItemPresenter", Type = typeof(RadialMenuItemsPresenter))]
+
     public partial class RadialMenu
     {
         #region fileds
@@ -19,10 +18,26 @@ namespace MyUWPToolkit.RadialMenu
         //private static SymbolIcon defaulNavigationButtonBackIcon = new SymbolIcon(Symbol.Back);
         private RadialMenuItemsPresenter _currentItemPresenter;
         private Button _navigationButton;
+        private Grid _contentGrid;
         #endregion
 
         #region DP
 
+
+        public bool IsExpanded
+        {
+            get { return (bool)GetValue(IsExpandedProperty); }
+            set { SetValue(IsExpandedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsExpanded.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsExpandedProperty =
+            DependencyProperty.Register("IsExpanded", typeof(bool), typeof(RadialMenu), new PropertyMetadata(false,new PropertyChangedCallback(OnIsExpandedChanged)));
+
+        private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as RadialMenu).IsExpandedChanged();
+        }
 
         public double StartAngle
         {

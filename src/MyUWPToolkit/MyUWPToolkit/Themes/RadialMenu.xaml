@@ -46,6 +46,7 @@
                             </Path.Data>
                         </Path>
 
+                        
                         <Grid x:Name="ExpandButtonArea" Visibility="{Binding HasItems,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource VisibilityConverter}}">
                             <!--ExpandButtonArea-->
                             <Path x:Name="PointerOverElement" StrokeThickness="0" Stroke="Blue">
@@ -84,9 +85,6 @@
 
     <Style x:Key="NavigationButtonStyle" TargetType="Button">
         <Setter Property="Content" Value="&#xE115;"/>
-        <!--<Setter Property="BorderBrush" Value="{ThemeResource TelerikRadialMenuButtonBorderBrush}"/>
-        <Setter Property="Background" Value="{ThemeResource TelerikRadialMenuButtonBackgroundBrush}"/>
-        <Setter Property="Foreground" Value="{ThemeResource TelerikRadialMenuButtonForegroundBrush}"/>-->
         <Setter Property="MinWidth" Value="0"/>
         <Setter Property="Width" Value="45"/>
         <Setter Property="Height" Value="45"/>
@@ -182,18 +180,20 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:RadialMenu">
                     <Grid>
-                        <Ellipse Fill="{TemplateBinding Background}"  Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                        <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
+                        <Grid x:Name="ContentGrid">
+                            <Ellipse Fill="{TemplateBinding Background}"  Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
                                                         ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
                                                        >
-                            <!--ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                                <!--ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
                                                         ItemTemplate="{TemplateBinding ItemTemplate}"-->
-                            <local:RadialMenuItemsPresenter.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <local:RadialMenuPanel/>
-                                </ItemsPanelTemplate>
-                            </local:RadialMenuItemsPresenter.ItemsPanel>
-                        </local:RadialMenuItemsPresenter>
+                                <local:RadialMenuItemsPresenter.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <local:RadialMenuPanel/>
+                                    </ItemsPanelTemplate>
+                                </local:RadialMenuItemsPresenter.ItemsPanel>
+                            </local:RadialMenuItemsPresenter>
+                        </Grid>
                         <Button x:Name="NavigationButton" Style="{TemplateBinding NavigationButtonStyle}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>

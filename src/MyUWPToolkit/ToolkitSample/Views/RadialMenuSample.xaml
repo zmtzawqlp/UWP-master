@@ -6,11 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:radialMenu="using:MyUWPToolkit.RadialMenu"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
       
-        <radialMenu:RadialMenu SectorCount="8" StartAngle="-60" >
+        <radialMenu:RadialMenu SectorCount="8" StartAngle="-60">
             <radialMenu:RadialMenuItem >
                 <radialMenu:RadialMenuItem.Content>
                     <StackPanel Orientation="Vertical">
@@ -81,6 +82,15 @@
                             <TextBlock Text="添加"/>
                         </StackPanel>
                     </radialMenu:RadialMenuItem.Content>
+
+                    <radialMenu:RadialMenuItem >
+                        <radialMenu:RadialMenuItem.Content>
+                            <StackPanel Orientation="Vertical">
+                                <SymbolIcon Symbol="Add"/>
+                                <TextBlock Text="测试一下"/>
+                            </StackPanel>
+                        </radialMenu:RadialMenuItem.Content>
+                    </radialMenu:RadialMenuItem>
                 </radialMenu:RadialMenuItem>
             </radialMenu:RadialMenuItem>
            

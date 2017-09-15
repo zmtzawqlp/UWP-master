@@ -20,12 +20,14 @@ namespace MyUWPToolkit.RadialMenu
 {
     [TemplatePart(Name = "ExpandIcon", Type = typeof(FontIcon))]
     [TemplatePart(Name = "ExpandButton", Type = typeof(Path))]
+    [TemplatePart(Name = "ExpandButtonArea", Type = typeof(Grid))]
     [ContentProperty(Name = "Items")]
     [Bindable]
     public class RadialMenuItem : ContentControl, IRadialMenuItemsControl, INotifyPropertyChanged
     {
         private Path _expandButton;
         private FontIcon _expandIcon;
+        private Grid _expandButtonArea;
         internal FontIcon ExpandIcon
         {
             get
@@ -88,27 +90,37 @@ namespace MyUWPToolkit.RadialMenu
         {
             _expandIcon = GetTemplateChild("ExpandIcon") as FontIcon;
             _expandButton = GetTemplateChild("ExpandButton") as Path;
-            _expandButton.PointerEntered += _expandArea_PointerEntered;
-            _expandButton.PointerExited += _expandArea_PointerExited;
-            _expandButton.Tapped += _expandButton_Tapped;
+            _expandButtonArea = GetTemplateChild("ExpandButtonArea") as Grid;
+            _expandButtonArea.PointerEntered += _expandButtonArea_PointerEntered;
+            _expandButtonArea.PointerExited += _expandButtonArea_PointerExited;
+            _expandButtonArea.Tapped += _expandButtonArea_Tapped;
             base.OnApplyTemplate();
         }
 
-        #region ExpandButton
-        private void _expandButton_Tapped(object sender, TappedRoutedEventArgs e)
-        {
+        #region ExpandButtonArea
 
+        private void _expandButtonArea_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Menu.SetCurrentItem(this);
         }
 
-        private void _expandArea_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void _expandButtonArea_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Normal", false);
+            if (HasItems)
+            {
+                VisualStateManager.GoToState(this, "Normal", false);
+            }
         }
 
-        private void _expandArea_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void _expandButtonArea_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "ExpandButtonPointerOver", false);
+            if (HasItems)
+            {
+                VisualStateManager.GoToState(this, "ExpandButtonPointerOver", false);
+            }
         }
+
+
 
         #endregion
 
@@ -121,13 +133,14 @@ namespace MyUWPToolkit.RadialMenu
 
         private RadialMenu _menu;
 
-       
+        private IRadialMenuItemsControl _parentItem;
         public RadialMenu Menu => _menu;
-        public IRadialMenuItemsControl ParentItem => _menu?.CurrentItem;
+        public IRadialMenuItemsControl ParentItem => _parentItem;
 
         internal void SetMenu(RadialMenu menu)
         {
             _menu = menu;
+            _parentItem = menu?.CurrentItem;
         }
 
         #region INotifyPropertyChanged
