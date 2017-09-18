@@ -15,17 +15,18 @@ using Windows.UI.Xaml.Shapes;
 using System.Diagnostics;
 using Windows.UI.Xaml.Input;
 using System.ComponentModel;
+using Windows.UI;
 
 namespace MyUWPToolkit.RadialMenu
 {
-    [TemplatePart(Name = "ExpandIcon", Type = typeof(FontIcon))]
-    [TemplatePart(Name = "ExpandButton", Type = typeof(Path))]
-    [TemplatePart(Name = "ExpandButtonArea", Type = typeof(Grid))]
+    //[TemplatePart(Name = "ExpandIcon", Type = typeof(FontIcon))]
+    //[TemplatePart(Name = "ExpandButton", Type = typeof(Path))]
     [ContentProperty(Name = "Items")]
+    [TemplatePart(Name = "ExpandButtonArea", Type = typeof(Grid))]
     [Bindable]
     public class RadialMenuItem : ContentControl, IRadialMenuItemsControl, INotifyPropertyChanged
     {
-        private Path _expandButton;
+        //private Path _expandButton;
         private FontIcon _expandIcon;
         private Grid _expandButtonArea;
         internal FontIcon ExpandIcon
@@ -65,6 +66,51 @@ namespace MyUWPToolkit.RadialMenu
         public static readonly DependencyProperty ContentAngleProperty =
             DependencyProperty.Register("ContentAngle", typeof(double), typeof(RadialMenuItem), new PropertyMetadata(0.0));
 
+
+
+        public bool IsCheckable
+        {
+            get { return (bool)GetValue(IsCheckableProperty); }
+            set { SetValue(IsCheckableProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsCheckable.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsCheckableProperty =
+            DependencyProperty.Register("IsCheckable", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(false));
+
+
+
+        public bool IsChecked
+        {
+            get { return (bool)GetValue(IsCheckedProperty); }
+            set { SetValue(IsCheckedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsCheckedProperty =
+            DependencyProperty.Register("IsChecked", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(false,OnIsCheckedChanged));
+
+        private static void OnIsCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as RadialMenuItem).OnIsCheckedChanged();
+        }
+
+        private void OnIsCheckedChanged()
+        {
+            if (!IsCheckable)
+            {
+                return;
+            }
+            if (IsChecked)
+            {
+                VisualStateManager.GoToState(this, "IsChecked", false);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Normal", false);
+            }
+        }
+
         public bool HasItems
         {
             get { return _items.Count > 0; }
@@ -73,12 +119,22 @@ namespace MyUWPToolkit.RadialMenu
         public RadialMenuItem()
         {
             this.DefaultStyleKey = typeof(RadialMenuItem);
+            PrepareElements();
+        }
+
+        protected void PrepareElements()
+        {
             _items = new ObservableCollection<RadialMenuItem>();
             _items.CollectionChanged += _items_CollectionChanged;
             ArcSegments = new ArcSegments();
             ArcSegments.CheckElement = new ArcSegmentItem();
             ArcSegments.PointerOverElement = new ArcSegmentItem();
             ArcSegments.ExpandArea = new ArcSegmentItem();
+            if (this is RadialColorMenuItem)
+            {
+                ArcSegments.ColorElement = new ArcSegmentItem();
+            }
+            ArcSegments.HitTestElement = new ArcSegmentItem();
         }
 
         private void _items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -88,20 +144,36 @@ namespace MyUWPToolkit.RadialMenu
 
         protected override void OnApplyTemplate()
         {
+            //base.OnApplyTemplate();
             _expandIcon = GetTemplateChild("ExpandIcon") as FontIcon;
-            _expandButton = GetTemplateChild("ExpandButton") as Path;
+            //_expandButton = GetTemplateChild("ExpandButton") as Path;
             _expandButtonArea = GetTemplateChild("ExpandButtonArea") as Grid;
+
             _expandButtonArea.PointerEntered += _expandButtonArea_PointerEntered;
             _expandButtonArea.PointerExited += _expandButtonArea_PointerExited;
             _expandButtonArea.Tapped += _expandButtonArea_Tapped;
-            base.OnApplyTemplate();
+
         }
 
         #region ExpandButtonArea
 
         private void _expandButtonArea_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Menu.SetCurrentItem(this);
+            if (HasItems)
+            {
+                e.Handled = true;
+                Menu?.SetCurrentItem(this);
+            }
+        }
+
+        protected override void OnTapped(TappedRoutedEventArgs e)
+        {
+            if (IsCheckable)
+            {
+                IsChecked = !IsChecked;
+            }
+            Menu?.OnItemTapped(this, e);
+            base.OnTapped(e);
         }
 
         private void _expandButtonArea_PointerExited(object sender, PointerRoutedEventArgs e)

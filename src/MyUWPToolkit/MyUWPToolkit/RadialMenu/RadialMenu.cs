@@ -5,21 +5,24 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Shapes;
 
 namespace MyUWPToolkit.RadialMenu
 {
-    [TemplatePart(Name = "NavigationButton", Type = typeof(Button))]
-    [TemplatePart(Name = "CurrentItemPresenter", Type = typeof(RadialMenuItemsPresenter))]
-    [TemplatePart(Name = "ContentGrid", Type = typeof(Grid))]
+    
     [ContentProperty(Name = "Items")]
     [Bindable]
+    [TemplatePart(Name = "NavigationButton", Type = typeof(RadialMenuNavigationButton))]
+    [TemplatePart(Name = "CurrentItemPresenter", Type = typeof(RadialMenuItemsPresenter))]
+    [TemplatePart(Name = "ContentGrid", Type = typeof(Grid))]
     public partial class RadialMenu : Control, IRadialMenuItemsControl
     {
         public RadialMenu()
@@ -27,16 +30,19 @@ namespace MyUWPToolkit.RadialMenu
             this.DefaultStyleKey = typeof(RadialMenu);
             _items = new ObservableCollection<RadialMenuItem>();
         }
+
         #region override
         protected override void OnApplyTemplate()
         {
+
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
             _currentItemPresenter = GetTemplateChild("CurrentItemPresenter") as RadialMenuItemsPresenter;
             _currentItemPresenter.Menu = this;
-            _navigationButton = GetTemplateChild("NavigationButton") as Button;
+            _navigationButton = GetTemplateChild("NavigationButton") as RadialMenuNavigationButton;
             _navigationButton.Click += _navigationButton_Click;
+            if (!DesignMode.DesignModeEnabled)
+                PrepareAnimation();
             CurrentItem = this;
-            PrepareAnimation();
             base.OnApplyTemplate();
         }
 
@@ -72,6 +78,7 @@ namespace MyUWPToolkit.RadialMenu
         Compositor _compositor;
         ScalarKeyFrameAnimation rotationAnimation;
         Vector3KeyFrameAnimation scaleAnimation;
+        //ScalarKeyFrameAnimation opacityAnimation;
         void PrepareAnimation()
         {
             _contentGridVisual = ElementCompositionPreview.GetElementVisual(_contentGrid);
@@ -79,6 +86,8 @@ namespace MyUWPToolkit.RadialMenu
 
             rotationAnimation = _compositor.CreateScalarKeyFrameAnimation();
             scaleAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            //opacityAnimation = _compositor.CreateScalarKeyFrameAnimation();
+
             var easing = _compositor.CreateLinearEasingFunction();
    
             _contentGrid.SizeChanged += (s, e) =>
@@ -91,29 +100,37 @@ namespace MyUWPToolkit.RadialMenu
 
             rotationAnimation.InsertKeyFrame(0.0f, -90.0f);
             rotationAnimation.InsertKeyFrame(1.0f, 0.0f, easing);
+
+            //opacityAnimation.InsertKeyFrame(0.0f, 0.0f);
+            //opacityAnimation.InsertKeyFrame(1.0f, 1.0f, easing);
+
             _contentGridVisual.Scale = new Vector3(0,0,0);
+           
         }
         public void Expand()
         {
-            //_navigationButton.RequestedTheme = ElementTheme.Dark;
             scaleAnimation.Direction = AnimationDirection.Normal;
             rotationAnimation.Direction = AnimationDirection.Normal;
             scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
             rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
+            //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
             _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
             _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
+            //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
+            _navigationButton.GoToStateExpand();
         }
 
         public void Collapse()
         {
-            //_navigationButton.RequestedTheme = ElementTheme.Light;
-           
             scaleAnimation.Direction = AnimationDirection.Reverse;
             rotationAnimation.Direction = AnimationDirection.Reverse;
             scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
             rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
+            //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
             _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
             _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
+            //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
+            _navigationButton.GoToStateCollapse();
         }
 
         internal void SetCurrentItem(IRadialMenuItemsControl currentItem)
@@ -137,6 +154,11 @@ namespace MyUWPToolkit.RadialMenu
             scaleAnimation.Direction = AnimationDirection.Reverse;
             scaleAnimation.Duration = TimeSpan.FromSeconds(0.1);
             _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+        }
+
+        internal void OnItemTapped(RadialMenuItem sender, TappedRoutedEventArgs e)
+        {
+            ItemTapped?.Invoke(sender, e);
         }
     }
 }

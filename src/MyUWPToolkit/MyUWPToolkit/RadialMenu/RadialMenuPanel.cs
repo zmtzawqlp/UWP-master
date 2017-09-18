@@ -60,10 +60,9 @@ namespace MyUWPToolkit.RadialMenu
             //double arcThickness = ParentItemsControl != null ? GetArcThickness(ParentItemsControl) : 0;
             //double arcRadius = radius * (ParentItemsControl != null ? GetArcRelativeRadius(ParentItemsControl) : 1); // only honor parent setting here
 
-            UIElementCollection children = Children;
-            int count = children.Count;
+
+            int count = Children.Count;
             int sectorCount = -1;
-            List<UIElement> elements = new List<UIElement>(count);
             double startAngle = 0.0;
 
             if (Menu != null)
@@ -79,12 +78,23 @@ namespace MyUWPToolkit.RadialMenu
                 startAngle = Menu.StartAngle;
             }
 
-            count = (sectorCount > 0 && sectorCount > Children.Count) ? sectorCount : Children.Count;
+
+            List<RadialMenuItem> items = new List<RadialMenuItem>();
+            foreach (var item in this.Children)
+            {
+                if (item is RadialMenuItem radialMenuItem && radialMenuItem.Visibility == Visibility.Visible)
+                {
+                    items.Add(radialMenuItem);
+                }
+            }
+
+            count = (sectorCount > 0 && sectorCount > items.Count) ? sectorCount : items.Count;
 
             double childAngle = 360.0 / (Math.Max((double)count, 2));
 
-            var sin = Sin(childAngle / 2.0);
-            var cos = Cos(childAngle / 2.0);
+            //leave some marign form sector to sector
+            var sin = Sin((childAngle - 0.5) / 2.0);
+            var cos = Cos((childAngle) / 2.0);
 
             var sectorRect = new Rect() { Width = 2 * sin * radius, Height = radius };
             sectorRect.X = radius - sectorRect.Width / 2.0;
@@ -96,46 +106,81 @@ namespace MyUWPToolkit.RadialMenu
 
             var checkElementRadius = radius - Menu.ExpandAreaThickness - Menu.CheckElementThickness / 2.0;
 
+            var colorElementStrokeThickness = radius - Menu.ExpandAreaThickness - Menu.CheckElementThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
+
+            var colorElementRadius = radius - Menu.ExpandAreaThickness - Menu.CheckElementThickness - colorElementStrokeThickness / 2.0;
+
+            var hitTestElementStrokeThickness = radius - Menu.ExpandAreaThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
+
+            var hitTestElementRadius = radius - Menu.ExpandAreaThickness - hitTestElementStrokeThickness / 2.0;
 
             var pointerOverElement = new ArcSegmentItem();
             SetArcSegmentItem(pointerOverElement, pointerOverElementRadius, sin, cos, sectorRect);
+
             var expandArea = new ArcSegmentItem();
             SetArcSegmentItem(expandArea, expandAreaRadius, sin, cos, sectorRect);
             expandArea.ExpandIconY = radius - expandArea.Size.Height;
+
             var checkElement = new ArcSegmentItem();
             SetArcSegmentItem(checkElement, checkElementRadius, sin, cos, sectorRect);
 
+            var colorElement = new ArcSegmentItem();
+            SetArcSegmentItem(colorElement, colorElementRadius, sin, cos, sectorRect);
+            colorElement.StrokeThickness = colorElementStrokeThickness;
+
+            var hitTestElement = new ArcSegmentItem();
+            SetArcSegmentItem(hitTestElement, hitTestElementRadius, sin, cos, sectorRect);
+            hitTestElement.StrokeThickness = hitTestElementStrokeThickness;
 
             int i = 0;
             bool first = true;
-            foreach (var item in this.Children)
+            int j = items.Count;
+            if (Menu?.CurrentItem is RadialMenuItem item1 && item1.Items.Count < count)
             {
-                if (item is RadialMenuItem radialMenuItem && radialMenuItem.Visibility == Visibility.Visible)
-                {
-                    var angle = startAngle + childAngle * i;
-                    i++;
-                    if (first)
-                    {
-                        if (radialMenuItem.ExpandIcon.DesiredSize.Height == 0)
-                        {
-                            radialMenuItem.ExpandIcon.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                        }
-                        expandArea.ExpandIconY -= radialMenuItem.ExpandIcon.DesiredSize.Height / 2.0;
-                        first = false;
-                    }
-                    radialMenuItem.ArcSegments.ExpandArea = expandArea;
-                    radialMenuItem.ArcSegments.PointerOverElement = pointerOverElement;
-                    radialMenuItem.ArcSegments.CheckElement = checkElement;
+                startAngle = -(childAngle * item1.Items.Count / 2.0 + item1.ContentAngle) + childAngle / 2.0;
+            }
 
-                    RotateTransform transform = new RotateTransform();
-                    transform.CenterX = sectorRect.Width / 2.0;
-                    transform.CenterY = sectorRect.Height;
-                    transform.Angle = angle;
-                    radialMenuItem.ContentAngle = -angle;
-                    radialMenuItem.RenderTransform = transform;
-                    radialMenuItem.Arrange(sectorRect);
+            if (Menu.FillEmptyPlaces)
+            {
+                while (j < count)
+                {
+                    var newItem = new RadialMenuItem();
+                    newItem.SetMenu(Menu);
+                    items.Add(newItem);
+                    this.Children.Add(newItem);
+                    j++;
+                }
+            }
+
+            foreach (var radialMenuItem in items)
+            {
+                var angle = startAngle + childAngle * i;
+                i++;
+                if (first && radialMenuItem.HasItems)
+                {
+                    if (radialMenuItem.ExpandIcon.DesiredSize.Height == 0)
+                    {
+                        radialMenuItem.ExpandIcon.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    }
+                    expandArea.ExpandIconY -= radialMenuItem.ExpandIcon.DesiredSize.Height / 2.0;
+                    first = false;
+                }
+                radialMenuItem.ArcSegments.ExpandArea = expandArea;
+                radialMenuItem.ArcSegments.PointerOverElement = pointerOverElement;
+                radialMenuItem.ArcSegments.CheckElement = checkElement;
+                radialMenuItem.ArcSegments.HitTestElement = hitTestElement;
+                if (radialMenuItem is RadialColorMenuItem radialColorMenuItem)
+                {
+                    radialColorMenuItem.ArcSegments.ColorElement = colorElement;
                 }
 
+                RotateTransform transform = new RotateTransform();
+                transform.CenterX = sectorRect.Width / 2.0;
+                transform.CenterY = sectorRect.Height;
+                transform.Angle = angle;
+                radialMenuItem.ContentAngle = -angle;
+                radialMenuItem.RenderTransform = transform;
+                radialMenuItem.Arrange(sectorRect);
             }
         }
 

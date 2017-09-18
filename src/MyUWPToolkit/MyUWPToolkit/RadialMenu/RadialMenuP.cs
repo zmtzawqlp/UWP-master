@@ -4,8 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 namespace MyUWPToolkit.RadialMenu
 {
@@ -17,11 +20,22 @@ namespace MyUWPToolkit.RadialMenu
         //private static SymbolIcon defaulNavigationButtonIcon = new SymbolIcon(Symbol.Setting);
         //private static SymbolIcon defaulNavigationButtonBackIcon = new SymbolIcon(Symbol.Back);
         private RadialMenuItemsPresenter _currentItemPresenter;
-        private Button _navigationButton;
+        internal RadialMenuNavigationButton _navigationButton;
         private Grid _contentGrid;
         #endregion
 
         #region DP
+
+
+        public bool FillEmptyPlaces
+        {
+            get { return (bool)GetValue(FillEmptyPlacesProperty); }
+            set { SetValue(FillEmptyPlacesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FillEmptyPlaces.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FillEmptyPlacesProperty =
+            DependencyProperty.Register("FillEmptyPlaces", typeof(bool), typeof(RadialMenu), new PropertyMetadata(true));
 
 
         public bool IsExpanded
@@ -99,7 +113,7 @@ namespace MyUWPToolkit.RadialMenu
 
         // Using a DependencyProperty as the backing store for CheckElementThickness.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CheckElementThicknessProperty =
-            DependencyProperty.Register("CheckElementThickness", typeof(double), typeof(RadialMenu), new PropertyMetadata(2.0));
+            DependencyProperty.Register("CheckElementThickness", typeof(double), typeof(RadialMenu), new PropertyMetadata(8.0));
 
 
         #region NavigationButton
@@ -125,25 +139,65 @@ namespace MyUWPToolkit.RadialMenu
 
 
 
-        public Style NavigationButtonStyle
-        {
-            get { return (Style)GetValue(NavigationButtonStyleProperty); }
-            set { SetValue(NavigationButtonStyleProperty, value); }
-        }
+        //public Style NavigationButtonStyle
+        //{
+        //    get { return (Style)GetValue(NavigationButtonStyleProperty); }
+        //    set { SetValue(NavigationButtonStyleProperty, value); }
+        //}
 
-        // Using a DependencyProperty as the backing store for NavigationButtonStyle.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty NavigationButtonStyleProperty =
-            DependencyProperty.Register("NavigationButtonStyle", typeof(Style), typeof(RadialMenu), new PropertyMetadata(null));
+        //// Using a DependencyProperty as the backing store for NavigationButtonStyle.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty NavigationButtonStyleProperty =
+        //    DependencyProperty.Register("NavigationButtonStyle", typeof(Style), typeof(RadialMenu), new PropertyMetadata(null));
 
 
         #endregion
 
 
+        #region ExpandButton
+
+        public Brush ExpandButtonBackground
+        {
+            get { return (Brush)GetValue(ExpandButtonBackgroundProperty); }
+            set { SetValue(ExpandButtonBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ExpandButtonBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ExpandButtonBackgroundProperty =
+            DependencyProperty.Register("ExpandButtonBackground", typeof(Brush), typeof(RadialMenu), new PropertyMetadata(null));
+
+        public Brush ExpandButtonPointerOverBackground
+        {
+            get { return (Brush)GetValue(ExpandButtonPointerOverBackgroundProperty); }
+            set { SetValue(ExpandButtonPointerOverBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ExpandButtonPointerOverBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ExpandButtonPointerOverBackgroundProperty =
+            DependencyProperty.Register("ExpandButtonPointerOverBackground", typeof(Brush), typeof(RadialMenu), new PropertyMetadata(null));
+
+
+        #endregion
+
+        public Brush CheckElementBackground
+        {
+            get { return (Brush)GetValue(CheckElementBackgroundProperty); }
+            set { SetValue(CheckElementBackgroundProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CheckElementBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CheckElementBackgroundProperty =
+            DependencyProperty.Register("CheckElementBackground", typeof(Brush), typeof(RadialMenu), new PropertyMetadata(null));
         #endregion
 
         #region Prop
-        public ObservableCollection<RadialMenuItem> Items => _items;
-
+        public ObservableCollection<RadialMenuItem> Items
+        {
+            get
+            {
+                return _items;
+            }
+        }
+        public event TappedEventHandler ItemTapped;
         #endregion
     }
 }

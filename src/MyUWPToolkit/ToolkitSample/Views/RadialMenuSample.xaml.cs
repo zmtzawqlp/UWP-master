@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.RadialMenu;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,32 @@ namespace ToolkitSample
         public RadialMenuSample()
         {
             this.InitializeComponent();
+        }
+
+        private void OnTapped1(object sender, TappedRoutedEventArgs e)
+        {
+            var item = (sender as RadialMenuItem);
+            if (item.IsChecked)
+            {
+                item.Content = "阳线(实)";
+            }
+            else
+            {
+                item.Content = "阳线(空)";
+            }
+        }
+
+        private void OnTapped2(object sender, TappedRoutedEventArgs e)
+        {
+            var item = (sender as RadialMenuItem);
+            if (item.IsChecked)
+            {
+               tb.Text = "显示缺口";
+            }
+            else
+            {
+                tb.Text = "隐藏缺口";
+            }
         }
     }
 }

@@ -18,12 +18,13 @@
                                         <DoubleAnimation Storyboard.TargetName="PointerOverElement"  Storyboard.TargetProperty="StrokeThickness" Duration="0" To="{Binding Menu.PointerOverElementThickness,RelativeSource={RelativeSource TemplatedParent}}"/>
                                         <DoubleAnimation Storyboard.TargetName="ExpandIconTranslateTransform" Storyboard.TargetProperty="Y" Duration="0" To="0" />
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandButton" Storyboard.TargetProperty="Stroke">
-                                            <DiscreteObjectKeyFrame KeyTime="0" >
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <SolidColorBrush Color="Blue"/>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0"  Value="{Binding Stroke,ElementName=PointerOverElement}"/>
                                         </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="IsChecked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckElement"  Storyboard.TargetProperty="StrokeThickness" Duration="0" To="{Binding Menu.CheckElementThickness,RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -33,6 +34,111 @@
                                 <RotateTransform Angle="{Binding ContentAngle, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </ContentPresenter.RenderTransform>
                         </ContentPresenter>
+                        <Path x:Name="ColorElement"
+                            StrokeThickness="{Binding ArcSegments.ColorElement.StrokeThickness,RelativeSource={RelativeSource TemplatedParent}}"   
+                              >
+                            <Path.Stroke>
+                                <SolidColorBrush Color="{Binding Color,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Path.Stroke>
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.ColorElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.ColorElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.ColorElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+
+                        <Path x:Name="CheckElement" StrokeThickness="0" Stroke="{Binding Menu.CheckElementBackground, RelativeSource={RelativeSource TemplatedParent}}">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.CheckElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.CheckElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.CheckElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+
+                        <Path x:Name="HitTestElement" Stroke="#01010101"
+                            StrokeThickness="{Binding ArcSegments.HitTestElement.StrokeThickness,RelativeSource={RelativeSource TemplatedParent}}"   
+                              >
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.HitTestElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.HitTestElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.HitTestElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+
+                        <Grid x:Name="ExpandButtonArea">
+                            <!--ExpandButtonArea-->
+                            <Path x:Name="PointerOverElement" StrokeThickness="0" Stroke="{Binding Menu.ExpandButtonPointerOverBackground,RelativeSource={RelativeSource TemplatedParent}}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.PointerOverElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                            <ArcSegment Point="{Binding ArcSegments.PointerOverElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.PointerOverElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <Path x:Name="ExpandButton" Stroke="{Binding Menu.ExpandButtonBackground,RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="{Binding Menu.ExpandAreaThickness,RelativeSource={RelativeSource TemplatedParent}}" >
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.ExpandArea.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                            <ArcSegment Point="{Binding ArcSegments.ExpandArea.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.ExpandArea.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <FontIcon x:Name="ExpandIcon" Glyph="&#xE0A0;" Visibility="{Binding HasItems,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource VisibilityConverter}}" IsHitTestVisible="False" VerticalAlignment="Top" FontSize="12" FontFamily="Segoe UI Symbol">
+                                <FontIcon.RenderTransform>
+                                    <TranslateTransform x:Name="ExpandIconTranslateTransform" Y="{Binding ArcSegments.ExpandArea.ExpandIconY,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                </FontIcon.RenderTransform>
+                            </FontIcon>
+                            <!--ExpandButtonArea-->
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--<Style TargetType="local:RadialColorMenuItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:RadialColorMenuItem">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="ExpandButtonPointerOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="PointerOverElement"  Storyboard.TargetProperty="StrokeThickness" Duration="0" To="{Binding Menu.PointerOverElementThickness,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <DoubleAnimation Storyboard.TargetName="ExpandIconTranslateTransform" Storyboard.TargetProperty="Y" Duration="0" To="0" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandButton" Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0"  Value="{Binding Stroke,ElementName=PointerOverElement}"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Path x:Name="ColorElement"
+                            StrokeThickness="{Binding ArcSegments.ColorElement.ColorElementStrokeThickness,RelativeSource={RelativeSource TemplatedParent}}"   
+                              >
+                            <Path.Stroke>
+                                <SolidColorBrush Color="{Binding Color,RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Path.Stroke>
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.ColorElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.ColorElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.ColorElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
 
                         <Path x:Name="CheckElement" Stroke="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"
                               StrokeThickness="{Binding Menu.CheckElementThickness,RelativeSource={RelativeSource TemplatedParent}}"   
@@ -46,10 +152,12 @@
                             </Path.Data>
                         </Path>
 
-                        
                         <Grid x:Name="ExpandButtonArea" Visibility="{Binding HasItems,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource VisibilityConverter}}">
-                            <!--ExpandButtonArea-->
-                            <Path x:Name="PointerOverElement" StrokeThickness="0" Stroke="Blue">
+                            --><!--ExpandButtonArea--><!--
+                            <Path x:Name="PointerOverElement" StrokeThickness="0" >
+                                <Path.Stroke>
+                                    <SolidColorBrush Color="{Binding Color,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                </Path.Stroke>
                                 <Path.Data>
                                     <PathGeometry>
                                         <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.PointerOverElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
@@ -59,7 +167,7 @@
                                 </Path.Data>
                             </Path>
 
-                            <Path x:Name="ExpandButton" Stroke="Red" StrokeThickness="{Binding Menu.ExpandAreaThickness,RelativeSource={RelativeSource TemplatedParent}}" >
+                            <Path x:Name="ExpandButton" Stroke="{Binding Menu.ExpandButtonBackground,RelativeSource={RelativeSource TemplatedParent}}" StrokeThickness="{Binding Menu.ExpandAreaThickness,RelativeSource={RelativeSource TemplatedParent}}" >
                                 <Path.Data>
                                     <PathGeometry>
                                         <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.ExpandArea.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
@@ -74,16 +182,16 @@
                                     <TranslateTransform x:Name="ExpandIconTranslateTransform" Y="{Binding ArcSegments.ExpandArea.ExpandIconY,RelativeSource={RelativeSource TemplatedParent}}"/>
                                 </FontIcon.RenderTransform>
                             </FontIcon>
-                            <!--ExpandButtonArea-->
+                            --><!--ExpandButtonArea--><!--
                         </Grid>
 
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
-    <Style x:Key="NavigationButtonStyle" TargetType="Button">
+    <Style TargetType="local:RadialMenuNavigationButton">
         <Setter Property="Content" Value="&#xE115;"/>
         <Setter Property="MinWidth" Value="0"/>
         <Setter Property="Width" Value="45"/>
@@ -94,40 +202,41 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="FontSize" Value="25"/>
+        <Setter Property="Background" Value="#466666"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Button">
+                <ControlTemplate TargetType="local:RadialMenuNavigationButton">
                     <Grid x:Name="RootGrid">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal">
+                                <!--<VisualState x:Name="Normal">
                                     <Storyboard>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                        --><!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
                                                    Storyboard.TargetProperty="Stroke">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                    Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        </ObjectAnimationUsingKeyFrames>--><!--
                                         <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                        --><!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
                                                    Storyboard.TargetProperty="Fill">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
                                                    Storyboard.TargetProperty="Stroke">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
+                                        </ObjectAnimationUsingKeyFrames>--><!--
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                    Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
@@ -150,10 +259,30 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
+                                </VisualState>-->
+                                <VisualState x:Name="Expand">
+                                  
+                                </VisualState>
+                                <VisualState x:Name="Collapse">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                   Storyboard.TargetProperty="Stroke">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
+                                                   Storyboard.TargetProperty="Fill">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding Background,RelativeSource={RelativeSource TemplatedParent}}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                   Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
+                                    </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Ellipse x:Name="BackgroundElement" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Ellipse x:Name="BackgroundElement" StrokeThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <ContentPresenter x:Name="ContentPresenter"
                           BorderBrush="{TemplateBinding BorderBrush}"
                           BorderThickness="{TemplateBinding BorderThickness}"
@@ -171,19 +300,20 @@
     </Style>
 
     <Style TargetType="local:RadialMenu">
-        <Setter Property="Width" Value="220"/>
-        <Setter Property="Height" Value="220"/>
-        <Setter Property="BorderBrush" Value="Green"/>
-        <Setter Property="NavigationButtonStyle" Value="{StaticResource NavigationButtonStyle}"/>
+        <Setter Property="Width" Value="260"/>
+        <Setter Property="Height" Value="260"/>
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="ExpandButtonBackground" Value="{ThemeResource ButtonBackground}"/>
+        <Setter Property="ExpandButtonPointerOverBackground" Value="#466666"/>
+        <Setter Property="CheckElementBackground" Value="#608B8B"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:RadialMenu">
                     <Grid>
                         <Grid x:Name="ContentGrid">
-                            <Ellipse Fill="{TemplateBinding Background}"  Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <Ellipse Fill="{TemplateBinding Background}"  Stroke="{ThemeResource ButtonBackground}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
-                                                        ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
+                             ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
                                                        >
                                 <!--ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
                                                         ItemTemplate="{TemplateBinding ItemTemplate}"-->
@@ -194,7 +324,7 @@
                                 </local:RadialMenuItemsPresenter.ItemsPanel>
                             </local:RadialMenuItemsPresenter>
                         </Grid>
-                        <Button x:Name="NavigationButton" Style="{TemplateBinding NavigationButtonStyle}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <local:RadialMenuNavigationButton x:Name="NavigationButton"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

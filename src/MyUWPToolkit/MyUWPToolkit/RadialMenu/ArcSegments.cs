@@ -11,6 +11,31 @@ namespace MyUWPToolkit.RadialMenu
     public class ArcSegments : INotifyPropertyChanged
     {
 
+        private ArcSegmentItem hitTestElement;
+
+        public ArcSegmentItem HitTestElement
+        {
+            get { return hitTestElement; }
+            set
+            {
+                hitTestElement = value;
+                OnPropertyChanged("HitTestElement");
+            }
+        }
+
+
+        private ArcSegmentItem colorElement;
+
+        public ArcSegmentItem ColorElement
+        {
+            get { return colorElement; }
+            set
+            {
+                colorElement = value;
+                OnPropertyChanged("ColorElement");
+            }
+        }
+
         private ArcSegmentItem checkElement;
 
         public ArcSegmentItem CheckElement
@@ -108,6 +133,19 @@ namespace MyUWPToolkit.RadialMenu
                 OnPropertyChanged("ExpandIconY");
             }
         }
+
+        private double strokeThickness;
+
+        public double StrokeThickness
+        {
+            get { return strokeThickness; }
+            set
+            {
+                strokeThickness = value;
+                OnPropertyChanged("StrokeThickness");
+            }
+        }
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;
