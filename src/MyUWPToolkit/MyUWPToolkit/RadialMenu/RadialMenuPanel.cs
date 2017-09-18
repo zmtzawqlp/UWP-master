@@ -57,9 +57,6 @@ namespace MyUWPToolkit.RadialMenu
             {
                 return;
             }
-            //double arcThickness = ParentItemsControl != null ? GetArcThickness(ParentItemsControl) : 0;
-            //double arcRadius = radius * (ParentItemsControl != null ? GetArcRelativeRadius(ParentItemsControl) : 1); // only honor parent setting here
-
 
             int count = Children.Count;
             int sectorCount = -1;
