@@ -23,16 +23,11 @@ namespace MyUWPToolkit.RadialMenu
             }
         }
 
-        private RadialMenu _menu;
         private RadialMenu Menu
         {
             get
             {
-                if (_menu == null && RadialMenuItemsPresenter != null)
-                {
-                    _menu = RadialMenuItemsPresenter.Menu;
-                }
-                return _menu;
+                return RadialMenuItemsPresenter?.Menu;
             }
         }
         protected override Size MeasureOverride(Size availableSize)
@@ -90,7 +85,7 @@ namespace MyUWPToolkit.RadialMenu
             double childAngle = 360.0 / (Math.Max((double)count, 2));
 
             //leave some marign form sector to sector
-            var sin = Sin((childAngle - 0.5) / 2.0);
+            var sin = Sin((childAngle * 0.99) / 2.0);
             var cos = Cos((childAngle) / 2.0);
 
             var sectorRect = new Rect() { Width = 2 * sin * radius, Height = radius };
@@ -101,11 +96,11 @@ namespace MyUWPToolkit.RadialMenu
 
             var expandAreaRadius = radius - Menu.ExpandAreaThickness / 2.0;
 
-            var checkElementRadius = radius - Menu.ExpandAreaThickness - Menu.CheckElementThickness / 2.0;
+            var SelectedElementRadius = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness / 2.0;
 
-            var colorElementStrokeThickness = radius - Menu.ExpandAreaThickness - Menu.CheckElementThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
+            var colorElementStrokeThickness = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
 
-            var colorElementRadius = radius - Menu.ExpandAreaThickness - Menu.CheckElementThickness - colorElementStrokeThickness / 2.0;
+            var colorElementRadius = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness - colorElementStrokeThickness / 2.0;
 
             var hitTestElementStrokeThickness = radius - Menu.ExpandAreaThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
 
@@ -118,8 +113,8 @@ namespace MyUWPToolkit.RadialMenu
             SetArcSegmentItem(expandArea, expandAreaRadius, sin, cos, sectorRect);
             expandArea.ExpandIconY = radius - expandArea.Size.Height;
 
-            var checkElement = new ArcSegmentItem();
-            SetArcSegmentItem(checkElement, checkElementRadius, sin, cos, sectorRect);
+            var SelectedElement = new ArcSegmentItem();
+            SetArcSegmentItem(SelectedElement, SelectedElementRadius, sin, cos, sectorRect);
 
             var colorElement = new ArcSegmentItem();
             SetArcSegmentItem(colorElement, colorElementRadius, sin, cos, sectorRect);
@@ -164,7 +159,7 @@ namespace MyUWPToolkit.RadialMenu
                 }
                 radialMenuItem.ArcSegments.ExpandArea = expandArea;
                 radialMenuItem.ArcSegments.PointerOverElement = pointerOverElement;
-                radialMenuItem.ArcSegments.CheckElement = checkElement;
+                radialMenuItem.ArcSegments.SelectedElement = SelectedElement;
                 radialMenuItem.ArcSegments.HitTestElement = hitTestElement;
                 if (radialMenuItem is RadialColorMenuItem radialColorMenuItem)
                 {

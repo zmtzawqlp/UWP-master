@@ -26310,6 +26310,7 @@
     "": [
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.4.0",
       "Newtonsoft.Json >= 10.0.3",
+      "System.Runtime >= 4.3.0",
       "Win2D.uwp >= 1.21.0"
     ],
     "UAP,Version=v10.0.14393": []
@@ -26338,7 +26339,11 @@
     "dependencies": {
       "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
       "Newtonsoft.Json": "10.0.3",
-      "Win2D.uwp": "1.21.0"
+      "Win2D.uwp": "1.21.0",
+      "System.Runtime": {
+        "target": "Package",
+        "version": "[4.3.0, )"
+      }
     },
     "frameworks": {
       "uap10.0.14393": {}

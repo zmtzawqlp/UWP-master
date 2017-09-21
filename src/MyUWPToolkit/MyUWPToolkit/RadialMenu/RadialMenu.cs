@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Foundation;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,7 +19,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace MyUWPToolkit.RadialMenu
 {
-    
+
     [ContentProperty(Name = "Items")]
     [Bindable]
     [TemplatePart(Name = "NavigationButton", Type = typeof(RadialMenuNavigationButton))]
@@ -29,6 +31,29 @@ namespace MyUWPToolkit.RadialMenu
         {
             this.DefaultStyleKey = typeof(RadialMenu);
             _items = new ObservableCollection<RadialMenuItem>();
+            ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            Loaded += RadialMenu_Loaded;
+            Unloaded += RadialMenu_Unloaded;
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
+        }
+
+        private void RadialMenu_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Window.Current.SizeChanged -= Current_SizeChanged;
+        }
+
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            UpdateOffset();
+        }
+
+        private void RadialMenu_Loaded(object sender, RoutedEventArgs e)
+        {
+            Window.Current.SizeChanged += Current_SizeChanged;
+            xPositive = 1;
+            yPositive = 1;
+            UpdateOffset();
         }
 
         #region override
@@ -74,6 +99,81 @@ namespace MyUWPToolkit.RadialMenu
         }
         #endregion
 
+        int xPositive = 1;
+        int yPositive = 1;
+        protected override void OnManipulationDelta(ManipulationDeltaRoutedEventArgs e)
+        {
+            UpdateOffset(e.Delta.Translation.X, e.Delta.Translation.Y, e.IsInertial);
+            //Debug.WriteLine(Offset);
+            base.OnManipulationDelta(e);
+        }
+
+        private void UpdateOffset(double x = 0, double y = 0, bool isInertial = false)
+        {
+            Vector3 newOffset = Vector3.Zero;
+            var windowRect = Window.Current.Bounds;
+
+            var minX = IsExpanded ? 0 : -(this.ActualWidth - _navigationButton.ActualWidth) / 2.0;
+            var minY = IsExpanded ? 0 : -(this.ActualHeight - _navigationButton.ActualHeight) / 2.0;
+
+            var maxX = windowRect.Width - (IsExpanded ? this.ActualWidth : (this.ActualWidth + _navigationButton.ActualWidth) / 2.0);
+            var maxY = windowRect.Height - (IsExpanded ? this.ActualHeight : (this.ActualHeight + _navigationButton.ActualHeight) / 2.0);
+
+            var newX = Offset.X + (xPositive * x);
+            var newY = Offset.Y + (yPositive * y);
+            if (isInertial)
+                BounceOffset(maxX, maxY, minX, minY, ref newX, ref newY);
+            else
+                ClipOffset(maxX, maxY, minX, minY, ref newX, ref newY);
+
+            Offset = new Vector3((float)newX, (float)newY, 0);
+        }
+
+        private void ClipOffset(double maxX, double maxY, double minX, double minY, ref double newX, ref double newY)
+        {
+            newX = Math.Max(minX, Math.Min(maxX, newX));
+            newY = Math.Max(minY, Math.Min(maxY, newY));
+        }
+
+        private void BounceOffset(double maxX, double maxY, double minX, double minY, ref double newX, ref double newY)
+        {
+            if (newX < minX)
+            {
+                xPositive = -xPositive;
+                newX = -newX;
+            }
+            else if (newX > maxX)
+            {
+                xPositive = -xPositive;
+                newX = maxX - (newX % maxX);
+            }
+
+            if (newY < minY)
+            {
+                yPositive = -yPositive;
+                newY = -newY;
+            }
+            else if (newY > maxY)
+            {
+                yPositive = -yPositive;
+                newY = maxY - (newY % maxY);
+            }
+        }
+        protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
+        {
+            xPositive = 1;
+            yPositive = 1;
+            base.OnManipulationStarted(e);
+        }
+        private void OnOffsetChanged()
+        {
+            if (_radialMenuVisual != null)
+            {
+                _radialMenuVisual.Offset = Offset;
+            }
+        }
+
+        Visual _radialMenuVisual;
         Visual _contentGridVisual;
         Compositor _compositor;
         ScalarKeyFrameAnimation rotationAnimation;
@@ -81,6 +181,8 @@ namespace MyUWPToolkit.RadialMenu
         //ScalarKeyFrameAnimation opacityAnimation;
         void PrepareAnimation()
         {
+            _radialMenuVisual = ElementCompositionPreview.GetElementVisual(this);
+            _radialMenuVisual.Offset = Offset;
             _contentGridVisual = ElementCompositionPreview.GetElementVisual(_contentGrid);
             _compositor = _contentGridVisual.Compositor;
 
@@ -89,7 +191,7 @@ namespace MyUWPToolkit.RadialMenu
             //opacityAnimation = _compositor.CreateScalarKeyFrameAnimation();
 
             var easing = _compositor.CreateLinearEasingFunction();
-   
+
             _contentGrid.SizeChanged += (s, e) =>
             {
                 _contentGridVisual.CenterPoint = new Vector3((float)_contentGrid.ActualWidth / 2.0f, (float)_contentGrid.ActualHeight / 2.0f, 0);
@@ -104,11 +206,12 @@ namespace MyUWPToolkit.RadialMenu
             //opacityAnimation.InsertKeyFrame(0.0f, 0.0f);
             //opacityAnimation.InsertKeyFrame(1.0f, 1.0f, easing);
 
-            _contentGridVisual.Scale = new Vector3(0,0,0);
-           
+            _contentGridVisual.Scale = new Vector3(0, 0, 0);
+
         }
         public void Expand()
         {
+            UpdateOffset();
             scaleAnimation.Direction = AnimationDirection.Normal;
             rotationAnimation.Direction = AnimationDirection.Normal;
             scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
@@ -122,6 +225,7 @@ namespace MyUWPToolkit.RadialMenu
 
         public void Collapse()
         {
+            UpdateOffset();
             scaleAnimation.Direction = AnimationDirection.Reverse;
             rotationAnimation.Direction = AnimationDirection.Reverse;
             scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);

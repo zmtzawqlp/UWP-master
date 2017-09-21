@@ -36,6 +36,8 @@ namespace MyUWPToolkit.RadialMenu
                 return _expandIcon;
             }
         }
+        public event EventHandler IsSelectedChanged;
+
         public int SectorCount
         {
             get { return (int)GetValue(SectorCountProperty); }
@@ -66,54 +68,77 @@ namespace MyUWPToolkit.RadialMenu
         public static readonly DependencyProperty ContentAngleProperty =
             DependencyProperty.Register("ContentAngle", typeof(double), typeof(RadialMenuItem), new PropertyMetadata(0.0));
 
-
-
-        public bool IsCheckable
+        public bool IsSelectedEnable
         {
-            get { return (bool)GetValue(IsCheckableProperty); }
-            set { SetValue(IsCheckableProperty, value); }
+            get { return (bool)GetValue(IsSelectedEnableProperty); }
+            set { SetValue(IsSelectedEnableProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsCheckable.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsCheckableProperty =
-            DependencyProperty.Register("IsCheckable", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(false));
+        // Using a DependencyProperty as the backing store for IsSelectedEnable.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsSelectedEnableProperty =
+            DependencyProperty.Register("IsSelectedEnable", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(true));
 
-
-
-        public bool IsChecked
+        public bool IsSelected
         {
-            get { return (bool)GetValue(IsCheckedProperty); }
-            set { SetValue(IsCheckedProperty, value); }
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsCheckedProperty =
-            DependencyProperty.Register("IsChecked", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(false,OnIsCheckedChanged));
+        // Using a DependencyProperty as the backing store for IsSelected.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register("IsSelected", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(false, OnIsSelectedChanged));
 
-        private static void OnIsCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as RadialMenuItem).OnIsCheckedChanged();
+            (d as RadialMenuItem).OnIsSelectedChanged();
         }
 
-        private void OnIsCheckedChanged()
+        public RadialMenuSelectionMode SelectionMode
         {
-            if (!IsCheckable)
+            get { return (RadialMenuSelectionMode)GetValue(SelectionModeProperty); }
+            set { SetValue(SelectionModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionModeProperty =
+            DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenuItem), new PropertyMetadata(RadialMenuSelectionMode.Single));
+
+        private void OnIsSelectedChanged()
+        {
+            if (!IsSelectedEnable)
             {
                 return;
             }
-            if (IsChecked)
+            if (IsSelected)
             {
-                VisualStateManager.GoToState(this, "IsChecked", false);
+                VisualStateManager.GoToState(this, "IsSelected", false);
             }
             else
             {
                 VisualStateManager.GoToState(this, "Normal", false);
             }
+            IsSelectedChanged?.Invoke(this, null);
         }
 
         public bool HasItems
         {
             get { return _items.Count > 0; }
+        }
+
+        //public RadialMenuItem SelectedItem
+        //{
+        //    get
+        //    {
+        //        return Items.FirstOrDefault(x => x.IsSelected);
+        //    }
+        //}
+
+        public IEnumerable<RadialMenuItem> SelectedItems
+        {
+            get
+            {
+                return Items.Where(x => x.IsSelected);
+            }
         }
 
         public RadialMenuItem()
@@ -127,7 +152,7 @@ namespace MyUWPToolkit.RadialMenu
             _items = new ObservableCollection<RadialMenuItem>();
             _items.CollectionChanged += _items_CollectionChanged;
             ArcSegments = new ArcSegments();
-            ArcSegments.CheckElement = new ArcSegmentItem();
+            ArcSegments.SelectedElement = new ArcSegmentItem();
             ArcSegments.PointerOverElement = new ArcSegmentItem();
             ArcSegments.ExpandArea = new ArcSegmentItem();
             if (this is RadialColorMenuItem)
@@ -168,10 +193,30 @@ namespace MyUWPToolkit.RadialMenu
 
         protected override void OnTapped(TappedRoutedEventArgs e)
         {
-            if (IsCheckable)
+            if (IsSelectedEnable)
             {
-                IsChecked = !IsChecked;
+                switch (ParentItem.SelectionMode)
+                {
+                    case RadialMenuSelectionMode.None:
+                        break;
+                    case RadialMenuSelectionMode.Single:
+                        foreach (var item in ParentItem.SelectedItems)
+                        {
+                            if (item != this)
+                            {
+                                item.IsSelected = false;
+                            }
+                        }
+                        IsSelected = !IsSelected;
+                        break;
+                    case RadialMenuSelectionMode.Multiple:
+                        IsSelected = !IsSelected;
+                        break;
+                    default:
+                        break;
+                }
             }
+
             Menu?.OnItemTapped(this, e);
             base.OnTapped(e);
         }
@@ -228,4 +273,6 @@ namespace MyUWPToolkit.RadialMenu
         #endregion
 
     }
+
+
 }

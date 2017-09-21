@@ -22,14 +22,14 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="IsChecked">
+                                <VisualState x:Name="IsSelected">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="CheckElement"  Storyboard.TargetProperty="StrokeThickness" Duration="0" To="{Binding Menu.CheckElementThickness,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedElement"  Storyboard.TargetProperty="StrokeThickness" Duration="0" To="{Binding Menu.SelectedElementThickness,RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter RenderTransformOrigin="0.5,0.5"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ContentPresenter RenderTransformOrigin="0.5,0.5" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <ContentPresenter.RenderTransform>
                                 <RotateTransform Angle="{Binding ContentAngle, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </ContentPresenter.RenderTransform>
@@ -49,11 +49,11 @@
                             </Path.Data>
                         </Path>
 
-                        <Path x:Name="CheckElement" StrokeThickness="0" Stroke="{Binding Menu.CheckElementBackground, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Path x:Name="SelectedElement" StrokeThickness="0" Stroke="{Binding Menu.SelectedElementBackground, RelativeSource={RelativeSource TemplatedParent}}">
                             <Path.Data>
                                 <PathGeometry>
-                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.CheckElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ArcSegment Point="{Binding ArcSegments.CheckElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.CheckElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.SelectedElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.SelectedElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.SelectedElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
                                     </PathFigure>
                                 </PathGeometry>
                             </Path.Data>
@@ -140,13 +140,13 @@
                             </Path.Data>
                         </Path>
 
-                        <Path x:Name="CheckElement" Stroke="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"
-                              StrokeThickness="{Binding Menu.CheckElementThickness,RelativeSource={RelativeSource TemplatedParent}}"   
+                        <Path x:Name="SelectedElement" Stroke="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"
+                              StrokeThickness="{Binding Menu.SelectedElementThickness,RelativeSource={RelativeSource TemplatedParent}}"   
                               >
                             <Path.Data>
                                 <PathGeometry>
-                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.CheckElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ArcSegment Point="{Binding ArcSegments.CheckElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.CheckElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.SelectedElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.SelectedElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.SelectedElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
                                     </PathFigure>
                                 </PathGeometry>
                             </Path.Data>
@@ -302,10 +302,12 @@
     <Style TargetType="local:RadialMenu">
         <Setter Property="Width" Value="260"/>
         <Setter Property="Height" Value="260"/>
+        <Setter Property="MinWidth" Value="260"/>
+        <Setter Property="MinHeight" Value="260"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="ExpandButtonBackground" Value="{ThemeResource ButtonBackground}"/>
         <Setter Property="ExpandButtonPointerOverBackground" Value="#466666"/>
-        <Setter Property="CheckElementBackground" Value="#608B8B"/>
+        <Setter Property="SelectedElementBackground" Value="#608B8B"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:RadialMenu">

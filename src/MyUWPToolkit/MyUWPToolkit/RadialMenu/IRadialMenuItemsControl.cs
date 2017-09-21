@@ -10,7 +10,10 @@ namespace MyUWPToolkit.RadialMenu
     public interface IRadialMenuItemsControl
     {
         ObservableCollection<RadialMenuItem> Items { get; }
+        //RadialMenuItem SelectedItem { get; }
+        IEnumerable<RadialMenuItem> SelectedItems { get; }
 
+        RadialMenuSelectionMode SelectionMode { get; set; }
         //RadialMenu Menu { get; }
 
         //IRadialMenuItemsControl ParentItem { get;}

@@ -26,32 +26,9 @@ namespace ToolkitSample
         public RadialMenuSample()
         {
             this.InitializeComponent();
+            radialMenu.Offset = new System.Numerics.Vector3(100f, 10f, 0);
+            
         }
 
-        private void OnTapped1(object sender, TappedRoutedEventArgs e)
-        {
-            var item = (sender as RadialMenuItem);
-            if (item.IsChecked)
-            {
-                item.Content = "阳线(实)";
-            }
-            else
-            {
-                item.Content = "阳线(空)";
-            }
-        }
-
-        private void OnTapped2(object sender, TappedRoutedEventArgs e)
-        {
-            var item = (sender as RadialMenuItem);
-            if (item.IsChecked)
-            {
-               tb.Text = "显示缺口";
-            }
-            else
-            {
-                tb.Text = "隐藏缺口";
-            }
-        }
     }
 }

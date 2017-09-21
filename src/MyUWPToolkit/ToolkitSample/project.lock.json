@@ -2527,6 +2527,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }
@@ -5076,6 +5077,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }
@@ -7661,6 +7663,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }
@@ -10219,6 +10222,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }
@@ -12813,6 +12817,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }
@@ -15371,6 +15376,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }
@@ -17965,6 +17971,7 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
+          "System.Runtime": "4.3.0",
           "Win2D.uwp": "1.21.0"
         }
       }

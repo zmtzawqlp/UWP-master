@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Numerics;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -46,7 +50,7 @@ namespace MyUWPToolkit.RadialMenu
 
         // Using a DependencyProperty as the backing store for IsExpanded.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsExpandedProperty =
-            DependencyProperty.Register("IsExpanded", typeof(bool), typeof(RadialMenu), new PropertyMetadata(false,new PropertyChangedCallback(OnIsExpandedChanged)));
+            DependencyProperty.Register("IsExpanded", typeof(bool), typeof(RadialMenu), new PropertyMetadata(false, new PropertyChangedCallback(OnIsExpandedChanged)));
 
         private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -105,15 +109,15 @@ namespace MyUWPToolkit.RadialMenu
             DependencyProperty.Register("PointerOverElementThickness", typeof(double), typeof(RadialMenu), new PropertyMetadata(8.0));
 
 
-        public double CheckElementThickness
+        public double SelectedElementThickness
         {
-            get { return (double)GetValue(CheckElementThicknessProperty); }
-            set { SetValue(CheckElementThicknessProperty, value); }
+            get { return (double)GetValue(SelectedElementThicknessProperty); }
+            set { SetValue(SelectedElementThicknessProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for CheckElementThickness.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CheckElementThicknessProperty =
-            DependencyProperty.Register("CheckElementThickness", typeof(double), typeof(RadialMenu), new PropertyMetadata(8.0));
+        // Using a DependencyProperty as the backing store for SelectedElementThickness.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedElementThicknessProperty =
+            DependencyProperty.Register("SelectedElementThickness", typeof(double), typeof(RadialMenu), new PropertyMetadata(8.0));
 
 
         #region NavigationButton
@@ -178,15 +182,68 @@ namespace MyUWPToolkit.RadialMenu
 
         #endregion
 
-        public Brush CheckElementBackground
+        public Brush SelectedElementBackground
         {
-            get { return (Brush)GetValue(CheckElementBackgroundProperty); }
-            set { SetValue(CheckElementBackgroundProperty, value); }
+            get { return (Brush)GetValue(SelectedElementBackgroundProperty); }
+            set { SetValue(SelectedElementBackgroundProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for CheckElementBackground.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CheckElementBackgroundProperty =
-            DependencyProperty.Register("CheckElementBackground", typeof(Brush), typeof(RadialMenu), new PropertyMetadata(null));
+        // Using a DependencyProperty as the backing store for SelectedElementBackground.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedElementBackgroundProperty =
+            DependencyProperty.Register("SelectedElementBackground", typeof(Brush), typeof(RadialMenu), new PropertyMetadata(null));
+
+
+
+        public RadialMenuSelectionMode SelectionMode
+        {
+            get { return (RadialMenuSelectionMode)GetValue(SelectionModeProperty); }
+            set { SetValue(SelectionModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionModeProperty =
+            DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenu), new PropertyMetadata(RadialMenuSelectionMode.Single));
+
+        public Vector3 Offset
+        {
+            get { return (Vector3)GetValue(OffsetProperty); }
+            set { SetValue(OffsetProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Offset.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OffsetProperty =
+            DependencyProperty.Register("Offset", typeof(Vector3), typeof(RadialMenu), new PropertyMetadata(Vector3.Zero, OnOffsetChanged));
+
+        private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as RadialMenu).OnOffsetChanged();
+        }
+
+
+
+        public bool IsSupportInertial
+        {
+            get { return (bool)GetValue(IsSupportInertialProperty); }
+            set { SetValue(IsSupportInertialProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsSupportInertial.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsSupportInertialProperty =
+            DependencyProperty.Register("IsSupportInertial", typeof(bool), typeof(RadialMenu), new PropertyMetadata(true, OnIsSupportInertialChanged));
+
+        private static void OnIsSupportInertialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            RadialMenu rm = d as RadialMenu;
+            if (rm.IsSupportInertial)
+            {
+                rm.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            }
+            else
+            {
+                rm.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+            }
+        }
+
         #endregion
 
         #region Prop
@@ -197,7 +254,65 @@ namespace MyUWPToolkit.RadialMenu
                 return _items;
             }
         }
+
+        //public RadialMenuItem SelectedItem
+        //{
+        //    get
+        //    {
+        //        return Items.FirstOrDefault(x => x.IsSelected);
+        //    }
+        //}
+
+        public IEnumerable<RadialMenuItem> SelectedItems
+        {
+            get
+            {
+                return Items.Where(x => x.IsSelected);
+            }
+        }
+
         public event TappedEventHandler ItemTapped;
         #endregion
     }
+
+    //public struct RadialMenuOffset : IEquatable<RadialMenuOffset>
+    //{
+    //    //
+    //    // Summary:
+    //    //     The X component of the vector.
+    //    public float X;
+    //    //
+    //    // Summary:
+    //    //     The Y component of the vector.
+    //    public float Y;
+
+    //    public static RadialMenuOffset Zero
+    //    {
+    //        get
+    //        {
+    //            return  new RadialMenuOffset(0, 0);
+    //        }
+    //    }
+
+    //    public RadialMenuOffset(float x, float y)
+    //    {
+    //        X = x;
+    //        Y = y;
+    //    }
+
+    //    public bool Equals(RadialMenuOffset other)
+    //    {
+    //        return X == other.X && Y == other.Y;
+    //    }
+
+    //}
+
+    //public class RadialMenuConverter : TypeConverter
+    //{
+    //    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+    //    {
+    //        return base.CanConvertFrom(context, sourceType);
+    //    }
+    //}
+
 }

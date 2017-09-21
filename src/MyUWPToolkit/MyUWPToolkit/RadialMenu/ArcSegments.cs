@@ -36,15 +36,15 @@ namespace MyUWPToolkit.RadialMenu
             }
         }
 
-        private ArcSegmentItem checkElement;
+        private ArcSegmentItem selectedElement;
 
-        public ArcSegmentItem CheckElement
+        public ArcSegmentItem SelectedElement
         {
-            get { return checkElement; }
+            get { return selectedElement; }
             set
             {
-                checkElement = value;
-                OnPropertyChanged("CheckElement");
+                selectedElement = value;
+                OnPropertyChanged("SelectedElement");
             }
         }
 

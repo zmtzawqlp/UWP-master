@@ -19,7 +19,7 @@ namespace MyUWPToolkit.RadialMenu
 
         // Using a DependencyProperty as the backing store for Color.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(RadialColorMenuItem), new PropertyMetadata(null));
+            DependencyProperty.Register("Color", typeof(Color), typeof(RadialColorMenuItem), new PropertyMetadata(Colors.Transparent));
 
         //public RadialColorMenuItem()
         //{

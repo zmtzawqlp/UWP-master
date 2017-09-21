@@ -2,10 +2,11 @@
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
     "Newtonsoft.Json": "10.0.3",
+    "System.Runtime": "4.3.0",
     "Win2D.uwp": "1.21.0"
   },
   "frameworks": {
-    "uap10.0.10240": {}
+    "uap10.0.14393": {}
   },
   "runtimes": {
     "win10-arm": {},

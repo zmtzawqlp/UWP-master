@@ -179,6 +179,8 @@
     <Compile Include="RadialMenu\RadialMenuNavigationButton.cs" />
     <Compile Include="RadialMenu\RadialMenuP.cs" />
     <Compile Include="RadialMenu\RadialMenuPanel.cs" />
+    <Compile Include="RadialMenu\RadialMenuSelectionMode.cs" />
+    <Compile Include="RadialMenu\RadialNumericMenuItem.cs" />
     <Compile Include="Text\NumericTextBox.cs" />
     <Compile Include="Text\NumericUpDown.cs" />
     <Compile Include="Text\UpDownTextBox.cs" />
