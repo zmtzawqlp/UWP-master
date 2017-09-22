@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System.Linq;
 using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 namespace MyUWPToolkit.RadialMenu
 {
@@ -57,7 +58,23 @@ namespace MyUWPToolkit.RadialMenu
             int sectorCount = -1;
             double startAngle = 0.0;
 
-            if (Menu != null)
+            RadialNumericMenuItem radialNumericMenuItem = Menu.CurrentItem as RadialNumericMenuItem;
+
+            if (radialNumericMenuItem != null && radialNumericMenuItem.Items.Count > 0 && count == 0)
+            {
+                List<RadialMenuItem> internalItems = new List<RadialMenuItem>();
+                foreach (var item in radialNumericMenuItem.Items)
+                {
+                    var newItem = new RadialNumericMenuChildrenItem() { Content = item, IsSelected = item == radialNumericMenuItem.Value };
+                    newItem.SetMenu(Menu);
+                    internalItems.Add(newItem);
+                    this.Children.Add(newItem);
+                }
+                radialNumericMenuItem.InternalItems = internalItems;
+                return;
+            }
+
+            if (radialNumericMenuItem == null)
             {
                 if (Menu.CurrentItem != null && Menu.CurrentItem is RadialMenuItem raitem && raitem.SectorCount > 0)
                 {
@@ -67,9 +84,9 @@ namespace MyUWPToolkit.RadialMenu
                 {
                     sectorCount = Menu.SectorCount;
                 }
-                startAngle = Menu.StartAngle;
             }
 
+            startAngle = Menu.StartAngle;
 
             List<RadialMenuItem> items = new List<RadialMenuItem>();
             foreach (var item in this.Children)
@@ -84,8 +101,10 @@ namespace MyUWPToolkit.RadialMenu
 
             double childAngle = 360.0 / (Math.Max((double)count, 2));
 
+            double rate = radialNumericMenuItem != null ? 1.0 : 0.99;
+            //rate = 0.99;
             //leave some marign form sector to sector
-            var sin = Sin((childAngle * 0.99) / 2.0);
+            var sin = Sin((childAngle * rate) / 2.0);
             var cos = Cos((childAngle) / 2.0);
 
             var sectorRect = new Rect() { Width = 2 * sin * radius, Height = radius };
@@ -96,11 +115,33 @@ namespace MyUWPToolkit.RadialMenu
 
             var expandAreaRadius = radius - Menu.ExpandAreaThickness / 2.0;
 
-            var SelectedElementRadius = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness / 2.0;
+            var selectedElementRadius = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness / 2.0;
 
-            var colorElementStrokeThickness = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
+            var navigationButtonSize = Math.Min(Menu._navigationButton.ActualWidth, Menu._navigationButton.ActualHeight);
+
+            var colorElementStrokeThickness = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness - navigationButtonSize * 0.5;
 
             var colorElementRadius = radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness - colorElementStrokeThickness / 2.0;
+
+
+            Thickness radialNumericMenuItemPading = new Thickness();
+            Line line1 = null;
+            Line line2 = null;
+            if (radialNumericMenuItem != null)
+            {
+                colorElementRadius = (radius - Menu.ExpandAreaThickness - Menu.SelectedElementThickness) * 0.7;
+
+                var markTotalLength = colorElementRadius * 1.1;
+                line1 = new Line();
+                line2 = new Line();
+                line1.StartPoint = new Point(sectorRect.Width / 2.0, radius - markTotalLength);
+                line1.EndPoint = new Point(sectorRect.Width / 2.0, radius - navigationButtonSize * 0.5);
+
+                line2.StartPoint = new Point(sectorRect.Width / 2.0, radius - colorElementRadius);
+                line2.EndPoint = new Point(sectorRect.Width / 2.0, radius - navigationButtonSize * 0.5);
+
+                radialNumericMenuItemPading = new Thickness(0, Menu.ExpandAreaThickness + 2, 0, 0);
+            }
 
             var hitTestElementStrokeThickness = radius - Menu.ExpandAreaThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
 
@@ -113,8 +154,8 @@ namespace MyUWPToolkit.RadialMenu
             SetArcSegmentItem(expandArea, expandAreaRadius, sin, cos, sectorRect);
             expandArea.ExpandIconY = radius - expandArea.Size.Height;
 
-            var SelectedElement = new ArcSegmentItem();
-            SetArcSegmentItem(SelectedElement, SelectedElementRadius, sin, cos, sectorRect);
+            var selectedElement = new ArcSegmentItem();
+            SetArcSegmentItem(selectedElement, selectedElementRadius, sin, cos, sectorRect);
 
             var colorElement = new ArcSegmentItem();
             SetArcSegmentItem(colorElement, colorElementRadius, sin, cos, sectorRect);
@@ -134,20 +175,27 @@ namespace MyUWPToolkit.RadialMenu
 
             if (Menu.FillEmptyPlaces)
             {
-                while (j < count)
+                if (j < count)
                 {
-                    var newItem = new RadialMenuItem();
-                    newItem.SetMenu(Menu);
-                    items.Add(newItem);
-                    this.Children.Add(newItem);
-                    j++;
+                    while (j < count)
+                    {
+                        var newItem = new RadialMenuItem();
+                        newItem.SetMenu(Menu);
+                        //items.Add(newItem);
+                        this.Children.Add(newItem);
+                        j++;
+                    }
+                    return;
                 }
+
             }
 
-            foreach (var radialMenuItem in items)
+            for (int k = 0; k < items.Count; k++)
             {
-                var angle = startAngle + childAngle * i;
-                i++;
+                var radialMenuItem = items[k];
+
+                var angle = startAngle + childAngle * k;
+
                 if (first && radialMenuItem.HasItems)
                 {
                     if (radialMenuItem.ExpandIcon.DesiredSize.Height == 0)
@@ -157,13 +205,42 @@ namespace MyUWPToolkit.RadialMenu
                     expandArea.ExpandIconY -= radialMenuItem.ExpandIcon.DesiredSize.Height / 2.0;
                     first = false;
                 }
+
                 radialMenuItem.ArcSegments.ExpandArea = expandArea;
                 radialMenuItem.ArcSegments.PointerOverElement = pointerOverElement;
-                radialMenuItem.ArcSegments.SelectedElement = SelectedElement;
+                radialMenuItem.ArcSegments.SelectedElement = selectedElement;
                 radialMenuItem.ArcSegments.HitTestElement = hitTestElement;
-                if (radialMenuItem is RadialColorMenuItem radialColorMenuItem)
+                if (radialMenuItem is RadialColorMenuItem)
                 {
-                    radialColorMenuItem.ArcSegments.ColorElement = colorElement;
+                    radialMenuItem.ArcSegments.ColorElement = colorElement;
+                }
+
+                if (radialNumericMenuItem != null)
+                {
+                    if (radialMenuItem is RadialNumericMenuChildrenItem radialNumericMenuChildrenItem)
+                    {
+                        radialNumericMenuChildrenItem.ArcSegments.ColorElement = colorElement;
+                        if (k == 0 || k == count - 1)
+                        {
+                            if (k == 0)
+                            {
+                                radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect((colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, 0, colorElement.EndPoint.X - colorElement.StartPoint.X, colorElement.Size.Height) };
+                            }
+                            else
+                            {
+                                radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, (colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, colorElement.Size.Height) };
+                            }
+
+                            radialNumericMenuChildrenItem.IsFirstOrLastOneOpacity = 1.0;
+                            radialNumericMenuChildrenItem.Line2 = line2;
+                        }
+                        else
+                        {
+                            radialNumericMenuChildrenItem.IsFirstOrLastOneOpacity = 0.0;
+                        }
+                        radialMenuItem.Padding = radialNumericMenuItemPading;
+                        radialNumericMenuChildrenItem.Line1 = line1;
+                    }
                 }
 
                 RotateTransform transform = new RotateTransform();

@@ -172,6 +172,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadialMenu\ArcSegments.cs" />
     <Compile Include="RadialMenu\IRadialMenuItemsControl.cs" />
+    <Compile Include="RadialMenu\Line.cs" />
     <Compile Include="RadialMenu\RadialColorMenuItem.cs" />
     <Compile Include="RadialMenu\RadialMenu.cs" />
     <Compile Include="RadialMenu\RadialMenuItem.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="RadialMenu\RadialMenuP.cs" />
     <Compile Include="RadialMenu\RadialMenuPanel.cs" />
     <Compile Include="RadialMenu\RadialMenuSelectionMode.cs" />
+    <Compile Include="RadialMenu\RadialNumericMenuChildrenItem.cs" />
     <Compile Include="RadialMenu\RadialNumericMenuItem.cs" />
     <Compile Include="Text\NumericTextBox.cs" />
     <Compile Include="Text\NumericUpDown.cs" />

@@ -11,11 +11,6 @@ namespace MyUWPToolkit.RadialMenu
     public class RadialMenuItemsPresenter : ItemsControl
     {
         public RadialMenu Menu { get; internal set; }
-        
-        public RadialMenuItemsPresenter()
-        {
-            
-        }
 
         #region override
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
@@ -23,6 +18,10 @@ namespace MyUWPToolkit.RadialMenu
             if (element is RadialMenuItem menuItem)
             {
                 menuItem.SetMenu(Menu);
+            }
+            else
+            {
+
             }
             base.PrepareContainerForItemOverride(element, item);
         }

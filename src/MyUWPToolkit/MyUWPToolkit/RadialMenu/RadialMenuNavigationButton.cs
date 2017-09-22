@@ -44,6 +44,11 @@ namespace MyUWPToolkit.RadialMenu
             VisualStateManager.GoToState(this, "Collapse", false);
         }
 
+        public void GoToStateNumeric()
+        {
+            VisualStateManager.GoToState(this, "Numeric", false);
+        }
+
         //Visual _backgroundElementVisual;
         //Compositor _compositor;
         //ScalarKeyFrameAnimation rotationAnimation;

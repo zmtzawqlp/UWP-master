@@ -8,6 +8,8 @@ using System.Numerics;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,7 +22,7 @@ namespace MyUWPToolkit.RadialMenu
     public partial class RadialMenu
     {
         #region fileds
-        private ObservableCollection<RadialMenuItem> _items;
+        private RadialMenuItemCollection _items;
         //private static SymbolIcon defaulNavigationButtonIcon = new SymbolIcon(Symbol.Setting);
         //private static SymbolIcon defaulNavigationButtonBackIcon = new SymbolIcon(Symbol.Back);
         private RadialMenuItemsPresenter _currentItemPresenter;
@@ -247,13 +249,14 @@ namespace MyUWPToolkit.RadialMenu
         #endregion
 
         #region Prop
-        public ObservableCollection<RadialMenuItem> Items
+        public RadialMenuItemCollection Items
         {
             get
             {
                 return _items;
             }
         }
+
 
         //public RadialMenuItem SelectedItem
         //{
@@ -273,6 +276,14 @@ namespace MyUWPToolkit.RadialMenu
 
         public event TappedEventHandler ItemTapped;
         #endregion
+    }
+
+    [MarshalingBehavior(MarshalingType.Agile)]
+    [Threading(ThreadingModel.Both)]
+    [WebHostHidden]
+    public sealed class RadialMenuItemCollection : ObservableCollection<RadialMenuItem>
+    {
+        //
     }
 
     //public struct RadialMenuOffset : IEquatable<RadialMenuOffset>

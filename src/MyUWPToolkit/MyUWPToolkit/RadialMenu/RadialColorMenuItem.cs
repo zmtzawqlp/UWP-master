@@ -21,10 +21,9 @@ namespace MyUWPToolkit.RadialMenu
         public static readonly DependencyProperty ColorProperty =
             DependencyProperty.Register("Color", typeof(Color), typeof(RadialColorMenuItem), new PropertyMetadata(Colors.Transparent));
 
-        //public RadialColorMenuItem()
-        //{
-        //    this.DefaultStyleKey = typeof(RadialColorMenuItem);
-        //    PrepareElements();
-        //}
+        public RadialColorMenuItem()
+        {
+            this.DefaultStyleKey = typeof(RadialColorMenuItem);
+        }
     }
 }

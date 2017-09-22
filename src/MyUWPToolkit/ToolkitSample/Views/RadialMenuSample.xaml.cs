@@ -27,7 +27,6 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             radialMenu.Offset = new System.Numerics.Vector3(100f, 10f, 0);
-            
         }
 
     }

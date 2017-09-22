@@ -24,7 +24,7 @@ namespace MyUWPToolkit.RadialMenu
     [ContentProperty(Name = "Items")]
     [TemplatePart(Name = "ExpandButtonArea", Type = typeof(Grid))]
     [Bindable]
-    public class RadialMenuItem : ContentControl, IRadialMenuItemsControl, INotifyPropertyChanged
+    public class RadialMenuItem : Control, IRadialMenuItemsControl, INotifyPropertyChanged
     {
         //private Path _expandButton;
         private FontIcon _expandIcon;
@@ -37,6 +37,30 @@ namespace MyUWPToolkit.RadialMenu
             }
         }
         public event EventHandler IsSelectedChanged;
+
+        public object Content
+        {
+            get { return (object)GetValue(ContentProperty); }
+            set { SetValue(ContentProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Content.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ContentProperty =
+            DependencyProperty.Register("Content", typeof(object), typeof(RadialMenuItem), new PropertyMetadata(null));
+
+
+
+        public object ToolTip
+        {
+            get { return (object)GetValue(ToolTipProperty); }
+            set { SetValue(ToolTipProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ToolTip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ToolTipProperty =
+            DependencyProperty.Register("ToolTip", typeof(object), typeof(RadialMenuItem), new PropertyMetadata(null));
+
+
 
         public int SectorCount
         {
@@ -103,7 +127,7 @@ namespace MyUWPToolkit.RadialMenu
         public static readonly DependencyProperty SelectionModeProperty =
             DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenuItem), new PropertyMetadata(RadialMenuSelectionMode.Single));
 
-        private void OnIsSelectedChanged()
+        protected void OnIsSelectedChanged()
         {
             if (!IsSelectedEnable)
             {
@@ -118,9 +142,10 @@ namespace MyUWPToolkit.RadialMenu
                 VisualStateManager.GoToState(this, "Normal", false);
             }
             IsSelectedChanged?.Invoke(this, null);
+
         }
 
-        public bool HasItems
+        public virtual bool HasItems
         {
             get { return _items.Count > 0; }
         }
@@ -133,7 +158,7 @@ namespace MyUWPToolkit.RadialMenu
         //    }
         //}
 
-        public IEnumerable<RadialMenuItem> SelectedItems
+        public virtual IEnumerable<RadialMenuItem> SelectedItems
         {
             get
             {
@@ -149,13 +174,13 @@ namespace MyUWPToolkit.RadialMenu
 
         protected void PrepareElements()
         {
-            _items = new ObservableCollection<RadialMenuItem>();
+            _items = new RadialMenuItemCollection();
             _items.CollectionChanged += _items_CollectionChanged;
             ArcSegments = new ArcSegments();
             ArcSegments.SelectedElement = new ArcSegmentItem();
             ArcSegments.PointerOverElement = new ArcSegmentItem();
             ArcSegments.ExpandArea = new ArcSegmentItem();
-            if (this is RadialColorMenuItem)
+            if (this is RadialColorMenuItem || this is RadialNumericMenuChildrenItem)
             {
                 ArcSegments.ColorElement = new ArcSegmentItem();
             }
@@ -170,6 +195,10 @@ namespace MyUWPToolkit.RadialMenu
         protected override void OnApplyTemplate()
         {
             //base.OnApplyTemplate();
+            if (this is RadialNumericMenuChildrenItem)
+            {
+                return;
+            }
             _expandIcon = GetTemplateChild("ExpandIcon") as FontIcon;
             //_expandButton = GetTemplateChild("ExpandButton") as Path;
             _expandButtonArea = GetTemplateChild("ExpandButtonArea") as Grid;
@@ -193,6 +222,18 @@ namespace MyUWPToolkit.RadialMenu
 
         protected override void OnTapped(TappedRoutedEventArgs e)
         {
+            //if (this is RadialNumericMenuChildrenItem)
+            //{
+            //    return;
+            //}
+            UpdateIsSelectedState();
+
+            Menu?.OnItemTapped(this, e);
+            base.OnTapped(e);
+        }
+
+        internal void UpdateIsSelectedState()
+        {
             if (IsSelectedEnable)
             {
                 switch (ParentItem.SelectionMode)
@@ -208,6 +249,10 @@ namespace MyUWPToolkit.RadialMenu
                             }
                         }
                         IsSelected = !IsSelected;
+                        if (IsSelected && this is RadialNumericMenuChildrenItem radialNumericMenuChildrenItem)
+                        {
+                            (radialNumericMenuChildrenItem.ParentItem as RadialNumericMenuItem).Value = (double)radialNumericMenuChildrenItem.Content;
+                        }
                         break;
                     case RadialMenuSelectionMode.Multiple:
                         IsSelected = !IsSelected;
@@ -216,9 +261,6 @@ namespace MyUWPToolkit.RadialMenu
                         break;
                 }
             }
-
-            Menu?.OnItemTapped(this, e);
-            base.OnTapped(e);
         }
 
         private void _expandButtonArea_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -242,8 +284,8 @@ namespace MyUWPToolkit.RadialMenu
         #endregion
 
         #region IRadialMenuItemsControl
-        private ObservableCollection<RadialMenuItem> _items;
-        public ObservableCollection<RadialMenuItem> Items => _items;
+        private RadialMenuItemCollection _items;
+        public RadialMenuItemCollection Items => _items;
 
         #endregion
 
@@ -263,7 +305,7 @@ namespace MyUWPToolkit.RadialMenu
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propName)
+        internal void OnPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
             {

@@ -30,7 +30,7 @@ namespace MyUWPToolkit.RadialMenu
         public RadialMenu()
         {
             this.DefaultStyleKey = typeof(RadialMenu);
-            _items = new ObservableCollection<RadialMenuItem>();
+            _items = new RadialMenuItemCollection();
             ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
             Loaded += RadialMenu_Loaded;
             Unloaded += RadialMenu_Unloaded;
@@ -249,6 +249,14 @@ namespace MyUWPToolkit.RadialMenu
                 }
                 else
                 {
+                    if (CurrentItem is RadialNumericMenuItem)
+                    {
+                        _navigationButton.GoToStateNumeric();
+                    }
+                    else
+                    {
+                        _navigationButton.GoToStateExpand();
+                    }
                     _navigationButton.Content = this.NavigationButtonBackIcon ?? (char)0xE2A6;
                 }
                 scaleAnimation.Direction = AnimationDirection.Normal;
