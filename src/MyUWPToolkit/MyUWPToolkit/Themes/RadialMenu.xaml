@@ -5,6 +5,7 @@
     xmlns:converters="using:MyUWPToolkit.Converters"
     >
     <converters:VisibilityConverter x:Key="VisibilityConverter"/>
+    <converters:NulltoVisibilityConverter x:Key="NulltoVisibilityConverter"/>
     <Style TargetType="local:RadialMenuItem">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -13,7 +14,7 @@
                 <ControlTemplate TargetType="local:RadialMenuItem">
                     <Grid>
                         <ToolTipService.ToolTip>
-                            <ToolTip Content="{TemplateBinding ToolTip}"/>
+                            <ToolTip x:Name="toolTip" Content="{TemplateBinding ToolTip}" Visibility="{Binding Content,ElementName=toolTip,Converter={StaticResource NulltoVisibilityConverter}}"/>
                         </ToolTipService.ToolTip>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -39,21 +40,7 @@
                                 <RotateTransform Angle="{Binding ContentAngle, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </ContentPresenter.RenderTransform>
                         </ContentPresenter>
-                        <!--<Path x:Name="ColorElement"
-                            StrokeThickness="{Binding ArcSegments.ColorElement.StrokeThickness,RelativeSource={RelativeSource TemplatedParent}}"   
-                              >
-                            <Path.Stroke>
-                                <SolidColorBrush Color="{Binding Color,RelativeSource={RelativeSource TemplatedParent}}"/>
-                            </Path.Stroke>
-                            <Path.Data>
-                                <PathGeometry>
-                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.ColorElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ArcSegment Point="{Binding ArcSegments.ColorElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.ColorElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
-                                    </PathFigure>
-                                </PathGeometry>
-                            </Path.Data>
-                        </Path>-->
-
+                        
                         <Path x:Name="SelectedElement" StrokeThickness="0" Stroke="{Binding Menu.SelectedElementBackground, RelativeSource={RelativeSource TemplatedParent}}">
                             <Path.Data>
                                 <PathGeometry>
@@ -228,8 +215,6 @@
                                 <VisualState x:Name="IsSelected">
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="SelectedMark"  Storyboard.TargetProperty="Opacity" Duration="0" To="1"/>
-                                        <!--<DoubleAnimation Storyboard.TargetName="ContentRotateTransform" Storyboard.TargetProperty="ScaleY" Duration="0" To="1.5" />
-                                        <DoubleAnimation Storyboard.TargetName="ContentRotateTransform" Storyboard.TargetProperty="ScaleX" Duration="0" To="1.5" />-->
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="PointerOver">
@@ -257,7 +242,7 @@
                                 </PathGeometry>
                             </Path.Data>
                         </Path>
-                        <Path Opacity="{Binding IsFirstOrLastOneOpacity,RelativeSource={RelativeSource TemplatedParent}}" Stroke="{TemplateBinding CircularBrush}" StrokeThickness="{TemplateBinding CircularThickness}">
+                        <Path Stroke="{TemplateBinding CircularBrush}" StrokeThickness="{TemplateBinding CircularThickness}">
                             <Path.Data>
                                 <PathGeometry>
                                     <PathFigure StartPoint="{Binding Line2.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
@@ -350,7 +335,6 @@
                                                    Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="White" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Numeric">
@@ -359,15 +343,6 @@
                                                    Storyboard.TargetProperty="Stroke">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement"
-                                                   Storyboard.TargetProperty="Fill">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding Background,RelativeSource={RelativeSource TemplatedParent}}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
-                                                   Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="White" />
-                                        </ObjectAnimationUsingKeyFrames>-->
-                                        <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -406,9 +381,7 @@
                             <Ellipse Fill="{TemplateBinding Background}"  Stroke="{ThemeResource ButtonBackground}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
                              ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
-                                                       >
-                                <!--ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                                                        ItemTemplate="{TemplateBinding ItemTemplate}"-->
+                             >
                                 <local:RadialMenuItemsPresenter.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <local:RadialMenuPanel/>

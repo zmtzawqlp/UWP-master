@@ -260,11 +260,11 @@ namespace MyUWPToolkit.RadialMenu
                     _navigationButton.Content = this.NavigationButtonBackIcon ?? (char)0xE2A6;
                 }
                 scaleAnimation.Direction = AnimationDirection.Normal;
-                scaleAnimation.Duration = TimeSpan.FromSeconds(0.15);
+                scaleAnimation.Duration = TimeSpan.FromSeconds(0.1);
                 _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
             };
             scaleAnimation.Direction = AnimationDirection.Reverse;
-            scaleAnimation.Duration = TimeSpan.FromSeconds(0.1);
+            scaleAnimation.Duration = TimeSpan.FromSeconds(0.07);
             _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
         }
 

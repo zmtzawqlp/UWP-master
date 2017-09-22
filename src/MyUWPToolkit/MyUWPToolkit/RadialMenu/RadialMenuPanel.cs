@@ -230,13 +230,7 @@ namespace MyUWPToolkit.RadialMenu
                             {
                                 radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, (colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, colorElement.Size.Height) };
                             }
-
-                            radialNumericMenuChildrenItem.IsFirstOrLastOneOpacity = 1.0;
                             radialNumericMenuChildrenItem.Line2 = line2;
-                        }
-                        else
-                        {
-                            radialNumericMenuChildrenItem.IsFirstOrLastOneOpacity = 0.0;
                         }
                         radialMenuItem.Padding = radialNumericMenuItemPading;
                         radialNumericMenuChildrenItem.Line1 = line1;

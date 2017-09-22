@@ -31,17 +31,17 @@ namespace MyUWPToolkit.RadialMenu
             }
         }
 
-        private double isFirstOrLastOneOpacity;
+        //private double isFirstOrLastOneOpacity;
 
-        public double IsFirstOrLastOneOpacity
-        {
-            get { return isFirstOrLastOneOpacity; }
-            set
-            {
-                isFirstOrLastOneOpacity = value;
-                OnPropertyChanged(nameof(IsFirstOrLastOneOpacity));
-            }
-        }
+        //public double IsFirstOrLastOneOpacity
+        //{
+        //    get { return isFirstOrLastOneOpacity; }
+        //    set
+        //    {
+        //        isFirstOrLastOneOpacity = value;
+        //        OnPropertyChanged(nameof(IsFirstOrLastOneOpacity));
+        //    }
+        //}
 
 
         private Line line1;
