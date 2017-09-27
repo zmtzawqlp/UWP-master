@@ -147,7 +147,10 @@ namespace MyUWPToolkit.RadialMenu
 
         public virtual bool HasItems
         {
-            get { return _items.Count > 0; }
+            get
+            {
+                return _items.Where(x => x.Visibility == Visibility.Visible).Count() > 0;
+            }
         }
 
         //public RadialMenuItem SelectedItem

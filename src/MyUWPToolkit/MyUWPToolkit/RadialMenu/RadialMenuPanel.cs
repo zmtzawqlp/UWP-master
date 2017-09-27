@@ -97,6 +97,11 @@ namespace MyUWPToolkit.RadialMenu
                 }
             }
 
+            if (items.Count == 0)
+            {
+                return;
+            }
+
             count = (sectorCount > 0 && sectorCount > items.Count) ? sectorCount : items.Count;
 
             double childAngle = 360.0 / (Math.Max((double)count, 2));
