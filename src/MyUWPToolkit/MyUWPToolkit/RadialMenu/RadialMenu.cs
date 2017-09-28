@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyUWPToolkit.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.UI.Composition;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -112,12 +114,22 @@ namespace MyUWPToolkit.RadialMenu
         {
             Vector3 newOffset = Vector3.Zero;
             var windowRect = Window.Current.Bounds;
+            if (DeviceInfo.IsNarrowSrceen)
+            {
+                //Gets the visible region of the window (app view). The visible region is the region 
+                //not occluded by chrome such as the status bar and app bar.   
+                windowRect = ApplicationView.GetForCurrentView().VisibleBounds;
+            }
 
-            var minX = IsExpanded ? 0 : -(this.ActualWidth - _navigationButton.ActualWidth) / 2.0;
-            var minY = IsExpanded ? 0 : -(this.ActualHeight - _navigationButton.ActualHeight) / 2.0;
+            var navigationButtonWidth = _navigationButton == null ? 0 : _navigationButton.ActualWidth;
+            var navigationButtonHeight = _navigationButton == null ? 0 : _navigationButton.ActualHeight;
 
-            var maxX = windowRect.Width - (IsExpanded ? this.ActualWidth : (this.ActualWidth + _navigationButton.ActualWidth) / 2.0);
-            var maxY = windowRect.Height - (IsExpanded ? this.ActualHeight : (this.ActualHeight + _navigationButton.ActualHeight) / 2.0);
+
+            var minX = IsExpanded ? 0 : -(this.ActualWidth - navigationButtonWidth) / 2.0;
+            var minY = IsExpanded ? 0 : -(this.ActualHeight - navigationButtonHeight) / 2.0;
+
+            var maxX = windowRect.Width - (IsExpanded ? this.ActualWidth : (this.ActualWidth + navigationButtonWidth) / 2.0);
+            var maxY = windowRect.Height - (IsExpanded ? this.ActualHeight : (this.ActualHeight + navigationButtonHeight) / 2.0);
 
             var newX = Offset.X + (xPositive * x);
             var newY = Offset.Y + (yPositive * y);
@@ -140,7 +152,8 @@ namespace MyUWPToolkit.RadialMenu
             if (newX < minX)
             {
                 xPositive = -xPositive;
-                newX = -newX;
+                //when minX <0 , newX will be
+                newX = minX + minX - newX;
             }
             else if (newX > maxX)
             {
@@ -151,7 +164,7 @@ namespace MyUWPToolkit.RadialMenu
             if (newY < minY)
             {
                 yPositive = -yPositive;
-                newY = -newY;
+                newY = minY + minY - newY;
             }
             else if (newY > maxY)
             {
@@ -209,7 +222,7 @@ namespace MyUWPToolkit.RadialMenu
             _contentGridVisual.Scale = new Vector3(0, 0, 0);
 
         }
-        public void Expand()
+        void Expand()
         {
             UpdateOffset();
             scaleAnimation.Direction = AnimationDirection.Normal;
@@ -223,7 +236,7 @@ namespace MyUWPToolkit.RadialMenu
             _navigationButton.GoToStateExpand();
         }
 
-        public void Collapse()
+        void Collapse()
         {
             UpdateOffset();
             scaleAnimation.Direction = AnimationDirection.Reverse;
@@ -262,6 +275,7 @@ namespace MyUWPToolkit.RadialMenu
                 scaleAnimation.Direction = AnimationDirection.Normal;
                 scaleAnimation.Duration = TimeSpan.FromSeconds(0.1);
                 _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+
             };
             scaleAnimation.Direction = AnimationDirection.Reverse;
             scaleAnimation.Duration = TimeSpan.FromSeconds(0.07);
@@ -271,6 +285,17 @@ namespace MyUWPToolkit.RadialMenu
         internal void OnItemTapped(RadialMenuItem sender, TappedRoutedEventArgs e)
         {
             ItemTapped?.Invoke(sender, e);
+        }
+
+
+        public void CollapseMenu()
+        {
+            CurrentItem = this;
+            if (_navigationButton != null)
+            {
+                _navigationButton.Content = this.NavigationButtonIcon ?? (char)0xE115;
+            }
+            IsExpanded = false;
         }
     }
 }

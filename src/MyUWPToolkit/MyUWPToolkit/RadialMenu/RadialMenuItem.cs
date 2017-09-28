@@ -173,6 +173,23 @@ namespace MyUWPToolkit.RadialMenu
         {
             this.DefaultStyleKey = typeof(RadialMenuItem);
             PrepareElements();
+            Loaded += RadialMenuItem_Loaded;
+        }
+
+        private void RadialMenuItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!IsSelectedEnable)
+            {
+                return;
+            }
+            if (IsSelected)
+            {
+                VisualStateManager.GoToState(this, "IsSelected", false);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Normal", false);
+            }
         }
 
         protected void PrepareElements()
