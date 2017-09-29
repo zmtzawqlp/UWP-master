@@ -55,6 +55,12 @@ namespace MyUWPToolkit.RadialMenu
             }
 
             int count = Children.Count;
+            int visibleItemsCount = 0;
+            if (Menu.CurrentItem != null)
+            {
+                visibleItemsCount = Menu.CurrentItem.Items.Where(x => x.Visibility == Visibility.Visible).Count();
+            }
+
             int sectorCount = -1;
             double startAngle = 0.0;
 
@@ -86,7 +92,7 @@ namespace MyUWPToolkit.RadialMenu
                 }
             }
 
-            startAngle = Menu.StartAngle;
+
 
             List<RadialMenuItem> items = new List<RadialMenuItem>();
             foreach (var item in this.Children)
@@ -97,12 +103,52 @@ namespace MyUWPToolkit.RadialMenu
                 }
             }
 
-            if (items.Count == 0)
+            int j = items.Count;
+
+            if (j == 0)
             {
                 return;
             }
 
-            count = (sectorCount > 0 && sectorCount > items.Count) ? sectorCount : items.Count;
+            count = Math.Max(sectorCount, j);
+
+            if (Menu.FillEmptyPlaces && radialNumericMenuItem == null)
+            {
+                if (j < count)
+                {
+                    while (j < count)
+                    {
+                        var newItem = new RadialMenuItem();
+                        newItem.IsEmpty = true;
+                        newItem.SetMenu(Menu);
+                        newItem.IsHitTestVisible = false;
+                        //items.Add(newItem);
+                        this.Children.Add(newItem);
+                        j++;
+                    }
+                    return;
+                }
+
+                var count1 = Math.Max(sectorCount, visibleItemsCount);
+                //remove redundancy empty item
+                if (j > count1)
+                {
+                    try
+                    {
+                        for (int i = 0; i < j - count1; i++)
+                        {
+                            var emptyitem = items.FirstOrDefault(x => x.IsEmpty);
+                            this.Children.Remove(emptyitem);
+                        }
+                        return;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            startAngle = Menu.StartAngle;
 
             double childAngle = 360.0 / (Math.Max((double)count, 2));
 
@@ -170,29 +216,11 @@ namespace MyUWPToolkit.RadialMenu
             SetArcSegmentItem(hitTestElement, hitTestElementRadius, sin, cos, sectorRect);
             hitTestElement.StrokeThickness = hitTestElementStrokeThickness;
 
-            int i = 0;
             bool first = true;
-            int j = items.Count;
+
             if (Menu?.CurrentItem is RadialMenuItem item1 && item1.Items.Count < count)
             {
                 startAngle = -(childAngle * item1.Items.Count / 2.0 + item1.ContentAngle) + childAngle / 2.0;
-            }
-
-            if (Menu.FillEmptyPlaces)
-            {
-                if (j < count)
-                {
-                    while (j < count)
-                    {
-                        var newItem = new RadialMenuItem();
-                        newItem.SetMenu(Menu);
-                        //items.Add(newItem);
-                        this.Children.Add(newItem);
-                        j++;
-                    }
-                    return;
-                }
-
             }
 
             for (int k = 0; k < items.Count; k++)

@@ -168,6 +168,9 @@ namespace MyUWPToolkit.RadialMenu
                 return Items.Where(x => x.IsSelected);
             }
         }
+        internal bool IsEmpty { get; set; }
+
+        public event TappedEventHandler ItemTapped;
 
         public RadialMenuItem()
         {
@@ -249,8 +252,18 @@ namespace MyUWPToolkit.RadialMenu
             UpdateIsSelectedState();
 
             Menu?.OnItemTapped(this, e);
+            if (ParentItem is RadialMenuItem item)
+            {
+                item.OnItemTapped(this, e);
+            }
             base.OnTapped(e);
         }
+
+        internal void OnItemTapped(RadialMenuItem sender, TappedRoutedEventArgs e)
+        {
+            ItemTapped?.Invoke(sender, e);
+        }
+
 
         internal void UpdateIsSelectedState()
         {
