@@ -288,7 +288,15 @@ namespace MyUWPToolkit.RadialMenu
                                 item.IsSelected = false;
                             }
                         }
-                        IsSelected = true;
+                        var selectedEnableItems = ParentItem.Items.Where(x => x.IsSelectedEnable);
+                        if (selectedEnableItems.Count() == 1)
+                        {
+                            IsSelected = !IsSelected;
+                        }
+                        else
+                        {
+                            IsSelected = true;
+                        }
                         if (IsSelected && this is RadialNumericMenuChildrenItem radialNumericMenuChildrenItem)
                         {
                             (radialNumericMenuChildrenItem.ParentItem as RadialNumericMenuItem).Value = (double)radialNumericMenuChildrenItem.Content;

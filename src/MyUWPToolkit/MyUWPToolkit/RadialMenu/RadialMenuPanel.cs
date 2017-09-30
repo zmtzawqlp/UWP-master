@@ -152,7 +152,7 @@ namespace MyUWPToolkit.RadialMenu
 
             double childAngle = 360.0 / (Math.Max((double)count, 2));
 
-            double rate = radialNumericMenuItem != null ? 1.0 : 0.99;
+            double rate = radialNumericMenuItem != null ? 1.02 : 0.99;
             //rate = 0.99;
             //leave some marign form sector to sector
             var sin = Sin((childAngle * rate) / 2.0);
