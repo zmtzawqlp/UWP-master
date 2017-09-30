@@ -125,11 +125,11 @@ namespace MyUWPToolkit.RadialMenu
 
         // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionModeProperty =
-            DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenuItem), new PropertyMetadata(RadialMenuSelectionMode.Single));
+            DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenuItem), new PropertyMetadata(RadialMenuSelectionMode.None));
 
         protected void OnIsSelectedChanged()
         {
-            if (!IsSelectedEnable)
+            if (!(IsSelectedEnable && !HasItems))
             {
                 return;
             }
@@ -142,7 +142,6 @@ namespace MyUWPToolkit.RadialMenu
                 VisualStateManager.GoToState(this, "Normal", false);
             }
             IsSelectedChanged?.Invoke(this, null);
-
         }
 
         public virtual bool HasItems
@@ -168,6 +167,7 @@ namespace MyUWPToolkit.RadialMenu
                 return Items.Where(x => x.IsSelected);
             }
         }
+
         internal bool IsEmpty { get; set; }
 
         public event TappedEventHandler ItemTapped;
@@ -181,7 +181,7 @@ namespace MyUWPToolkit.RadialMenu
 
         private void RadialMenuItem_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!IsSelectedEnable)
+            if (!(IsSelectedEnable && !HasItems))
             {
                 return;
             }
@@ -256,6 +256,7 @@ namespace MyUWPToolkit.RadialMenu
             {
                 item.OnItemTapped(this, e);
             }
+
             base.OnTapped(e);
         }
 
@@ -265,9 +266,15 @@ namespace MyUWPToolkit.RadialMenu
         }
 
 
+        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        {
+            //VisualStateManager.GoToState(this, "Normal", false);
+            base.OnPointerReleased(e);
+        }
+
         internal void UpdateIsSelectedState()
         {
-            if (IsSelectedEnable)
+            if (IsSelectedEnable && !HasItems)
             {
                 switch (ParentItem.SelectionMode)
                 {
@@ -281,7 +288,7 @@ namespace MyUWPToolkit.RadialMenu
                                 item.IsSelected = false;
                             }
                         }
-                        IsSelected = !IsSelected;
+                        IsSelected = true;
                         if (IsSelected && this is RadialNumericMenuChildrenItem radialNumericMenuChildrenItem)
                         {
                             (radialNumericMenuChildrenItem.ParentItem as RadialNumericMenuItem).Value = (double)radialNumericMenuChildrenItem.Content;
@@ -346,8 +353,5 @@ namespace MyUWPToolkit.RadialMenu
             }
         }
         #endregion
-
     }
-
-
 }

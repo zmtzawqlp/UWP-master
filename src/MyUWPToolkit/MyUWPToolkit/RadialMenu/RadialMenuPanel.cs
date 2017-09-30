@@ -191,7 +191,7 @@ namespace MyUWPToolkit.RadialMenu
                 line2.StartPoint = new Point(sectorRect.Width / 2.0, radius - colorElementRadius);
                 line2.EndPoint = new Point(sectorRect.Width / 2.0, radius - navigationButtonSize * 0.5);
 
-                radialNumericMenuItemPading = new Thickness(0, Menu.ExpandAreaThickness + 2, 0, 0);
+                radialNumericMenuItemPading = new Thickness(0, Menu.ExpandAreaThickness + 5, 0, 0);
             }
 
             var hitTestElementStrokeThickness = radius - Menu.ExpandAreaThickness - Math.Min(Menu._navigationButton.DesiredSize.Width, Menu._navigationButton.DesiredSize.Height) * 0.5;
