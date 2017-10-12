@@ -29,6 +29,7 @@ namespace MyUWPToolkit.RadialMenu
         //private Path _expandButton;
         private FontIcon _expandIcon;
         private Grid _expandButtonArea;
+        private Path _hitTestElement;
         internal FontIcon ExpandIcon
         {
             get
@@ -177,6 +178,21 @@ namespace MyUWPToolkit.RadialMenu
             this.DefaultStyleKey = typeof(RadialMenuItem);
             PrepareElements();
             Loaded += RadialMenuItem_Loaded;
+            IsEnabledChanged += RadialMenuItem_IsEnabledChanged;
+        }
+
+        private void RadialMenuItem_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            UpdateHitTestElementStroke();
+        }
+
+        private void UpdateHitTestElementStroke()
+        {
+            if (_hitTestElement != null)
+            {
+                var color = IsEnabled ? Color.FromArgb(1, 1, 1, 1) : Color.FromArgb(33, 0, 0, 0);
+                _hitTestElement.Stroke = new SolidColorBrush(color);
+            }
         }
 
         private void RadialMenuItem_Loaded(object sender, RoutedEventArgs e)
@@ -225,6 +241,8 @@ namespace MyUWPToolkit.RadialMenu
             _expandIcon = GetTemplateChild("ExpandIcon") as FontIcon;
             //_expandButton = GetTemplateChild("ExpandButton") as Path;
             _expandButtonArea = GetTemplateChild("ExpandButtonArea") as Grid;
+            _hitTestElement = GetTemplateChild("HitTestElement") as Path;
+            UpdateHitTestElementStroke();
 
             _expandButtonArea.PointerEntered += _expandButtonArea_PointerEntered;
             _expandButtonArea.PointerExited += _expandButtonArea_PointerExited;
@@ -265,13 +283,6 @@ namespace MyUWPToolkit.RadialMenu
             ItemTapped?.Invoke(sender, e);
         }
 
-
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
-        {
-            //VisualStateManager.GoToState(this, "Normal", false);
-            base.OnPointerReleased(e);
-        }
-
         internal void UpdateIsSelectedState()
         {
             if (IsSelectedEnable && !HasItems)
@@ -288,6 +299,7 @@ namespace MyUWPToolkit.RadialMenu
                                 item.IsSelected = false;
                             }
                         }
+
                         var selectedEnableItems = ParentItem.Items.Where(x => x.IsSelectedEnable);
                         if (selectedEnableItems.Count() == 1)
                         {
@@ -297,6 +309,7 @@ namespace MyUWPToolkit.RadialMenu
                         {
                             IsSelected = true;
                         }
+
                         if (IsSelected && this is RadialNumericMenuChildrenItem radialNumericMenuChildrenItem)
                         {
                             (radialNumericMenuChildrenItem.ParentItem as RadialNumericMenuItem).Value = (double)radialNumericMenuChildrenItem.Content;
@@ -326,8 +339,6 @@ namespace MyUWPToolkit.RadialMenu
                 VisualStateManager.GoToState(this, "ExpandButtonPointerOver", false);
             }
         }
-
-
 
         #endregion
 
@@ -361,5 +372,6 @@ namespace MyUWPToolkit.RadialMenu
             }
         }
         #endregion
+
     }
 }

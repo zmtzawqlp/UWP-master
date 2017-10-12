@@ -41,7 +41,9 @@ RequestedTheme="Light"
                 <x:Double>15</x:Double>
                 <x:Double>16</x:Double>
             </radialMenu:RadialNumericMenuItem>
-         
+            <radialMenu:RadialMenuItem Content="Disabled" IsEnabled="True">
+                <radialMenu:RadialMenuItem Content="test"/>
+            </radialMenu:RadialMenuItem>
         </radialMenu:RadialMenu>
   
     </Grid>

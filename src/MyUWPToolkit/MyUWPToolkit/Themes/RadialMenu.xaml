@@ -35,6 +35,18 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        <Path x:Name="HitTestElement" Stroke="#01010101"
+                            StrokeThickness="{Binding ArcSegments.HitTestElement.StrokeThickness,RelativeSource={RelativeSource TemplatedParent}}"   
+                              >
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.HitTestElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ArcSegment Point="{Binding ArcSegments.HitTestElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.HitTestElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+
                         <ContentPresenter RenderTransformOrigin="0.5,0.5" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
                             <ContentPresenter.RenderTransform>
                                 <RotateTransform Angle="{Binding ContentAngle, RelativeSource={RelativeSource TemplatedParent}}"/>
@@ -46,18 +58,6 @@
                                 <PathGeometry>
                                     <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.SelectedElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
                                         <ArcSegment Point="{Binding ArcSegments.SelectedElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.SelectedElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
-                                    </PathFigure>
-                                </PathGeometry>
-                            </Path.Data>
-                        </Path>
-
-                        <Path x:Name="HitTestElement" Stroke="#01010101"
-                            StrokeThickness="{Binding ArcSegments.HitTestElement.StrokeThickness,RelativeSource={RelativeSource TemplatedParent}}"   
-                              >
-                            <Path.Data>
-                                <PathGeometry>
-                                    <PathFigure IsFilled="False" IsClosed="False" StartPoint="{Binding ArcSegments.HitTestElement.StartPoint,RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ArcSegment Point="{Binding ArcSegments.HitTestElement.EndPoint,RelativeSource={RelativeSource TemplatedParent}}" Size="{Binding ArcSegments.HitTestElement.Size,RelativeSource={RelativeSource TemplatedParent}}" SweepDirection="Clockwise"/>
                                     </PathFigure>
                                 </PathGeometry>
                             </Path.Data>
