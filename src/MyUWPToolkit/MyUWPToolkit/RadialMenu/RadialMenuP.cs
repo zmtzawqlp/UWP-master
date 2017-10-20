@@ -77,7 +77,12 @@ namespace MyUWPToolkit.RadialMenu
 
         // Using a DependencyProperty as the backing store for CurrentItem.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CurrentItemProperty =
-            DependencyProperty.Register("CurrentItem", typeof(IRadialMenuItemsControl), typeof(RadialMenu), new PropertyMetadata(null));
+            DependencyProperty.Register("CurrentItem", typeof(IRadialMenuItemsControl), typeof(RadialMenu), new PropertyMetadata(null, OnCurrentItemChanged));
+
+        private static void OnCurrentItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as RadialMenu).OnCurrentItemChanged(e);
+        }
 
         public int SectorCount
         {
@@ -204,7 +209,7 @@ namespace MyUWPToolkit.RadialMenu
 
         // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionModeProperty =
-            DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenu), new PropertyMetadata(RadialMenuSelectionMode.Single));
+            DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenu), new PropertyMetadata(RadialMenuSelectionMode.None));
 
         public Vector3 Offset
         {
@@ -275,6 +280,8 @@ namespace MyUWPToolkit.RadialMenu
         }
 
         public event TappedEventHandler ItemTapped;
+
+        public event DependencyPropertyChangedEventHandler CurrentItemChanged;
         #endregion
     }
 

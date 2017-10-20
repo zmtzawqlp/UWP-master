@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
@@ -30,6 +31,8 @@ namespace MyUWPToolkit.RadialMenu
                 return _colorElement;
             }
         }
+
+        //internal Border ColorElementClipBorder;
 
         //private double isFirstOrLastOneOpacity;
 
@@ -114,6 +117,7 @@ namespace MyUWPToolkit.RadialMenu
         protected override void OnApplyTemplate()
         {
             _colorElement = GetTemplateChild("ColorElement") as Path;
+            //ColorElementClipBorder = GetTemplateChild("ColorElementClipBorder") as Border;
             base.OnApplyTemplate();
         }
 

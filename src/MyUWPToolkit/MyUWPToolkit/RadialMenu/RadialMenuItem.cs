@@ -39,6 +39,8 @@ namespace MyUWPToolkit.RadialMenu
         }
         public event EventHandler IsSelectedChanged;
 
+        public string GroupName { get; set; }
+
         public object Content
         {
             get { return (object)GetValue(ContentProperty); }
@@ -127,6 +129,16 @@ namespace MyUWPToolkit.RadialMenu
         // Using a DependencyProperty as the backing store for SelectionMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectionModeProperty =
             DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenuItem), new PropertyMetadata(RadialMenuSelectionMode.None));
+
+        public bool ExpandButtonEnabled
+        {
+            get { return (bool)GetValue(ExpandButtonEnabledProperty); }
+            set { SetValue(ExpandButtonEnabledProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ExpandButtonEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ExpandButtonEnabledProperty =
+            DependencyProperty.Register("ExpandButtonEnabled", typeof(bool), typeof(RadialMenuItem), new PropertyMetadata(true));
 
         protected void OnIsSelectedChanged()
         {
@@ -254,7 +266,7 @@ namespace MyUWPToolkit.RadialMenu
 
         private void _expandButtonArea_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (HasItems)
+            if (HasItems && ExpandButtonEnabled)
             {
                 e.Handled = true;
                 Menu?.SetCurrentItem(this);
@@ -292,22 +304,29 @@ namespace MyUWPToolkit.RadialMenu
                     case RadialMenuSelectionMode.None:
                         break;
                     case RadialMenuSelectionMode.Single:
+                    case RadialMenuSelectionMode.SingleExtended:
                         foreach (var item in ParentItem.SelectedItems)
                         {
-                            if (item != this)
+                            if (item != this && item.GroupName == this.GroupName)
                             {
                                 item.IsSelected = false;
                             }
                         }
-
-                        var selectedEnableItems = ParentItem.Items.Where(x => x.IsSelectedEnable);
-                        if (selectedEnableItems.Count() == 1)
+                        if (ParentItem.SelectionMode == RadialMenuSelectionMode.Single)
                         {
-                            IsSelected = !IsSelected;
+                            var selectedEnableItems = ParentItem.Items.Where(x => x.IsSelectedEnable && x.GroupName == this.GroupName);
+                            if (selectedEnableItems.Count() == 1)
+                            {
+                                IsSelected = !IsSelected;
+                            }
+                            else
+                            {
+                                IsSelected = true;
+                            }
                         }
                         else
                         {
-                            IsSelected = true;
+                            IsSelected = !IsSelected;
                         }
 
                         if (IsSelected && this is RadialNumericMenuChildrenItem radialNumericMenuChildrenItem)
@@ -326,7 +345,7 @@ namespace MyUWPToolkit.RadialMenu
 
         private void _expandButtonArea_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (HasItems)
+            if (HasItems && ExpandButtonEnabled)
             {
                 VisualStateManager.GoToState(this, "Normal", false);
             }
@@ -334,7 +353,7 @@ namespace MyUWPToolkit.RadialMenu
 
         private void _expandButtonArea_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if (HasItems)
+            if (HasItems && ExpandButtonEnabled)
             {
                 VisualStateManager.GoToState(this, "ExpandButtonPointerOver", false);
             }

@@ -20,10 +20,9 @@ namespace MyUWPToolkit.RadialMenu
         // Summary:
         //     The user can select multiple items without entering a special mode.
         Multiple = 2,
-        ////
-        //// Summary:
-        ////     The user can select multiple items by entering a special mode, for example when
-        ////     depressing a modifier key.
-        //Extended = 3
+        //
+        // Summary:
+        //     A user can select a single item and also can cancel select
+        SingleExtended = 3,
     }
 }

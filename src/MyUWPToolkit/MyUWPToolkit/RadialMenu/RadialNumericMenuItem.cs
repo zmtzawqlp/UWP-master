@@ -45,10 +45,10 @@ namespace MyUWPToolkit.RadialMenu
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as RadialNumericMenuItem).OnValueChanged();
+            (d as RadialNumericMenuItem).OnValueChanged(e);
         }
-
-        private void OnValueChanged()
+        public event DependencyPropertyChangedEventHandler ValueChanged;
+        private void OnValueChanged(DependencyPropertyChangedEventArgs e)
         {
             if (InternalItems != null)
             {
@@ -57,6 +57,7 @@ namespace MyUWPToolkit.RadialMenu
                 {
                     item.UpdateIsSelectedState();
                 }
+                ValueChanged?.Invoke(this, e);
             }
         }
         public RadialNumericMenuItem()

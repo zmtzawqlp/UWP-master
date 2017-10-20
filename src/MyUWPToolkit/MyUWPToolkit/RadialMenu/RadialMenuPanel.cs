@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using System.Linq;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
+using Windows.Foundation.Metadata;
 
 namespace MyUWPToolkit.RadialMenu
 {
@@ -255,14 +256,31 @@ namespace MyUWPToolkit.RadialMenu
                         radialNumericMenuChildrenItem.ArcSegments.ColorElement = colorElement;
                         if (k == 0 || k == count - 1)
                         {
-                            if (k == 0)
+                            var Build1709 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 5);
+                            if (Build1709)
                             {
-                                radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect((colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, 0, colorElement.EndPoint.X - colorElement.StartPoint.X, colorElement.Size.Height) };
+                                if (k == 0)
+                                {
+                                    radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect(sectorRect.Width / 2.0, 0, sectorRect.Width / 2.0, sectorRect.Height) };
+
+                                }
+                                else
+                                {
+                                    radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, sectorRect.Width / 2.0, sectorRect.Height) };
+                                }
                             }
                             else
                             {
-                                radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, (colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, colorElement.Size.Height) };
+                                if (k == 0)
+                                {
+                                    radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect((colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, 0, colorElement.EndPoint.X - colorElement.StartPoint.X, colorElement.Size.Height) };
+                                }
+                                else
+                                {
+                                    radialNumericMenuChildrenItem.ColorElement.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, (colorElement.EndPoint.X - colorElement.StartPoint.X) / 2.0, colorElement.Size.Height) };
+                                }
                             }
+
                             radialNumericMenuChildrenItem.Line2 = line2;
                         }
                         radialMenuItem.Padding = radialNumericMenuItemPading;

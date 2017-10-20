@@ -38,6 +38,7 @@ namespace MyUWPToolkit.RadialMenu
             Unloaded += RadialMenu_Unloaded;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
+            IsHitTestVisible = false;
         }
 
         private void RadialMenu_Unloaded(object sender, RoutedEventArgs e)
@@ -56,6 +57,10 @@ namespace MyUWPToolkit.RadialMenu
             xPositive = 1;
             yPositive = 1;
             UpdateOffset();
+            if (!IsHitTestVisible)
+            {
+                this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () => { this.IsHitTestVisible = true; });
+            }
         }
 
         #region override
@@ -71,6 +76,11 @@ namespace MyUWPToolkit.RadialMenu
                 PrepareAnimation();
             CurrentItem = this;
             base.OnApplyTemplate();
+        }
+
+        private void OnCurrentItemChanged(DependencyPropertyChangedEventArgs e)
+        {
+            CurrentItemChanged?.Invoke(this, e);
         }
 
         private void IsExpandedChanged()
@@ -113,6 +123,7 @@ namespace MyUWPToolkit.RadialMenu
         private void UpdateOffset(double x = 0, double y = 0, bool isInertial = false)
         {
             Vector3 newOffset = Vector3.Zero;
+
             var windowRect = Window.Current.Bounds;
             if (DeviceInfo.IsNarrowSrceen)
             {
@@ -120,6 +131,7 @@ namespace MyUWPToolkit.RadialMenu
                 //not occluded by chrome such as the status bar and app bar.   
                 windowRect = ApplicationView.GetForCurrentView().VisibleBounds;
             }
+
 
             var navigationButtonWidth = _navigationButton == null ? 0 : _navigationButton.ActualWidth;
             var navigationButtonHeight = _navigationButton == null ? 0 : _navigationButton.ActualHeight;
@@ -290,12 +302,16 @@ namespace MyUWPToolkit.RadialMenu
 
         public void CollapseMenu()
         {
-            CurrentItem = this;
-            if (_navigationButton != null)
+            if (CurrentItem != this)
             {
-                _navigationButton.Content = this.NavigationButtonIcon ?? (char)0xE115;
+                CurrentItem = this;
+                if (_navigationButton != null)
+                {
+                    _navigationButton.Content = this.NavigationButtonIcon ?? (char)0xE115;
+                }
             }
             IsExpanded = false;
         }
+
     }
 }
