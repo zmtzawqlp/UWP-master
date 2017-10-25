@@ -28,6 +28,7 @@ namespace MyUWPToolkit.RadialMenu
         private RadialMenuItemsPresenter _currentItemPresenter;
         internal RadialMenuNavigationButton _navigationButton;
         private Grid _contentGrid;
+        private bool lowerThan14393;
         #endregion
 
         #region DP

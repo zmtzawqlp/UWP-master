@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "UAP,Version=v10.0.14393": {
+    "UAP,Version=v10.0.10586": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -2474,7 +2474,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-arm": {
+    "UAP,Version=v10.0.10586/win10-arm": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -4966,7 +4966,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-arm-aot": {
+    "UAP,Version=v10.0.10586/win10-arm-aot": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -7494,7 +7494,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x64": {
+    "UAP,Version=v10.0.10586/win10-x64": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -9995,7 +9995,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x64-aot": {
+    "UAP,Version=v10.0.10586/win10-x64-aot": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -12532,7 +12532,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x86": {
+    "UAP,Version=v10.0.10586/win10-x86": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -15033,7 +15033,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x86-aot": {
+    "UAP,Version=v10.0.10586/win10-x86-aot": {
       "Microsoft.CSharp/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -26313,7 +26313,7 @@
       "System.Runtime >= 4.3.0",
       "Win2D.uwp >= 1.21.0"
     ],
-    "UAP,Version=v10.0.14393": []
+    "UAP,Version=v10.0.10586": []
   },
   "packageFolders": {
     "C:\\Users\\eastmoney\\.nuget\\packages\\": {}
@@ -26343,7 +26343,7 @@
       "Win2D.uwp": "1.21.0"
     },
     "frameworks": {
-      "uap10.0.14393": {}
+      "uap10.0.10586": {}
     },
     "runtimes": {
       "win10-arm": {

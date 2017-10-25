@@ -93,8 +93,6 @@ namespace MyUWPToolkit.RadialMenu
                 }
             }
 
-
-
             List<RadialMenuItem> items = new List<RadialMenuItem>();
             foreach (var item in this.Children)
             {
@@ -256,8 +254,13 @@ namespace MyUWPToolkit.RadialMenu
                         radialNumericMenuChildrenItem.ArcSegments.ColorElement = colorElement;
                         if (k == 0 || k == count - 1)
                         {
-                            var Build1709 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 5);
-                            if (Build1709)
+                            var Build16229 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 5);
+                            //
+                            var Build15063 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 4);
+                            //var Build14393 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 3);
+                            //var Build10586 = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 2);
+                            bool is15063 = Build15063 && !Build16229;
+                            if (!is15063)
                             {
                                 if (k == 0)
                                 {

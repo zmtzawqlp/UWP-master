@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -17,6 +18,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Shapes;
 
 namespace MyUWPToolkit.RadialMenu
@@ -39,6 +42,7 @@ namespace MyUWPToolkit.RadialMenu
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             IsHitTestVisible = false;
+            lowerThan14393 = !ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 3);
         }
 
         private void RadialMenu_Unloaded(object sender, RoutedEventArgs e)
@@ -61,12 +65,44 @@ namespace MyUWPToolkit.RadialMenu
             {
                 this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () => { this.IsHitTestVisible = true; });
             }
+            if (CurrentItem == this)
+            {
+                if (IsExpanded)
+                {
+                    if (lowerThan14393)
+                    {
+                        var ct = (_contentGrid.RenderTransform as CompositeTransform);
+                        ct.ScaleX = 1;
+                        ct.ScaleY = 1;
+                    }
+                    else
+                    {
+                        _contentGridVisual.Scale = new Vector3(1, 1, 0);
+                    }
+
+                    _navigationButton.GoToStateExpand();
+                }
+                else
+                {
+                    if (lowerThan14393)
+                    {
+                        var ct = (_contentGrid.RenderTransform as CompositeTransform);
+                        ct.ScaleX = 0;
+                        ct.ScaleY = 0;
+                    }
+                    else
+                    {
+                        _contentGridVisual.Scale = new Vector3(0, 0, 0);
+                    }
+
+                    _navigationButton.GoToStateCollapse();
+                }
+            }
         }
 
         #region override
         protected override void OnApplyTemplate()
         {
-
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
             _currentItemPresenter = GetTemplateChild("CurrentItemPresenter") as RadialMenuItemsPresenter;
             _currentItemPresenter.Menu = this;
@@ -85,17 +121,17 @@ namespace MyUWPToolkit.RadialMenu
 
         private void IsExpandedChanged()
         {
-            if (_contentGridVisual != null)
+            //if (_contentGridVisual != null)
+            //{
+            if (IsExpanded)
             {
-                if (IsExpanded)
-                {
-                    Expand();
-                }
-                else
-                {
-                    Collapse();
-                }
+                Expand();
             }
+            else
+            {
+                Collapse();
+            }
+            //}
         }
 
         private void _navigationButton_Click(object sender, RoutedEventArgs e)
@@ -203,95 +239,241 @@ namespace MyUWPToolkit.RadialMenu
         Compositor _compositor;
         ScalarKeyFrameAnimation rotationAnimation;
         Vector3KeyFrameAnimation scaleAnimation;
-        //ScalarKeyFrameAnimation opacityAnimation;
+
+        //use animation for lower than 14393
+        Storyboard expand;
+        Storyboard collapse;
+        Storyboard open;
+        Storyboard close;
         void PrepareAnimation()
         {
             _radialMenuVisual = ElementCompositionPreview.GetElementVisual(this);
             _radialMenuVisual.Offset = Offset;
-            _contentGridVisual = ElementCompositionPreview.GetElementVisual(_contentGrid);
-            _compositor = _contentGridVisual.Compositor;
-
-            rotationAnimation = _compositor.CreateScalarKeyFrameAnimation();
-            scaleAnimation = _compositor.CreateVector3KeyFrameAnimation();
-            //opacityAnimation = _compositor.CreateScalarKeyFrameAnimation();
-
-            var easing = _compositor.CreateLinearEasingFunction();
-
-            _contentGrid.SizeChanged += (s, e) =>
+            if (lowerThan14393)
             {
-                _contentGridVisual.CenterPoint = new Vector3((float)_contentGrid.ActualWidth / 2.0f, (float)_contentGrid.ActualHeight / 2.0f, 0);
-            };
+                _contentGrid.RenderTransformOrigin = new Point(0.5, 0.5);
+                _contentGrid.RenderTransform = new CompositeTransform();
+                #region expand
+                expand = new Storyboard();
+                var duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleX)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 0 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.2)), Value = 1, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                expand.Children.Add(duk);
 
-            scaleAnimation.InsertKeyFrame(0.0f, new Vector3() { X = 0.0f, Y = 0.0f, Z = 0.0f });
-            scaleAnimation.InsertKeyFrame(1.0f, new Vector3() { X = 1.0f, Y = 1.0f, Z = 0.0f }, easing);
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleY)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 0 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.2)), Value = 1, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                expand.Children.Add(duk);
 
-            rotationAnimation.InsertKeyFrame(0.0f, -90.0f);
-            rotationAnimation.InsertKeyFrame(1.0f, 0.0f, easing);
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.Rotation)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = -90 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.2)), Value = 0, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                expand.Children.Add(duk);
+                #endregion
 
-            //opacityAnimation.InsertKeyFrame(0.0f, 0.0f);
-            //opacityAnimation.InsertKeyFrame(1.0f, 1.0f, easing);
+                #region collapse
+                collapse = new Storyboard();
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleX)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 1 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.2)), Value = 0, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                collapse.Children.Add(duk);
 
-            _contentGridVisual.Scale = new Vector3(0, 0, 0);
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleY)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 1 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.2)), Value = 0, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                collapse.Children.Add(duk);
 
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.Rotation)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 0 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.2)), Value = -90, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                collapse.Children.Add(duk);
+
+                #endregion
+
+                #region Open
+                open = new Storyboard();
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleX)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 0 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.1)), Value = 1, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                open.Children.Add(duk);
+
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleY)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 0 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.1)), Value = 1, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                open.Children.Add(duk);
+                #endregion
+
+                #region Close
+                close = new Storyboard();
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleX)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 1 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.07)), Value = 0, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                close.Children.Add(duk);
+
+                duk = new DoubleAnimationUsingKeyFrames();
+                Storyboard.SetTarget(duk, _contentGrid);
+                Storyboard.SetTargetProperty(duk, "(UIElement.RenderTransform).(CompositeTransform.ScaleY)");
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)), Value = 1 });
+                duk.KeyFrames.Add(new EasingDoubleKeyFrame() { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.07)), Value = 0, EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut } });
+                close.Children.Add(duk);
+                #endregion
+            }
+            else
+            {
+
+                _contentGridVisual = ElementCompositionPreview.GetElementVisual(_contentGrid);
+                _compositor = _contentGridVisual.Compositor;
+
+                rotationAnimation = _compositor.CreateScalarKeyFrameAnimation();
+                scaleAnimation = _compositor.CreateVector3KeyFrameAnimation();
+
+                var easing = _compositor.CreateLinearEasingFunction();
+
+                _contentGrid.SizeChanged += (s, e) =>
+                {
+                    _contentGridVisual.CenterPoint = new Vector3((float)_contentGrid.ActualWidth / 2.0f, (float)_contentGrid.ActualHeight / 2.0f, 0);
+                };
+
+                scaleAnimation.InsertKeyFrame(0.0f, new Vector3() { X = 0.0f, Y = 0.0f, Z = 0.0f });
+                scaleAnimation.InsertKeyFrame(1.0f, new Vector3() { X = 1.0f, Y = 1.0f, Z = 0.0f }, easing);
+
+                rotationAnimation.InsertKeyFrame(0.0f, -90.0f);
+                rotationAnimation.InsertKeyFrame(1.0f, 0.0f, easing);
+
+            }
         }
         void Expand()
         {
             UpdateOffset();
-            scaleAnimation.Direction = AnimationDirection.Normal;
-            rotationAnimation.Direction = AnimationDirection.Normal;
-            scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
-            rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
-            //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
-            _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
-            _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
-            //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
-            _navigationButton.GoToStateExpand();
+            if (lowerThan14393)
+            {
+                expand?.Begin();
+            }
+            else
+            {
+                if (_contentGridVisual == null)
+                {
+                    return;
+                }
+
+                scaleAnimation.Direction = AnimationDirection.Normal;
+                rotationAnimation.Direction = AnimationDirection.Normal;
+                scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
+                //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
+
+            }
+
+            _navigationButton?.GoToStateExpand();
         }
 
         void Collapse()
         {
             UpdateOffset();
-            scaleAnimation.Direction = AnimationDirection.Reverse;
-            rotationAnimation.Direction = AnimationDirection.Reverse;
-            scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
-            rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
-            //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
-            _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
-            _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
-            //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
-            _navigationButton.GoToStateCollapse();
+            if (lowerThan14393)
+            {
+                collapse?.Begin();
+            }
+            else
+            {
+                if (_contentGridVisual == null)
+                {
+                    return;
+                }
+
+                scaleAnimation.Direction = AnimationDirection.Reverse;
+                rotationAnimation.Direction = AnimationDirection.Reverse;
+                scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
+            }
+
+            _navigationButton?.GoToStateCollapse();
         }
 
         internal void SetCurrentItem(IRadialMenuItemsControl currentItem)
         {
-            var batch = _compositor.GetCommitBatch(CompositionBatchTypes.Animation);
-            batch.Completed += (s, e) =>
+            if (lowerThan14393)
             {
-                CurrentItem = currentItem;
-                if (CurrentItem == this)
+                if (close != null)
                 {
-                    _navigationButton.Content = this.NavigationButtonIcon ?? (char)0xE115;
+                    EventHandler<object> handler = null;
+                    handler = new EventHandler<object>((s1, e1) =>
+                    {
+                        close.Completed -= handler;
+                        SetCurrentItemIn(currentItem);
+                        open?.Begin();
+                    });
+                    close.Completed += handler;
+                    close.Begin();
                 }
                 else
                 {
-                    if (CurrentItem is RadialNumericMenuItem)
-                    {
-                        _navigationButton.GoToStateNumeric();
-                    }
-                    else
-                    {
-                        _navigationButton.GoToStateExpand();
-                    }
-                    _navigationButton.Content = this.NavigationButtonBackIcon ?? (char)0xE2A6;
+                    SetCurrentItemIn(currentItem);
                 }
-                scaleAnimation.Direction = AnimationDirection.Normal;
-                scaleAnimation.Duration = TimeSpan.FromSeconds(0.1);
-                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+            }
+            else
+            {
+                var batch = _compositor.GetCommitBatch(CompositionBatchTypes.Animation);
+                batch.Completed += (s, e) =>
+                {
+                    SetCurrentItemIn(currentItem);
 
-            };
-            scaleAnimation.Direction = AnimationDirection.Reverse;
-            scaleAnimation.Duration = TimeSpan.FromSeconds(0.07);
-            _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+                    scaleAnimation.Duration = TimeSpan.FromSeconds(0.1);
+                    if (!lowerThan14393)
+                    {
+                        scaleAnimation.Direction = AnimationDirection.Normal;
+                    }
+                    _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+                };
+
+                scaleAnimation.Duration = TimeSpan.FromSeconds(0.07);
+                scaleAnimation.Direction = AnimationDirection.Reverse;
+                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+            }
+        }
+
+        private void SetCurrentItemIn(IRadialMenuItemsControl currentItem)
+        {
+            CurrentItem = currentItem;
+            if (CurrentItem == this)
+            {
+                _navigationButton.Content = this.NavigationButtonIcon ?? (char)0xE115;
+            }
+            else
+            {
+                if (CurrentItem is RadialNumericMenuItem)
+                {
+                    _navigationButton.GoToStateNumeric();
+                }
+                else
+                {
+                    _navigationButton.GoToStateExpand();
+                }
+                _navigationButton.Content = this.NavigationButtonBackIcon ?? (char)0xE2A6;
+            }
         }
 
         internal void OnItemTapped(RadialMenuItem sender, TappedRoutedEventArgs e)

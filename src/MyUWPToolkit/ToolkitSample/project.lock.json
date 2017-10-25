@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "UAP,Version=v10.0.14393": {
+    "UAP,Version=v10.0.10586": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -2523,7 +2523,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -2532,7 +2532,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-arm": {
+    "UAP,Version=v10.0.10586/win10-arm": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -5073,7 +5073,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -5082,7 +5082,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-arm-aot": {
+    "UAP,Version=v10.0.10586/win10-arm-aot": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -7659,7 +7659,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -7668,7 +7668,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x64": {
+    "UAP,Version=v10.0.10586/win10-x64": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -10218,7 +10218,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -10227,7 +10227,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x64-aot": {
+    "UAP,Version=v10.0.10586/win10-x64-aot": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -12813,7 +12813,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -12822,7 +12822,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x86": {
+    "UAP,Version=v10.0.10586/win10-x86": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -15372,7 +15372,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -15381,7 +15381,7 @@
         }
       }
     },
-    "UAP,Version=v10.0.14393/win10-x86-aot": {
+    "UAP,Version=v10.0.10586/win10-x86-aot": {
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -17967,7 +17967,7 @@
       },
       "MyUWPToolkit/1.0.0": {
         "type": "project",
-        "framework": "UAP,Version=v10.0.14393",
+        "framework": "UAP,Version=v10.0.10586",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
           "Newtonsoft.Json": "10.0.3",
@@ -26783,7 +26783,7 @@
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.4.0",
       "Win2D.uwp >= 1.21.0"
     ],
-    "UAP,Version=v10.0.14393": []
+    "UAP,Version=v10.0.10586": []
   },
   "packageFolders": {
     "C:\\Users\\eastmoney\\.nuget\\packages\\": {}
@@ -26806,7 +26806,7 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "uap10.0.14393": {
+        "uap10.0.10586": {
           "projectReferences": {
             "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj": {
               "projectPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj"
@@ -26823,7 +26823,7 @@
       "Win2D.uwp": "1.21.0"
     },
     "frameworks": {
-      "uap10.0.14393": {}
+      "uap10.0.10586": {}
     },
     "runtimes": {
       "win10-arm": {
@@ -26845,5 +26845,23 @@
         "#import": []
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1608",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Detected package version outside of dependency constraint: Microsoft.ApplicationInsights.WindowsApps 1.1.1 requires Microsoft.ApplicationInsights (= 1.2.3) but version Microsoft.ApplicationInsights 2.4.0 was resolved.",
+      "libraryId": "Microsoft.ApplicationInsights",
+      "targetGraphs": [
+        "UAP,Version=v10.0.10586",
+        "UAP,Version=v10.0.10586/win10-arm",
+        "UAP,Version=v10.0.10586/win10-arm-aot",
+        "UAP,Version=v10.0.10586/win10-x64",
+        "UAP,Version=v10.0.10586/win10-x64-aot",
+        "UAP,Version=v10.0.10586/win10-x86",
+        "UAP,Version=v10.0.10586/win10-x86-aot"
+      ]
+    }
+  ]
 }

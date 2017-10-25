@@ -375,7 +375,7 @@
         <Setter Property="MinWidth" Value="260"/>
         <Setter Property="MinHeight" Value="260"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="ExpandButtonBackground" Value="{ThemeResource ButtonBackground}"/>
+        <Setter Property="ExpandButtonBackground" Value="#FF3381E3"/>
         <Setter Property="ExpandButtonPointerOverBackground" Value="#466666"/>
         <Setter Property="SelectedElementBackground" Value="#608B8B"/>
         <Setter Property="Template">
@@ -383,7 +383,7 @@
                 <ControlTemplate TargetType="local:RadialMenu">
                     <Grid>
                         <Grid x:Name="ContentGrid">
-                            <Ellipse Fill="{TemplateBinding Background}"  Stroke="{ThemeResource ButtonBackground}" StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <Ellipse Fill="{TemplateBinding Background}"  StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                             <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
                              ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
                              >
