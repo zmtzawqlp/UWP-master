@@ -65,37 +65,48 @@ namespace MyUWPToolkit.RadialMenu
             {
                 this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () => { this.IsHitTestVisible = true; });
             }
+            InitialIsExpandedStates();
+        }
+
+        private void InitialIsExpandedStates()
+        {
             if (CurrentItem == this)
             {
-                if (IsExpanded)
+                if (lowerThan14393)
                 {
-                    if (lowerThan14393)
+                    if (_contentGrid != null)
                     {
                         var ct = (_contentGrid.RenderTransform as CompositeTransform);
-                        ct.ScaleX = 1;
-                        ct.ScaleY = 1;
-                    }
-                    else
-                    {
-                        _contentGridVisual.Scale = new Vector3(1, 1, 0);
-                    }
+                        if (IsExpanded)
+                        {
 
-                    _navigationButton.GoToStateExpand();
+                            ct.ScaleX = 1;
+                            ct.ScaleY = 1;
+                            _navigationButton?.GoToStateExpand();
+                        }
+                        else
+                        {
+                            ct.ScaleX = 0;
+                            ct.ScaleY = 0;
+                            _navigationButton?.GoToStateCollapse();
+                        }
+                    }
                 }
                 else
                 {
-                    if (lowerThan14393)
+                    if (_contentGridVisual != null)
                     {
-                        var ct = (_contentGrid.RenderTransform as CompositeTransform);
-                        ct.ScaleX = 0;
-                        ct.ScaleY = 0;
+                        if (IsExpanded)
+                        {
+                            _contentGridVisual.Scale = new Vector3(1, 1, 0);
+                            _navigationButton?.GoToStateExpand();
+                        }
+                        else
+                        {
+                            _contentGridVisual.Scale = new Vector3(0, 0, 0);
+                            _navigationButton?.GoToStateCollapse();
+                        }
                     }
-                    else
-                    {
-                        _contentGridVisual.Scale = new Vector3(0, 0, 0);
-                    }
-
-                    _navigationButton.GoToStateCollapse();
                 }
             }
         }
@@ -359,6 +370,7 @@ namespace MyUWPToolkit.RadialMenu
                 rotationAnimation.InsertKeyFrame(1.0f, 0.0f, easing);
 
             }
+            InitialIsExpandedStates();
         }
         void Expand()
         {
