@@ -67,19 +67,22 @@ namespace MyUWPToolkit.RadialMenu
 
             RadialNumericMenuItem radialNumericMenuItem = Menu.CurrentItem as RadialNumericMenuItem;
 
-            if (radialNumericMenuItem != null && radialNumericMenuItem.Items.Count > 0 && count == 0)
-            {
-                List<RadialMenuItem> internalItems = new List<RadialMenuItem>();
-                foreach (var item in radialNumericMenuItem.Items)
-                {
-                    var newItem = new RadialNumericMenuChildrenItem() { Content = item, IsSelected = item == radialNumericMenuItem.Value };
-                    newItem.SetMenu(Menu);
-                    internalItems.Add(newItem);
-                    this.Children.Add(newItem);
-                }
-                radialNumericMenuItem.InternalItems = internalItems;
-                return;
-            }
+            //Children.Count has some thing wrong in 10586 release mode,when use new key word for Items property
+            //More action, i add new property NumericItems to override Items
+            //but it has bug in debug mode, you should set NumericItems as sample done.
+            //if (radialNumericMenuItem != null && radialNumericMenuItem.Items.Count > 0 && count ==0)
+            //{
+            //    List<RadialMenuItem> internalItems = new List<RadialMenuItem>();
+            //    foreach (var item in radialNumericMenuItem.Items)
+            //    {
+            //        var newItem = new RadialNumericMenuChildrenItem() { Content = item, IsSelected = item == radialNumericMenuItem.Value };
+            //        newItem.SetMenu(Menu);
+            //        internalItems.Add(newItem);
+            //        this.Children.Add(newItem);
+            //    }
+            //    radialNumericMenuItem.InternalItems = internalItems;
+            //    return;
+            //}
 
             if (radialNumericMenuItem == null)
             {

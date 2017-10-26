@@ -24,22 +24,24 @@ RequestedTheme="Light"
                         <Run Text=")"/>
                     </TextBlock>
                 </radialMenu:RadialNumericMenuItem.Content>
-                <x:Double>1</x:Double>
-                <x:Double>2</x:Double>
-                <x:Double>3</x:Double>
-                <x:Double>4</x:Double>
-                <x:Double>5</x:Double>
-                <x:Double>6</x:Double>
-                <x:Double>7</x:Double>
-                <x:Double>8</x:Double>
-                <x:Double>9</x:Double>
-                <x:Double>10</x:Double>
-                <x:Double>11</x:Double>
-                <x:Double>12</x:Double>
-                <x:Double>13</x:Double>
-                <x:Double>14</x:Double>
-                <x:Double>15</x:Double>
-                <x:Double>16</x:Double>
+                <radialMenu:RadialNumericMenuItem.NumericItems>
+                    <x:Double>1</x:Double>
+                    <x:Double>2</x:Double>
+                    <x:Double>3</x:Double>
+                    <x:Double>4</x:Double>
+                    <x:Double>5</x:Double>
+                    <x:Double>6</x:Double>
+                    <x:Double>7</x:Double>
+                    <x:Double>8</x:Double>
+                    <x:Double>9</x:Double>
+                    <x:Double>10</x:Double>
+                    <x:Double>11</x:Double>
+                    <x:Double>12</x:Double>
+                    <x:Double>13</x:Double>
+                    <x:Double>14</x:Double>
+                    <x:Double>15</x:Double>
+                    <x:Double>16</x:Double>
+                </radialMenu:RadialNumericMenuItem.NumericItems>
             </radialMenu:RadialNumericMenuItem>
             <radialMenu:RadialMenuItem Content="Disabled" IsEnabled="True">
                 <radialMenu:RadialMenuItem Content="test"/>

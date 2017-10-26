@@ -363,7 +363,7 @@ namespace MyUWPToolkit.RadialMenu
 
         #region IRadialMenuItemsControl
         private RadialMenuItemCollection _items;
-        public RadialMenuItemCollection Items => _items;
+        public virtual RadialMenuItemCollection Items => _items;
 
         #endregion
 

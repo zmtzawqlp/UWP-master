@@ -5,32 +5,78 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Markup;
 
 namespace MyUWPToolkit.RadialMenu
 {
+    [ContentProperty(Name = "NumericItems")]
     public class RadialNumericMenuItem : RadialMenuItem
     {
-        private ObservableCollection<double> _items;
-        public new ObservableCollection<double> Items
+        private ObservableCollection<double> _numericItems;
+        /// <summary>
+        /// notice in debug mode ContentProperty can't override base class
+        /// please set it directly
+        /// </summary>
+        public ObservableCollection<double> NumericItems
         {
             get
             {
+                return _numericItems;
+            }
+        }
+        private RadialMenuItemCollection _items;
+        public override RadialMenuItemCollection Items
+        {
+            get
+            {
+                if (_items == null)
+                {
+                    _items = new RadialMenuItemCollection();
+                    foreach (var item in NumericItems)
+                    {
+                        var newItem = new RadialNumericMenuChildrenItem() { Content = item, IsSelected = item == this.Value };
+                        newItem.SetMenu(Menu);
+                        _items.Add(newItem);
+                    }
+                }
+                else
+                {
+                    if (_items.Count != NumericItems.Count)
+                    {
+                        _items.Clear();
+                        foreach (var item in NumericItems)
+                        {
+                            var newItem = new RadialNumericMenuChildrenItem() { Content = item, IsSelected = item == this.Value };
+                            newItem.SetMenu(Menu);
+                            _items.Add(newItem);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in _items)
+                        {
+                            item.IsSelected = (double)item.Content == this.Value;
+                            item.SetMenu(Menu);
+                        }
+                    }
+                   
+                }
                 return _items;
             }
         }
 
-        internal IEnumerable<RadialMenuItem> InternalItems { get; set; }
+        //internal IEnumerable<RadialMenuItem> InternalItems { get; set; }
         public override IEnumerable<RadialMenuItem> SelectedItems
         {
             get
             {
-                return InternalItems.Where(x => x.IsSelected);
+                return Items.Where(x => x.IsSelected);
             }
         }
 
         public override bool HasItems
         {
-            get { return _items.Count > 0; }
+            get { return _numericItems.Count > 0; }
         }
 
         public double Value
@@ -50,9 +96,9 @@ namespace MyUWPToolkit.RadialMenu
         public event DependencyPropertyChangedEventHandler ValueChanged;
         private void OnValueChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (InternalItems != null)
+            if (Items != null)
             {
-                var item = InternalItems.FirstOrDefault(x => (double)x.Content == Value);
+                var item = Items.FirstOrDefault(x => (double)x.Content == Value);
                 if (item != null && !item.IsSelected)
                 {
                     item.UpdateIsSelectedState();
@@ -62,7 +108,7 @@ namespace MyUWPToolkit.RadialMenu
         }
         public RadialNumericMenuItem()
         {
-            _items = new ObservableCollection<double>();
+            _numericItems = new ObservableCollection<double>();
             SelectionMode = RadialMenuSelectionMode.Single;
         }
     }
