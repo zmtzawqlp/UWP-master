@@ -125,6 +125,7 @@ namespace MyUWPToolkit
                 _popup.Opened += _popup_Opened;
                 _popup.Closed += _popup_Closed;
                 _popup.Child = CreatePresenter();
+                (_popup.Child as FlyoutPresenter).SizeChanged += AdvancedFlyoutBase_SizeChanged;
                 frame = Window.Current.Content as Frame;
             }
 
@@ -153,6 +154,11 @@ namespace MyUWPToolkit
             _popup.VerticalOffset += VerticalOffset;
 
             _popup.IsOpen = true;
+        }
+
+        private void AdvancedFlyoutBase_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            CalculatePopupPosition(placementTarget);
         }
 
         private void InputPane_Hiding(InputPane sender, InputPaneVisibilityEventArgs args)
