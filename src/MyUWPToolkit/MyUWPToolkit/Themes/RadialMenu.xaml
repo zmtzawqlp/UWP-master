@@ -303,8 +303,8 @@
     <Style TargetType="local:RadialMenuNavigationButton">
         <Setter Property="Content" Value="&#xE115;"/>
         <Setter Property="MinWidth" Value="0"/>
-        <Setter Property="Width" Value="45"/>
-        <Setter Property="Height" Value="45"/>
+        <!--<Setter Property="Width" Value="45"/>
+        <Setter Property="Height" Value="45"/>-->
         <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -394,7 +394,7 @@
                                 </local:RadialMenuItemsPresenter.ItemsPanel>
                             </local:RadialMenuItemsPresenter>
                         </Grid>
-                        <local:RadialMenuNavigationButton x:Name="NavigationButton"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <local:RadialMenuNavigationButton x:Name="NavigationButton" Width="{TemplateBinding RadialMenuNavigationButtonSize}" Height="{TemplateBinding RadialMenuNavigationButtonSize}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

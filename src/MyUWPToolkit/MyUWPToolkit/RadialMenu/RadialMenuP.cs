@@ -129,6 +129,17 @@ namespace MyUWPToolkit.RadialMenu
 
 
         #region NavigationButton
+
+        public double RadialMenuNavigationButtonSize
+        {
+            get { return (double)GetValue(RadialMenuNavigationButtonSizeProperty); }
+            set { SetValue(RadialMenuNavigationButtonSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RadialMenuNavigationButtonSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RadialMenuNavigationButtonSizeProperty =
+            DependencyProperty.Register("RadialMenuNavigationButtonSize", typeof(double), typeof(RadialMenu), new PropertyMetadata(45.0));
+
         public object NavigationButtonIcon
         {
             get { return (object)GetValue(NavigationButtonIconProperty); }
