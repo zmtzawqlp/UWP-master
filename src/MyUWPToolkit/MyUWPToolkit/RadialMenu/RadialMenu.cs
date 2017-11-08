@@ -169,6 +169,10 @@ namespace MyUWPToolkit.RadialMenu
 
         private void UpdateOffset(double x = 0, double y = 0, bool isInertial = false)
         {
+            if (this.ActualWidth == 0 || this.ActualHeight == 0)
+            {
+                return;
+            }
             Vector3 newOffset = Vector3.Zero;
 
             var windowRect = Window.Current.Bounds;
