@@ -31,7 +31,6 @@ namespace MyUWPToolkit.RadialMenu
         internal RadialMenuNavigationButton _navigationButton;
         private Windows.UI.Xaml.Controls.Primitives.Popup _popup;
         private Grid _contentGrid;
-        private Grid _root;
         private bool lowerThan14393;
         #endregion
 

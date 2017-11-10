@@ -120,10 +120,6 @@ namespace MyUWPToolkit.RadialMenu
         protected override void OnApplyTemplate()
         {
             //_popup = GetTemplateChild("Popup") as Windows.UI.Xaml.Controls.Primitives.Popup;
-            //UpdatePopupSize();
-            _root = GetTemplateChild("Root") as Grid;
-            _root.ManipulationStarted += _root_ManipulationStarted;
-            _root.ManipulationDelta += _root_ManipulationDelta;
 
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
             _currentItemPresenter = GetTemplateChild("CurrentItemPresenter") as RadialMenuItemsPresenter;
@@ -162,17 +158,13 @@ namespace MyUWPToolkit.RadialMenu
 
         private void OnIsSupportInertialChanged()
         {
-            if (_root == null)
-            {
-                return;
-            }
             if (IsSupportInertial)
             {
-                _root.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+                ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
             }
             else
             {
-                _root.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+                ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
             }
         }
 
@@ -233,12 +225,13 @@ namespace MyUWPToolkit.RadialMenu
 
         int xPositive = 1;
         int yPositive = 1;
-        private void _root_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+
+        protected override void OnManipulationDelta(ManipulationDeltaRoutedEventArgs e)
         {
             UpdateOffset(e.Delta.Translation.X, e.Delta.Translation.Y, e.IsInertial);
         }
 
-        private void _root_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
         {
             xPositive = 1;
             yPositive = 1;

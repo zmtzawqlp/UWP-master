@@ -374,7 +374,7 @@
         <Setter Property="Height" Value="260"/>
         <Setter Property="MinWidth" Value="260"/>
         <Setter Property="MinHeight" Value="260"/>
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Background" Value="{ThemeResource TextBoxBackgroundThemeBrush}"/>
         <Setter Property="ExpandButtonBackground" Value="#FF3381E3"/>
         <Setter Property="ExpandButtonPointerOverBackground" Value="#466666"/>
         <Setter Property="SelectedElementBackground" Value="#608B8B"/>
@@ -382,21 +382,21 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:RadialMenu">
                     <!--<Popup x:Name="Popup" IsLightDismissEnabled="False" IsOpen="{TemplateBinding IsOpen}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">-->
-                        <Grid x:Name="Root" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-                            <Grid x:Name="ContentGrid">
-                                <Ellipse Fill="{TemplateBinding Background}"  StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                                <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid x:Name="ContentGrid">
+                            <Ellipse Fill="{TemplateBinding Background}"  StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                            <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
                              >
-                                    <local:RadialMenuItemsPresenter.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <local:RadialMenuPanel/>
-                                        </ItemsPanelTemplate>
-                                    </local:RadialMenuItemsPresenter.ItemsPanel>
-                                </local:RadialMenuItemsPresenter>
-                            </Grid>
-                            <local:RadialMenuNavigationButton x:Name="NavigationButton" Width="{TemplateBinding RadialMenuNavigationButtonSize}" Height="{TemplateBinding RadialMenuNavigationButtonSize}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <local:RadialMenuItemsPresenter.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <local:RadialMenuPanel/>
+                                    </ItemsPanelTemplate>
+                                </local:RadialMenuItemsPresenter.ItemsPanel>
+                            </local:RadialMenuItemsPresenter>
                         </Grid>
+                        <local:RadialMenuNavigationButton x:Name="NavigationButton" Width="{TemplateBinding RadialMenuNavigationButtonSize}" Height="{TemplateBinding RadialMenuNavigationButtonSize}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
                     <!--</Popup>-->
                 </ControlTemplate>
             </Setter.Value>
