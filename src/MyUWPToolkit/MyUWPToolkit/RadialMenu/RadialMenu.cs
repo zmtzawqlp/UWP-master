@@ -1,12 +1,6 @@
 ﻿using MyUWPToolkit.Util;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -20,10 +14,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Shapes;
 
 namespace MyUWPToolkit.RadialMenu
 {
+    /// <summary>
+    /// notice: do not put RadialMenu into the virtualtree directly
+    /// use RadialMenuBase AttachedMenu instead  
+    /// </summary>
 
     [ContentProperty(Name = "Items")]
     [Bindable]
@@ -36,14 +33,19 @@ namespace MyUWPToolkit.RadialMenu
         {
             this.DefaultStyleKey = typeof(RadialMenu);
             _items = new RadialMenuItemCollection();
-            ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
             Loaded += RadialMenu_Loaded;
             Unloaded += RadialMenu_Unloaded;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             IsHitTestVisible = false;
+            _popup = new Windows.UI.Xaml.Controls.Primitives.Popup();
+            _popup.IsLightDismissEnabled = false;
+            BindingOperations.SetBinding(_popup, Windows.UI.Xaml.Controls.Primitives.Popup.IsOpenProperty, new Binding() { Mode = BindingMode.TwoWay, Source = this, Path = new PropertyPath("IsOpen") });
+            _popup.Child = this;
+            UpdatePopupSize();
             lowerThan14393 = !ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 3);
         }
+
 
         private void RadialMenu_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -52,15 +54,18 @@ namespace MyUWPToolkit.RadialMenu
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
+            UpdatePopupSize();
             UpdateOffset();
         }
 
         private void RadialMenu_Loaded(object sender, RoutedEventArgs e)
         {
+            UpdatePopupSize();
             Window.Current.SizeChanged += Current_SizeChanged;
             xPositive = 1;
             yPositive = 1;
             UpdateOffset();
+
             if (!IsHitTestVisible)
             {
                 this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () => { this.IsHitTestVisible = true; });
@@ -114,6 +119,12 @@ namespace MyUWPToolkit.RadialMenu
         #region override
         protected override void OnApplyTemplate()
         {
+            //_popup = GetTemplateChild("Popup") as Windows.UI.Xaml.Controls.Primitives.Popup;
+            //UpdatePopupSize();
+            _root = GetTemplateChild("Root") as Grid;
+            _root.ManipulationStarted += _root_ManipulationStarted;
+            _root.ManipulationDelta += _root_ManipulationDelta;
+
             _contentGrid = GetTemplateChild("ContentGrid") as Grid;
             _currentItemPresenter = GetTemplateChild("CurrentItemPresenter") as RadialMenuItemsPresenter;
             _currentItemPresenter.Menu = this;
@@ -122,7 +133,26 @@ namespace MyUWPToolkit.RadialMenu
             if (!DesignMode.DesignModeEnabled)
                 PrepareAnimation();
             CurrentItem = this;
+            OnIsSupportInertialChanged();
             base.OnApplyTemplate();
+        }
+
+        private void UpdatePopupSize()
+        {
+            return;
+            if (_popup == null || lowerThan14393)
+            {
+                return;
+            }
+            var windowRect = Window.Current.Bounds;
+            if (DeviceInfo.IsNarrowSrceen)
+            {
+                //Gets the visible region of the window (app view). The visible region is the region 
+                //not occluded by chrome such as the status bar and app bar.   
+                windowRect = ApplicationView.GetForCurrentView().VisibleBounds;
+            }
+            _popup.Width = windowRect.Width;
+            _popup.Height = windowRect.Height;
         }
 
         private void OnCurrentItemChanged(DependencyPropertyChangedEventArgs e)
@@ -130,6 +160,49 @@ namespace MyUWPToolkit.RadialMenu
             CurrentItemChanged?.Invoke(this, e);
         }
 
+        private void OnIsSupportInertialChanged()
+        {
+            if (_root == null)
+            {
+                return;
+            }
+            if (IsSupportInertial)
+            {
+                _root.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
+            }
+            else
+            {
+                _root.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
+            }
+        }
+
+        private void OnOffsetChanged()
+        {
+            //if (lowerThan14393)
+            {
+                if (_popup != null)
+                {
+                    double x = Offset.X;
+                    double y = Offset.Y;
+                    if (_popup.HorizontalOffset != x || _popup.VerticalOffset != y)
+                    {
+                        _popup.HorizontalOffset = x;
+                        _popup.VerticalOffset = y;
+                    }
+                }
+            }
+            //else
+            //{
+            //    if (_radialMenuVisual != null)
+            //    {
+            //        if (_radialMenuVisual.Offset != Offset)
+            //        {
+            //            _radialMenuVisual.Offset = Offset;
+            //            AppSettings.TKAppOffset = Offset;
+            //        }
+            //    }
+            //}
+        }
         private void IsExpandedChanged()
         {
             //if (_contentGridVisual != null)
@@ -160,11 +233,15 @@ namespace MyUWPToolkit.RadialMenu
 
         int xPositive = 1;
         int yPositive = 1;
-        protected override void OnManipulationDelta(ManipulationDeltaRoutedEventArgs e)
+        private void _root_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             UpdateOffset(e.Delta.Translation.X, e.Delta.Translation.Y, e.IsInertial);
-            //Debug.WriteLine(Offset);
-            base.OnManipulationDelta(e);
+        }
+
+        private void _root_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            xPositive = 1;
+            yPositive = 1;
         }
 
         private void UpdateOffset(double x = 0, double y = 0, bool isInertial = false)
@@ -181,6 +258,15 @@ namespace MyUWPToolkit.RadialMenu
                 //Gets the visible region of the window (app view). The visible region is the region 
                 //not occluded by chrome such as the status bar and app bar.   
                 windowRect = ApplicationView.GetForCurrentView().VisibleBounds;
+
+                //notice
+                //higher than 10586 the StatusBar will take height event it seems like hide
+                //it will make your radialmenu will never get the top boundary
+                //if you are crae about this ,you can use follow code to make StatusBar are really hide.
+                //if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))
+                //{
+                //    Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
+                //}
             }
 
 
@@ -201,7 +287,7 @@ namespace MyUWPToolkit.RadialMenu
             else
                 ClipOffset(maxX, maxY, minX, minY, ref newX, ref newY);
 
-            Offset = new Vector3((float)newX, (float)newY, 0);
+            Offset = new Point(newX, newY);
         }
 
         private void ClipOffset(double maxX, double maxY, double minX, double minY, ref double newX, ref double newY)
@@ -235,21 +321,8 @@ namespace MyUWPToolkit.RadialMenu
                 newY = maxY - (newY % maxY);
             }
         }
-        protected override void OnManipulationStarted(ManipulationStartedRoutedEventArgs e)
-        {
-            xPositive = 1;
-            yPositive = 1;
-            base.OnManipulationStarted(e);
-        }
-        private void OnOffsetChanged()
-        {
-            if (_radialMenuVisual != null)
-            {
-                _radialMenuVisual.Offset = Offset;
-            }
-        }
 
-        Visual _radialMenuVisual;
+        //Visual _radialMenuVisual;
         Visual _contentGridVisual;
         Compositor _compositor;
         ScalarKeyFrameAnimation rotationAnimation;
@@ -262,8 +335,6 @@ namespace MyUWPToolkit.RadialMenu
         Storyboard close;
         void PrepareAnimation()
         {
-            _radialMenuVisual = ElementCompositionPreview.GetElementVisual(this);
-            _radialMenuVisual.Offset = Offset;
             if (lowerThan14393)
             {
                 _contentGrid.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -353,7 +424,8 @@ namespace MyUWPToolkit.RadialMenu
             }
             else
             {
-
+                //_radialMenuVisual = ElementCompositionPreview.GetElementVisual(this);
+                //_radialMenuVisual.Offset = Offset;
                 _contentGridVisual = ElementCompositionPreview.GetElementVisual(_contentGrid);
                 _compositor = _contentGridVisual.Compositor;
 
@@ -500,6 +572,10 @@ namespace MyUWPToolkit.RadialMenu
 
         public void CollapseMenu()
         {
+            if (CurrentItem == null)
+            {
+                return;
+            }
             if (CurrentItem != this)
             {
                 CurrentItem = this;
@@ -510,6 +586,27 @@ namespace MyUWPToolkit.RadialMenu
             }
             IsExpanded = false;
         }
+        //not work, use 
+        //_popup.HorizontalOffset = x;
+        //_popup.VerticalOffset = y;
+        //instead of use Composition API
 
+        ///// <summary>
+        ///// when page NavigationCacheMode is not disable, 
+        ///// Composition API about offset will not work right
+        ///// follow method is a workaround for this
+        ///// </summary>
+        //public void OffsetWrokaround()
+        //{
+        //    return;
+        //    if (!lowerThan14393)
+        //    {
+        //        if (_radialMenuVisual != null)
+        //        {      
+        //            _radialMenuVisual.Offset = new Vector3();
+        //            _radialMenuVisual.Offset = Offset;
+        //        }
+        //    }
+        //}
     }
 }

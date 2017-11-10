@@ -8,11 +8,13 @@ using System.Numerics;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
@@ -27,11 +29,22 @@ namespace MyUWPToolkit.RadialMenu
         //private static SymbolIcon defaulNavigationButtonBackIcon = new SymbolIcon(Symbol.Back);
         private RadialMenuItemsPresenter _currentItemPresenter;
         internal RadialMenuNavigationButton _navigationButton;
+        private Windows.UI.Xaml.Controls.Primitives.Popup _popup;
         private Grid _contentGrid;
+        private Grid _root;
         private bool lowerThan14393;
         #endregion
 
         #region DP
+        public bool IsOpen
+        {
+            get { return (bool)GetValue(IsOpenProperty); }
+            set { SetValue(IsOpenProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsOpen.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsOpenProperty =
+            DependencyProperty.Register("IsOpen", typeof(bool), typeof(RadialMenu), new PropertyMetadata(true));
 
 
         public bool FillEmptyPlaces
@@ -223,15 +236,15 @@ namespace MyUWPToolkit.RadialMenu
         public static readonly DependencyProperty SelectionModeProperty =
             DependencyProperty.Register("SelectionMode", typeof(RadialMenuSelectionMode), typeof(RadialMenu), new PropertyMetadata(RadialMenuSelectionMode.None));
 
-        public Vector3 Offset
+        public Point Offset
         {
-            get { return (Vector3)GetValue(OffsetProperty); }
+            get { return (Point)GetValue(OffsetProperty); }
             set { SetValue(OffsetProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Offset.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OffsetProperty =
-            DependencyProperty.Register("Offset", typeof(Vector3), typeof(RadialMenu), new PropertyMetadata(Vector3.Zero, OnOffsetChanged));
+            DependencyProperty.Register("Offset", typeof(Point), typeof(RadialMenu), new PropertyMetadata(new Point(), OnOffsetChanged));
 
         private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -253,14 +266,7 @@ namespace MyUWPToolkit.RadialMenu
         private static void OnIsSupportInertialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             RadialMenu rm = d as RadialMenu;
-            if (rm.IsSupportInertial)
-            {
-                rm.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY | ManipulationModes.TranslateInertia;
-            }
-            else
-            {
-                rm.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
-            }
+            rm.OnIsSupportInertialChanged();
         }
 
         #endregion

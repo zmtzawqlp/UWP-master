@@ -175,6 +175,7 @@
     <Compile Include="RadialMenu\Line.cs" />
     <Compile Include="RadialMenu\RadialColorMenuItem.cs" />
     <Compile Include="RadialMenu\RadialMenu.cs" />
+    <Compile Include="RadialMenu\RadialMenuBase.cs" />
     <Compile Include="RadialMenu\RadialMenuItem.cs" />
     <Compile Include="RadialMenu\RadialMenuItemsPresenter.cs" />
     <Compile Include="RadialMenu\RadialMenuNavigationButton.cs" />

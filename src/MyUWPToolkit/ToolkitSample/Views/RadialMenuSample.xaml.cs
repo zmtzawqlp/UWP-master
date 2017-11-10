@@ -26,7 +26,12 @@ namespace ToolkitSample
         public RadialMenuSample()
         {
             this.InitializeComponent();
-            radialMenu.Offset = new System.Numerics.Vector3(100f, 10f, 0);
+   
+            Popup p = new Popup();
+            p.IsLightDismissEnabled = false;
+            p.Child = new Button() { Content = 12312 };
+            p.IsOpen = true;
+            
         }
 
     }

@@ -52,7 +52,7 @@
                                 <RotateTransform Angle="{Binding ContentAngle, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </ContentPresenter.RenderTransform>
                         </ContentPresenter>
-                        
+
                         <Path x:Name="SelectedElement" StrokeThickness="0" Stroke="{Binding Menu.SelectedElementBackground, RelativeSource={RelativeSource TemplatedParent}}">
                             <Path.Data>
                                 <PathGeometry>
@@ -381,21 +381,23 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:RadialMenu">
-                    <Grid>
-                        <Grid x:Name="ContentGrid">
-                            <Ellipse Fill="{TemplateBinding Background}"  StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                            <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter"
+                    <!--<Popup x:Name="Popup" IsLightDismissEnabled="False" IsOpen="{TemplateBinding IsOpen}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">-->
+                        <Grid x:Name="Root" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                            <Grid x:Name="ContentGrid">
+                                <Ellipse Fill="{TemplateBinding Background}"  StrokeThickness="{TemplateBinding ExpandAreaThickness}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                                <local:RadialMenuItemsPresenter x:Name="CurrentItemPresenter" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                              ItemsSource="{Binding CurrentItem.Items,RelativeSource={RelativeSource TemplatedParent}}" 
                              >
-                                <local:RadialMenuItemsPresenter.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <local:RadialMenuPanel/>
-                                    </ItemsPanelTemplate>
-                                </local:RadialMenuItemsPresenter.ItemsPanel>
-                            </local:RadialMenuItemsPresenter>
+                                    <local:RadialMenuItemsPresenter.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <local:RadialMenuPanel/>
+                                        </ItemsPanelTemplate>
+                                    </local:RadialMenuItemsPresenter.ItemsPanel>
+                                </local:RadialMenuItemsPresenter>
+                            </Grid>
+                            <local:RadialMenuNavigationButton x:Name="NavigationButton" Width="{TemplateBinding RadialMenuNavigationButtonSize}" Height="{TemplateBinding RadialMenuNavigationButtonSize}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Grid>
-                        <local:RadialMenuNavigationButton x:Name="NavigationButton" Width="{TemplateBinding RadialMenuNavigationButtonSize}" Height="{TemplateBinding RadialMenuNavigationButtonSize}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Grid>
+                    <!--</Popup>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -1,4 +1,5 @@
 ﻿using MyUWPToolkit;
+using MyUWPToolkit.RadialMenu;
 using MyUWPToolkit.Util;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using ToolkitSample.Views;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -29,12 +31,15 @@ namespace ToolkitSample
         {
             this.InitializeComponent();
             Loaded += MainPage_Loaded;
+            
+           
         }
 
 
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+
             if (PlatformIndependent.IsWindowsPhoneDevice)
             {
                 listView.Items.Add("CustomKeyboardPage");
