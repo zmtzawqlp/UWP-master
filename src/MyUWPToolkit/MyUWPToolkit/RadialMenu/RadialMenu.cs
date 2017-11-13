@@ -130,6 +130,7 @@ namespace MyUWPToolkit.RadialMenu
                 PrepareAnimation();
             CurrentItem = this;
             OnIsSupportInertialChanged();
+            InitialIsExpandedStates();
             base.OnApplyTemplate();
         }
 
@@ -439,7 +440,6 @@ namespace MyUWPToolkit.RadialMenu
                 rotationAnimation.InsertKeyFrame(1.0f, 0.0f, easing);
 
             }
-            InitialIsExpandedStates();
         }
         void Expand()
         {
