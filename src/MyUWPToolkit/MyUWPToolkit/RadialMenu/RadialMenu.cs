@@ -450,20 +450,17 @@ namespace MyUWPToolkit.RadialMenu
             }
             else
             {
-                if (_contentGridVisual == null)
+                if (_contentGridVisual != null)
                 {
-                    return;
+                    scaleAnimation.Direction = AnimationDirection.Normal;
+                    rotationAnimation.Direction = AnimationDirection.Normal;
+                    scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                    rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                    //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                    _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+                    _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
+                    //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
                 }
-
-                scaleAnimation.Direction = AnimationDirection.Normal;
-                rotationAnimation.Direction = AnimationDirection.Normal;
-                scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
-                rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
-                //opacityAnimation.Duration = TimeSpan.FromSeconds(0.2);
-                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
-                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
-                //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
-
             }
 
             _navigationButton?.GoToStateExpand();
@@ -478,17 +475,15 @@ namespace MyUWPToolkit.RadialMenu
             }
             else
             {
-                if (_contentGridVisual == null)
+                if (_contentGridVisual != null)
                 {
-                    return;
+                    scaleAnimation.Direction = AnimationDirection.Reverse;
+                    rotationAnimation.Direction = AnimationDirection.Reverse;
+                    scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                    rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
+                    _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
+                    _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
                 }
-
-                scaleAnimation.Direction = AnimationDirection.Reverse;
-                rotationAnimation.Direction = AnimationDirection.Reverse;
-                scaleAnimation.Duration = TimeSpan.FromSeconds(0.2);
-                rotationAnimation.Duration = TimeSpan.FromSeconds(0.2);
-                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
-                _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
             }
 
             _navigationButton?.GoToStateCollapse();
