@@ -1,2 +1,2 @@
 # UWP-master
-UWP customer control
+UWP custom control
