@@ -40,10 +40,11 @@ namespace MyUWPToolkit
 
         #region Property
         public event ColorChangedEventHandler SelectedColorChanged;
-        public event EventHandler<System.Object> Closed;
-        public event EventHandler<System.Object> Opened;
         public bool IsOpen { get; private set; }
 
+        public event EventHandler<System.Object> Closed;
+        public event EventHandler<System.Object> Opened;
+        public event EventHandler<System.Object> Opening;
         #endregion
 
         #region DependencyProperty

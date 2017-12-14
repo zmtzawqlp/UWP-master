@@ -1003,22 +1003,22 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <local:ColorPickerNumericTextBox x:Name="AColor" Grid.Column="0">
+                                                    <local:ColorPickerNumericTextBox x:Name="AColor" Grid.Column="0" InputScope="Number">
                                                         <local:ColorPickerNumericTextBox.Header>
                                                             <TextBlock Text="透明度(A)" HorizontalAlignment="Center"/>
                                                         </local:ColorPickerNumericTextBox.Header>
                                                     </local:ColorPickerNumericTextBox>
-                                                    <local:ColorPickerNumericTextBox x:Name="RColor"  Grid.Column="1" >
+                                                    <local:ColorPickerNumericTextBox x:Name="RColor"  Grid.Column="1" InputScope="Number">
                                                         <local:ColorPickerNumericTextBox.Header>
                                                             <TextBlock Text="红(R)" HorizontalAlignment="Center"/>
                                                         </local:ColorPickerNumericTextBox.Header>
                                                     </local:ColorPickerNumericTextBox>
-                                                    <local:ColorPickerNumericTextBox x:Name="GColor" Grid.Column="2" >
+                                                    <local:ColorPickerNumericTextBox x:Name="GColor" Grid.Column="2" InputScope="Number">
                                                         <local:ColorPickerNumericTextBox.Header>
                                                             <TextBlock Text="绿(G)" HorizontalAlignment="Center"/>
                                                         </local:ColorPickerNumericTextBox.Header>
                                                     </local:ColorPickerNumericTextBox>
-                                                    <local:ColorPickerNumericTextBox x:Name="BColor" Grid.Column="3">
+                                                    <local:ColorPickerNumericTextBox x:Name="BColor" Grid.Column="3" InputScope="Number">
                                                         <local:ColorPickerNumericTextBox.Header>
                                                             <TextBlock Text="蓝(B)" HorizontalAlignment="Center"/>
                                                         </local:ColorPickerNumericTextBox.Header>

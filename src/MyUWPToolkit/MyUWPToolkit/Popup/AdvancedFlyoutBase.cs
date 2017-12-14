@@ -8,6 +8,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace MyUWPToolkit
@@ -17,6 +18,7 @@ namespace MyUWPToolkit
 
         #region Filed
         protected Popup _popup;
+        private double inputPaneHeight;
         #endregion
 
         #region DP
@@ -158,17 +160,36 @@ namespace MyUWPToolkit
 
         private void AdvancedFlyoutBase_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            (_popup.Child as FlyoutPresenter).SizeChanged -= AdvancedFlyoutBase_SizeChanged;
             CalculatePopupPosition(placementTarget);
         }
 
         private void InputPane_Hiding(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            CalculatePopupPosition(placementTarget);
+            if (_popup != null)
+            {
+                _popup.VerticalOffset += inputPaneHeight;
+            }
+            inputPaneHeight = 0;
         }
 
         private void InputPane_Showing(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            CalculatePopupPosition(placementTarget);
+            inputPaneHeight = 0;
+            var focusedElement = FocusManager.GetFocusedElement() as FrameworkElement;
+            if (focusedElement != null)
+            {
+                var focusedElementTargetRect = focusedElement.TransformToVisual(Window.Current.Content as FrameworkElement).TransformBounds(new Rect(0, 0, focusedElement.ActualWidth, focusedElement.ActualHeight));
+                var visibleBounds = ApplicationView.GetForCurrentView().VisibleBounds;
+                if (focusedElementTargetRect.Bottom + args.OccludedRect.Height > visibleBounds.Height)
+                {
+                    inputPaneHeight = focusedElementTargetRect.Bottom + args.OccludedRect.Height - visibleBounds.Height;
+                }
+            }
+            if (_popup != null)
+            {
+                _popup.VerticalOffset -= inputPaneHeight;
+            }
         }
 
         private void PlacementTarget_Unloaded(object sender, RoutedEventArgs e)
@@ -228,11 +249,10 @@ namespace MyUWPToolkit
 
                 //var rect = StatusBarHelper.GetOccludedRect();
                 //double statusbarHeight = rect == Rect.Empty ? 0 : rect.Height;
-                var inputPane = InputPane.GetForCurrentView();
-                var visibleBounds = ApplicationView.GetForCurrentView().VisibleBounds;
-                double inputPaneHeight = inputPane.OccludedRect.Height;
 
-                var height = visibleBounds.Height - inputPaneHeight;
+                var visibleBounds = ApplicationView.GetForCurrentView().VisibleBounds;
+
+                var height = visibleBounds.Height;
                 //-statusbarHeight;
 
                 var windowSize = new Size(visibleBounds.Width, height > 0 ? height : 0);
@@ -337,6 +357,18 @@ namespace MyUWPToolkit
                     TryHandlePlacementCenterScreen(fpSize, windowSize);
                 }
 
+
+                var focusedElement = FocusManager.GetFocusedElement() as FrameworkElement;
+                if (focusedElement != null)
+                {
+                    var inputPane = InputPane.GetForCurrentView();
+                    var focusedElementTargetRect = focusedElement.TransformToVisual(Window.Current.Content as FrameworkElement).TransformBounds(new Rect(0, 0, focusedElement.ActualWidth, focusedElement.ActualHeight));
+                    if (focusedElementTargetRect.Bottom + inputPane.OccludedRect.Height > height)
+                    {
+                        inputPaneHeight = focusedElementTargetRect.Bottom + inputPane.OccludedRect.Height - visibleBounds.Height;
+                        _popup.VerticalOffset -= inputPaneHeight;
+                    }
+                }
                 return true;
             }
             catch (Exception ex)
