@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BodyNamed.Pages;
+using BodyNamed.Utils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +27,38 @@ namespace BodyNamed
         public MainPage()
         {
             this.InitializeComponent();
+            NavigationService.RegisterCustomFrame(innerFrame, nameof(innerFrame));
+        }
+
+        private void ToggleSplitPane(object sender, RoutedEventArgs e)
+        {
+            splitView.IsPaneOpen = !splitView.IsPaneOpen;
+            hamburgerButton.Width = splitView.IsPaneOpen ? 100 : 48;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (innerFrame.Content == null)
+            {
+                line1.Opacity = 1;
+                line2.Opacity = 0;
+                NavigationService.Navigate(typeof(HomePage));
+            }
+        }
+
+        private void homeSP_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            line1.Opacity = 1;
+            line2.Opacity = 0;
+            NavigationService.GoBackToRootPage();
+        }
+
+        private void settingsSP_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            line2.Opacity = 1;
+            line1.Opacity = 0;
+            NavigationService.Navigate(typeof(SettingsPage));
         }
     }
 }

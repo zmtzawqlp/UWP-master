@@ -303,7 +303,7 @@
                                     x:Name="PART_ValueBar"
                                     IsHitTestVisible="False"
                                     Fill="#FFFFFFFF" />
-                                <controls:UpDownTextBox Header="{TemplateBinding Header}"  HeaderTemplate="{TemplateBinding HeaderTemplate}"
+                                <controls:UpDownTextBox 
                                     x:Name="PART_ValueTextBox"
                                     FontFamily="{TemplateBinding FontFamily}"
                                     FontSize="{TemplateBinding FontSize}"

@@ -26316,7 +26316,8 @@
     "UAP,Version=v10.0.10586": []
   },
   "packageFolders": {
-    "C:\\Users\\eastmoney\\.nuget\\packages\\": {}
+    "C:\\Users\\eastmoney\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {}
   },
   "project": {
     "restore": {
@@ -26327,9 +26328,13 @@
       "packagesPath": "C:\\Users\\eastmoney\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\obj\\",
       "projectStyle": "ProjectJson",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\"
+      ],
       "configFilePaths": [
         "C:\\Users\\eastmoney\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -26337,10 +26342,10 @@
       }
     },
     "dependencies": {
-      "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
-      "Newtonsoft.Json": "10.0.3",
-      "System.Runtime": "4.3.0",
-      "Win2D.uwp": "1.21.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform": "[5.4.0, )",
+      "Newtonsoft.Json": "[10.0.3, )",
+      "System.Runtime": "[4.3.0, )",
+      "Win2D.uwp": "[1.21.0, )"
     },
     "frameworks": {
       "uap10.0.10586": {}

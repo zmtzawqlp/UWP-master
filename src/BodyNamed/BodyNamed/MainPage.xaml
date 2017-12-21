@@ -8,6 +8,38 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <SplitView x:Name="splitView"
+                   CompactPaneLength="48"
+                   OpenPaneLength="100"
+                   DisplayMode="CompactInline"
+                   IsPaneOpen="True">
+            <SplitView.Pane>
+                <StackPanel Orientation="Vertical">
+                    <Button x:Name="hamburgerButton"
+                                Width="100"
+                                Height="48"
+                                Padding="15,0"
+                                HorizontalContentAlignment="Left"
+                                VerticalContentAlignment="Center"
+                                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                Content="&#xE700;"
+                                Click="ToggleSplitPane">
+
+                    </Button>
+                    <StackPanel x:Name="homeSP" Background="#01010101" Height="48" Tapped="homeSP_Tapped" Orientation="Horizontal">
+                        <Rectangle x:Name="line1"   Fill="Orange" Width="5"/>
+                        <SymbolIcon Symbol="Home" Margin="10,0,14,0" />
+                        <TextBlock Text="首页" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel x:Name="settingsSP" Background="#01010101" Height="48" Tapped="settingsSP_Tapped" Orientation="Horizontal">
+                        <Rectangle x:Name="line2"  Fill="Orange" Width="5"/>
+                        <SymbolIcon Symbol="Setting"  Margin="10,0,14,0"/>
+                        <TextBlock Text="设置" VerticalAlignment="Center" Margin="0,14"/>
+                    </StackPanel>
+                </StackPanel>
+            </SplitView.Pane>
+            <Frame x:Name="innerFrame"/>
+        </SplitView>
 
     </Grid>
 </Page>
