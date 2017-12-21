@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.SpeechSynthesis;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -83,6 +84,20 @@ namespace BodyNamed.Pages
                 dt.Start();
             }
             start = !start;
+        }
+
+        public async void ReadText()
+        {
+            var text = "";
+            MediaElement mediaplayer = new MediaElement();
+            using (var speech = new SpeechSynthesizer())
+            {
+                speech.Voice = SpeechSynthesizer.AllVoices.First(gender => gender.Gender == VoiceGender.Female);
+                string ssml = @"<speak version='1.0' " + "xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='zh-cn'>" + text + "</speak>";
+                SpeechSynthesisStream stream = await speech.SynthesizeSsmlToStreamAsync(ssml);
+                mediaplayer.SetSource(stream, stream.ContentType);
+                mediaplayer.Play();
+            }
         }
     }
 }
