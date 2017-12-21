@@ -48,7 +48,7 @@ namespace BodyNamed.Pages
         {
             AddItem.Name = "周天";
             AddItem.Gender = Gender.Male;
-            AddItem.Chance = 1;
+            AddItem.Chance = 100;
         }
 
         public void Group()
