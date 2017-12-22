@@ -1,1 +1,0 @@
-[{"Name":"周天玥","Gender":1,"Chance":100.0},{"Name":"周天姿","Gender":1,"Chance":100.0},{"Name":"周天沁","Gender":1,"Chance":100.0},{"Name":"周天谕","Gender":0,"Chance":100.0},{"Name":"周天睿","Gender":0,"Chance":100.0}]

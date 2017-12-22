@@ -66,8 +66,14 @@ namespace BodyNamed.Utils
         {
             if (!await StorageHelper.FileExistsAsync(FileName))
             {
-                var source = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/{FileName}"));
-                await source.CopyAsync(ApplicationData.Current.LocalFolder);
+                try
+                {
+                    var source = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/{FileName}"));
+                    await source.CopyAsync(ApplicationData.Current.LocalFolder);
+                }
+                catch
+                {
+                }
             }
         }
 
@@ -95,6 +101,11 @@ namespace BodyNamed.Utils
                 {
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _streamWriter?.Dispose();
         }
     }
 }

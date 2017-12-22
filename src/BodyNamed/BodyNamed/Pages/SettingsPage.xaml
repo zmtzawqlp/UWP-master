@@ -23,7 +23,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListView x:Name="NameList" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding View,ElementName=cvs}" SelectionMode="None" IsItemClickEnabled="False" Margin="5,2">
+        <ListView x:Name="NameList" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Auto" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding View,ElementName=cvs}" SelectionMode="None" IsItemClickEnabled="False" Margin="5,2">
             <ListView.GroupStyle>
                 <GroupStyle HidesIfEmpty="True">
                     <GroupStyle.HeaderTemplate>
@@ -37,55 +37,65 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Padding" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:BodyName">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*" MinWidth="140"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Text="{x:Bind Name,Mode=TwoWay}" />
                         <ComboBox Grid.Column="1" Width="120" MinWidth="0" SelectedIndex="{x:Bind Gender,Mode=TwoWay,Converter={StaticResource GenderIntConverter}}" SelectionChanged="ComboBox_SelectionChanged">
                             <ComboBoxItem>男宝宝</ComboBoxItem>
                             <ComboBoxItem>女宝宝</ComboBoxItem>
                         </ComboBox>
-                        <controls:NumericTextBox Width="120" Margin="10,0" Minimum="0" Grid.Column="2" Value="{x:Bind Chance,Mode=TwoWay}"/>
-                        <Button Grid.Column="3" x:Name="removeButton" Content="删除" Width="120" Click="removeButton_Click"/>
+                        <controls:NumericTextBox Width="120" Margin="10,0,0,0" Minimum="0" Grid.Column="2" Value="{x:Bind Chance,Mode=TwoWay}"/>
+                        <TextBox Grid.Column="3" Width="NaN" Text="{x:Bind Introduction,Mode=TwoWay}" />
+                        <Button Grid.Column="4" Margin="0,0,5,0" x:Name="removeButton" Content="删除" Width="120" Click="removeButton_Click"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
                 <StackPanel Orientation="Vertical">
-                    <Grid x:Name="addItem" Padding="0,0,0,10" HorizontalAlignment="Left">
+                    <Grid x:Name="addItem" Padding="0,0,0,10" HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*" MinWidth="140"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="宝宝名字" Margin="10,5"/>
-                        <TextBlock Grid.Column="1" Text="宝宝性别" Margin="0,5"/>
-                        <TextBlock Grid.Column="2" Grid.ColumnSpan="2" Margin="10,5" Text="概率"/>
+                        <TextBlock Grid.Column="0" Text="名字" Margin="10,5" />
+                        <TextBlock Grid.Column="1" Text="性别" Margin="0,5" />
+                        <TextBlock Grid.Column="2" Margin="10,5" Text="概率" />
+                        <TextBlock Grid.Column="3" Margin="10,5" Text="寓意"/>
                         <TextBox Grid.Column="0" Grid.Row="1" Text="{x:Bind AddItem.Name,Mode=TwoWay}" />
                         <ComboBox Grid.Column="1" Grid.Row="1" Width="120" MinWidth="0" SelectedIndex="{x:Bind AddItem.Gender,Mode=TwoWay,Converter={StaticResource GenderIntConverter}}">
                             <ComboBoxItem>男宝宝</ComboBoxItem>
                             <ComboBoxItem>女宝宝</ComboBoxItem>
                         </ComboBox>
-                        <controls:NumericTextBox Width="120" Margin="10,0" Grid.Row="1" Grid.Column="2" Minimum="0" Value="{x:Bind AddItem.Chance,Mode=TwoWay}"/>
-                        <Button Grid.Column="3" Grid.Row="1" x:Name="addButton" Width="120" Content="添加" Click="addButton_Click"/>
+                        <controls:NumericTextBox Width="120" Margin="10,0,0,0" Grid.Row="1" Grid.Column="2" Minimum="0" Value="{x:Bind AddItem.Chance,Mode=TwoWay}"/>
+                        <TextBox Grid.Column="3"  Grid.Row="1" Width="NaN" Text="{x:Bind AddItem.Introduction,Mode=TwoWay}" />
+                        <Button Grid.Column="4" Grid.Row="1" Margin="0,0,5,0" x:Name="addButton" Width="120" Content="添加" Click="addButton_Click"/>
                     </Grid>
                     <Rectangle Fill="Gray" Opacity="0.5" Height="1" Margin="12,0"/>
                 </StackPanel>
             </ListView.Header>
         </ListView>
+        <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="本地同步到OneDrive" x:Name="uploadButton" Click="uploadButton_Click" Margin="10"/>
+            <Button Content="OneDrive同步到本地" x:Name="downloadButton" Click="downloadButton_Click" Margin="10"/>
+        </StackPanel>-->
         <ToggleSwitch x:Name="ts" Grid.Row="1" Margin="10" HorizontalAlignment="Right" OnContent="使用男宝宝名字" OffContent="使用女宝宝名字" Toggled="ts_Toggled"/>
     </Grid>
 </Page>

@@ -36,6 +36,11 @@
                         <SymbolIcon Symbol="Setting"  Margin="10,0,14,0"/>
                         <TextBlock Text="设置" VerticalAlignment="Center" Margin="0,14"/>
                     </StackPanel>
+                    <StackPanel x:Name="aboutSP" Background="#01010101" Height="48" Tapped="aboutSP_Tapped" Orientation="Horizontal">
+                        <Rectangle x:Name="line3"  Fill="Orange" Width="5"/>
+                        <SymbolIcon Symbol="Admin"  Margin="10,0,14,0"/>
+                        <TextBlock Text="关于" VerticalAlignment="Center" Margin="0,14"/>
+                    </StackPanel>
                 </StackPanel>
             </SplitView.Pane>
             <Frame x:Name="innerFrame"/>

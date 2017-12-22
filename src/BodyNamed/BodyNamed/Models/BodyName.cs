@@ -51,6 +51,19 @@ namespace BodyNamed.Models
             }
         }
 
+        private string introduction;
+
+        public string Introduction
+        {
+            get { return introduction; }
+            set
+            {
+                introduction = value;
+                OnPropertyChanged(nameof(Introduction));
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged(string propertyName)

@@ -59,7 +59,7 @@ namespace BodyNamed
             //    // Place the frame in the current Window
             //    Window.Current.Content = rootFrame;
             //}
-            await BodyNamesHelper.Instance.CopyFile();
+            //await BodyNamesHelper.Instance.CopyFile();
             await BodyNamesHelper.Instance.Initialize();
             if (e.PrelaunchActivated == false)
             {

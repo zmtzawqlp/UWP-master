@@ -42,7 +42,7 @@ namespace BodyNamed
             if (innerFrame.Content == null)
             {
                 line1.Opacity = 1;
-                line2.Opacity = 0;
+                line2.Opacity= line3.Opacity = 0;
                 NavigationService.Navigate(typeof(HomePage));
             }
         }
@@ -50,15 +50,22 @@ namespace BodyNamed
         private void homeSP_Tapped(object sender, TappedRoutedEventArgs e)
         {
             line1.Opacity = 1;
-            line2.Opacity = 0;
+            line2.Opacity = line3.Opacity = 0;
             NavigationService.GoBackToRootPage();
         }
 
         private void settingsSP_Tapped(object sender, TappedRoutedEventArgs e)
         {
             line2.Opacity = 1;
-            line1.Opacity = 0;
-            NavigationService.Navigate(typeof(SettingsPage));
+            line1.Opacity = line3.Opacity = 0;
+            NavigationService.CleanNavigate(typeof(SettingsPage));
+        }
+
+        private void aboutSP_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            line3.Opacity = 1;
+            line1.Opacity = line2.Opacity = 0;
+            NavigationService.CleanNavigate(typeof(AboutPage));
         }
     }
 }
