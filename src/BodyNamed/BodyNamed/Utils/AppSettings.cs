@@ -18,5 +18,11 @@ namespace BodyNamed.Utils
             get { return Settings.GetValue(defaultValue: Gender.Male); }
             set { Settings.SetValue((int)value); }
         }
+
+        public static string VoiceInformationID
+        {
+            get { return Settings.GetValue(defaultValue: ""); }
+            set { Settings.SetValue(value); }
+        }
     }
 }

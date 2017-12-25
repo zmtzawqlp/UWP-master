@@ -96,6 +96,9 @@
             <Button Content="本地同步到OneDrive" x:Name="uploadButton" Click="uploadButton_Click" Margin="10"/>
             <Button Content="OneDrive同步到本地" x:Name="downloadButton" Click="downloadButton_Click" Margin="10"/>
         </StackPanel>-->
+        <ComboBox x:Name="voiceList" Grid.Row="1" Margin="10" HorizontalAlignment="Left" SelectionChanged="voiceList_SelectionChanged"/>
+
+
         <ToggleSwitch x:Name="ts" Grid.Row="1" Margin="10" HorizontalAlignment="Right" OnContent="使用男宝宝名字" OffContent="使用女宝宝名字" Toggled="ts_Toggled"/>
     </Grid>
 </Page>

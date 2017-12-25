@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Tapped="Grid_Tapped">
-        <TextBlock x:Name="tb" Text="点击屏幕以开始" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
+    <Grid x:Name="rootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Tapped="Grid_Tapped">
+        <MediaPlayerElement x:Name="media"/>
+        <TextBox x:Name="textToSynthesize" BorderThickness="0" IsReadOnly="True" Visibility="Collapsed" SelectionHighlightColorWhenNotFocused="Blue" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
+        <TextBlock x:Name="tb" Text="点击屏幕以开始" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60"/>
     </Grid>
 </Page>
