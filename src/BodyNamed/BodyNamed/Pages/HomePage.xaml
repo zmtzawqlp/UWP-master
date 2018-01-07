@@ -5,11 +5,40 @@
     xmlns:local="using:BodyNamed.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ct="using:MyUWPToolkit"
     mc:Ignorable="d">
 
     <Grid x:Name="rootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Tapped="Grid_Tapped">
         <MediaPlayerElement x:Name="media"/>
-        <TextBox x:Name="textToSynthesize" BorderThickness="0" IsReadOnly="True" Visibility="Collapsed" SelectionHighlightColorWhenNotFocused="Blue" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
-        <TextBlock x:Name="tb" Text="点击屏幕以开始" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60"/>
+        <TextBox x:Name="textToSynthesize" BorderThickness="0" IsReadOnly="True" Visibility="Collapsed" SelectionHighlightColorWhenNotFocused="Blue" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30"/>
+        <TextBlock x:Name="tb" Text="点击开始" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60"/>
+       
     </Grid>
+    <ct:AdvancedFlyoutBase.AttachedFlyout>
+        <ct:AdvancedFlyout x:Name="Flyout" Placement="FullScreen" IsLightDismissEnabled="False">
+            <ct:AdvancedFlyout.FlyoutPresenterStyle>
+                <Style TargetType="FlyoutPresenter">
+                    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
+                    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                    <!--<Setter Property="MaxHeight" Value="NaN"/>
+                                        <Setter Property="MaxWidth" Value="NaN"/>-->
+                    <Setter Property="MinHeight" Value="0"/>
+                    <Setter Property="MinWidth" Value="0"/>
+                    <Setter Property="Padding" Value="0,0,0,0"/>
+                    <Setter Property="Margin" Value="0,0,0,0"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <!--<Setter Property="Background" Value="White"/>-->
+                    <!--<Setter Property="BorderBrush" Value="#A4AFBA"/>-->
+                    <Setter Property="MaxWidth" Value="NaN"/>
+                    <Setter Property="MaxHeight" Value="NaN"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                </Style>
+            </ct:AdvancedFlyout.FlyoutPresenterStyle>
+            <Button Content="重新开始" Click="B_Click" Margin="20"/>
+        </ct:AdvancedFlyout>
+    </ct:AdvancedFlyoutBase.AttachedFlyout>
 </Page>

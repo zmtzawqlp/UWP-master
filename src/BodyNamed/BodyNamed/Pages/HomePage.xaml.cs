@@ -51,9 +51,16 @@ namespace BodyNamed.Pages
             }
             MediaPlayer player = new MediaPlayer();
             player.AutoPlay = false;
-            //player.MediaEnded += media_MediaEnded;
 
             media.SetMediaPlayer(player);
+        }
+
+        private void B_Click(object sender, RoutedEventArgs e)
+        {
+            media.MediaPlayer.Pause();
+            rootGrid.IsHitTestVisible = true;
+            Flyout.Hide();
+            Grid_Tapped(null, null);
         }
 
         private void Dt_Tick(object sender, object e)
@@ -90,21 +97,23 @@ namespace BodyNamed.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             dt.Stop();
+            Flyout.Hide();
+            media.MediaPlayer.Pause();
             base.OnNavigatedFrom(e);
         }
 
         bool start;
         private async void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
+
             if (start)
             {
                 dt.Stop();
-                var grid = (sender as Grid);
-                grid.IsHitTestVisible = false;
+                rootGrid.IsHitTestVisible = false;
 
                 await ReadText();
-
-                grid.IsHitTestVisible = true;
+                Flyout.ShowAt(this);
+                //grid.IsHitTestVisible = true;
             }
             else
             {
@@ -122,9 +131,12 @@ namespace BodyNamed.Pages
 
             if (introduction != null && name != null)
             {
-                var text = name + "小朋友,你已经选择了自己的名字. 爸爸妈妈给你取这个名字的希望:" + introduction;
-
-               // text = @"仅使用语音，便可以启动程序、打开菜单、单击屏幕上的按钮和其他对象、将文本口述到文档中以及书写和发送电子邮件。只要是可以用键盘和鼠标完成的所有事情，都可以仅用语音来完成。";
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(name + "小朋友");
+                sb.AppendLine("你已经选择了自己的名字.");
+                sb.AppendLine("其寓意为:" + introduction);
+                var text = sb.ToString();
+                // text = @"仅使用语音，便可以启动程序、打开菜单、单击屏幕上的按钮和其他对象、将文本口述到文档中以及书写和发送电子邮件。只要是可以用键盘和鼠标完成的所有事情，都可以仅用语音来完成。";
                 textToSynthesize.Text = text;
                 textToSynthesize.Visibility = Visibility.Visible;
                 tb.Visibility = Visibility.Collapsed;
@@ -146,7 +158,7 @@ namespace BodyNamed.Pages
 
                     // Ensure that the app is notified for cues.  
                     RegisterForWordBoundaryEvents(mediaPlaybackItem);
-                    
+
                     media.Source = mediaPlaybackItem;
                     //media.MediaPlayer.PlaybackSession.PositionChanged += PlaybackSession_PositionChanged;
                     media.MediaPlayer.Play();
@@ -227,7 +239,7 @@ namespace BodyNamed.Pages
             if (startPositionInInput != null && endPositionInInput != null)
             {
                 //textToSynthesize.Select(startPositionInInput.Value, endPositionInInput.Value - startPositionInInput.Value + 1);
-               // Debug.WriteLine(endPositionInInput.Value + 1);
+                // Debug.WriteLine(endPositionInInput.Value + 1);
                 textToSynthesize.Select(0, endPositionInInput.Value + 1);
             }
         }
