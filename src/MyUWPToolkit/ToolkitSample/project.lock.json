@@ -26786,19 +26786,19 @@
     "UAP,Version=v10.0.10586": []
   },
   "packageFolders": {
-    "C:\\Users\\eastmoney\\.nuget\\packages\\": {}
+    "C:\\Users\\zmtza\\.nuget\\packages\\": {}
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\ToolkitSample\\ToolkitSample.csproj",
+      "projectUniqueName": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\ToolkitSample\\ToolkitSample.csproj",
       "projectName": "ToolkitSample",
-      "projectPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\ToolkitSample\\ToolkitSample.csproj",
-      "projectJsonPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\ToolkitSample\\project.json",
-      "packagesPath": "C:\\Users\\eastmoney\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\ToolkitSample\\obj\\",
+      "projectPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\ToolkitSample\\ToolkitSample.csproj",
+      "projectJsonPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\ToolkitSample\\project.json",
+      "packagesPath": "C:\\Users\\zmtza\\.nuget\\packages\\",
+      "outputPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\ToolkitSample\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
-        "C:\\Users\\eastmoney\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\zmtza\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "sources": {
@@ -26808,8 +26808,8 @@
       "frameworks": {
         "uap10.0.10586": {
           "projectReferences": {
-            "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj": {
-              "projectPath": "C:\\Users\\eastmoney\\Source\\Repos\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj"
+            "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj": {
+              "projectPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj"
             }
           }
         }
@@ -26845,23 +26845,5 @@
         "#import": []
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: Microsoft.ApplicationInsights.WindowsApps 1.1.1 requires Microsoft.ApplicationInsights (= 1.2.3) but version Microsoft.ApplicationInsights 2.4.0 was resolved.",
-      "libraryId": "Microsoft.ApplicationInsights",
-      "targetGraphs": [
-        "UAP,Version=v10.0.10586",
-        "UAP,Version=v10.0.10586/win10-arm",
-        "UAP,Version=v10.0.10586/win10-arm-aot",
-        "UAP,Version=v10.0.10586/win10-x64",
-        "UAP,Version=v10.0.10586/win10-x64-aot",
-        "UAP,Version=v10.0.10586/win10-x86",
-        "UAP,Version=v10.0.10586/win10-x86-aot"
-      ]
-    }
-  ]
+  }
 }
