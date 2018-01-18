@@ -34,7 +34,7 @@ namespace MyUWPToolkit.RadialMenu
             this.DefaultStyleKey = typeof(RadialMenu);
             _items = new RadialMenuItemCollection();
             Loaded += RadialMenu_Loaded;
-            Unloaded += RadialMenu_Unloaded;
+            //Unloaded += RadialMenu_Unloaded;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             IsHitTestVisible = false;
@@ -42,26 +42,42 @@ namespace MyUWPToolkit.RadialMenu
             _popup.IsLightDismissEnabled = false;
             BindingOperations.SetBinding(_popup, Windows.UI.Xaml.Controls.Primitives.Popup.IsOpenProperty, new Binding() { Mode = BindingMode.TwoWay, Source = this, Path = new PropertyPath("IsOpen") });
             _popup.Child = this;
-            UpdatePopupSize();
+            _popup.Opened += _popup_Opened;
+            _popup.Closed += _popup_Closed;
+            //UpdatePopupSize();
             lowerThan14393 = !ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 3);
         }
 
-
-        private void RadialMenu_Unloaded(object sender, RoutedEventArgs e)
+        private void _popup_Closed(object sender, object e)
         {
+            //Debug.WriteLine("_popup_Closed" + this.Tag?.ToString());
             Window.Current.SizeChanged -= Current_SizeChanged;
         }
 
+        private void _popup_Opened(object sender, object e)
+        {
+            //Debug.WriteLine("_popup_Opened" + this.Tag?.ToString());
+            Window.Current.SizeChanged += Current_SizeChanged;
+        }
+
+        //private void RadialMenu_Unloaded(object sender, RoutedEventArgs e)
+        //{
+        //    //Window.Current.SizeChanged -= Current_SizeChanged;
+        //    //Debug.WriteLine("RadialMenu_Unloaded");
+        //}
+
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
-            UpdatePopupSize();
+            //UpdatePopupSize();
             UpdateOffset();
         }
 
         private void RadialMenu_Loaded(object sender, RoutedEventArgs e)
         {
-            UpdatePopupSize();
-            Window.Current.SizeChanged += Current_SizeChanged;
+            //UpdatePopupSize();
+            //Window.Current.SizeChanged += Current_SizeChanged;
+            //Debug.WriteLine("RadialMenu_Loaded");
+
             xPositive = 1;
             yPositive = 1;
             UpdateOffset();
@@ -134,23 +150,23 @@ namespace MyUWPToolkit.RadialMenu
             base.OnApplyTemplate();
         }
 
-        private void UpdatePopupSize()
-        {
-            return;
-            if (_popup == null || lowerThan14393)
-            {
-                return;
-            }
-            var windowRect = Window.Current.Bounds;
-            if (DeviceInfo.IsNarrowSrceen)
-            {
-                //Gets the visible region of the window (app view). The visible region is the region 
-                //not occluded by chrome such as the status bar and app bar.   
-                windowRect = ApplicationView.GetForCurrentView().VisibleBounds;
-            }
-            _popup.Width = windowRect.Width;
-            _popup.Height = windowRect.Height;
-        }
+        //private void UpdatePopupSize()
+        //{
+        //    return;
+        //    if (_popup == null || lowerThan14393)
+        //    {
+        //        return;
+        //    }
+        //    var windowRect = Window.Current.Bounds;
+        //    if (DeviceInfo.IsNarrowSrceen)
+        //    {
+        //        //Gets the visible region of the window (app view). The visible region is the region 
+        //        //not occluded by chrome such as the status bar and app bar.   
+        //        windowRect = ApplicationView.GetForCurrentView().VisibleBounds;
+        //    }
+        //    _popup.Width = windowRect.Width;
+        //    _popup.Height = windowRect.Height;
+        //}
 
         private void OnCurrentItemChanged(DependencyPropertyChangedEventArgs e)
         {
@@ -460,6 +476,7 @@ namespace MyUWPToolkit.RadialMenu
                     _contentGridVisual.StartAnimation(nameof(_contentGridVisual.Scale), scaleAnimation);
                     _contentGridVisual.StartAnimation(nameof(_contentGridVisual.RotationAngleInDegrees), rotationAnimation);
                     //_contentGridVisual.StartAnimation(nameof(_contentGridVisual.Opacity), opacityAnimation);
+
                 }
             }
 
