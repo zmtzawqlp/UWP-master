@@ -26316,25 +26316,20 @@
     "UAP,Version=v10.0.10586": []
   },
   "packageFolders": {
-    "C:\\Users\\zmtza\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {}
+    "C:\\Users\\eastmoney\\.nuget\\packages\\": {}
   },
   "project": {
     "restore": {
-      "projectUniqueName": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
+      "projectUniqueName": "D:\\Github\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
       "projectName": "MyUWPToolkit",
-      "projectPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
-      "projectJsonPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\project.json",
-      "packagesPath": "C:\\Users\\zmtza\\.nuget\\packages\\",
-      "outputPath": "E:\\ZMT\\GitHub\\src\\MyUWPToolkit\\MyUWPToolkit\\obj\\",
+      "projectPath": "D:\\Github\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\MyUWPToolkit.csproj",
+      "projectJsonPath": "D:\\Github\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\project.json",
+      "packagesPath": "C:\\Users\\eastmoney\\.nuget\\packages\\",
+      "outputPath": "D:\\Github\\UWP-master\\src\\MyUWPToolkit\\MyUWPToolkit\\obj\\",
       "projectStyle": "ProjectJson",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\zmtza\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\eastmoney\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},

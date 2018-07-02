@@ -141,6 +141,7 @@ namespace MyUWPToolkit.RadialMenu
             _currentItemPresenter = GetTemplateChild("CurrentItemPresenter") as RadialMenuItemsPresenter;
             _currentItemPresenter.Menu = this;
             _navigationButton = GetTemplateChild("NavigationButton") as RadialMenuNavigationButton;
+            _navigationButton.Content = this.NavigationButtonIcon ?? (char)0xE115;
             _navigationButton.Click += _navigationButton_Click;
             if (!DesignMode.DesignModeEnabled)
                 PrepareAnimation();
