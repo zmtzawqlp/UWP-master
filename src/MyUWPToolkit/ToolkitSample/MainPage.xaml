@@ -30,6 +30,8 @@
             <x:String>AdvancedFlyout</x:String>
             <x:String>HightLightedRadioButton</x:String>
             <x:String>RadialMenu</x:String>
+            <x:String>FillRowViewPanel</x:String>
+            
             <x:String>Test</x:String>
             
         </ListView>

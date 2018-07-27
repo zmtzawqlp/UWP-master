@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyUWPToolkit", "MyUWPToolkit\MyUWPToolkit.csproj", "{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}"
 EndProject
@@ -40,16 +40,16 @@ Global
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|ARM.Build.0 = Release|ARM
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|x64.ActiveCfg = Release|x64
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|x64.Build.0 = Release|x64
-		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|x86.ActiveCfg = Release|x86
-		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|x86.Build.0 = Release|x86
+		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|x86.ActiveCfg = Debug|x86
+		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.GCRelease|x86.Build.0 = Debug|x86
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|ARM.ActiveCfg = Release|ARM
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|ARM.Build.0 = Release|ARM
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|x64.ActiveCfg = Release|x64
 		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|x64.Build.0 = Release|x64
-		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|x86.ActiveCfg = Release|x86
-		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|x86.Build.0 = Release|x86
+		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|x86.ActiveCfg = Debug|x86
+		{8BB9FFDE-08A9-4B2C-B4B8-4DE6069402C3}.Release|x86.Build.0 = Debug|x86
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Debug|Any CPU.Build.0 = Debug|x86
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Debug|Any CPU.Deploy.0 = Debug|x86
@@ -71,9 +71,9 @@ Global
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x64.ActiveCfg = Release|x64
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x64.Build.0 = Release|x64
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x64.Deploy.0 = Release|x64
-		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x86.ActiveCfg = Release|x86
-		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x86.Build.0 = Release|x86
-		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x86.Deploy.0 = Release|x86
+		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x86.ActiveCfg = Debug|x86
+		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x86.Build.0 = Debug|x86
+		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.GCRelease|x86.Deploy.0 = Debug|x86
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|Any CPU.ActiveCfg = Release|x86
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|ARM.ActiveCfg = Release|ARM
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|ARM.Build.0 = Release|ARM
@@ -81,14 +81,17 @@ Global
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x64.ActiveCfg = Release|x64
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x64.Build.0 = Release|x64
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x64.Deploy.0 = Release|x64
-		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x86.ActiveCfg = Release|x86
-		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x86.Build.0 = Release|x86
-		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x86.Deploy.0 = Release|x86
+		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x86.ActiveCfg = Debug|x86
+		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x86.Build.0 = Debug|x86
+		{71FD34B2-C585-49AD-8423-29C5B62A6C67}.Release|x86.Deploy.0 = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{71FD34B2-C585-49AD-8423-29C5B62A6C67} = {CF56B439-F7AF-46E9-8F98-041D7220A130}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1580F746-E6D8-4AEA-AB3E-514FA30AF4CA}
 	EndGlobalSection
 EndGlobal

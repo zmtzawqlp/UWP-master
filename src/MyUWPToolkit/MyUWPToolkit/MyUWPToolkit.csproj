@@ -11,11 +11,12 @@
     <AssemblyName>MyUWPToolkit</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RuntimeIdentifiers>win10-arm;win10-arm-aot;win10-x86;win10-x86-aot;win10-x64;win10-x64-aot</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -26,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,6 +37,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -103,10 +106,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="project.json" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Button\HightLightedRadioButton.cs" />
     <Compile Include="Chart\ColumnChart.cs" />
     <Compile Include="CollectionView\ICollectionViewEx.cs" />
@@ -147,6 +146,8 @@
     <Compile Include="ImageControl\CropSelectionSize.cs" />
     <Compile Include="ImageControl\RotationAngle.cs" />
     <Compile Include="ImageControl\Win2DImageTool.cs" />
+    <Compile Include="Panel\FillRowViewPanel\FillRowViewPanel.cs" />
+    <Compile Include="Panel\FillRowViewPanel\FillRowViewSource.cs" />
     <Compile Include="ItemsControl\GroupListView\Class1.cs" />
     <Compile Include="ItemsControl\GroupListView\ExpressionAnimationItem.cs" />
     <Compile Include="ItemsControl\GroupListView\GroupListView.cs" />
@@ -160,12 +161,12 @@
     <Compile Include="Panel\PullToRefresh\PullToRefreshGrid.cs" />
     <Compile Include="Panel\PullToRefresh\PullToRefreshPanel.cs" />
     <Compile Include="Panel\PullToRefresh\ScrollPanel.cs" />
-    <Compile Include="Panel\VariableSizedGrid\IResizable.cs" />
-    <Compile Include="Panel\VariableSizedGrid\ObservableRowAapter.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VariableSizedGridView.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VariableSizedWrapGridDataContext.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedGridView.cs" />
-    <Compile Include="Panel\VariableSizedGrid\VirtualizedVariableSizedWrapGrid.cs" />
+    <Compile Include="ItemsControl\VariableSizedGrid\IResizable.cs" />
+    <Compile Include="ItemsControl\VariableSizedGrid\ObservableRowAapter.cs" />
+    <Compile Include="ItemsControl\VariableSizedGrid\VariableSizedGridView.cs" />
+    <Compile Include="ItemsControl\VariableSizedGrid\VariableSizedWrapGridDataContext.cs" />
+    <Compile Include="ItemsControl\VariableSizedGrid\VirtualizedVariableSizedGridView.cs" />
+    <Compile Include="ItemsControl\VariableSizedGrid\VirtualizedVariableSizedWrapGrid.cs" />
     <Compile Include="Popup\AdvancedFlyout.cs" />
     <Compile Include="Popup\AdvancedFlyoutBase.cs" />
     <Compile Include="Popup\AdvancedFlyoutPlacementMode.cs" />
@@ -190,13 +191,17 @@
     <Compile Include="Util\AudioCapturePermissions.cs" />
     <Compile Include="Util\CryptographyHelper.cs" />
     <Compile Include="Util\DeviceInfo.cs" />
+    <Compile Include="Util\HttpClientHelper.cs" />
     <Compile Include="Util\IEnumerableExtensions.cs" />
     <Compile Include="Util\ItemsControlExtensions.cs" />
     <Compile Include="Util\NetworkInfo.cs" />
     <Compile Include="Util\NotifyTaskCompletion.cs" />
     <Compile Include="Util\PlatformIndependent.cs" />
+    <Compile Include="Util\RetryHelper.cs" />
     <Compile Include="Util\SpeechService.cs" />
+    <Compile Include="Util\TplExtensions.cs" />
     <Compile Include="Util\Util.cs" />
+    <Compile Include="Util\ValidationHelper.cs" />
     <EmbeddedResource Include="Properties\MyUWPToolkit.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -288,11 +293,24 @@
     <Content Include="Resource\indicator_arrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsMobile, Version=10.0.15063.0">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.1.5</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime">
+      <Version>4.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="Win2D.uwp">
+      <Version>1.21.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="WindowsMobile, Version=10.0.17134.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

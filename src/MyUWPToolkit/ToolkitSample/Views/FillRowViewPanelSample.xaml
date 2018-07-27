@@ -1,0 +1,56 @@
+﻿<Page
+    x:Class="ToolkitSample.Views.FillRowViewPanelSample"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ToolkitSample.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ct="using:MyUWPToolkit"
+    xmlns:msct="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <ct:PullToRefreshGrid RefreshThreshold="100"  PullToRefresh="PullToRefreshGrid_PullToRefresh">
+            <ListView x:Name="FillRowView" SizeChanged="FillRowView_SizeChanged">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ListView  ScrollViewer.HorizontalScrollMode="Disabled" ItemsSource="{Binding}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ct:FillRowViewPanel x:Name="fillRowViewPanel" MinRowItemsCount="2" Height="300"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <!--<msct:ImageEx Margin="5" IsCacheEnabled="True" Source="{Binding ImageUrl}" Stretch="Fill"/>-->
+                                    <Image Margin="5" Source="{Binding ImageUrl}" Stretch="Fill"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ct:PullToRefreshGrid>
+    </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Refresh" Label="Refresh" Click="AppBarButton_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>

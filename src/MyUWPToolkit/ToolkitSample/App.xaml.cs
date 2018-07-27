@@ -1,4 +1,5 @@
-﻿using MyUWPToolkit.Util;
+﻿using Microsoft.Toolkit.Uwp.UI;
+using MyUWPToolkit.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,7 @@ namespace ToolkitSample
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            ImageCache.Instance.ClearAsync(TimeSpan.FromDays(2));
         }
 
         /// <summary>
@@ -44,7 +46,6 @@ namespace ToolkitSample
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {

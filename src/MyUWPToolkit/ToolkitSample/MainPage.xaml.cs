@@ -101,6 +101,9 @@ namespace ToolkitSample
                 case "RadialMenu":
                     Frame.Navigate(typeof(RadialMenuSample));
                     break;
+                case "FillRowViewPanel":
+                    Frame.Navigate(typeof(FillRowViewPanelSample));
+                    break;
                 default:
                     break;
             }
