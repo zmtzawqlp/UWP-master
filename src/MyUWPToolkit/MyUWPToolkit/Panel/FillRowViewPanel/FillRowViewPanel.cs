@@ -66,8 +66,7 @@ namespace MyUWPToolkit
                     }
 
                     var rect = new Rect(x, 0, width, finalSize.Height);
-                    (item as FrameworkElement).Width = rect.Width;
-                    (item as FrameworkElement).Height = finalSize.Height;
+                    item.Measure(new Size(rect.Width, finalSize.Height));
                     item.Arrange(rect);
                     x += width;
                 }
